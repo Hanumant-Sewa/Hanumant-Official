@@ -272,6 +272,7 @@ section{
     align-items:center;
 
 }
+/*================ LOGO =================*/
 
 .logo{
 
@@ -279,24 +280,69 @@ section{
 
     align-items:center;
 
-    gap:12px;
-
-    font-size:28px;
-
-    font-weight:800;
+    gap:15px;
 
     color:var(--primary);
 
-    font-family:'Poppins',sans-serif;
-
 }
 
-.logo img{
+.logo-icon{
 
     width:55px;
 
+    height:55px;
+
+    border-radius:16px;
+
+    background:linear-gradient(135deg,#D97706,#B45309);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#fff;
+
+    font-size:26px;
+
+    box-shadow:0 10px 25px rgba(217,119,6,.30);
+
 }
 
+.logo-text{
+
+    display:flex;
+
+    flex-direction:column;
+
+    line-height:1.1;
+
+}
+
+.logo-title{
+
+    font-family:'Poppins',sans-serif;
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+.logo-tagline{
+
+    font-size:12px;
+
+    color:#777;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+}
 .nav-menu{
 
     display:flex;
