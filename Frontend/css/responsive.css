@@ -443,7 +443,6 @@
     }
 
     .donate-btn{
-
         display:none;
 
     }
@@ -451,31 +450,18 @@
     .nav-menu{
 
         position:fixed;
-
         top:0;
-
         right:-100%;
-
         width:280px;
-
         height:100vh;
-
         background:#fff;
-
         display:flex;
-
         flex-direction:column;
-
         justify-content:center;
-
         align-items:center;
-
         gap:30px;
-
         box-shadow:-10px 0 30px rgba(0,0,0,.12);
-
         transition:.35s;
-
         z-index:1000;
 
     }
