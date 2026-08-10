@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Account | Hanumant Seva</title>
+
+
+    <!-- Google Fonts -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- Font Awesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="donation.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="donation-page">
+
+
+    <!-- ================= LEFT SIDE ================= -->
+
+    <div class="donation-left">
+
+
+        <a
+            href="../index.html"
+            class="donation-logo"
+        >
+
+            <img
+                src="../images/logo.png"
+                alt="Hanumant Seva Logo"
+            >
+
+        </a>
+
+
+        <div class="donation-message">
+
+
+            <span class="mini-badge">
+                ❤️ Join Our Mission
+            </span>
+
+
+            <h1>
+
+                Be A Part Of
+
+                <span>Something Good.</span>
+
+            </h1>
+
+
+            <p>
+
+                Create your account and make your donation
+                journey simple, meaningful and secure.
+
+            </p>
+
+
+            <div class="trust-items">
+
+
+                <div>
+
+                    <i class="fa-solid fa-heart"></i>
+
+                    Support Humanity
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-utensils"></i>
+
+                    Feed Someone
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+
+                    Spread Compassion
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= RIGHT SIDE ================= -->
+
+    <div class="donation-right">
+
+
+        <div class="auth-card">
+
+
+            <a
+                href="login.html"
+                class="back-home"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Sign In
+
+            </a>
+
+
+
+            <div class="auth-heading">
+
+
+                <div class="auth-icon">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                </div>
+
+
+                <h2>
+                    Create Account
+                </h2>
+
+
+                <p>
+                    Create an account to continue your donation.
+                </p>
+
+
+            </div>
+
+
+
+            <!-- ================= SIGNUP FORM ================= -->
+
+            <form id="signupForm">
+
+
+                <div class="input-group">
+
+                    <label>
+                        Full Name
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-user"></i>
+
+
+                        <input
+                            type="text"
+                            id="signupName"
+                            placeholder="Enter your full name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="input-group">
+
+                    <label>
+                        Email Address
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-envelope"></i>
+
+
+                        <input
+                            type="email"
+                            id="signupEmail"
+                            placeholder="Enter your email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="input-group">
+
+                    <label>
+                        Mobile Number
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-phone"></i>
+
+
+                        <input
+                            type="tel"
+                            id="signupPhone"
+                            placeholder="Enter your mobile number"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="input-group">
+
+                    <label>
+                        Password
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-lock"></i>
+
+
+                        <input
+                            type="password"
+                            id="signupPassword"
+                            placeholder="Create a password"
+                            required
+                        >
+
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('signupPassword', this)"
+                        >
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </button>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="input-group">
+
+                    <label>
+                        Confirm Password
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-lock"></i>
+
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm your password"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <button
+                    type="submit"
+                    class="auth-btn"
+                >
+
+                    Create Account
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+
+            </form>
+
+
+
+            <div
+                id="signupMessage"
+                class="form-message"
+            ></div>
+
+
+
+            <div class="divider">
+
+                <span>
+                    OR
+                </span>
+
+            </div>
+
+
+
+            <p class="create-account">
+
+                Already have an account?
+
+                <a href="login.html">
+                    Sign In
+                </a>
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- JavaScript -->
+
+<script src="donation.js"></script>
+
+
+</body>
+
+</html>

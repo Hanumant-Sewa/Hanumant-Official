@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Make a Donation | Hanumant Seva</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="donation.css" />
+  </head>
+
+  <body>
+    <div class="donation-page">
+      <!-- ================================================= -->
+      <!-- LEFT SIDE -->
+      <!-- ================================================= -->
+
+      <div class="donation-left">
+        <!-- Logo -->
+
+        <a href="../index.html" class="donation-logo">
+          <img src="../images/logo.png" alt="Hanumant Seva Logo" />
+        </a>
+
+        <!-- Donation Message -->
+
+        <div class="donation-message">
+          <span class="mini-badge"> ❤️ Your Kindness Creates Hope </span>
+
+          <h1>
+            Your Generosity
+
+            <span> Can Feed A Hungry Heart. </span>
+          </h1>
+
+          <p>
+            Every contribution, big or small, can become a nutritious meal, a
+            moment of comfort, and a reason for someone to smile. Together,
+            let's make compassion count.
+          </p>
+
+          <!-- Trust Items -->
+
+          <div class="trust-items">
+            <div>
+              <i class="fa-solid fa-shield-heart"></i>
+
+              Safe & Secure Payment
+            </div>
+
+            <div>
+              <i class="fa-solid fa-heart"></i>
+
+              Every Donation Makes An Impact
+            </div>
+
+            <div>
+              <i class="fa-solid fa-bowl-food"></i>
+
+              Your Support Feeds Someone
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================= -->
+      <!-- RIGHT SIDE -->
+      <!-- ================================================= -->
+
+      <div class="donation-right">
+        <div class="auth-card">
+          <!-- Back -->
+
+          <a href="../index.html" class="back-home">
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Home
+          </a>
+
+          <!-- Heading -->
+
+          <div class="auth-heading">
+            <div class="auth-icon">
+              <i class="fa-solid fa-heart"></i>
+            </div>
+
+            <h2>Make a Donation</h2>
+
+            <p>Your contribution can make someone's day brighter.</p>
+          </div>
+
+          <!-- ================================================= -->
+          <!-- DONATION AMOUNT -->
+          <!-- ================================================= -->
+
+          <div class="input-group">
+            <label> Donation Amount </label>
+
+            <div class="input-box">
+              <i class="fa-solid fa-indian-rupee-sign"></i>
+
+              <input
+                type="number"
+                id="donationAmount"
+                placeholder="Enter amount"
+                min="1"
+                value="100"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- ================================================= -->
+          <!-- QUICK AMOUNTS -->
+          <!-- ================================================= -->
+
+          <div class="quick-amounts">
+            <button type="button" onclick="setAmount(100)">₹100</button>
+
+            <button type="button" onclick="setAmount(500)">₹500</button>
+
+            <button type="button" onclick="setAmount(1000)">₹1000</button>
+          </div>
+
+          <!-- ================================================= -->
+          <!-- PAYMENT METHOD -->
+          <!-- ================================================= -->
+
+          <div class="input-group">
+            <label> Payment Method </label>
+
+            <div class="payment-methods">
+              <!-- UPI -->
+
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="UPI" checked />
+
+                <span>
+                  <i class="fa-solid fa-mobile-screen-button"></i>
+
+                  UPI
+                </span>
+              </label>
+
+              <!-- CARD -->
+
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="Card" />
+
+                <span>
+                  <i class="fa-solid fa-credit-card"></i>
+
+                  Card
+                </span>
+              </label>
+
+              <!-- NET BANKING -->
+
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="Net Banking" />
+
+                <span>
+                  <i class="fa-solid fa-building-columns"></i>
+
+                  Net Banking
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- ================================================= -->
+          <!-- EXTRA PAYMENT DETAILS -->
+          <!-- ================================================= -->
+
+          <div id="paymentDetails"></div>
+
+          <!-- ================================================= -->
+          <!-- DONATE BUTTON -->
+          <!-- ================================================= -->
+
+          <button type="button" class="auth-btn" onclick="processDonation()">
+            Donate Now
+
+            <i class="fa-solid fa-heart"></i>
+          </button>
+
+          <!-- Message -->
+
+          <div id="paymentMessage" class="form-message"></div>
+
+          <!-- Security -->
+
+          <div class="payment-security">
+            <i class="fa-solid fa-lock"></i>
+
+            <span> Your payment information is handled securely. </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+
+    <script src="donation.js"></script>
+
+    <script>
+      /* =====================================================
+   QUICK DONATION AMOUNT
+   ===================================================== */
+
+      function setAmount(amount) {
+        document.getElementById("donationAmount").value = amount;
+      }
+
+      /* =====================================================
+   EXTRA PAYMENT DETAILS
+   ===================================================== */
+
+      const paymentOptions = document.querySelectorAll(
+        'input[name="paymentMethod"]',
+      );
+
+      const paymentDetails = document.getElementById("paymentDetails");
+
+      paymentOptions.forEach(function (option) {
+        option.addEventListener("change", function () {
+          const method = this.value;
+
+          /* =================================================
+               UPI
+               ================================================= */
+
+          if (method === "UPI") {
+            paymentDetails.innerHTML = `
+
+                    <div class="input-group">
+
+                        <label>
+                            UPI ID
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+
+                            <input
+                                type="text"
+                                id="upiId"
+                                placeholder="Enter your UPI ID"
+                            >
+
+                        </div>
+
+                    </div>
+
+                `;
+          } else if (method === "Card") {
+
+          /* =================================================
+               CARD
+               ================================================= */
+            paymentDetails.innerHTML = `
+
+                    <div class="input-group">
+
+                        <label>
+                            Card Number
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="fa-solid fa-credit-card"></i>
+
+                            <input
+                                type="text"
+                                id="cardNumber"
+                                placeholder="1234 5678 9012 3456"
+                                maxlength="19"
+                                inputmode="numeric"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Card Holder Name
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="fa-solid fa-user"></i>
+
+                            <input
+                                type="text"
+                                id="cardHolder"
+                                placeholder="Enter card holder name"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-row">
+
+                        <div class="input-group">
+
+                            <label>
+                                Expiry Date
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="fa-solid fa-calendar"></i>
+
+                                <input
+                                    type="text"
+                                    id="expiryDate"
+                                    placeholder="MM/YY"
+                                    maxlength="5"
+                                    inputmode="numeric"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label>
+                                CVV
+                            </label>
+
+                            <div class="input-box">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="cvv"
+                                    placeholder="CVV"
+                                    maxlength="3"
+                                    inputmode="numeric"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+          } else if (method === "Net Banking") {
+
+          /* =================================================
+               NET BANKING
+               ================================================= */
+            paymentDetails.innerHTML = `
+
+                    <div class="input-group">
+
+                        <label>
+                            Select Bank
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="fa-solid fa-building-columns"></i>
+
+                            <select id="bankName">
+
+                                <option value="">
+                                    Select your bank
+                                </option>
+
+                                <option value="SBI">
+                                    State Bank of India
+                                </option>
+
+                                <option value="HDFC">
+                                    HDFC Bank
+                                </option>
+
+                                <option value="ICICI">
+                                    ICICI Bank
+                                </option>
+
+                                <option value="Axis">
+                                    Axis Bank
+                                </option>
+
+                                <option value="Kotak">
+                                    Kotak Mahindra Bank
+                                </option>
+
+                                <option value="Other">
+                                    Other Bank
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Account Holder Name
+                        </label>
+
+                        <div class="input-box">
+
+                            <i class="fa-solid fa-user"></i>
+
+                            <input
+                                type="text"
+                                id="accountHolder"
+                                placeholder="Enter account holder name"
+                            >
+
+                        </div>
+
+                    </div>
+
+                `;
+          }
+        });
+      });
+
+      /* =====================================================
+   SHOW UPI DETAILS BY DEFAULT
+   ===================================================== */
+
+      const defaultUPI = document.querySelector(
+        'input[name="paymentMethod"][value="UPI"]:checked',
+      );
+
+      if (defaultUPI) {
+        defaultUPI.dispatchEvent(new Event("change"));
+      }
+
+      /* =====================================================
+   PROCESS DONATION
+   ===================================================== */
+
+      function processDonation() {
+        const amountInput = document.getElementById("donationAmount");
+
+        const amount = amountInput.value.trim();
+
+        const selectedPayment = document.querySelector(
+          'input[name="paymentMethod"]:checked',
+        );
+
+        const message = document.getElementById("paymentMessage");
+
+        /* =================================================
+       VALIDATE AMOUNT
+       ================================================= */
+
+        if (amount === "" || Number(amount) <= 0) {
+          message.textContent = "Please enter a valid donation amount.";
+
+          message.style.color = "red";
+
+          message.style.display = "block";
+
+          return;
+        }
+
+        /* =================================================
+       CHECK PAYMENT METHOD
+       ================================================= */
+
+        if (!selectedPayment) {
+          message.textContent = "Please select a payment method.";
+
+          message.style.color = "red";
+
+          message.style.display = "block";
+
+          return;
+        }
+
+        const method = selectedPayment.value;
+
+        /* =================================================
+       UPI VALIDATION
+       ================================================= */
+
+        if (method === "UPI") {
+          const upiInput = document.getElementById("upiId");
+
+          const upiId = upiInput ? upiInput.value.trim() : "";
+
+          if (upiId === "") {
+            message.textContent = "Please enter your UPI ID.";
+
+            message.style.color = "red";
+
+            message.style.display = "block";
+
+            return;
+          }
+
+          localStorage.setItem("upiId", upiId);
+        }
+
+        /* =================================================
+       CARD VALIDATION
+       ================================================= */
+
+        if (method === "Card") {
+          const cardNumber = document.getElementById("cardNumber").value.trim();
+
+          const cardHolder = document.getElementById("cardHolder").value.trim();
+
+          const expiryDate = document.getElementById("expiryDate").value.trim();
+
+          const cvv = document.getElementById("cvv").value.trim();
+
+          if (cardNumber === "") {
+            message.textContent = "Please enter your card number.";
+
+            message.style.color = "red";
+
+            message.style.display = "block";
+
+            return;
+          }
+
+          if (cardHolder === "") {
+            message.textContent = "Please enter card holder name.";
+
+            message.style.color = "red";
+
+            message.style.display = "block";
+
+            return;
+          }
+
+          if (expiryDate === "") {
+            message.textContent = "Please enter expiry date.";
+
+            message.style.color = "red";
+
+            message.style.display = "block";
+
+            return;
+          }
+
+          if (cvv === "") {
+            message.textContent = "Please enter CVV.";
+
+            message.style.color = "red";
+
+            message.style.display = "block";
+
+            return;
+          }
+        }
+
+        /* =================================================
+       NET BANKING VALIDATION
+       ================================================= */
+
+        if (method === "Net Banking") {
+          const bankName = document.getElementById("bankName").value;
+
+          const accountHolder = document
+            .getElementById("accountHolder")
+            .value.trim();
+
+          if (bankName === "") {
+            message.textContent = "Please select your bank.";
+
+            message.style.color = "red";
+
+            message.style.display = "block";
+
+            return;
+          }
+
+          if (accountHolder === "") {
+            message.textContent = "Please enter account holder name.";
+
+            message.style.color = "red";
+
+            message.style.display = "block";
+
+            return;
+          }
+        }
+
+        /* =================================================
+       SAVE DONATION INFORMATION
+       ================================================= */
+
+        localStorage.setItem("donationAmount", amount);
+
+        localStorage.setItem("paymentMethod", method);
+
+        /* =================================================
+       GENERATE TRANSACTION ID
+       ================================================= */
+
+        const transactionId = "HNS" + Date.now().toString().slice(-8);
+
+        localStorage.setItem("transactionId", transactionId);
+
+        /* =================================================
+       SHOW PROCESSING MESSAGE
+       ================================================= */
+
+        message.textContent = "Processing your donation...";
+
+        message.style.color = "green";
+
+        message.style.display = "block";
+
+        /* =================================================
+       OPEN SUCCESS PAGE
+       ================================================= */
+
+        setTimeout(function () {
+          window.location.href = "success.html";
+        }, 700);
+      }
+    </script>
+  </body>
+</html>
