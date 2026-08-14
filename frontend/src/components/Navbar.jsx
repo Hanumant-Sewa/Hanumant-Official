@@ -1,4 +1,6 @@
 import { Heart } from "lucide-react";
+import { Link } from "react-router-dom";
+
 function Navbar() {
   return (
     <header className="navbar">
@@ -27,10 +29,12 @@ function Navbar() {
           <a href="#contact">Contact</a>
         </nav>
 
-        <a href="#donate" className="navbar-donate">
+        {/* Donate Now → Login */}
+        <Link to="/login" className="navbar-donate">
           <Heart size={25} />
           Donate Now
-        </a>
+        </Link>
+        
       </div>
     </header>
   );

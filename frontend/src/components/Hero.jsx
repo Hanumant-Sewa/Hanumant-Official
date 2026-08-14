@@ -8,6 +8,8 @@ import {
   Star,
 } from "lucide-react";
 
+import { Link } from "react-router-dom";
+
 function Hero() {
   return (
     <section className="hero" id="home">
@@ -34,15 +36,22 @@ function Hero() {
 
           {/* BUTTONS */}
           <div className="hero-buttons">
-            <a href="#donate" className="hero-btn hero-btn-primary">
-              <Heart size={25} />
-              Donate Now
-            </a>
+            <Link
+              to="/login"
+              className="hero-btn hero-btn-primary"
+            > 
+              <Heart size={25} /> 
+              Donate Now 
+            </Link>
 
-            <a href="#volunteer" className="hero-btn hero-btn-outline">
+            {/* Your other button */}
+            <Link
+              to="/volunteer"
+              className="hero-btn hero-btn-outline"
+            >
               <Users size={25} />
               Become a Volunteer
-            </a>
+            </Link>
           </div>
 
           {/* TRUST FEATURES */}
