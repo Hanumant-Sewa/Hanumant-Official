@@ -25,9 +25,9 @@ function Navbar() {
         <nav className="nav-links">
           {isHomePage ? (
             <>
-              <a href="#home" className="active">
+              <Link to="/" className="active">
                 Home
-              </a>
+              </Link>
 
               <a href="#about">About</a>
 

@@ -10,7 +10,7 @@
 
 .navbar {
   width: 100%;
-  min-height: clamp(70px, 7vw, 105px);
+  height: clamp(50px, 6vw, 90px);
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   display: flex;
@@ -72,31 +72,6 @@
     transform: translateY(-1px);
 }
 
-
-/* Donate */
-.navbar-donate {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-
-    min-width: clamp(130px, 9vw, 170px);
-    padding: clamp(13px, 1vw, 16px) clamp(18px, 1.5vw, 28px);
-
-    background: var(--primary);
-    color: #fff;
-
-    border-radius: 16px;
-
-    font-size: clamp(15px, 1vw, 17px);
-    font-weight: 600;
-
-    text-decoration: none;
-
-    box-shadow: 0 8px 20px rgba(217, 119, 6, 0.18);
-
-    transition: var(--transition);
-}
 
 .navbar-donate svg {
     width: clamp(20px, 1.4vw, 24px);
@@ -164,9 +139,9 @@
   align-items: center;
   justify-content: center;
   gap: clamp(6px, 0.6vw, 10px);
-  width: clamp(170px, 14vw, 225px);
-  height: clamp(45px, 4vw, 60px);
-  padding: 0 clamp(12px, 1.5vw, 20px);
+  width: clamp(150px, 10vw, 170px);
+  height: clamp(40px, 2.5vw, 60px);
+  padding: 0 clamp(8px, 1vw, 14px);
   border-radius: clamp(12px, 1vw, 16px);
   background: var(--primary);
   color: var(--white);
@@ -607,7 +582,7 @@
     background:linear-gradient(145deg,#FFFDF9,#FFF8F0);
     border:1px solid #F1E4D3;
     border-radius:clamp(18px,2vw,28px);
-    padding:clamp(25px,4vw,50px);
+    padding:clamp(20px,3.5vw,40px);
     box-shadow:var(--shadow-md);
 }
 
