@@ -122,7 +122,7 @@ function Community() {
 
             <div className="community-hero-actions">
               <Link
-                to="/register"
+                to="/community/join"
                 className="community-btn community-btn-primary"
               >
                 Join Our Community

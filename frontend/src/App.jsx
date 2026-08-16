@@ -50,6 +50,8 @@ import VolunteerCertificates from "./pages/VolunteerCertificates";
 import Community from "./pages/Community";
 //transparency
 import Transparency from "./pages/Transparency";
+
+import JoinCommunity from "./pages/JoinCommunity";
 function App() {
   return (
     <BrowserRouter>
@@ -162,6 +164,8 @@ function App() {
         <Route path="/community" element={<Community />} />
 
         <Route path="/transparency" element={<Transparency />} />
+
+        <Route path="/community/join" element={<JoinCommunity />} />
 
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>

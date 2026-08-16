@@ -1686,50 +1686,51 @@
         gap: 10px;
     }
 
-}
-/*====================================================
+}/*====================================================
                     IMPACT SECTION
 ====================================================*/
 
-.impact {
-    background: #ffffff;
-    position: relative;
+.impact{
+    background:#ffffff;
+    position:relative;
 }
 
-.impact-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: clamp(18px, 2vw, 30px);
+.impact-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:24px;
 }
 
-.impact-card {
-    background: linear-gradient(135deg, #D97706, #B45309);
-    color: #fff;
-    text-align: center;
-    border-radius: 24px;
-    padding: clamp(30px, 3vw, 45px) clamp(18px, 2vw, 25px);
-    box-shadow: var(--shadow-md);
-    transition: .35s;
+.impact-card{
+    background:linear-gradient(135deg,#D97706,#B45309);
+    color:#fff;
+    text-align:center;
+    border-radius:24px;
+    padding:35px 20px;
+    box-shadow:var(--shadow-md);
+    transition:.35s;
 }
 
-.impact-card:hover {
-    transform: translateY(-12px);
+.impact-card:hover{
+    transform:translateY(-12px);
 }
 
-.impact-card i {
-    font-size: clamp(32px, 3.5vw, 45px);
-    margin-bottom: clamp(18px, 2vw, 25px);
+.impact-card i{
+    font-size:42px;
+    margin-bottom:20px;
 }
 
-.impact-card h3 {
-    font-size: clamp(36px, 4vw, 48px);
-    margin-bottom: clamp(8px, 1vw, 12px);
-    font-family: 'Poppins', sans-serif;
+.impact-card h3{
+    font-size:46px;
+    margin:0 0 8px;
+    font-family:'Poppins',sans-serif;
+    line-height:1.1;
 }
 
-.impact-card p {
-    font-size: clamp(15px, 1.3vw, 17px);
-    opacity: .95;
+.impact-card p{
+    font-size:16px;
+    margin:0;
+    opacity:.95;
 }
 /* ========================================
    AUTH PAGES (ForgotPassword Page)
@@ -3367,56 +3368,6 @@
 }
 
 
-/* ================= IMPACT ================= */
-
-.impact-card {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  padding: 28px;
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--primary-dark)
-  );
-  color: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-  margin-bottom: 28px;
-}
-
-.impact-icon {
-  width: 72px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.impact-content {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-.impact-content span {
-  font-weight: 600;
-}
-
-.impact-content strong {
-  font-size: 42px;
-  line-height: 1;
-}
-
-.impact-content p {
-  width: 100%;
-  margin-top: -5px;
-  opacity: .9;
-}
-
 
 /* ================= STATISTICS ================= */
 
@@ -4278,7 +4229,7 @@
 footer {
     background: #1F2937;
     color: #fff;
-    padding: clamp(50px, 7vw, 90px) 0 0;
+    padding: clamp(50px, 6vw, 90px) 0 0;
 }
 
 .footer-grid {

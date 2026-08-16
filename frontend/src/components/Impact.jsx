@@ -1,4 +1,73 @@
+import { useEffect, useRef, useState } from "react";
+
+function Counter({ target }) {
+  const [count, setCount] = useState(0);
+  const counterRef = useRef(null);
+  const startedRef = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !startedRef.current) {
+          startedRef.current = true;
+
+          let current = 0;
+          const duration = 1800;
+          const increment = target / (duration / 16);
+
+          const timer = setInterval(() => {
+            current += increment;
+
+            if (current >= target) {
+              current = target;
+              clearInterval(timer);
+            }
+
+            setCount(Math.floor(current));
+          }, 16);
+        }
+      },
+      {
+        threshold: 0.5,
+      },
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [target]);
+
+  return <h3 ref={counterRef}>{count}+</h3>;
+}
+
 function Impact() {
+  const impactData = [
+    {
+      icon: "fa-solid fa-bowl-food",
+      target: 1500,
+      label: "Meals Served",
+    },
+    {
+      icon: "fa-solid fa-user-group",
+      target: 500,
+      label: "Active Volunteers",
+    },
+    {
+      icon: "fa-solid fa-location-dot",
+      target: 20,
+      label: "Cities Reached",
+    },
+    {
+      icon: "fa-solid fa-heart",
+      target: 1000,
+      label: "Families Supported",
+    },
+  ];
+
   return (
     <section className="impact section" id="impact">
       <div className="container">
@@ -11,45 +80,15 @@ function Impact() {
         </div>
 
         <div className="impact-grid">
-          <div className="impact-card">
-            <i className="fa-solid fa-bowl-food"></i>
+          {impactData.map((item) => (
+            <div className="impact-card" key={item.label}>
+              <i className={item.icon}></i>
 
-            <h3 className="counter" data-target="1500">
-              0
-            </h3>
+              <Counter target={item.target} />
 
-            <p>Meals Served</p>
-          </div>
-
-          <div className="impact-card">
-            <i className="fa-solid fa-user-group"></i>
-
-            <h3 className="counter" data-target="500">
-              0
-            </h3>
-
-            <p>Active Volunteers</p>
-          </div>
-
-          <div className="impact-card">
-            <i className="fa-solid fa-location-dot"></i>
-
-            <h3 className="counter" data-target="20">
-              0
-            </h3>
-
-            <p>Cities Reached</p>
-          </div>
-
-          <div className="impact-card">
-            <i className="fa-solid fa-heart"></i>
-
-            <h3 className="counter" data-target="1000">
-              0
-            </h3>
-
-            <p>Families Supported</p>
-          </div>
+              <p>{item.label}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
