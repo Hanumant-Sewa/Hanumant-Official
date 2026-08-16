@@ -18,7 +18,7 @@ function Contact() {
               <div>
                 <h3>Address</h3>
 
-                <p>Akola, Maharashtra, India</p>
+                <p>Kanpur, Uttar Pradesh, India</p>
               </div>
             </div>
 

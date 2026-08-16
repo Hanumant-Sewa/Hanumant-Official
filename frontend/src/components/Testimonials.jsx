@@ -33,7 +33,7 @@ function Testimonials() {
 
             <div className="testimonial-user">
               <img
-                src="/images/story-volunteer.jpg"
+                src="/images/story-volunteer.jpeg"
                 alt="Hanumat Seva volunteer"
               />
 
@@ -57,7 +57,7 @@ function Testimonials() {
             </p>
 
             <div className="testimonial-user">
-              <img src="/images/story-donor.jpg" alt="Hanumat Seva donor" />
+              <img src="/images/story-donor.jpeg" alt="Hanumat Seva donor" />
 
               <div>
                 <h4>Supporter Story</h4>
@@ -80,7 +80,7 @@ function Testimonials() {
 
             <div className="testimonial-user">
               <img
-                src="/images/story-community.jpg"
+                src="/images/story-community.jpeg"
                 alt="Hanumat Seva community"
               />
 
