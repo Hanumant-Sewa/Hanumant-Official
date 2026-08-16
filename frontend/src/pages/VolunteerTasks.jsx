@@ -27,7 +27,7 @@ const VolunteerTasks = () => {
       date: "22 August 2026",
       location: "Solapur Community Center",
       status: "pending",
-      image: "/images/volunteer-task-food.png",
+      image: "/images/volunteer-task-donation.jpeg",
     },
     {
       id: 2,
@@ -38,7 +38,7 @@ const VolunteerTasks = () => {
       date: "20 September 2026",
       location: "Central Collection Point",
       status: "progress",
-      image: "/images/volunteer-task-donation.png",
+      image: "/images/documentation.jpeg",
     },
     {
       id: 3,
@@ -49,7 +49,7 @@ const VolunteerTasks = () => {
       date: "27 September 2026",
       location: "Solapur Community Area",
       status: "completed",
-      image: "/images/volunteer-task-outreach.jpg",
+      image: "/images/volunteer-event-food.jpeg",
     },
     {
       id: 4,
@@ -60,7 +60,7 @@ const VolunteerTasks = () => {
       date: "28 August 2026",
       location: "Hanumat Seva Center",
       status: "pending",
-      image: "/images/volunteer-task-rescue.png",
+      image: "/images/food-rescue.png",
     },
   ]);
 
@@ -465,7 +465,7 @@ const VolunteerTasks = () => {
           <div className="tasks-motivation-image">
 
             <img
-              src="/images/volunteer-tasks.jpg"
+              src="/images/volunteer-tasks.jpeg"
               alt="Volunteer helping community"
             />
 
