@@ -4,9 +4,17 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import Services from "./components/Services";
+import Programs from "./components/Programs";
+import Campaigns from "./components/Campaigns";
 import Impact from "./components/Impact";
-
+import Gallery from "./components/Gallery";
+import Events from "./components/Events";
+import Testimonials from "./components/Testimonials";
+import DonateSection from "./components/DonateSection";
+import Volunteer from "./components/Volunteer";
+import FAQ from "./components/FAQ";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 // ADDED
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -32,8 +40,17 @@ function App() {
             <>
               <Hero />
               <About />
-              <Services />
+              <Programs />
               <Impact />
+              <Campaigns />
+              <Gallery />
+              <Events />
+              <Testimonials />
+              <DonateSection />
+              <Volunteer />
+              <FAQ />
+              <Contact />
+              <Footer />
             </>
           }
         />
