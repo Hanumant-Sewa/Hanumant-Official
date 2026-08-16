@@ -732,7 +732,7 @@ const VolunteerDashboard = () => {
           <div className="motivation-image">
 
             <img
-              src="/images/volunteer-dashboard.jpg"
+              src="/images/volunteer-dashboard.png"
               alt="Volunteers working together"
             />
 

@@ -308,8 +308,7 @@ function VolunteerCertificates() {
           <div className="certificates-motivation-image">
 
             <img
-              src="/images/volunteer-certificate.jpg"
-              alt="Volunteer achievement"
+              src="/images/volunteer-certificate.jpeg"
             />
 
           </div>

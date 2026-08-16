@@ -28,7 +28,7 @@ const VolunteerEvents = () => {
       time: "09:00 AM - 01:00 PM",
       volunteers: "25 Volunteers",
       category: "Food Support",
-      image: "/images/volunteer-event-food.jpg",
+      image: "/images/volunteer-event-food.jpeg",
     },
     {
       id: 2,
@@ -41,7 +41,7 @@ const VolunteerEvents = () => {
       time: "10:00 AM - 02:00 PM",
       volunteers: "18 Volunteers",
       category: "Food Rescue",
-      image: "/images/volunteer-event-rescue.jpg",
+      image: "/images/food-rescue.png",
     },
     {
       id: 3,
@@ -54,7 +54,7 @@ const VolunteerEvents = () => {
       time: "11:00 AM - 03:00 PM",
       volunteers: "30 Volunteers",
       category: "Awareness",
-      image: "/images/volunteer-event-awareness.jpg",
+      image: "/images/awareness.jpeg",
     },
     {
       id: 4,
@@ -67,7 +67,7 @@ const VolunteerEvents = () => {
       time: "08:00 AM - 12:00 PM",
       volunteers: "20 Volunteers",
       category: "Community Kitchen",
-      image: "/images/volunteer-event-kitchen.jpg",
+      image: "/images/benefit-skills.jpeg",
     },
     {
       id: 5,
@@ -80,7 +80,7 @@ const VolunteerEvents = () => {
       time: "09:30 AM - 01:30 PM",
       volunteers: "15 Volunteers",
       category: "Donation",
-      image: "/images/volunteer-event-donation.jpg",
+      image: "/images/food-distribution.png",
     },
     {
       id: 6,
@@ -93,7 +93,7 @@ const VolunteerEvents = () => {
       time: "10:00 AM - 02:00 PM",
       volunteers: "22 Volunteers",
       category: "Outreach",
-      image: "/images/volunteer-event-outreach.jpg",
+      image: "/images/community-support.jpeg",
     },
   ];
 
@@ -335,7 +335,7 @@ const VolunteerEvents = () => {
           <div className="events-motivation-image">
 
             <img
-              src="/images/volunteer-events.jpg"
+              src="/images/volunteer-group.jpeg"
               alt="Volunteers helping community"
             />
 
