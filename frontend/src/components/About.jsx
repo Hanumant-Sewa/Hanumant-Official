@@ -66,7 +66,7 @@ const About = () => {
               </div>
             </div>
 
-            <Link to="/donate" className="about-btn">
+            <Link to="/login" className="about-btn">
               Start Monthly Support
               <ArrowRight size={18} />
             </Link>
