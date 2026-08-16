@@ -41,9 +41,7 @@ function Navbar() {
             <>
               <Link to="/">Home</Link>
 
-              <Link to="/campaigns">Campaigns</Link>
-
-              <Link to="/transparency">Transparency</Link>
+              <Link to="/">Dashboard</Link>
             </>
           )}
         </nav>
@@ -72,7 +70,7 @@ function Navbar() {
                 Volunteer
               </Link>
 
-              <Link to="/donate" className="navbar-donate">
+              <Link to="/login" className="navbar-donate">
                 <Heart size={20} />
                 Donate
               </Link>

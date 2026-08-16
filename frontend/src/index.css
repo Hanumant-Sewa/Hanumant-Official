@@ -109,6 +109,7 @@ section {
   font-weight: 600;
   transition: .35s;
   cursor: pointer;
+  color: var(--primary-dark);
 }
 
 .btn-primary {

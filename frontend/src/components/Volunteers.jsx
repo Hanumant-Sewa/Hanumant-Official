@@ -1,4 +1,4 @@
-function Volunteer() {
+function Volunteers() {
   return (
     <section className="volunteer section" id="volunteer">
       <div className="container">
@@ -38,4 +38,4 @@ function Volunteer() {
   );
 }
 
-export default Volunteer;
+export default Volunteers;
