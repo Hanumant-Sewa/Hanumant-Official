@@ -1,40 +1,84 @@
-import { Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Heart, Users } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
+  const location = useLocation();
+
+  const isHomePage = location.pathname === "/";
+
+  // Temporary until authentication is connected
+  const isLoggedIn = false;
+
   return (
     <header className="navbar">
       <div className="navbar-container">
-        <a href="#home" className="navbar-logo">
+        {/* ================= LOGO ================= */}
+        <Link to="/" className="navbar-logo">
           <img
             src="/images/logo.png"
-            alt="Hanumant Foundation"
+            alt="Hanumat Seva"
             className="navbar-logo-image"
           />
-        </a>
+        </Link>
 
+        {/* ================= NAVIGATION ================= */}
         <nav className="nav-links">
-          <a href="#home" className="active">
-            Home
-          </a>
+          {isHomePage ? (
+            <>
+              <a href="#home" className="active">
+                Home
+              </a>
 
-          <a href="#about">About</a>
+              <a href="#about">About</a>
 
-          <a href="#services">Services</a>
+              <a href="#programs">Programs</a>
 
-          <a href="#impact">Impact</a>
+              <a href="#impact">Impact</a>
 
-          <a href="#gallery">Gallery</a>
+              <a href="#campaigns">Campaigns</a>
+            </>
+          ) : (
+            <>
+              <Link to="/">Home</Link>
 
-          <a href="#contact">Contact</a>
+              <Link to="/campaigns">Campaigns</Link>
+
+              <Link to="/transparency">Transparency</Link>
+            </>
+          )}
         </nav>
 
-        {/* Donate Now → Login */}
-        <Link to="/login" className="navbar-donate">
-          <Heart size={25} />
-          Donate Now
-        </Link>
-        
+        {/* ================= ACTIONS ================= */}
+        <div className="navbar-actions">
+          {isLoggedIn ? (
+            <>
+              <Link to="/dashboard" className="navbar-community">
+                Dashboard
+              </Link>
+
+              <Link to="/profile" className="navbar-community">
+                Profile
+              </Link>
+
+              <Link to="/donate" className="navbar-donate">
+                <Heart size={20} />
+                Donate
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/volunteer" className="navbar-community">
+                <Users size={20} />
+                Volunteer
+              </Link>
+
+              <Link to="/donate" className="navbar-donate">
+                <Heart size={20} />
+                Donate
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

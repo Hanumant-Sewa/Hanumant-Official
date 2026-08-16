@@ -7,6 +7,22 @@ import Hero from "./components/Hero";
 import About from "./components/About";
 
 // Router
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Programs from "./components/Programs";
+import Campaigns from "./components/Campaigns";
+import Impact from "./components/Impact";
+import Gallery from "./components/Gallery";
+import Events from "./components/Events";
+import Testimonials from "./components/Testimonials";
+import DonateSection from "./components/DonateSection";
+import Volunteer from "./components/Volunteer";
+import FAQ from "./components/FAQ";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
+// ADDED
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Authentication
@@ -31,25 +47,31 @@ import VolunteerTasks from "./pages/VolunteerTasks";
 import VolunteerImpact from "./pages/VolunteerImpact";
 import VolunteerCertificates from "./pages/VolunteerCertificates";
 
-
 function App() {
   return (
+    // ADDED
     <BrowserRouter>
-
       <Navbar />
 
       <Routes>
-
-        {/* =========================
-            HOME
-        ========================== */}
-
+        {/* HOME - YOUR EXISTING COMPONENTS */}
         <Route
           path="/"
           element={
             <>
               <Hero />
               <About />
+              <Programs />
+              <Impact />
+              <Campaigns />
+              <Gallery />
+              <Events />
+              <Testimonials />
+              <DonateSection />
+              <Volunteer />
+              <FAQ />
+              <Contact />
+              <Footer />
             </>
           }
         />
@@ -93,16 +115,16 @@ function App() {
           path="/donate"
           element={<Donate />}
         />
+        {/* INTERNAL PAGES - ADDED */}
+        <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/donate/checkout"
-          element={<DonationCheckout />}
-        />
+        <Route path="/register" element={<Register />} />
 
-        <Route
-          path="/donate/receipt/:id"
-          element={<DonationReceipt />}
-        />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        <Route path="/donate" element={<Donate />} />
+
+        <Route path="/donate/checkout" element={<DonationCheckout />} />
 
 
         {/* =================================================
@@ -193,10 +215,11 @@ function App() {
           element={<VolunteerCertificates />}
         />
 
+        <Route path="/donate/receipt/:id" element={<DonationReceipt />} />
       </Routes>
-
     </BrowserRouter>
   );
 }
 
 export default App;
+

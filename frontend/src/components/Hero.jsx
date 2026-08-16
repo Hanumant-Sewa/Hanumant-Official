@@ -38,41 +38,40 @@ function Hero() {
             <span></span>
           </div>
 
+          <h3 className="hero-theme">₹50. One Person. One Meal. One Month.</h3>
+
           <p>
-            HanumantSeva Foundation is dedicated to serving
-            humanity, supporting communities, and creating a
-            better tomorrow through compassion and selfless service.
+            You don't have to do everything to help someone. Sometimes, one
+            small contribution can become someone's meal.
           </p>
 
-
-          {/* =========================
-              BUTTONS
-          ========================== */}
-
           <div className="hero-buttons">
-
-            {/* DONATE BUTTON */}
-
-            <Link
-              to="/login"
-              className="hero-btn hero-btn-primary"
-            >
-              <Heart size={25} />
-              Donate Now
+            <Link to="/donate" className="hero-btn hero-btn-primary">
+              <Heart size={20} />
+              Support 1 Person – ₹50
             </Link>
 
+            <Link to="/community" className="hero-btn hero-btn-outline">
+              <Users size={25} />
+              Join Our Community
+            </Link>
+          </div>
 
-            {/* VOLUNTEER BUTTON */}
+          <p className="hero-founder">Founded in 2026 by Manisha Nigam</p>
 
-            <Link
-              to="/volunteer"
-              className="hero-btn hero-btn-outline"
-            >
+          {/* BUTTONS */}
+          {/* <div className="hero-buttons">
+            <Link to="/login" className="hero-btn hero-btn-primary">
+              <Heart size={25} />
+              Donate Now
+            </Link> */}
+
+          {/* Your other button */}
+          {/* <Link to="/volunteer" className="hero-btn hero-btn-outline">
               <Users size={25} />
               Become a Volunteer
             </Link>
-
-          </div>
+          </div> */}
 
 
           {/* =========================
