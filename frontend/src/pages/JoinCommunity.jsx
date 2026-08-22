@@ -8,7 +8,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import "./JoinCommunity.css";
+import "../css/JoinCommunity.css";
 
 function JoinCommunity() {
   const navigate = useNavigate();

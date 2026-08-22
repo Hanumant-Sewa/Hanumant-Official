@@ -1008,32 +1008,6 @@
         width:calc(100% - 30px);
     }
 
-<<<<<<< HEAD
-    .volunteer-cta{
-        width:calc(100% - 30px);
-    }
-
-    .cta-image{
-        min-height:240px;
-    }
-
-    .cta-content{
-        padding:28px 22px;
-    }
-
-    .application-hero{
-        min-height:500px;
-        padding:55px 22px;
-    }
-
-    .application-section{
-        width:calc(100% - 30px);
-    }
-
-    .application-form-card{
-        padding:25px 18px;
-    }
-=======
 }
 
 /* =========================================================
@@ -2135,5 +2109,4 @@
     padding: 30px 20px;
   }
 
->>>>>>> 65b865cd0c33b80361f9335af657f7405ed36c66
 }
