@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
-import "./Community.css";
+import "../css/Community.css";
 
 function Community() {
   const impactLevels = [

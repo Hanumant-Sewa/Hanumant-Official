@@ -84,17 +84,17 @@
     box-shadow: 0 10px 24px rgba(180, 83, 9, 0.25);
 }
 /* Logo */
-
-.navbar-logo {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
+.navbar-logo{
+    display:flex;
+    align-items:center;
+    flex-shrink:0;
 }
 
-.navbar-logo-image {
-  width: clamp(180px, 16vw, 250px);
-  height: auto;
-  display: block;
+.navbar-logo-image{
+    width:160px;
+    height:auto;
+    display:block;
+    object-fit:contain;
 }
 
 /* Navigation */
