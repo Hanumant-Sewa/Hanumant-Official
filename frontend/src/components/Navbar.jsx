@@ -1,4 +1,5 @@
-import { Heart, Users } from "lucide-react";
+import { useState } from "react";
+import { Heart, Users, Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
@@ -8,6 +9,9 @@ function Navbar() {
 
   // Temporary until authentication is connected
   const isLoggedIn = false;
+
+  // ADDED: Mobile menu state
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className="navbar">
@@ -77,6 +81,80 @@ function Navbar() {
             </>
           )}
         </div>
+
+        <button
+          className="mobile-menu-button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          {menuOpen ? <X size={26} /> : <Menu size={26} />}
+        </button>
+
+        {/* ADDED: Mobile navigation menu */}
+        {menuOpen && (
+          <div className="mobile-menu">
+
+            {isHomePage ? (
+              <>
+                <Link to="/" onClick={() => setMenuOpen(false)}>
+                  Home
+                </Link>
+
+                <a href="#about" onClick={() => setMenuOpen(false)}>
+                  About
+                </a>
+
+                <a href="#programs" onClick={() => setMenuOpen(false)}>
+                  Programs
+                </a>
+
+                <a href="#impact" onClick={() => setMenuOpen(false)}>
+                  Impact
+                </a>
+
+                <a href="#campaigns" onClick={() => setMenuOpen(false)}>
+                  Campaigns
+                </a>
+              </>
+            ) : (
+              <>
+                <Link to="/" onClick={() => setMenuOpen(false)}>
+                  Home
+                </Link>
+
+                <Link to="/" onClick={() => setMenuOpen(false)}>
+                  Dashboard
+                </Link>
+              </>
+            )}
+
+            {/* Mobile Volunteer */}
+            {!isLoggedIn && (
+              <Link
+                to="/volunteer"
+                className="mobile-volunteer"
+                onClick={() => setMenuOpen(false)}
+              >
+                <Users size={19} />
+                Volunteer
+              </Link>
+            )}
+
+            {/* Mobile Donate */}
+            {!isLoggedIn && (
+              <Link
+                to="/login"
+                className="mobile-donate"
+                onClick={() => setMenuOpen(false)}
+              >
+                <Heart size={19} />
+                Donate
+              </Link>
+            )}
+
+          </div>
+        )}
+
       </div>
     </header>
   );
