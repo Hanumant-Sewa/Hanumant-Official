@@ -1,6 +1,8 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import "dotenv/config";
+
+import authRoutes from "./src/routes/authRoutes.js";
 
 const app = express();
 
@@ -9,9 +11,11 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json({
-    message: "HanumantSeva Backend is running",
+    message: "Hanumant Seva Backend is running",
   });
 });
+
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
