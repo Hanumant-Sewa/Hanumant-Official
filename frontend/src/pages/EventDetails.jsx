@@ -12,7 +12,7 @@ import {
   Share2,
 } from "lucide-react";
 
-import "../Volunteer.css";
+import "../css/Volunteer.css";
 
 const EventDetails = () => {
   const navigate = useNavigate();
@@ -113,7 +113,7 @@ const EventDetails = () => {
         eventId,
         eventName: event.title,
         joined: true,
-      })
+      }),
     );
 
     alert("You have successfully joined this event!");
@@ -123,263 +123,169 @@ const EventDetails = () => {
 
   return (
     <div className="event-details-page">
-
       {/* =========================================
           HERO IMAGE
       ========================================== */}
 
       <section className="event-details-hero">
-
-        <img
-          src={event.image}
-          alt={event.title}
-        />
+        <img src={event.image} alt={event.title} />
 
         <div className="event-details-overlay"></div>
 
         <div className="event-details-hero-content">
-
           <button
             type="button"
             className="back-button event-back-button"
-            onClick={() =>
-              navigate("/volunteer/events")
-            }
+            onClick={() => navigate("/volunteer/events")}
           >
             <ArrowLeft size={17} />
             Back to Events
           </button>
 
-          <span className="event-details-category">
-            {event.category}
-          </span>
+          <span className="event-details-category">{event.category}</span>
 
-          <h1>
-            {event.title}
-          </h1>
-
+          <h1>{event.title}</h1>
         </div>
-
       </section>
-
 
       {/* =========================================
           DETAILS MAIN
       ========================================== */}
 
       <main className="event-details-main">
-
         <div className="event-details-grid">
-
           {/* =====================================
               LEFT CONTENT
           ====================================== */}
 
           <section className="event-details-content">
-
             <div className="event-details-card">
+              <span className="card-small-label">ABOUT THIS EVENT</span>
 
-              <span className="card-small-label">
-                ABOUT THIS EVENT
-              </span>
+              <h2>Make a Difference Together</h2>
 
-              <h2>
-                Make a Difference Together
-              </h2>
+              <p>{event.description}</p>
 
-              <p>
-                {event.description}
-              </p>
-
-              <p>
-                {event.about}
-              </p>
-
+              <p>{event.about}</p>
             </div>
-
 
             {/* =================================
                 WHAT YOU WILL DO
             ================================== */}
 
             <div className="event-details-card">
+              <span className="card-small-label">VOLUNTEER ROLE</span>
 
-              <span className="card-small-label">
-                VOLUNTEER ROLE
-              </span>
-
-              <h2>
-                What You Will Do
-              </h2>
+              <h2>What You Will Do</h2>
 
               <div className="event-role-list">
-
                 <div>
                   <CheckCircle size={18} />
-                  <span>
-                    Support the event team during the activity.
-                  </span>
+                  <span>Support the event team during the activity.</span>
                 </div>
 
                 <div>
                   <CheckCircle size={18} />
-                  <span>
-                    Help organize materials and supplies.
-                  </span>
+                  <span>Help organize materials and supplies.</span>
                 </div>
 
                 <div>
                   <CheckCircle size={18} />
-                  <span>
-                    Assist people participating in the event.
-                  </span>
+                  <span>Assist people participating in the event.</span>
                 </div>
 
                 <div>
                   <CheckCircle size={18} />
-                  <span>
-                    Follow instructions given by the coordinator.
-                  </span>
+                  <span>Follow instructions given by the coordinator.</span>
                 </div>
 
                 <div>
                   <CheckCircle size={18} />
-                  <span>
-                    Work together with other volunteers.
-                  </span>
+                  <span>Work together with other volunteers.</span>
                 </div>
-
               </div>
-
             </div>
-
 
             {/* =================================
                 EVENT IMAGE
             ================================== */}
 
             <div className="event-details-image-card">
-
-              <img
-                src={event.image}
-                alt={event.title}
-              />
+              <img src={event.image} alt={event.title} />
 
               <div>
-
                 <Heart size={20} />
 
-                <span>
-                  Your contribution matters.
-                </span>
-
+                <span>Your contribution matters.</span>
               </div>
-
             </div>
-
           </section>
-
 
           {/* =====================================
               RIGHT SIDEBAR
           ====================================== */}
 
           <aside className="event-details-sidebar">
-
             <div className="event-info-box">
+              <span className="card-small-label">EVENT INFORMATION</span>
 
-              <span className="card-small-label">
-                EVENT INFORMATION
-              </span>
-
-              <h2>
-                Event Details
-              </h2>
-
+              <h2>Event Details</h2>
 
               {/* Date */}
 
               <div className="event-info-row">
-
                 <div className="event-info-icon">
                   <CalendarDays size={19} />
                 </div>
 
                 <div>
-                  <small>
-                    DATE
-                  </small>
+                  <small>DATE</small>
 
-                  <strong>
-                    {event.date}
-                  </strong>
+                  <strong>{event.date}</strong>
                 </div>
-
               </div>
-
 
               {/* Time */}
 
               <div className="event-info-row">
-
                 <div className="event-info-icon">
                   <Clock3 size={19} />
                 </div>
 
                 <div>
-                  <small>
-                    TIME
-                  </small>
+                  <small>TIME</small>
 
-                  <strong>
-                    {event.time}
-                  </strong>
+                  <strong>{event.time}</strong>
                 </div>
-
               </div>
-
 
               {/* Location */}
 
               <div className="event-info-row">
-
                 <div className="event-info-icon">
                   <MapPin size={19} />
                 </div>
 
                 <div>
-                  <small>
-                    LOCATION
-                  </small>
+                  <small>LOCATION</small>
 
-                  <strong>
-                    {event.location}
-                  </strong>
+                  <strong>{event.location}</strong>
                 </div>
-
               </div>
-
 
               {/* Volunteers */}
 
               <div className="event-info-row">
-
                 <div className="event-info-icon">
                   <Users size={19} />
                 </div>
 
                 <div>
-                  <small>
-                    VOLUNTEERS
-                  </small>
+                  <small>VOLUNTEERS</small>
 
-                  <strong>
-                    {event.volunteers}
-                  </strong>
+                  <strong>{event.volunteers}</strong>
                 </div>
-
               </div>
-
 
               {/* Join */}
 
@@ -393,16 +299,13 @@ const EventDetails = () => {
                 <ArrowRight size={17} />
               </button>
 
-
               {/* Share */}
 
               <button
                 type="button"
                 className="share-event-button"
                 onClick={() => {
-                  navigator.clipboard?.writeText(
-                    window.location.href
-                  );
+                  navigator.clipboard?.writeText(window.location.href);
 
                   alert("Event link copied!");
                 }}
@@ -410,49 +313,36 @@ const EventDetails = () => {
                 <Share2 size={17} />
                 Share Event
               </button>
-
             </div>
-
 
             {/* =================================
                 REMINDER CARD
             ================================== */}
 
             <div className="event-reminder-card">
-
               <div className="event-reminder-icon">
                 <Clock3 size={21} />
               </div>
 
-              <h3>
-                Be Prepared
-              </h3>
+              <h3>Be Prepared</h3>
 
               <p>
-                Please arrive at least 15 minutes before
-                the event starts and follow the coordinator's
-                instructions.
+                Please arrive at least 15 minutes before the event starts and
+                follow the coordinator's instructions.
               </p>
-
             </div>
-
           </aside>
-
         </div>
-
 
         {/* =========================================
             BOTTOM NAVIGATION
         ========================================== */}
 
         <div className="event-details-bottom">
-
           <button
             type="button"
             className="outline-button"
-            onClick={() =>
-              navigate("/volunteer/events")
-            }
+            onClick={() => navigate("/volunteer/events")}
           >
             <ArrowLeft size={17} />
             All Events
@@ -461,18 +351,13 @@ const EventDetails = () => {
           <button
             type="button"
             className="outline-button"
-            onClick={() =>
-              navigate("/volunteer/dashboard")
-            }
+            onClick={() => navigate("/volunteer/dashboard")}
           >
             Dashboard
             <ArrowRight size={17} />
           </button>
-
         </div>
-
       </main>
-
     </div>
   );
 };
