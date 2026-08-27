@@ -14,7 +14,7 @@ import {
   Send,
 } from "lucide-react";
 
-import "../Volunteer.css";
+import "../css/Volunteer.css";
 
 const VolunteerApplication = () => {
   const navigate = useNavigate();

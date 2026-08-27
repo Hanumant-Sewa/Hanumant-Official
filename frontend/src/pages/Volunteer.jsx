@@ -14,7 +14,7 @@ import {
   Megaphone,
 } from "lucide-react";
 
-import "../Volunteer.css";
+import "../css/Volunteer.css";
 
 function Volunteer() {
   const navigate = useNavigate();
@@ -60,37 +60,25 @@ function Volunteer() {
 
   return (
     <div className="volunteer-page">
-
       {/* =========================================
           HERO SECTION
       ========================================== */}
       <section className="volunteer-hero">
-
         <div className="hero-overlay"></div>
-        
 
         <div className="hero-content">
-
           <div className="hero-text">
-            
-
-            <span className="hero-small-title">
-              HANUMANT SEVA
-            </span>
+            <span className="hero-small-title">HANUMANT SEVA</span>
 
             <h1>
-              Become a
-              <span> Volunteer</span>
+              Become a<span> Volunteer</span>
             </h1>
 
-            <h2>
-              Give your time. Create real impact.
-            </h2>
+            <h2>Give your time. Create real impact.</h2>
 
             <p>
-              Join Hanumant Seva and become a part of a
-              community that serves people, supports
-              families and spreads kindness.
+              Join Hanumant Seva and become a part of a community that serves
+              people, supports families and spreads kindness.
             </p>
 
             <button
@@ -100,16 +88,11 @@ function Volunteer() {
               Apply as Volunteer
               <ArrowRight size={19} />
             </button>
-
           </div>
-
-          
-
         </div>
 
         {/* Hero Bottom Stats */}
         <div className="hero-stats">
-
           <div className="stat-box">
             <div className="stat-icon">
               <Users size={28} />
@@ -153,17 +136,13 @@ function Volunteer() {
               <p>Campaigns</p>
             </div>
           </div>
-
         </div>
-
       </section>
-
 
       {/* =========================================
           INTRODUCTION SECTION
       ========================================== */}
       <section className="volunteer-intro">
-
         <div className="section-image">
           <img
             src="/images/volunteer-service.jpeg"
@@ -172,10 +151,7 @@ function Volunteer() {
         </div>
 
         <div className="section-content">
-
-          <span className="section-label">
-            MAKE A DIFFERENCE
-          </span>
+          <span className="section-label">MAKE A DIFFERENCE</span>
 
           <h2>
             Your Time Can
@@ -183,15 +159,13 @@ function Volunteer() {
           </h2>
 
           <p>
-            Volunteering with Hanumant Seva is an opportunity
-            to give your time, skills and energy towards
-            meaningful community service.
+            Volunteering with Hanumant Seva is an opportunity to give your time,
+            skills and energy towards meaningful community service.
           </p>
 
           <p>
-            Whether you help with food distribution,
-            community activities, awareness campaigns or
-            documentation, every contribution matters.
+            Whether you help with food distribution, community activities,
+            awareness campaigns or documentation, every contribution matters.
           </p>
 
           <button
@@ -201,22 +175,15 @@ function Volunteer() {
             Start Your Journey
             <ArrowRight size={18} />
           </button>
-
         </div>
-
       </section>
-
 
       {/* =========================================
           WHY VOLUNTEER SECTION
       ========================================== */}
       <section className="why-volunteer">
-
         <div className="section-heading">
-
-          <span className="section-label">
-            WHY VOLUNTEER?
-          </span>
+          <span className="section-label">WHY VOLUNTEER?</span>
 
           <h2>
             Serve With
@@ -224,21 +191,15 @@ function Volunteer() {
           </h2>
 
           <p>
-            Become part of a community where your efforts
-            create visible and meaningful impact.
+            Become part of a community where your efforts create visible and
+            meaningful impact.
           </p>
-
         </div>
 
-
         <div className="benefits-grid">
-
           <div className="benefit-card">
             <div className="benefit-image">
-              <img
-                src="/images/benefit-impact.jpeg"
-                alt="Community impact"
-              />
+              <img src="/images/benefit-impact.jpeg" alt="Community impact" />
             </div>
 
             <div className="benefit-content">
@@ -249,12 +210,10 @@ function Volunteer() {
               <h3>Create Impact</h3>
 
               <p>
-                Make a real difference in the lives of
-                people and communities.
+                Make a real difference in the lives of people and communities.
               </p>
             </div>
           </div>
-
 
           <div className="benefit-card">
             <div className="benefit-image">
@@ -271,20 +230,13 @@ function Volunteer() {
 
               <h3>Meet People</h3>
 
-              <p>
-                Connect with people who share the same
-                spirit of service.
-              </p>
+              <p>Connect with people who share the same spirit of service.</p>
             </div>
           </div>
 
-
           <div className="benefit-card">
             <div className="benefit-image">
-              <img
-                src="/images/benefit-skills.jpeg"
-                alt="Volunteer skills"
-              />
+              <img src="/images/benefit-skills.jpeg" alt="Volunteer skills" />
             </div>
 
             <div className="benefit-content">
@@ -295,27 +247,19 @@ function Volunteer() {
               <h3>Build Skills</h3>
 
               <p>
-                Develop teamwork, leadership and
-                practical community skills.
+                Develop teamwork, leadership and practical community skills.
               </p>
             </div>
           </div>
-
         </div>
-
       </section>
-
 
       {/* =========================================
           ACTIVITIES SECTION
       ========================================== */}
       <section className="volunteer-activities">
-
         <div className="section-heading">
-
-          <span className="section-label">
-            VOLUNTEER ACTIVITIES
-          </span>
+          <span className="section-label">VOLUNTEER ACTIVITIES</span>
 
           <h2>
             Choose How You Want
@@ -323,62 +267,39 @@ function Volunteer() {
           </h2>
 
           <p>
-            Select activities according to your interests,
-            skills and availability.
+            Select activities according to your interests, skills and
+            availability.
           </p>
-
         </div>
 
-
         <div className="activities-grid">
-
           {activities.map((activity, index) => (
-            <div
-              className="activity-card"
-              key={index}
-            >
-
+            <div className="activity-card" key={index}>
               <div className="activity-image">
-                <img
-                  src={activity.image}
-                  alt={activity.title}
-                />
+                <img src={activity.image} alt={activity.title} />
               </div>
 
               <div className="activity-body">
-
-                <div className="activity-icon">
-                  {activity.icon}
-                </div>
+                <div className="activity-icon">{activity.icon}</div>
 
                 <h3>{activity.title}</h3>
 
                 <p>{activity.text}</p>
 
-                <button
-                  onClick={() =>
-                    navigate("/volunteer/application")
-                  }
-                >
+                <button onClick={() => navigate("/volunteer/application")}>
                   Join Activity
                   <ArrowRight size={16} />
                 </button>
-
               </div>
-
             </div>
           ))}
-
         </div>
-
       </section>
-
 
       {/* =========================================
           CTA SECTION
       ========================================== */}
       <section className="volunteer-cta">
-
         <div className="cta-image">
           <img
             src="/images/volunteer-group.jpeg"
@@ -387,35 +308,25 @@ function Volunteer() {
         </div>
 
         <div className="cta-content">
-
-          <span className="section-label">
-            JOIN HANUMAT SEVA
-          </span>
+          <span className="section-label">JOIN HANUMAT SEVA</span>
 
           <h2>
-            Ready to Make a
-            <span> Difference?</span>
+            Ready to Make a<span> Difference?</span>
           </h2>
 
           <p>
-            Your time, skills and kindness can become
-            someone's reason to smile.
+            Your time, skills and kindness can become someone's reason to smile.
           </p>
 
           <button
             className="orange-button"
-            onClick={() =>
-              navigate("/volunteer/application")
-            }
+            onClick={() => navigate("/volunteer/application")}
           >
             Become a Volunteer
             <ArrowRight size={19} />
           </button>
-
         </div>
-
       </section>
-
     </div>
   );
 }

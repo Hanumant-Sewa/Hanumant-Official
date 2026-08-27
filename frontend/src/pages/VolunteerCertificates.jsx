@@ -13,7 +13,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-import "../Volunteer.css";
+import "../css/Volunteer.css";
 
 function VolunteerCertificates() {
   const navigate = useNavigate();
@@ -55,15 +55,12 @@ function VolunteerCertificates() {
 
   return (
     <div className="volunteer-certificates-page">
-
       {/* =====================================================
           HERO SECTION
       ====================================================== */}
 
       <section className="certificates-page-hero">
-
         <div className="certificates-hero-content">
-
           <button
             type="button"
             className="back-button"
@@ -73,9 +70,7 @@ function VolunteerCertificates() {
             Back to Dashboard
           </button>
 
-          <span className="application-label">
-            VOLUNTEER ACHIEVEMENTS
-          </span>
+          <span className="application-label">VOLUNTEER ACHIEVEMENTS</span>
 
           <h1>
             My
@@ -83,30 +78,23 @@ function VolunteerCertificates() {
           </h1>
 
           <p>
-            Your service, dedication and contribution are
-            recognized through certificates and appreciation
-            awards.
+            Your service, dedication and contribution are recognized through
+            certificates and appreciation awards.
           </p>
-
         </div>
-
       </section>
-
 
       {/* =====================================================
           MAIN CONTENT
       ====================================================== */}
 
       <main className="certificates-page-main">
-
         {/* =================================================
             STATISTICS
         ================================================== */}
 
         <section className="certificate-stat-grid">
-
           <div className="certificate-stat-card">
-
             <div className="certificate-stat-icon">
               <Award size={23} />
             </div>
@@ -115,12 +103,9 @@ function VolunteerCertificates() {
               <span>TOTAL CERTIFICATES</span>
               <strong>{certificates.length}</strong>
             </div>
-
           </div>
 
-
           <div className="certificate-stat-card">
-
             <div className="certificate-stat-icon">
               <Trophy size={23} />
             </div>
@@ -129,12 +114,9 @@ function VolunteerCertificates() {
               <span>ACHIEVEMENTS</span>
               <strong>{certificates.length}</strong>
             </div>
-
           </div>
 
-
           <div className="certificate-stat-card">
-
             <div className="certificate-stat-icon">
               <Star size={23} />
             </div>
@@ -143,18 +125,14 @@ function VolunteerCertificates() {
               <span>VOLUNTEER STATUS</span>
               <strong>Active</strong>
             </div>
-
           </div>
-
         </section>
-
 
         {/* =================================================
             PAGE INTRO
         ================================================== */}
 
         <section className="certificates-intro">
-
           <div className="certificates-intro-icon">
             <Medal size={30} />
           </div>
@@ -168,157 +146,97 @@ function VolunteerCertificates() {
             </h2>
 
             <p>
-              Keep your certificates as a record of the
-              time, effort and service you have contributed
-              to the community.
+              Keep your certificates as a record of the time, effort and service
+              you have contributed to the community.
             </p>
           </div>
-
         </section>
-
 
         {/* =================================================
             CERTIFICATES
         ================================================== */}
 
         <section className="certificates-section">
-
           <div className="certificates-section-heading">
-
             <div>
               <span>YOUR RECORD</span>
 
-              <h2>
-                Earned Certificates
-              </h2>
+              <h2>Earned Certificates</h2>
             </div>
 
-            <div className="certificate-count">
-              {certificates.length}
-            </div>
-
+            <div className="certificate-count">{certificates.length}</div>
           </div>
 
-
           <div className="certificates-grid">
-
             {certificates.map((certificate) => (
-
-              <article
-                className="certificate-card"
-                key={certificate.id}
-              >
-
+              <article className="certificate-card" key={certificate.id}>
                 {/* Certificate Image */}
 
                 <div className="certificate-image">
-
-                  <img
-                    src={certificate.image}
-                    alt={certificate.title}
-                  />
+                  <img src={certificate.image} alt={certificate.title} />
 
                   <div className="certificate-image-overlay">
                     <Award size={30} />
                   </div>
-
                 </div>
-
 
                 {/* Certificate Content */}
 
                 <div className="certificate-content">
+                  <span className="certificate-type">{certificate.type}</span>
 
-                  <span className="certificate-type">
-                    {certificate.type}
-                  </span>
-
-                  <h3>
-                    {certificate.title}
-                  </h3>
+                  <h3>{certificate.title}</h3>
 
                   <div className="certificate-event">
-
                     <CheckCircle2 size={15} />
 
-                    <span>
-                      {certificate.event}
-                    </span>
-
+                    <span>{certificate.event}</span>
                   </div>
-
 
                   <div className="certificate-date">
-
                     <CalendarDays size={15} />
 
-                    <span>
-                      {certificate.date}
-                    </span>
-
+                    <span>{certificate.date}</span>
                   </div>
-
 
                   {/* Buttons */}
 
                   <div className="certificate-actions">
-
                     <button
                       type="button"
                       className="certificate-view-button"
-                      onClick={() =>
-                        handleViewCertificate(certificate)
-                      }
+                      onClick={() => handleViewCertificate(certificate)}
                     >
                       <Eye size={16} />
                       View
                     </button>
 
-
                     <button
                       type="button"
                       className="certificate-download-button"
-                      onClick={() =>
-                        handleDownloadCertificate(certificate)
-                      }
+                      onClick={() => handleDownloadCertificate(certificate)}
                     >
                       <Download size={16} />
                       Download
                     </button>
-
                   </div>
-
                 </div>
-
               </article>
-
             ))}
-
           </div>
-
         </section>
-
 
         {/* =================================================
             MOTIVATION SECTION
         ================================================== */}
 
         <section className="certificates-motivation">
-
           <div className="certificates-motivation-image">
-
-            <img
-              src="/images/volunteer-certificate.jpeg"
-            />
-
+            <img src="/images/volunteer-certificate.jpeg" />
           </div>
 
-
           <div className="certificates-motivation-content">
-
-            <span>
-              KEEP SERVING
-            </span>
+            <span>KEEP SERVING</span>
 
             <h2>
               Your service
@@ -326,48 +244,36 @@ function VolunteerCertificates() {
             </h2>
 
             <p>
-              Continue participating in volunteer
-              activities and create a positive impact
-              in the community.
+              Continue participating in volunteer activities and create a
+              positive impact in the community.
             </p>
 
             <button
               type="button"
               className="orange-button"
-              onClick={() =>
-                navigate("/volunteer/events")
-              }
+              onClick={() => navigate("/volunteer/events")}
             >
               Explore Events
               <ArrowRight size={17} />
             </button>
-
           </div>
-
         </section>
-
 
         {/* =================================================
             BOTTOM BUTTON
         ================================================== */}
 
         <div className="certificates-bottom-action">
-
           <button
             type="button"
             className="outline-button"
-            onClick={() =>
-              navigate("/volunteer/dashboard")
-            }
+            onClick={() => navigate("/volunteer/dashboard")}
           >
             <ArrowLeft size={17} />
             Back to Dashboard
           </button>
-
         </div>
-
       </main>
-
     </div>
   );
 }

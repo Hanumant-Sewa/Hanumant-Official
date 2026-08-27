@@ -11,7 +11,7 @@ import {
   Search,
 } from "lucide-react";
 
-import "../Volunteer.css";
+import "../css/Volunteer.css";
 
 const VolunteerEvents = () => {
   const navigate = useNavigate();
@@ -99,15 +99,12 @@ const VolunteerEvents = () => {
 
   return (
     <div className="volunteer-events-page">
-
       {/* =========================================
           HERO
       ========================================== */}
 
       <section className="events-page-hero">
-
         <div className="events-hero-content">
-
           <button
             type="button"
             className="back-button"
@@ -117,9 +114,7 @@ const VolunteerEvents = () => {
             Back to Dashboard
           </button>
 
-          <span className="application-label">
-            VOLUNTEER ACTIVITIES
-          </span>
+          <span className="application-label">VOLUNTEER ACTIVITIES</span>
 
           <h1>
             Upcoming
@@ -127,181 +122,111 @@ const VolunteerEvents = () => {
           </h1>
 
           <p>
-            Find meaningful opportunities to volunteer,
-            serve the community and make an impact.
+            Find meaningful opportunities to volunteer, serve the community and
+            make an impact.
           </p>
-
         </div>
-
       </section>
-
 
       {/* =========================================
           EVENTS MAIN
       ========================================== */}
 
       <main className="events-page-main">
-
         {/* =====================================
             TOP BAR
         ====================================== */}
 
         <div className="events-top-bar">
-
           <div>
+            <span className="card-small-label">FIND YOUR OPPORTUNITY</span>
 
-            <span className="card-small-label">
-              FIND YOUR OPPORTUNITY
-            </span>
-
-            <h2>
-              Available Events
-            </h2>
-
+            <h2>Available Events</h2>
           </div>
 
           <div className="events-count">
             <CalendarDays size={17} />
             {events.length} Events Available
           </div>
-
         </div>
-
 
         {/* =====================================
             SEARCH / FILTER
         ====================================== */}
 
         <div className="events-filter-bar">
-
           <div className="events-search">
-
             <Search size={18} />
 
-            <input
-              type="text"
-              placeholder="Search events..."
-            />
-
+            <input type="text" placeholder="Search events..." />
           </div>
 
-          <button
-            type="button"
-            className="event-filter active"
-          >
+          <button type="button" className="event-filter active">
             All Events
           </button>
 
-          <button
-            type="button"
-            className="event-filter"
-          >
+          <button type="button" className="event-filter">
             Food Support
           </button>
 
-          <button
-            type="button"
-            className="event-filter"
-          >
+          <button type="button" className="event-filter">
             Awareness
           </button>
-
         </div>
-
 
         {/* =====================================
             EVENT CARDS
         ====================================== */}
 
         <div className="events-grid">
-
           {events.map((event) => (
-
-            <article
-              className="volunteer-event-card"
-              key={event.id}
-            >
-
+            <article className="volunteer-event-card" key={event.id}>
               {/* Image */}
 
               <div className="event-card-image">
+                <img src={event.image} alt={event.title} />
 
-                <img
-                  src={event.image}
-                  alt={event.title}
-                />
-
-                <span className="event-category">
-                  {event.category}
-                </span>
+                <span className="event-category">{event.category}</span>
 
                 <div className="event-card-date">
+                  <span>{event.month}</span>
 
-                  <span>
-                    {event.month}
-                  </span>
-
-                  <strong>
-                    {event.date}
-                  </strong>
-
+                  <strong>{event.date}</strong>
                 </div>
-
               </div>
-
 
               {/* Content */}
 
               <div className="event-card-content">
+                <h3>{event.title}</h3>
 
-                <h3>
-                  {event.title}
-                </h3>
-
-                <p className="event-description">
-                  {event.description}
-                </p>
-
+                <p className="event-description">{event.description}</p>
 
                 <div className="event-meta">
-
                   <div>
                     <MapPin size={15} />
 
-                    <span>
-                      {event.location}
-                    </span>
+                    <span>{event.location}</span>
                   </div>
 
                   <div>
                     <Clock3 size={15} />
 
-                    <span>
-                      {event.time}
-                    </span>
+                    <span>{event.time}</span>
                   </div>
 
                   <div>
                     <Users size={15} />
 
-                    <span>
-                      {event.volunteers}
-                    </span>
+                    <span>{event.volunteers}</span>
                   </div>
-
                 </div>
 
-
                 <div className="event-card-footer">
-
                   <button
                     type="button"
                     className="event-details-button"
-                    onClick={() =>
-                      navigate(
-                        `/volunteer/events/${event.id}`
-                      )
-                    }
+                    onClick={() => navigate(`/volunteer/events/${event.id}`)}
                   >
                     View Details
                     <ArrowRight size={16} />
@@ -314,38 +239,26 @@ const VolunteerEvents = () => {
                   >
                     <Heart size={17} />
                   </button>
-
                 </div>
-
               </div>
-
             </article>
-
           ))}
-
         </div>
-
 
         {/* =====================================
             MOTIVATION SECTION
         ====================================== */}
 
         <section className="events-motivation">
-
           <div className="events-motivation-image">
-
             <img
               src="/images/volunteer-group.jpeg"
               alt="Volunteers helping community"
             />
-
           </div>
 
           <div className="events-motivation-content">
-
-            <span>
-              SERVE WITH PURPOSE
-            </span>
+            <span>SERVE WITH PURPOSE</span>
 
             <h2>
               There is always
@@ -353,48 +266,36 @@ const VolunteerEvents = () => {
             </h2>
 
             <p>
-              Choose an event that matches your interests
-              and availability. Your time and effort can
-              create a real difference in someone's life.
+              Choose an event that matches your interests and availability. Your
+              time and effort can create a real difference in someone's life.
             </p>
 
             <button
               type="button"
               className="orange-button"
-              onClick={() =>
-                navigate("/volunteer/dashboard")
-              }
+              onClick={() => navigate("/volunteer/dashboard")}
             >
               Back to Dashboard
               <ArrowRight size={17} />
             </button>
-
           </div>
-
         </section>
-
 
         {/* =====================================
             BOTTOM BUTTON
         ====================================== */}
 
         <div className="events-bottom-action">
-
           <button
             type="button"
             className="outline-button"
-            onClick={() =>
-              navigate("/volunteer/dashboard")
-            }
+            onClick={() => navigate("/volunteer/dashboard")}
           >
             <ArrowLeft size={17} />
             Back to Dashboard
           </button>
-
         </div>
-
       </main>
-
     </div>
   );
 };
