@@ -12,6 +12,7 @@ import Layout from "./components/Layout";
 
 // Landing Page Sections
 import Hero from "./components/Hero";
+import UpcomingEvent from "./components/UpcomingEvent";
 import About from "./components/About";
 import Programs from "./components/Programs";
 import Campaigns from "./components/Campaigns";
@@ -70,6 +71,7 @@ function App() {
             path="/"
             element={
               <>
+                <UpcomingEvent />
                 <Hero />
                 <About />
                 <Programs />
