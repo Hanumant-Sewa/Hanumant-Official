@@ -35,10 +35,6 @@ function Gallery() {
           <div className="gallery-item large">
             <img src="/images/gallery5.jpg" alt="Community support" />
           </div>
-
-          <div className="gallery-item">
-            <img src="/images/gallery6.jpg" alt="Volunteer service" />
-          </div>
         </div>
       </div>
     </section>
