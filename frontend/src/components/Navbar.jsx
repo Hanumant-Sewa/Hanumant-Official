@@ -3,298 +3,310 @@ import { Heart, Users, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function Navbar() {
-  const location = useLocation();
-  const navigate = useNavigate();
+const location = useLocation();
+const navigate = useNavigate();
 
-  const isHomePage = location.pathname === "/";
+const isHomePage = location.pathname === "/";
 
-  // Temporary until authentication is connected
-  const isLoggedIn = false;
+// Check whether the user is logged in
+const isLoggedIn = !!localStorage.getItem("token");
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+const [menuOpen, setMenuOpen] = useState(false);
+const [activeSection, setActiveSection] = useState("home");
 
-  /* =========================
-     SCROLL SPY
-  ========================= */
+/* =========================
+SCROLL SPY
+========================= */
 
-  useEffect(() => {
-    if (!isHomePage) return;
+useEffect(() => {
+if (!isHomePage) return;
 
-    const sections = ["home", "about", "programs", "impact", "campaigns"];
+const sections = ["home", "about", "programs", "impact", "campaigns"];
 
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 150;
+const handleScroll = () => {
+  const scrollPosition = window.scrollY + 150;
 
-      let currentSection = "home";
+  let currentSection = "home";
 
-      sections.forEach((section) => {
-        const element = document.getElementById(section);
+  sections.forEach((section) => {
+    const element = document.getElementById(section);
 
-        if (element && scrollPosition >= element.offsetTop) {
-          currentSection = section;
-        }
-      });
-
-      setActiveSection(currentSection);
-    };
-
-    handleScroll();
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [isHomePage]);
-
-  /* =========================
-     HOME CLICK
-  ========================= */
-
-  const handleHomeClick = (e) => {
-    e.preventDefault();
-
-    setMenuOpen(false);
-    setActiveSection("home");
-
-    if (location.pathname !== "/") {
-      navigate("/");
-      return;
+    if (element && scrollPosition >= element.offsetTop) {
+      currentSection = section;
     }
+  });
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
+  setActiveSection(currentSection);
+};
 
-  /* =========================
-     SECTION CLICK
-  ========================= */
+handleScroll();
 
-  const handleSectionClick = () => {
-    setMenuOpen(false);
-  };
+window.addEventListener("scroll", handleScroll);
 
-  return (
-    <header className="navbar">
-      <div className="navbar-container">
-        {/* ================= LOGO ================= */}
+return () => {
+  window.removeEventListener("scroll", handleScroll);
+};
 
-        <Link to="/" className="navbar-logo">
-          <img
-            src="/images/logo.png"
-            alt="Hanumat Seva"
-            className="navbar-logo-image"
-          />
-        </Link>
+}, [isHomePage]);
 
-        {/* ================= NAVIGATION ================= */}
+/* =========================
+HOME CLICK
+========================= */
 
-        <nav className="nav-links">
-          {isHomePage ? (
-            <>
-              {/* HOME */}
+const handleHomeClick = (e) => {
+e.preventDefault();
 
-              <a
-                href="/"
-                className={activeSection === "home" ? "active" : ""}
-                onClick={handleHomeClick}
-              >
-                Home
-              </a>
+setMenuOpen(false);
+setActiveSection("home");
 
-              {/* ABOUT */}
+if (location.pathname !== "/") {
+  navigate("/");
+  return;
+}
 
-              <a
-                href="#about"
-                className={activeSection === "about" ? "active" : ""}
-                onClick={handleSectionClick}
-              >
-                About
-              </a>
+window.scrollTo({
+  top: 0,
+  behavior: "smooth",
+});
 
-              {/* PROGRAMS */}
+};
 
-              <a
-                href="#programs"
-                className={activeSection === "programs" ? "active" : ""}
-                onClick={handleSectionClick}
-              >
-                Programs
-              </a>
+/* =========================
+SECTION CLICK
+========================= */
 
-              {/* IMPACT */}
+const handleSectionClick = () => {
+setMenuOpen(false);
+};
 
-              <a
-                href="#impact"
-                className={activeSection === "impact" ? "active" : ""}
-                onClick={handleSectionClick}
-              >
-                Impact
-              </a>
+return ( <header className="navbar"> <div className="navbar-container">
+{/* ================= LOGO ================= */}
 
-              {/* CAMPAIGNS */}
+    <Link to="/" className="navbar-logo">
+      <img
+        src="/images/logo.png"
+        alt="Hanumat Seva"
+        className="navbar-logo-image"
+      />
+    </Link>
 
-              <a
-                href="#campaigns"
-                className={activeSection === "campaigns" ? "active" : ""}
-                onClick={handleSectionClick}
-              >
-                Campaigns
-              </a>
-            </>
-          ) : (
-            <>
-              <Link to="/">Home</Link>
+    {/* ================= NAVIGATION ================= */}
 
-              <Link to="/community">Community</Link>
-            </>
-          )}
-        </nav>
+    <nav className="nav-links">
+      {isHomePage ? (
+        <>
+          {/* HOME */}
 
-        {/* ================= ACTIONS ================= */}
+          <a
+            href="/"
+            className={activeSection === "home" ? "active" : ""}
+            onClick={handleHomeClick}
+          >
+            Home
+          </a>
 
-        <div className="navbar-actions">
-          {isLoggedIn ? (
-            <>
-              <Link to="/dashboard" className="navbar-community">
-                Dashboard
-              </Link>
+          {/* ABOUT */}
 
-              <Link to="/profile" className="navbar-community">
-                Profile
-              </Link>
+          <a
+            href="#about"
+            className={activeSection === "about" ? "active" : ""}
+            onClick={handleSectionClick}
+          >
+            About
+          </a>
 
-              <Link to="/donate" className="navbar-donate">
-                <Heart size={20} />
-                Donate
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to="/volunteer" className="navbar-community">
-                <Users size={20} />
-                Volunteer
-              </Link>
+          {/* PROGRAMS */}
 
-              <Link to="/login" className="navbar-donate">
-                <Heart size={20} />
-                Donate
-              </Link>
-            </>
-          )}
-        </div>
+          <a
+            href="#programs"
+            className={activeSection === "programs" ? "active" : ""}
+            onClick={handleSectionClick}
+          >
+            Programs
+          </a>
 
-        {/* ================= MOBILE BUTTON ================= */}
+          {/* IMPACT */}
 
-        <button
-          className="mobile-menu-button"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle navigation menu"
-        >
-          {menuOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
+          <a
+            href="#impact"
+            className={activeSection === "impact" ? "active" : ""}
+            onClick={handleSectionClick}
+          >
+            Impact
+          </a>
 
-        {/* ================= MOBILE MENU ================= */}
+          {/* CAMPAIGNS */}
 
-        {menuOpen && (
-          <div className="mobile-menu">
-            {isHomePage ? (
-              <>
-                {/* HOME */}
+          <a
+            href="#campaigns"
+            className={activeSection === "campaigns" ? "active" : ""}
+            onClick={handleSectionClick}
+          >
+            Campaigns
+          </a>
+        </>
+      ) : (
+        <>
+          <Link to="/">Home</Link>
 
-                <a
-                  href="/"
-                  className={activeSection === "home" ? "active" : ""}
-                  onClick={handleHomeClick}
-                >
-                  Home
-                </a>
+          <Link to="/community">Community</Link>
+        </>
+      )}
+    </nav>
 
-                {/* ABOUT */}
+    {/* ================= ACTIONS ================= */}
 
-                <a
-                  href="#about"
-                  className={activeSection === "about" ? "active" : ""}
-                  onClick={handleSectionClick}
-                >
-                  About
-                </a>
+    <div className="navbar-actions">
+      {isLoggedIn ? (
+        <>
+          <Link to="/dashboard" className="navbar-community">
+            Dashboard
+          </Link>
 
-                {/* PROGRAMS */}
+          <Link to="/profile" className="navbar-community">
+            Profile
+          </Link>
 
-                <a
-                  href="#programs"
-                  className={activeSection === "programs" ? "active" : ""}
-                  onClick={handleSectionClick}
-                >
-                  Programs
-                </a>
+          <Link to="/donate" className="navbar-donate">
+            <Heart size={20} />
+            Donate
+          </Link>
+        </>
+      ) : (
+        <>
+          <Link
+            to="/login"
+            state={{ intendedPage: "/volunteer" }}
+            className="navbar-community"
+          >
+            <Users size={20} />
+            Volunteer
+          </Link>
 
-                {/* IMPACT */}
+          <Link
+            to="/login"
+            state={{ intendedPage: "/donate" }}
+            className="navbar-donate"
+          >
+            <Heart size={20} />
+            Donate
+          </Link>
+        </>
+      )}
+    </div>
 
-                <a
-                  href="#impact"
-                  className={activeSection === "impact" ? "active" : ""}
-                  onClick={handleSectionClick}
-                >
-                  Impact
-                </a>
+    {/* ================= MOBILE BUTTON ================= */}
 
-                {/* CAMPAIGNS */}
+    <button
+      className="mobile-menu-button"
+      onClick={() => setMenuOpen(!menuOpen)}
+      aria-label="Toggle navigation menu"
+    >
+      {menuOpen ? <X size={26} /> : <Menu size={26} />}
+    </button>
 
-                <a
-                  href="#campaigns"
-                  className={activeSection === "campaigns" ? "active" : ""}
-                  onClick={handleSectionClick}
-                >
-                  Campaigns
-                </a>
-              </>
-            ) : (
-              <>
-                <Link to="/" onClick={() => setMenuOpen(false)}>
-                  Home
-                </Link>
+    {/* ================= MOBILE MENU ================= */}
 
-                <Link to="/community" onClick={() => setMenuOpen(false)}>
-                  Community
-                </Link>
-              </>
-            )}
+    {menuOpen && (
+      <div className="mobile-menu">
+        {isHomePage ? (
+          <>
+            {/* HOME */}
 
-            {/* MOBILE VOLUNTEER */}
+            <a
+              href="/"
+              className={activeSection === "home" ? "active" : ""}
+              onClick={handleHomeClick}
+            >
+              Home
+            </a>
 
-            {!isLoggedIn && (
-              <Link
-                to="/volunteer"
-                className="mobile-volunteer"
-                onClick={() => setMenuOpen(false)}
-              >
-                <Users size={19} />
-                Volunteer
-              </Link>
-            )}
+            {/* ABOUT */}
 
-            {/* MOBILE DONATE */}
+            <a
+              href="#about"
+              className={activeSection === "about" ? "active" : ""}
+              onClick={handleSectionClick}
+            >
+              About
+            </a>
 
-            {!isLoggedIn && (
-              <Link
-                to="/login"
-                className="mobile-donate"
-                onClick={() => setMenuOpen(false)}
-              >
-                <Heart size={19} />
-                Donate
-              </Link>
-            )}
-          </div>
+            {/* PROGRAMS */}
+
+            <a
+              href="#programs"
+              className={activeSection === "programs" ? "active" : ""}
+              onClick={handleSectionClick}
+            >
+              Programs
+            </a>
+
+            {/* IMPACT */}
+
+            <a
+              href="#impact"
+              className={activeSection === "impact" ? "active" : ""}
+              onClick={handleSectionClick}
+            >
+              Impact
+            </a>
+
+            {/* CAMPAIGNS */}
+
+            <a
+              href="#campaigns"
+              className={activeSection === "campaigns" ? "active" : ""}
+              onClick={handleSectionClick}
+            >
+              Campaigns
+            </a>
+          </>
+        ) : (
+          <>
+            <Link to="/" onClick={() => setMenuOpen(false)}>
+              Home
+            </Link>
+
+            <Link to="/community" onClick={() => setMenuOpen(false)}>
+              Community
+            </Link>
+          </>
+        )}
+
+        {/* MOBILE VOLUNTEER */}
+
+        {!isLoggedIn && (
+          <Link
+            to="/login"
+            state={{ intendedPage: "/volunteer" }}
+            className="mobile-volunteer"
+            onClick={() => setMenuOpen(false)}
+          >
+            <Users size={19} />
+            Volunteer
+          </Link>
+        )}
+
+        {/* MOBILE DONATE */}
+
+        {!isLoggedIn && (
+          <Link
+            to="/login"
+            state={{ intendedPage: "/donate" }}
+            className="mobile-donate"
+            onClick={() => setMenuOpen(false)}
+          >
+            <Heart size={19} />
+            Donate
+          </Link>
         )}
       </div>
-    </header>
-  );
+    )}
+  </div>
+</header>
+
+)
 }
 
 export default Navbar;
+
