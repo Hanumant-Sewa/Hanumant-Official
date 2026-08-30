@@ -388,35 +388,26 @@ const ApplicationStatus = () => {
           </div>
 
 
-          {/* =====================================
-              ADDED: DEMO DASHBOARD ACCESS
-          ====================================== */}
+                 {/* BUTTON ACTIONS */}
+        <div className="status-bottom-actions">
 
+          {/* DEMO DASHBOARD ACCESS */}
           {canAccessDashboard && (
             <div className="status-bottom-action">
-
               <button
                 type="button"
                 className="orange-button status-action"
-                onClick={() =>
-                  navigate("/volunteer/dashboard")
-                }
+                onClick={() => navigate("/volunteer/dashboard")}
               >
                 <LayoutDashboard size={18} />
                 Go to Volunteer Dashboard
                 <ArrowRight size={18} />
               </button>
-
             </div>
           )}
 
-
-          {/* =====================================
-              BACK HOME BUTTON
-          ====================================== */}
-
+          {/* BACK HOME BUTTON */}
           <div className="status-bottom-action">
-
             <button
               type="button"
               className="outline-button"
@@ -425,15 +416,13 @@ const ApplicationStatus = () => {
               <ArrowLeft size={17} />
               Back to Volunteer Page
             </button>
-
           </div>
 
         </div>
-
-      </section>
-
-    </div>
-  );
+      </div>
+    </section>
+  </div>
+);
 };
 
 export default ApplicationStatus;
