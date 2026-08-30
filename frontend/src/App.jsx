@@ -2,6 +2,7 @@ import "./App.css";
 import "./index.css";
 import "./css/responsive.css";
 import "./css/Volunteer.css";
+import "./css/Dashboard.css";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
@@ -53,6 +54,8 @@ import Community from "./pages/Community";
 //transparency
 import Transparency from "./pages/Transparency";
 
+import Dashboard from "./pages/Dashboard";
+
 import JoinCommunity from "./pages/JoinCommunity";
 function App() {
   return (
@@ -98,6 +101,11 @@ function App() {
           <Route path="/donate/checkout" element={<DonationCheckout />} />
 
           <Route path="/donate/receipt/:id" element={<DonationReceipt />} />
+          {/* =========================
+    MAIN DASHBOARD
+========================== */}
+
+          <Route path="/dashboard" element={<Dashboard />} />
 
           {/* =================================================
               VOLUNTEER FLOW

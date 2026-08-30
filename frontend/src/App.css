@@ -2146,8 +2146,7 @@
 }
 .donation-card{
     position:relative;
-    min-height:clamp(210px,20vw,250px);
-    padding:clamp(16px,2vw,26px);
+    padding:clamp(16px,1vw,26px);
     border:2px solid var(--border);
     box-shadow:var(--shadow-sm);
     border-radius:clamp(18px,1.8vw,24px);
@@ -2713,7 +2712,7 @@
 
 /* HERO */
 
-.dashboard-hero,
+/* .dashboard-hero, */
 .events-hero {
   min-height: 430px;
   position: relative;
@@ -3559,7 +3558,7 @@
     font-size: clamp(36px, 4vw, 52px);
     color: var(--primary);
     font-family: 'Poppins', sans-serif;
-    margin-bottom: clamp(8px, 1vw, 12px);
+    margin-bottom: clamp(5px, 0.2vw, 9px);
 }
 
 .donation-card h4 {
@@ -4022,5 +4021,425 @@ footer {
 ::selection {
     background: var(--primary);
     color: #fff;
+}
+/*login switch */
+/* ========================================
+   LOGIN TYPE SWITCH
+======================================== */
+
+.login-type {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 4px;
+    margin: 20px 0 24px;
+    background: #FFF2DE;
+    border-radius: 30px;
+}
+
+.login-type button {
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    padding: 11px 14px;
+    border-radius: 25px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.login-type button.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+}
+
+.login-type button:hover:not(.active) {
+    color: var(--primary);
+}
+
+
+/* ========================================
+   ADMIN KEY NOTE
+======================================== */
+
+.admin-key-note {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-light);
+    font-size: 11px;
+}
+
+
+/* ========================================
+   ADMIN LOGIN MESSAGE
+======================================== */
+
+.admin-login-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 12px 14px;
+    background: #FFF8F0;
+    border: 1px solid #F4C27A;
+    border-radius: 12px;
+    color: var(--text-light);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.admin-login-note svg {
+    flex-shrink: 0;
+    color: var(--primary);
+}
+/* =====================================================
+   PROFILE DROPDOWN CONTAINER
+===================================================== */
+
+.profile-dropdown-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+/* =====================================================
+   PROFILE BUTTON
+===================================================== */
+
+.navbar-profile-button {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+
+  border: none;
+  background: transparent;
+
+  color: var(--primary);
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  padding: 0.55rem 0.7rem;
+
+  cursor: pointer;
+
+  border-radius: 10px;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.navbar-profile-button:hover,
+.navbar-profile-button[aria-expanded="true"] {
+  background: var(--cream);
+  color: var(--primary-dark);
+}
+
+.navbar-profile-button svg {
+  flex-shrink: 0;
+}
+
+
+/* =====================================================
+   PROFILE NAME
+===================================================== */
+
+.profile-name {
+  max-width: 120px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* =====================================================
+   PROFILE DROPDOWN
+===================================================== */
+
+.profile-dropdown {
+  position: absolute;
+
+  top: calc(100% + 0.7rem);
+  right: 0;
+
+  width: 220px;
+
+  background: var(--white);
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+
+  padding: 0.45rem;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.14);
+
+  z-index: 2000;
+
+  animation: profileDropdownOpen 0.2s ease;
+}
+
+
+/* =====================================================
+   DROPDOWN ANIMATION
+===================================================== */
+
+@keyframes profileDropdownOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =====================================================
+   DROPDOWN BUTTONS
+===================================================== */
+
+.profile-dropdown button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  border: none;
+  background: transparent;
+
+  color: var(--text);
+
+  padding: 0.7rem 0.75rem;
+
+  border-radius: 9px;
+
+  font-size: 0.92rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.profile-dropdown button:hover {
+  background: var(--cream);
+  color: var(--primary);
+}
+
+.profile-dropdown button svg {
+  flex-shrink: 0;
+}
+
+
+/* =====================================================
+   DROPDOWN DIVIDER
+===================================================== */
+
+.profile-dropdown-divider {
+  height: 1px;
+
+  background: var(--border);
+
+  margin: 0.35rem 0.2rem;
+}
+
+
+/* =====================================================
+   LOGOUT BUTTON
+===================================================== */
+
+.profile-dropdown .logout-button {
+  color: #dc2626;
+}
+
+.profile-dropdown .logout-button:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+
+/* =====================================================
+   NON-HOME NAVIGATION BUTTON
+===================================================== */
+
+.nav-protected-link {
+  border: none;
+  background: transparent;
+
+  color: var(--text);
+
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+
+  cursor: pointer;
+
+  padding: 0;
+
+  transition: color 0.25s ease;
+}
+
+.nav-protected-link:hover {
+  color: var(--primary);
+}
+
+
+/* =====================================================
+   MOBILE PROTECTED LINK
+===================================================== */
+
+.mobile-protected-link {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  border: none;
+  background: transparent;
+
+  color: var(--text);
+
+  padding: 0.8rem;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 0.95rem;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.mobile-protected-link:hover {
+  background: var(--cream);
+  color: var(--primary);
+}
+
+
+/* =====================================================
+   MOBILE MENU BUTTONS
+===================================================== */
+
+.mobile-menu > button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  border: none;
+  background: transparent;
+
+  color: var(--text);
+
+  padding: 0.8rem;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 0.95rem;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.mobile-menu > button:hover {
+  background: var(--cream);
+  color: var(--primary);
+}
+
+
+/* =====================================================
+   MOBILE LOGOUT
+===================================================== */
+
+.mobile-menu .mobile-logout {
+  color: #dc2626;
+}
+
+.mobile-menu .mobile-logout:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+
+/* =====================================================
+   MOBILE VOLUNTEER
+===================================================== */
+
+.mobile-menu .mobile-volunteer {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+
+  color: var(--primary);
+
+  text-decoration: none;
+}
+
+
+/* =====================================================
+   MOBILE DONATE
+===================================================== */
+
+.mobile-menu .mobile-donate {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+
+  text-decoration: none;
+}
+
+
+/* =====================================================
+   RESPONSIVE PROFILE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .profile-dropdown-container {
+    display: none;
+  }
+
+}
+
+
+/* =====================================================
+   SMALL SCREENS
+===================================================== */
+
+@media (max-width: 480px) {
+
+  .mobile-menu {
+    width: 100%;
+  }
+
 }
 
