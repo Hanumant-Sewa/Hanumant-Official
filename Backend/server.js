@@ -1,13 +1,33 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import cookieParser from "cookie-parser";
 
 import authRoutes from "./src/routes/authRoutes.js";
 
 const app = express();
 
-app.use(cors());
+// =====================================================
+// CORS
+// =====================================================
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
+
+// =====================================================
+// MIDDLEWARE
+// =====================================================
+
 app.use(express.json());
+app.use(cookieParser());
+
+// =====================================================
+// TEST ROUTE
+// =====================================================
 
 app.get("/", (req, res) => {
   res.json({
@@ -15,7 +35,15 @@ app.get("/", (req, res) => {
   });
 });
 
+// =====================================================
+// AUTH ROUTES
+// =====================================================
+
 app.use("/api/auth", authRoutes);
+
+// =====================================================
+// SERVER
+// =====================================================
 
 const PORT = process.env.PORT || 5000;
 
