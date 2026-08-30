@@ -2,27 +2,52 @@ import jwt from "jsonwebtoken";
 
 const authMiddleware = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    let token = null;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    // =====================================================
+    // 1. CHECK HTTP-ONLY COOKIE
+    // =====================================================
+
+    if (req.cookies?.token) {
+      token = req.cookies.token;
+    }
+
+    // =====================================================
+    // 2. FALLBACK TO AUTHORIZATION HEADER
+    // =====================================================
+
+    if (!token) {
+      const authHeader = req.headers.authorization;
+
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1];
+      }
+    }
+
+    // =====================================================
+    // 3. TOKEN REQUIRED
+    // =====================================================
+
+    if (!token) {
       return res.status(401).json({
-        message: "Authentication token is required",
+        message: "Authentication required",
       });
     }
 
-    const token = authHeader.split(" ")[1];
+    // =====================================================
+    // 4. VERIFY JWT
+    // =====================================================
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.user = decoded;
 
     next();
   } catch (error) {
+    console.error("Auth Middleware Error:", error);
+
     return res.status(401).json({
-      message: "Invalid or expired token",
+      message: "Invalid or expired authentication",
     });
   }
 };

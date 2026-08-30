@@ -126,8 +126,210 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   role: 'role',
+  status: 'status',
+  phone: 'phone',
+  avatar: 'avatar',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.VolunteerProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bio: 'bio',
+  skills: 'skills',
+  interests: 'interests',
+  city: 'city',
+  state: 'state',
+  country: 'country',
+  availability: 'availability',
+  totalHours: 'totalHours',
+  totalEvents: 'totalEvents',
+  joinedAt: 'joinedAt',
+  isVerified: 'isVerified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.VolunteerApplicationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  volunteerProfileId: 'volunteerProfileId',
+  motivation: 'motivation',
+  experience: 'experience',
+  skills: 'skills',
+  preferredArea: 'preferredArea',
+  availability: 'availability',
+  status: 'status',
+  adminRemarks: 'adminRemarks',
+  reviewedAt: 'reviewedAt',
+  reviewedBy: 'reviewedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommunityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  image: 'image',
+  city: 'city',
+  state: 'state',
+  country: 'country',
+  isPublic: 'isPublic',
+  isActive: 'isActive',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommunityMemberScalarFieldEnum = {
+  id: 'id',
+  communityId: 'communityId',
+  userId: 'userId',
+  role: 'role',
+  status: 'status',
+  joinedAt: 'joinedAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CampaignScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  image: 'image',
+  targetAmount: 'targetAmount',
+  raisedAmount: 'raisedAmount',
+  status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DonationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  campaignId: 'campaignId',
+  amount: 'amount',
+  currency: 'currency',
+  paymentMethod: 'paymentMethod',
+  status: 'status',
+  transactionId: 'transactionId',
+  paymentId: 'paymentId',
+  orderId: 'orderId',
+  paymentGateway: 'paymentGateway',
+  donorName: 'donorName',
+  donorEmail: 'donorEmail',
+  donorPhone: 'donorPhone',
+  isAnonymous: 'isAnonymous',
+  message: 'message',
+  receiptNumber: 'receiptNumber',
+  receiptUrl: 'receiptUrl',
+  donatedAt: 'donatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.VolunteerEventScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  image: 'image',
+  location: 'location',
+  city: 'city',
+  state: 'state',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  capacity: 'capacity',
+  status: 'status',
+  organizerId: 'organizerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EventRegistrationScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  userId: 'userId',
+  volunteerProfileId: 'volunteerProfileId',
+  status: 'status',
+  registeredAt: 'registeredAt',
+  attendedAt: 'attendedAt',
+  hoursCompleted: 'hoursCompleted',
+  feedback: 'feedback'
+};
+
+exports.Prisma.VolunteerTaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  eventId: 'eventId',
+  assignedToId: 'assignedToId',
+  volunteerProfileId: 'volunteerProfileId',
+  createdById: 'createdById',
+  status: 'status',
+  dueDate: 'dueDate',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.VolunteerImpactScalarFieldEnum = {
+  id: 'id',
+  volunteerProfileId: 'volunteerProfileId',
+  eventId: 'eventId',
+  hours: 'hours',
+  mealsServed: 'mealsServed',
+  peopleHelped: 'peopleHelped',
+  familiesSupported: 'familiesSupported',
+  description: 'description',
+  recordedAt: 'recordedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CertificateScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  volunteerProfileId: 'volunteerProfileId',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  certificateNumber: 'certificateNumber',
+  issueDate: 'issueDate',
+  fileUrl: 'fileUrl',
+  eventId: 'eventId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  message: 'message',
+  type: 'type',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  used: 'used',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  details: 'details',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -139,13 +341,110 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
+  VOLUNTEER: 'VOLUNTEER',
   ADMIN: 'ADMIN'
 };
 
+exports.UserStatus = exports.$Enums.UserStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED'
+};
+
+exports.VolunteerApplicationStatus = exports.$Enums.VolunteerApplicationStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  WITHDRAWN: 'WITHDRAWN'
+};
+
+exports.CommunityMemberRole = exports.$Enums.CommunityMemberRole = {
+  MEMBER: 'MEMBER',
+  MODERATOR: 'MODERATOR',
+  ADMIN: 'ADMIN'
+};
+
+exports.CommunityMemberStatus = exports.$Enums.CommunityMemberStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  BANNED: 'BANNED'
+};
+
+exports.CampaignStatus = exports.$Enums.CampaignStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.PaymentMethod = exports.$Enums.PaymentMethod = {
+  UPI: 'UPI',
+  CARD: 'CARD',
+  NET_BANKING: 'NET_BANKING',
+  WALLET: 'WALLET',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  CASH: 'CASH',
+  OTHER: 'OTHER'
+};
+
+exports.DonationStatus = exports.$Enums.DonationStatus = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.EventStatus = exports.$Enums.EventStatus = {
+  UPCOMING: 'UPCOMING',
+  ONGOING: 'ONGOING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.EventRegistrationStatus = exports.$Enums.EventRegistrationStatus = {
+  REGISTERED: 'REGISTERED',
+  ATTENDED: 'ATTENDED',
+  ABSENT: 'ABSENT',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.TaskStatus = exports.$Enums.TaskStatus = {
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.CertificateType = exports.$Enums.CertificateType = {
+  VOLUNTEER: 'VOLUNTEER',
+  EVENT: 'EVENT',
+  SPECIAL_RECOGNITION: 'SPECIAL_RECOGNITION'
+};
+
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  VolunteerProfile: 'VolunteerProfile',
+  VolunteerApplication: 'VolunteerApplication',
+  Community: 'Community',
+  CommunityMember: 'CommunityMember',
+  Campaign: 'Campaign',
+  Donation: 'Donation',
+  VolunteerEvent: 'VolunteerEvent',
+  EventRegistration: 'EventRegistration',
+  VolunteerTask: 'VolunteerTask',
+  VolunteerImpact: 'VolunteerImpact',
+  Certificate: 'Certificate',
+  Notification: 'Notification',
+  PasswordResetToken: 'PasswordResetToken',
+  AuditLog: 'AuditLog'
 };
 
 /**
