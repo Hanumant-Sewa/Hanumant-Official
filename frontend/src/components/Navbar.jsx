@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+
 import {
   Heart,
   Users,
@@ -8,28 +9,26 @@ import {
   LayoutDashboard,
   LogOut,
 } from "lucide-react";
+
 import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import Swal from "sweetalert2";
 
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
-const location = useLocation();
-const navigate = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const { user, loading, logout } = useAuth();
+
+  const isHomePage = location.pathname === "/";
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
   const profileRef = useRef(null);
-
-  // =====================================================
-  // CHECK CURRENT PAGE
-  // =====================================================
-
-  const isHomePage = location.pathname === "/";
 
   // =====================================================
   // CLOSE MENUS WHEN ROUTE CHANGES
@@ -59,48 +58,55 @@ const navigate = useNavigate();
   }, []);
 
   // =====================================================
-  // HOME SECTION SCROLL SPY
-  // =====================================================
-
-useEffect(() => {
-if (!isHomePage) return;
-
-const sections = ["home", "about", "programs", "impact", "campaigns"];
-
-const handleScroll = () => {
-  const scrollPosition = window.scrollY + 150;
-
-  let currentSection = "home";
-
-  sections.forEach((section) => {
-    const element = document.getElementById(section);
-
-    if (element && scrollPosition >= element.offsetTop) {
-      currentSection = section;
-    }
-  });
-
-  setActiveSection(currentSection);
-};
-
-handleScroll();
-
-window.addEventListener("scroll", handleScroll);
-
-return () => {
-  window.removeEventListener("scroll", handleScroll);
-};
-
-  // =====================================================
-  // SCROLL TO SECTION AFTER NAVIGATING FROM ANOTHER PAGE
+  // HOME PAGE SCROLL SPY
   // =====================================================
 
   useEffect(() => {
-    if (!isHomePage) return;
+    if (!isHomePage) {
+      return;
+    }
+
+    const sections = ["home", "about", "programs", "impact", "campaigns"];
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 150;
+
+      let currentSection = "home";
+
+      sections.forEach((section) => {
+        const element = document.getElementById(section);
+
+        if (element && scrollPosition >= element.offsetTop) {
+          currentSection = section;
+        }
+      });
+
+      setActiveSection(currentSection);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isHomePage]);
+
+  // =====================================================
+  // HANDLE SCROLLING TO SECTION FROM OTHER PAGES
+  // =====================================================
+
+  useEffect(() => {
+    if (!isHomePage) {
+      return;
+    }
 
     const section = location.state?.scrollTo;
 
-    if (!section) return;
+    if (!section) {
+      return;
+    }
 
     const timer = setTimeout(() => {
       const element = document.getElementById(section);
@@ -119,7 +125,6 @@ return () => {
         setActiveSection(section);
       }
 
-      // Remove navigation state so refresh does not scroll again
       navigate("/", {
         replace: true,
         state: {},
@@ -130,7 +135,7 @@ return () => {
   }, [isHomePage, location.state, navigate]);
 
   // =====================================================
-  // HOME CLICK
+  // HOME BUTTON
   // =====================================================
 
   const handleHomeClick = (event) => {
@@ -138,238 +143,13 @@ return () => {
 
     setMenuOpen(false);
     setProfileOpen(false);
+
     setActiveSection("home");
 
-setMenuOpen(false);
-setActiveSection("home");
-
-if (location.pathname !== "/") {
-  navigate("/");
-  return;
-}
-
-window.scrollTo({
-  top: 0,
-  behavior: "smooth",
-});
-
-};
-
-/* =========================
-SECTION CLICK
-========================= */
-
-const handleSectionClick = () => {
-setMenuOpen(false);
-};
-
-return ( <header className="navbar"> <div className="navbar-container">
-{/* ================= LOGO ================= */}
-
-    <Link to="/" className="navbar-logo">
-      <img
-        src="/images/logo.png"
-        alt="Hanumat Seva"
-        className="navbar-logo-image"
-      />
-    </Link>
-
-    {/* ================= NAVIGATION ================= */}
-
-    <nav className="nav-links">
-      {isHomePage ? (
-        <>
-          {/* HOME */}
-
-          <a
-            href="/"
-            className={activeSection === "home" ? "active" : ""}
-            onClick={handleHomeClick}
-          >
-            Home
-          </a>
-
-          {/* ABOUT */}
-
-          <a
-            href="#about"
-            className={activeSection === "about" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            About
-          </a>
-
-          {/* PROGRAMS */}
-
-          <a
-            href="#programs"
-            className={activeSection === "programs" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            Programs
-          </a>
-
-          {/* IMPACT */}
-
-          <a
-            href="#impact"
-            className={activeSection === "impact" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            Impact
-          </a>
-
-          {/* CAMPAIGNS */}
-
-          <a
-            href="#campaigns"
-            className={activeSection === "campaigns" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            Campaigns
-          </a>
-        </>
-      ) : (
-        <>
-          <Link to="/">Home</Link>
-
-          <Link to="/community">Community</Link>
-        </>
-      )}
-    </nav>
-
-    {/* ================= ACTIONS ================= */}
-
-    <div className="navbar-actions">
-      {isLoggedIn ? (
-        <>
-          <Link to="/dashboard" className="navbar-community">
-            Dashboard
-          </Link>
-
-          <Link to="/profile" className="navbar-community">
-            Profile
-          </Link>
-
-          <Link to="/donate" className="navbar-donate">
-            <Heart size={20} />
-            Donate
-          </Link>
-        </>
-      ) : (
-        <>
-          <Link
-            to="/login"
-            state={{ intendedPage: "/volunteer" }}
-            className="navbar-community"
-          >
-            <Users size={20} />
-            Volunteer
-          </Link>
-
-          <Link
-            to="/login"
-            state={{ intendedPage: "/donate" }}
-            className="navbar-donate"
-          >
-            <Heart size={20} />
-            Donate
-          </Link>
-        </>
-      )}
-    </div>
-
-    {/* ================= MOBILE BUTTON ================= */}
-
-    <button
-      className="mobile-menu-button"
-      onClick={() => setMenuOpen(!menuOpen)}
-      aria-label="Toggle navigation menu"
-    >
-      {menuOpen ? <X size={26} /> : <Menu size={26} />}
-    </button>
-
-    {/* ================= MOBILE MENU ================= */}
-
-    {menuOpen && (
-      <div className="mobile-menu">
-        {isHomePage ? (
-          <>
-            {/* HOME */}
-
-            <a
-              href="/"
-              className={activeSection === "home" ? "active" : ""}
-              onClick={handleHomeClick}
-            >
-              Home
-            </a>
-
-            {/* ABOUT */}
-
-            <a
-              href="#about"
-              className={activeSection === "about" ? "active" : ""}
-              onClick={handleSectionClick}
-            >
-              About
-            </a>
-
-            {/* PROGRAMS */}
-
-            <a
-              href="#programs"
-              className={activeSection === "programs" ? "active" : ""}
-              onClick={handleSectionClick}
-            >
-              Programs
-            </a>
-
-            {/* IMPACT */}
-
-            <a
-              href="#impact"
-              className={activeSection === "impact" ? "active" : ""}
-              onClick={handleSectionClick}
-            >
-              Impact
-            </a>
-
-            {/* CAMPAIGNS */}
-
-            <a
-              href="#campaigns"
-              className={activeSection === "campaigns" ? "active" : ""}
-              onClick={handleSectionClick}
-            >
-              Campaigns
-            </a>
-          </>
-        ) : (
-          <>
-            <Link to="/" onClick={() => setMenuOpen(false)}>
-              Home
-            </Link>
-
-            <Link to="/community" onClick={() => setMenuOpen(false)}>
-              Community
-            </Link>
-          </>
-        )}
-
-        {/* MOBILE VOLUNTEER */}
-
-        {!isLoggedIn && (
-          <Link
-            to="/login"
-            state={{ intendedPage: "/volunteer" }}
-            className="mobile-volunteer"
-            onClick={() => setMenuOpen(false)}
-          >
-            <Users size={19} />
-            Volunteer
-          </Link>
-        )}
+    if (!isHomePage) {
+      navigate("/");
+      return;
+    }
 
     window.scrollTo({
       top: 0,
@@ -378,7 +158,7 @@ return ( <header className="navbar"> <div className="navbar-container">
   };
 
   // =====================================================
-  // SECTION CLICK
+  // SECTION NAVIGATION
   // =====================================================
 
   const handleSectionClick = (event, section) => {
@@ -387,8 +167,7 @@ return ( <header className="navbar"> <div className="navbar-container">
     setMenuOpen(false);
     setProfileOpen(false);
 
-    // Already on Home
-    if (location.pathname === "/") {
+    if (isHomePage) {
       const element = document.getElementById(section);
 
       if (element) {
@@ -408,7 +187,6 @@ return ( <header className="navbar"> <div className="navbar-container">
       return;
     }
 
-    // Coming from another page
     navigate("/", {
       state: {
         scrollTo: section,
@@ -424,6 +202,7 @@ return ( <header className="navbar"> <div className="navbar-container">
     setMenuOpen(false);
     setProfileOpen(false);
 
+    // USER IS NOT LOGGED IN
     if (!user) {
       Swal.fire({
         icon: "warning",
@@ -443,6 +222,7 @@ return ( <header className="navbar"> <div className="navbar-container">
       return;
     }
 
+    // USER IS LOGGED IN
     navigate(path);
   };
 
@@ -482,148 +262,140 @@ return ( <header className="navbar"> <div className="navbar-container">
   // DESKTOP NAVIGATION
   // =====================================================
 
-  const renderDesktopNavigation = () => {
-    return (
-      <>
-        {/* HOME */}
+  const renderDesktopNavigation = () => (
+    <>
+      {/* HOME */}
 
-        <a
-          href="/"
-          className={activeSection === "home" && isHomePage ? "active" : ""}
-          onClick={handleHomeClick}
-        >
-          Home
-        </a>
+      <a
+        href="/"
+        className={isHomePage && activeSection === "home" ? "active" : ""}
+        onClick={handleHomeClick}
+      >
+        Home
+      </a>
 
-        {/* ABOUT */}
+      {/* ABOUT */}
 
-        <a
-          href="/#about"
-          className={activeSection === "about" && isHomePage ? "active" : ""}
-          onClick={(event) => handleSectionClick(event, "about")}
-        >
-          About
-        </a>
+      <a
+        href="/#about"
+        className={isHomePage && activeSection === "about" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "about")}
+      >
+        About
+      </a>
 
-        {/* PROGRAMS */}
+      {/* PROGRAMS */}
 
-        <a
-          href="/#programs"
-          className={activeSection === "programs" && isHomePage ? "active" : ""}
-          onClick={(event) => handleSectionClick(event, "programs")}
-        >
-          Programs
-        </a>
+      <a
+        href="/#programs"
+        className={isHomePage && activeSection === "programs" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "programs")}
+      >
+        Programs
+      </a>
 
-        {/* IMPACT */}
+      {/* IMPACT */}
 
-        <a
-          href="/#impact"
-          className={activeSection === "impact" && isHomePage ? "active" : ""}
-          onClick={(event) => handleSectionClick(event, "impact")}
-        >
-          Impact
-        </a>
+      <a
+        href="/#impact"
+        className={isHomePage && activeSection === "impact" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "impact")}
+      >
+        Impact
+      </a>
 
-        {/* CAMPAIGNS */}
+      {/* CAMPAIGNS */}
 
-        <a
-          href="/#campaigns"
-          className={
-            activeSection === "campaigns" && isHomePage ? "active" : ""
-          }
-          onClick={(event) => handleSectionClick(event, "campaigns")}
-        >
-          Campaigns
-        </a>
+      <a
+        href="/#campaigns"
+        className={isHomePage && activeSection === "campaigns" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "campaigns")}
+      >
+        Campaigns
+      </a>
 
-        {/* COMMUNITY */}
+      {/* COMMUNITY */}
 
-        <Link
-          to="/community"
-          onClick={() => {
-            setMenuOpen(false);
-            setProfileOpen(false);
-          }}
-          className={location.pathname === "/community" ? "active" : ""}
-        >
-          Community
-        </Link>
-      </>
-    );
-  };
+      <Link
+        to="/community"
+        className={location.pathname === "/community" ? "active" : ""}
+        onClick={() => {
+          setMenuOpen(false);
+          setProfileOpen(false);
+        }}
+      >
+        Community
+      </Link>
+    </>
+  );
 
   // =====================================================
   // MOBILE NAVIGATION
   // =====================================================
 
-  const renderMobileNavigation = () => {
-    return (
-      <>
-        {/* HOME */}
+  const renderMobileNavigation = () => (
+    <>
+      {/* HOME */}
 
-        <a
-          href="/"
-          className={activeSection === "home" && isHomePage ? "active" : ""}
-          onClick={handleHomeClick}
-        >
-          Home
-        </a>
+      <a
+        href="/"
+        className={isHomePage && activeSection === "home" ? "active" : ""}
+        onClick={handleHomeClick}
+      >
+        Home
+      </a>
 
-        {/* ABOUT */}
+      {/* ABOUT */}
 
-        <a
-          href="/#about"
-          className={activeSection === "about" && isHomePage ? "active" : ""}
-          onClick={(event) => handleSectionClick(event, "about")}
-        >
-          About
-        </a>
+      <a
+        href="/#about"
+        className={isHomePage && activeSection === "about" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "about")}
+      >
+        About
+      </a>
 
-        {/* PROGRAMS */}
+      {/* PROGRAMS */}
 
-        <a
-          href="/#programs"
-          className={activeSection === "programs" && isHomePage ? "active" : ""}
-          onClick={(event) => handleSectionClick(event, "programs")}
-        >
-          Programs
-        </a>
+      <a
+        href="/#programs"
+        className={isHomePage && activeSection === "programs" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "programs")}
+      >
+        Programs
+      </a>
 
-        {/* IMPACT */}
+      {/* IMPACT */}
 
-        <a
-          href="/#impact"
-          className={activeSection === "impact" && isHomePage ? "active" : ""}
-          onClick={(event) => handleSectionClick(event, "impact")}
-        >
-          Impact
-        </a>
+      <a
+        href="/#impact"
+        className={isHomePage && activeSection === "impact" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "impact")}
+      >
+        Impact
+      </a>
 
-        {/* CAMPAIGNS */}
+      {/* CAMPAIGNS */}
 
-        <a
-          href="/#campaigns"
-          className={
-            activeSection === "campaigns" && isHomePage ? "active" : ""
-          }
-          onClick={(event) => handleSectionClick(event, "campaigns")}
-        >
-          Campaigns
-        </a>
+      <a
+        href="/#campaigns"
+        className={isHomePage && activeSection === "campaigns" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "campaigns")}
+      >
+        Campaigns
+      </a>
 
-        {/* COMMUNITY */}
+      {/* COMMUNITY */}
 
-        <Link
-          to="/community"
-          onClick={() => setMenuOpen(false)}
-          className={location.pathname === "/community" ? "active" : ""}
-        >
-          Community
-        </Link>
-      </>
-    );
-  };
+      <Link
+        to="/community"
+        className={location.pathname === "/community" ? "active" : ""}
+        onClick={() => setMenuOpen(false)}
+      >
+        Community
+      </Link>
+    </>
+  );
 
   // =====================================================
   // AUTH LOADING
@@ -646,7 +418,7 @@ return ( <header className="navbar"> <div className="navbar-container">
   }
 
   // =====================================================
-  // JSX
+  // MAIN NAVBAR
   // =====================================================
 
   return (
@@ -656,7 +428,14 @@ return ( <header className="navbar"> <div className="navbar-container">
             LOGO
         ================================================= */}
 
-        <Link to="/" className="navbar-logo">
+        <Link
+          to="/"
+          className="navbar-logo"
+          onClick={() => {
+            setMenuOpen(false);
+            setProfileOpen(false);
+          }}
+        >
           <img
             src="/images/logo.png"
             alt="Hanumat Seva"
@@ -671,17 +450,15 @@ return ( <header className="navbar"> <div className="navbar-container">
         <nav className="nav-links">{renderDesktopNavigation()}</nav>
 
         {/* =================================================
-            DESKTOP ACTIONS
+            RIGHT SIDE ACTIONS
         ================================================= */}
 
         <div className="navbar-actions">
-          {/* =================================================
-              LOGGED IN
-          ================================================= */}
-
           {user ? (
             <>
-              {/* DONATE */}
+              {/* ==============================
+                  LOGGED-IN DONATE
+              ============================== */}
 
               <Link
                 to="/donate"
@@ -695,13 +472,15 @@ return ( <header className="navbar"> <div className="navbar-container">
                 Donate
               </Link>
 
-              {/* PROFILE */}
+              {/* ==============================
+                  PROFILE
+              ============================== */}
 
               <div className="profile-dropdown-container" ref={profileRef}>
                 <button
                   type="button"
                   className="navbar-profile-button"
-                  onClick={() => setProfileOpen((prev) => !prev)}
+                  onClick={() => setProfileOpen((previous) => !previous)}
                   aria-expanded={profileOpen}
                   aria-label="Open profile menu"
                 >
@@ -710,7 +489,9 @@ return ( <header className="navbar"> <div className="navbar-container">
                   <span className="profile-name">{user.name}</span>
                 </button>
 
-                {/* PROFILE DROPDOWN */}
+                {/* ==============================
+                    PROFILE DROPDOWN
+                ============================== */}
 
                 {profileOpen && (
                   <div className="profile-dropdown">
@@ -723,6 +504,7 @@ return ( <header className="navbar"> <div className="navbar-container">
                       }
                     >
                       <LayoutDashboard size={19} />
+
                       <span>Dashboard</span>
                     </button>
 
@@ -735,6 +517,7 @@ return ( <header className="navbar"> <div className="navbar-container">
                       }
                     >
                       <UserCircle size={19} />
+
                       <span>Profile</span>
                     </button>
 
@@ -747,6 +530,7 @@ return ( <header className="navbar"> <div className="navbar-container">
                       }
                     >
                       <Users size={19} />
+
                       <span>Volunteer</span>
                     </button>
 
@@ -760,6 +544,7 @@ return ( <header className="navbar"> <div className="navbar-container">
                       onClick={handleLogout}
                     >
                       <LogOut size={19} />
+
                       <span>Logout</span>
                     </button>
                   </div>
@@ -767,12 +552,10 @@ return ( <header className="navbar"> <div className="navbar-container">
               </div>
             </>
           ) : (
-            /* =================================================
-               LOGGED OUT
-            ================================================= */
-
             <>
-              {/* VOLUNTEER */}
+              {/* ==============================
+                  LOGGED-OUT VOLUNTEER
+              ============================== */}
 
               <button
                 type="button"
@@ -785,10 +568,20 @@ return ( <header className="navbar"> <div className="navbar-container">
                 Volunteer
               </button>
 
-              {/* DONATE */}
+              {/* ==============================
+                  LOGGED-OUT DONATE
+                  
+                  IMPORTANT:
+                  We remember /donate so after
+                  login the user can continue
+                  to donation.
+              ============================== */}
 
               <Link
                 to="/login"
+                state={{
+                  from: "/donate",
+                }}
                 className="navbar-donate"
                 onClick={() => {
                   setMenuOpen(false);
@@ -809,7 +602,7 @@ return ( <header className="navbar"> <div className="navbar-container">
         <button
           type="button"
           className="mobile-menu-button"
-          onClick={() => setMenuOpen((prev) => !prev)}
+          onClick={() => setMenuOpen((previous) => !previous)}
           aria-label="Toggle navigation"
           aria-expanded={menuOpen}
         >
@@ -822,10 +615,12 @@ return ( <header className="navbar"> <div className="navbar-container">
 
         {menuOpen && (
           <div className="mobile-menu">
+            {/* MAIN NAVIGATION */}
+
             {renderMobileNavigation()}
 
             {/* =================================================
-                MOBILE LOGGED IN
+                LOGGED-IN MOBILE OPTIONS
             ================================================= */}
 
             {user ? (
@@ -889,12 +684,10 @@ return ( <header className="navbar"> <div className="navbar-container">
                 </button>
               </>
             ) : (
-              /* =================================================
-                 MOBILE LOGGED OUT
-              ================================================= */
-
               <>
-                {/* VOLUNTEER */}
+                {/* =================================================
+                    LOGGED-OUT MOBILE VOLUNTEER
+                ================================================= */}
 
                 <button
                   type="button"
@@ -907,10 +700,18 @@ return ( <header className="navbar"> <div className="navbar-container">
                   Volunteer
                 </button>
 
-                {/* DONATE */}
+                {/* =================================================
+                    LOGGED-OUT MOBILE DONATE
+
+                    IMPORTANT:
+                    Remember /donate after login.
+                ================================================= */}
 
                 <Link
                   to="/login"
+                  state={{
+                    from: "/donate",
+                  }}
                   className="mobile-donate"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -922,12 +723,8 @@ return ( <header className="navbar"> <div className="navbar-container">
           </div>
         )}
       </div>
-    )}
-  </div>
-</header>
-
-)
+    </header>
+  );
 }
 
 export default Navbar;
-
