@@ -11,49 +11,33 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
+import { useAuth } from "../context/AuthContext";
+
 function Navbar() {
 const location = useLocation();
 const navigate = useNavigate();
 
-const isHomePage = location.pathname === "/";
+  const { user, loading, logout } = useAuth();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-
-  const [user, setUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
-
   const [activeSection, setActiveSection] = useState("home");
 
   const profileRef = useRef(null);
 
   // =====================================================
-  // CHECK LOGIN STATUS FROM BACKEND
+  // CHECK CURRENT PAGE
+  // =====================================================
+
+  const isHomePage = location.pathname === "/";
+
+  // =====================================================
+  // CLOSE MENUS WHEN ROUTE CHANGES
   // =====================================================
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/auth/profile", {
-          method: "GET",
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Authentication check failed:", error);
-        setUser(null);
-      } finally {
-        setLoadingUser(false);
-      }
-    };
-
-    checkAuth();
+    setMenuOpen(false);
+    setProfileOpen(false);
   }, [location.pathname]);
 
   // =====================================================
@@ -75,7 +59,7 @@ const isHomePage = location.pathname === "/";
   }, []);
 
   // =====================================================
-  // SCROLL SPY
+  // HOME SECTION SCROLL SPY
   // =====================================================
 
 useEffect(() => {
@@ -108,12 +92,49 @@ return () => {
 };
 
   // =====================================================
+  // SCROLL TO SECTION AFTER NAVIGATING FROM ANOTHER PAGE
+  // =====================================================
+
+  useEffect(() => {
+    if (!isHomePage) return;
+
+    const section = location.state?.scrollTo;
+
+    if (!section) return;
+
+    const timer = setTimeout(() => {
+      const element = document.getElementById(section);
+
+      if (element) {
+        const navbarHeight = 100;
+
+        const elementPosition =
+          element.getBoundingClientRect().top + window.scrollY - navbarHeight;
+
+        window.scrollTo({
+          top: elementPosition,
+          behavior: "smooth",
+        });
+
+        setActiveSection(section);
+      }
+
+      // Remove navigation state so refresh does not scroll again
+      navigate("/", {
+        replace: true,
+        state: {},
+      });
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [isHomePage, location.state, navigate]);
+
+  // =====================================================
   // HOME CLICK
   // =====================================================
 
-/* =========================
-HOME CLICK
-========================= */
+  const handleHomeClick = (event) => {
+    event.preventDefault();
 
     setMenuOpen(false);
     setProfileOpen(false);
@@ -360,9 +381,39 @@ return ( <header className="navbar"> <div className="navbar-container">
   // SECTION CLICK
   // =====================================================
 
-  const handleSectionClick = () => {
+  const handleSectionClick = (event, section) => {
+    event.preventDefault();
+
     setMenuOpen(false);
     setProfileOpen(false);
+
+    // Already on Home
+    if (location.pathname === "/") {
+      const element = document.getElementById(section);
+
+      if (element) {
+        const navbarHeight = 100;
+
+        const elementPosition =
+          element.getBoundingClientRect().top + window.scrollY - navbarHeight;
+
+        window.scrollTo({
+          top: elementPosition,
+          behavior: "smooth",
+        });
+
+        setActiveSection(section);
+      }
+
+      return;
+    }
+
+    // Coming from another page
+    navigate("/", {
+      state: {
+        scrollTo: section,
+      },
+    });
   };
 
   // =====================================================
@@ -381,7 +432,11 @@ return ( <header className="navbar"> <div className="navbar-container">
         confirmButtonText: "Login",
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate("/login");
+          navigate("/login", {
+            state: {
+              from: path,
+            },
+          });
         }
       });
 
@@ -400,107 +455,100 @@ return ( <header className="navbar"> <div className="navbar-container">
     setMenuOpen(false);
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
+      await logout();
+
+      await Swal.fire({
+        icon: "success",
+        title: "Logged Out",
+        text: "You have been logged out successfully.",
+        timer: 1500,
+        showConfirmButton: false,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setUser(null);
-
-        await Swal.fire({
-          icon: "success",
-          title: "Logged Out",
-          text: data.message || "You have been logged out successfully.",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-
-        navigate("/");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Logout Failed",
-          text: data.message || "Unable to logout.",
-        });
-      }
+      navigate("/");
     } catch (error) {
       console.error("Logout Error:", error);
 
       Swal.fire({
         icon: "error",
-        title: "Connection Error",
-        text: "Unable to connect to the server. Please try again.",
+        title: "Logout Failed",
+        text: error.message || "Unable to logout. Please try again.",
+        confirmButtonText: "OK",
       });
     }
   };
 
   // =====================================================
-  // RENDER NAVIGATION LINKS
+  // DESKTOP NAVIGATION
   // =====================================================
 
   const renderDesktopNavigation = () => {
-    if (isHomePage) {
-      return (
-        <>
-          <a
-            href="/"
-            className={activeSection === "home" ? "active" : ""}
-            onClick={handleHomeClick}
-          >
-            Home
-          </a>
-
-          <a
-            href="#about"
-            className={activeSection === "about" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            About
-          </a>
-
-          <a
-            href="#programs"
-            className={activeSection === "programs" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            Programs
-          </a>
-
-          <a
-            href="#impact"
-            className={activeSection === "impact" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            Impact
-          </a>
-
-          <a
-            href="#campaigns"
-            className={activeSection === "campaigns" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            Campaigns
-          </a>
-        </>
-      );
-    }
-
     return (
       <>
-        <Link to="/" onClick={() => setProfileOpen(false)}>
-          Home
-        </Link>
+        {/* HOME */}
 
-        <button
-          type="button"
-          className="nav-protected-link"
-          onClick={() => handleProtectedNavigation("/community", "Community")}
+        <a
+          href="/"
+          className={activeSection === "home" && isHomePage ? "active" : ""}
+          onClick={handleHomeClick}
+        >
+          Home
+        </a>
+
+        {/* ABOUT */}
+
+        <a
+          href="/#about"
+          className={activeSection === "about" && isHomePage ? "active" : ""}
+          onClick={(event) => handleSectionClick(event, "about")}
+        >
+          About
+        </a>
+
+        {/* PROGRAMS */}
+
+        <a
+          href="/#programs"
+          className={activeSection === "programs" && isHomePage ? "active" : ""}
+          onClick={(event) => handleSectionClick(event, "programs")}
+        >
+          Programs
+        </a>
+
+        {/* IMPACT */}
+
+        <a
+          href="/#impact"
+          className={activeSection === "impact" && isHomePage ? "active" : ""}
+          onClick={(event) => handleSectionClick(event, "impact")}
+        >
+          Impact
+        </a>
+
+        {/* CAMPAIGNS */}
+
+        <a
+          href="/#campaigns"
+          className={
+            activeSection === "campaigns" && isHomePage ? "active" : ""
+          }
+          onClick={(event) => handleSectionClick(event, "campaigns")}
+        >
+          Campaigns
+        </a>
+
+        {/* COMMUNITY */}
+
+        <Link
+          to="/community"
+          onClick={() => {
+            setMenuOpen(false);
+            setProfileOpen(false);
+          }}
+          className={location.pathname === "/community" ? "active" : ""}
         >
           Community
-        </button>
+        </Link>
       </>
     );
   };
@@ -510,74 +558,78 @@ return ( <header className="navbar"> <div className="navbar-container">
   // =====================================================
 
   const renderMobileNavigation = () => {
-    if (isHomePage) {
-      return (
-        <>
-          <a
-            href="/"
-            className={activeSection === "home" ? "active" : ""}
-            onClick={handleHomeClick}
-          >
-            Home
-          </a>
-
-          <a
-            href="#about"
-            className={activeSection === "about" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            About
-          </a>
-
-          <a
-            href="#programs"
-            className={activeSection === "programs" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            Programs
-          </a>
-
-          <a
-            href="#impact"
-            className={activeSection === "impact" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            Impact
-          </a>
-
-          <a
-            href="#campaigns"
-            className={activeSection === "campaigns" ? "active" : ""}
-            onClick={handleSectionClick}
-          >
-            Campaigns
-          </a>
-        </>
-      );
-    }
-
     return (
       <>
-        <Link to="/" onClick={() => setMenuOpen(false)}>
-          Home
-        </Link>
+        {/* HOME */}
 
-        <button
-          type="button"
-          className="mobile-protected-link"
-          onClick={() => handleProtectedNavigation("/community", "Community")}
+        <a
+          href="/"
+          className={activeSection === "home" && isHomePage ? "active" : ""}
+          onClick={handleHomeClick}
+        >
+          Home
+        </a>
+
+        {/* ABOUT */}
+
+        <a
+          href="/#about"
+          className={activeSection === "about" && isHomePage ? "active" : ""}
+          onClick={(event) => handleSectionClick(event, "about")}
+        >
+          About
+        </a>
+
+        {/* PROGRAMS */}
+
+        <a
+          href="/#programs"
+          className={activeSection === "programs" && isHomePage ? "active" : ""}
+          onClick={(event) => handleSectionClick(event, "programs")}
+        >
+          Programs
+        </a>
+
+        {/* IMPACT */}
+
+        <a
+          href="/#impact"
+          className={activeSection === "impact" && isHomePage ? "active" : ""}
+          onClick={(event) => handleSectionClick(event, "impact")}
+        >
+          Impact
+        </a>
+
+        {/* CAMPAIGNS */}
+
+        <a
+          href="/#campaigns"
+          className={
+            activeSection === "campaigns" && isHomePage ? "active" : ""
+          }
+          onClick={(event) => handleSectionClick(event, "campaigns")}
+        >
+          Campaigns
+        </a>
+
+        {/* COMMUNITY */}
+
+        <Link
+          to="/community"
+          onClick={() => setMenuOpen(false)}
+          className={location.pathname === "/community" ? "active" : ""}
         >
           Community
-        </button>
+        </Link>
       </>
     );
   };
 
   // =====================================================
-  // LOADING
+  // AUTH LOADING
   // =====================================================
 
-  if (loadingUser) {
+  if (loading) {
     return (
       <header className="navbar">
         <div className="navbar-container">
@@ -623,18 +675,27 @@ return ( <header className="navbar"> <div className="navbar-container">
         ================================================= */}
 
         <div className="navbar-actions">
-          {/* ================= LOGGED IN ================= */}
+          {/* =================================================
+              LOGGED IN
+          ================================================= */}
 
           {user ? (
             <>
               {/* DONATE */}
 
-              <Link to="/donate" className="navbar-donate">
+              <Link
+                to="/donate"
+                className="navbar-donate"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setProfileOpen(false);
+                }}
+              >
                 <Heart size={20} />
                 Donate
               </Link>
 
-              {/* PROFILE DROPDOWN */}
+              {/* PROFILE */}
 
               <div className="profile-dropdown-container" ref={profileRef}>
                 <button
@@ -642,11 +703,14 @@ return ( <header className="navbar"> <div className="navbar-container">
                   className="navbar-profile-button"
                   onClick={() => setProfileOpen((prev) => !prev)}
                   aria-expanded={profileOpen}
+                  aria-label="Open profile menu"
                 >
                   <UserCircle size={22} />
 
                   <span className="profile-name">{user.name}</span>
                 </button>
+
+                {/* PROFILE DROPDOWN */}
 
                 {profileOpen && (
                   <div className="profile-dropdown">
@@ -703,9 +767,13 @@ return ( <header className="navbar"> <div className="navbar-container">
               </div>
             </>
           ) : (
-            /* ================= LOGGED OUT ================= */
+            /* =================================================
+               LOGGED OUT
+            ================================================= */
 
             <>
+              {/* VOLUNTEER */}
+
               <button
                 type="button"
                 className="navbar-community"
@@ -717,7 +785,16 @@ return ( <header className="navbar"> <div className="navbar-container">
                 Volunteer
               </button>
 
-              <Link to="/login" className="navbar-donate">
+              {/* DONATE */}
+
+              <Link
+                to="/login"
+                className="navbar-donate"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setProfileOpen(false);
+                }}
+              >
                 <Heart size={20} />
                 Donate
               </Link>
@@ -726,13 +803,15 @@ return ( <header className="navbar"> <div className="navbar-container">
         </div>
 
         {/* =================================================
-            MOBILE BUTTON
+            MOBILE MENU BUTTON
         ================================================= */}
 
         <button
+          type="button"
           className="mobile-menu-button"
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
         >
           {menuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
@@ -745,10 +824,14 @@ return ( <header className="navbar"> <div className="navbar-container">
           <div className="mobile-menu">
             {renderMobileNavigation()}
 
-            {/* ================= MOBILE LOGGED IN ================= */}
+            {/* =================================================
+                MOBILE LOGGED IN
+            ================================================= */}
 
             {user ? (
               <>
+                {/* DASHBOARD */}
+
                 <button
                   type="button"
                   onClick={() =>
@@ -758,6 +841,8 @@ return ( <header className="navbar"> <div className="navbar-container">
                   <LayoutDashboard size={19} />
                   Dashboard
                 </button>
+
+                {/* PROFILE */}
 
                 <button
                   type="button"
@@ -769,6 +854,8 @@ return ( <header className="navbar"> <div className="navbar-container">
                   Profile
                 </button>
 
+                {/* VOLUNTEER */}
+
                 <button
                   type="button"
                   onClick={() =>
@@ -779,6 +866,8 @@ return ( <header className="navbar"> <div className="navbar-container">
                   Volunteer
                 </button>
 
+                {/* DONATE */}
+
                 <Link
                   to="/donate"
                   className="mobile-donate"
@@ -787,6 +876,8 @@ return ( <header className="navbar"> <div className="navbar-container">
                   <Heart size={19} />
                   Donate
                 </Link>
+
+                {/* LOGOUT */}
 
                 <button
                   type="button"
@@ -798,9 +889,13 @@ return ( <header className="navbar"> <div className="navbar-container">
                 </button>
               </>
             ) : (
-              /* ================= MOBILE LOGGED OUT ================= */
+              /* =================================================
+                 MOBILE LOGGED OUT
+              ================================================= */
 
               <>
+                {/* VOLUNTEER */}
+
                 <button
                   type="button"
                   className="mobile-volunteer"
@@ -811,6 +906,8 @@ return ( <header className="navbar"> <div className="navbar-container">
                   <Users size={19} />
                   Volunteer
                 </button>
+
+                {/* DONATE */}
 
                 <Link
                   to="/login"
