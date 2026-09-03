@@ -3,9 +3,13 @@ import { Heart, Lock, Mail, ArrowLeft, ShieldCheck } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 
+import { useAuth } from "../context/AuthContext";
+
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { login } = useAuth();
 
   const [loginType, setLoginType] = useState("user");
 
@@ -17,22 +21,26 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
 
-  /* =====================================================
-     HANDLE INPUT CHANGE
-  ===================================================== */
+  // =====================================================
+  // HANDLE INPUT CHANGE
+  // =====================================================
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  /* =====================================================
-     HANDLE LOGIN TYPE
-  ===================================================== */
+  // =====================================================
+  // HANDLE LOGIN TYPE
+  // =====================================================
 
   const handleLoginTypeChange = (type) => {
+    if (loading) return;
+
     setLoginType(type);
 
     if (type === "user") {
@@ -43,61 +51,55 @@ function Login() {
     }
   };
 
-  /* =====================================================
-     HANDLE LOGIN
-  ===================================================== */
+  // =====================================================
+  // HANDLE LOGIN
+  // =====================================================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+
+    // -----------------------------------------------------
+    // ADMIN KEY NOTICE
+    // -----------------------------------------------------
+    // The current backend authenticates using:
+    // email + password
+    //
+    // Administrator access is determined by the user's
+    // database role (ADMIN).
+    //
+    // Therefore, adminKey is currently only a UI field.
+    // It is NOT used as an authentication credential.
+    // -----------------------------------------------------
+
     setLoading(true);
 
     try {
-      /*
-        Currently the backend authenticates both users
-        and admins using the same login endpoint.
+      // ===================================================
+      // LOGIN THROUGH AUTH CONTEXT
+      // ===================================================
 
-        The adminKey is kept in the UI for the future
-        admin authentication flow.
-      */
+      const data = await login(formData.email, formData.password);
 
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
+      // ===================================================
+      // SAFETY CHECK
+      // ===================================================
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        /*
-            VERY IMPORTANT:
-
-            This allows the browser to receive the
-            HttpOnly authentication cookie from backend.
-          */
-        credentials: "include",
-
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      /* =================================================
-         LOGIN FAILED
-      ================================================= */
-
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+      if (!data?.user) {
+        throw new Error("Invalid response received from server.");
       }
 
-      /* =================================================
-         ADMIN LOGIN
-      ================================================= */
+      // ===================================================
+      // ADMIN ROLE CHECK
+      // ===================================================
 
       if (loginType === "admin") {
         if (data.user.role !== "ADMIN") {
+          // If backend has already created the session cookie,
+          // we should not leave a normal user logged in after
+          // failing the admin-role check.
+
           await Swal.fire({
             icon: "error",
             title: "Access Denied",
@@ -109,9 +111,9 @@ function Login() {
         }
       }
 
-      /* =================================================
-         LOGIN SUCCESS
-      ================================================= */
+      // ===================================================
+      // SUCCESS MESSAGE
+      // ===================================================
 
       await Swal.fire({
         icon: "success",
@@ -121,14 +123,9 @@ function Login() {
         showConfirmButton: false,
       });
 
-      /*
-        If the user originally tried to access a protected
-        page, send them back there after login.
-
-        Otherwise:
-        User  → /dashboard
-        Admin → /transparency
-      */
+      // ===================================================
+      // REDIRECT
+      // ===================================================
 
       const redirectPath = location.state?.from;
 
@@ -136,22 +133,38 @@ function Login() {
         navigate(redirectPath, {
           replace: true,
         });
-      } else if (loginType === "admin") {
+
+        return;
+      }
+
+      // ---------------------------------------------------
+      // ADMIN
+      // ---------------------------------------------------
+
+      if (loginType === "admin") {
         navigate("/transparency", {
           replace: true,
         });
-      } else {
-        navigate("/dashboard", {
-          replace: true,
-        });
+
+        return;
       }
+
+      // ---------------------------------------------------
+      // NORMAL USER
+      // ---------------------------------------------------
+
+      navigate("/dashboard", {
+        replace: true,
+      });
     } catch (error) {
       console.error("Login Error:", error);
 
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text: error.message || "Unable to login. Please try again.",
+        text:
+          error.message ||
+          "Unable to login. Please check your credentials and try again.",
         confirmButtonText: "Try Again",
       });
     } finally {
@@ -247,15 +260,18 @@ function Login() {
           ================================================= */}
 
           <form onSubmit={handleSubmit}>
-            {/* EMAIL */}
+            {/* =================================================
+                EMAIL
+            ================================================= */}
 
             <div className="form-group">
-              <label>Email Address</label>
+              <label htmlFor="email">Email Address</label>
 
               <div className="input-box">
                 <Mail size={20} />
 
                 <input
+                  id="email"
                   type="email"
                   name="email"
                   placeholder="Enter your email"
@@ -263,19 +279,23 @@ function Login() {
                   onChange={handleChange}
                   required
                   disabled={loading}
+                  autoComplete="email"
                 />
               </div>
             </div>
 
-            {/* PASSWORD */}
+            {/* =================================================
+                PASSWORD
+            ================================================= */}
 
             <div className="form-group">
-              <label>Password</label>
+              <label htmlFor="password">Password</label>
 
               <div className="input-box">
                 <Lock size={20} />
 
                 <input
+                  id="password"
                   type="password"
                   name="password"
                   placeholder="Enter your password"
@@ -283,20 +303,24 @@ function Login() {
                   onChange={handleChange}
                   required
                   disabled={loading}
+                  autoComplete="current-password"
                 />
               </div>
             </div>
 
-            {/* ADMIN KEY */}
+            {/* =================================================
+                ADMIN KEY
+            ================================================= */}
 
             {loginType === "admin" && (
               <div className="form-group">
-                <label>Admin Key</label>
+                <label htmlFor="adminKey">Admin Key</label>
 
                 <div className="input-box">
                   <ShieldCheck size={20} />
 
                   <input
+                    id="adminKey"
                     type="password"
                     name="adminKey"
                     placeholder="Enter admin key"
@@ -304,22 +328,27 @@ function Login() {
                     onChange={handleChange}
                     required
                     disabled={loading}
+                    autoComplete="off"
                   />
                 </div>
 
                 <small className="admin-key-note">
-                  This key is required for administrator access.
+                  Administrator access is verified using your account role.
                 </small>
               </div>
             )}
 
-            {/* FORGOT PASSWORD */}
+            {/* =================================================
+                FORGOT PASSWORD
+            ================================================= */}
 
             <div className="forgot-row">
               <Link to="/forgot-password">Forgot Password?</Link>
             </div>
 
-            {/* LOGIN BUTTON */}
+            {/* =================================================
+                LOGIN BUTTON
+            ================================================= */}
 
             <button
               type="submit"
@@ -345,7 +374,7 @@ function Login() {
               </div>
 
               <p className="register-text">
-                Don't have an account?
+                Don't have an account?{" "}
                 <Link to="/register">Create Account</Link>
               </p>
             </>

@@ -21,10 +21,12 @@ function Register() {
   ========================= */
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   /* =========================
@@ -34,29 +36,48 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+
     /* =========================
        PASSWORD CHECK
     ========================= */
 
     if (formData.password !== formData.confirmPassword) {
-      Swal.fire({
+      await Swal.fire({
         icon: "warning",
         title: "Passwords Don't Match",
         text: "Please make sure both passwords are the same.",
+        confirmButtonText: "OK",
       });
 
       return;
     }
 
     /* =========================
-       BASIC PHONE VALIDATION
+       PASSWORD LENGTH
+    ========================= */
+
+    if (formData.password.length < 6) {
+      await Swal.fire({
+        icon: "warning",
+        title: "Password Too Short",
+        text: "Password must contain at least 6 characters.",
+        confirmButtonText: "OK",
+      });
+
+      return;
+    }
+
+    /* =========================
+       PHONE VALIDATION
     ========================= */
 
     if (!/^[0-9]{10}$/.test(formData.phone)) {
-      Swal.fire({
+      await Swal.fire({
         icon: "warning",
         title: "Invalid Phone Number",
         text: "Please enter a valid 10-digit phone number.",
+        confirmButtonText: "OK",
       });
 
       return;
@@ -76,10 +97,13 @@ function Register() {
           "Content-Type": "application/json",
         },
 
+        // Required for cookie-based authentication.
+        credentials: "include",
+
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
           password: formData.password,
         }),
       });
@@ -91,11 +115,12 @@ function Register() {
       ========================= */
 
       if (!response.ok) {
-        Swal.fire({
+        await Swal.fire({
           icon: "error",
           title: "Registration Failed",
           text:
             data.message || "Unable to create your account. Please try again.",
+          confirmButtonText: "Try Again",
         });
 
         return;
@@ -105,21 +130,28 @@ function Register() {
          REGISTRATION SUCCESS
       ========================= */
 
-      Swal.fire({
+      await Swal.fire({
         icon: "success",
         title: "Account Created!",
         text: "Your Hanumat Seva account has been created successfully.",
         confirmButtonText: "Continue to Login",
-      }).then(() => {
-        navigate("/login");
+      });
+
+      /* =========================
+         GO TO LOGIN
+      ========================= */
+
+      navigate("/login", {
+        replace: true,
       });
     } catch (error) {
       console.error("Registration Error:", error);
 
-      Swal.fire({
+      await Swal.fire({
         icon: "error",
         title: "Connection Error",
         text: "Unable to connect to the server. Please make sure the backend is running.",
+        confirmButtonText: "OK",
       });
     } finally {
       setLoading(false);
@@ -168,18 +200,21 @@ function Register() {
             {/* ================= NAME ================= */}
 
             <div className="form-group">
-              <label>Full Name</label>
+              <label htmlFor="name">Full Name</label>
 
               <div className="input-box">
                 <User size={20} />
 
                 <input
+                  id="name"
                   type="text"
                   name="name"
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  disabled={loading}
+                  autoComplete="name"
                 />
               </div>
             </div>
@@ -187,18 +222,21 @@ function Register() {
             {/* ================= EMAIL ================= */}
 
             <div className="form-group">
-              <label>Email Address</label>
+              <label htmlFor="email">Email Address</label>
 
               <div className="input-box">
                 <Mail size={20} />
 
                 <input
+                  id="email"
                   type="email"
                   name="email"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  disabled={loading}
+                  autoComplete="email"
                 />
               </div>
             </div>
@@ -206,12 +244,13 @@ function Register() {
             {/* ================= PHONE ================= */}
 
             <div className="form-group">
-              <label>Phone Number</label>
+              <label htmlFor="phone">Phone Number</label>
 
               <div className="input-box">
                 <Phone size={20} />
 
                 <input
+                  id="phone"
                   type="tel"
                   name="phone"
                   placeholder="Enter 10-digit phone number"
@@ -220,6 +259,8 @@ function Register() {
                   maxLength="10"
                   inputMode="numeric"
                   required
+                  disabled={loading}
+                  autoComplete="tel"
                 />
               </div>
             </div>
@@ -227,18 +268,21 @@ function Register() {
             {/* ================= PASSWORD ================= */}
 
             <div className="form-group">
-              <label>Password</label>
+              <label htmlFor="password">Password</label>
 
               <div className="input-box">
                 <Lock size={20} />
 
                 <input
+                  id="password"
                   type="password"
                   name="password"
                   placeholder="Create a password"
                   value={formData.password}
                   onChange={handleChange}
                   required
+                  disabled={loading}
+                  autoComplete="new-password"
                 />
               </div>
             </div>
@@ -246,18 +290,21 @@ function Register() {
             {/* ================= CONFIRM PASSWORD ================= */}
 
             <div className="form-group">
-              <label>Confirm Password</label>
+              <label htmlFor="confirmPassword">Confirm Password</label>
 
               <div className="input-box">
                 <Lock size={20} />
 
                 <input
+                  id="confirmPassword"
                   type="password"
                   name="confirmPassword"
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
+                  disabled={loading}
+                  autoComplete="new-password"
                 />
               </div>
             </div>
@@ -276,8 +323,7 @@ function Register() {
           {/* ================= LOGIN ================= */}
 
           <p className="register-text">
-            Already have an account?
-            <Link to="/login">Login</Link>
+            Already have an account? <Link to="/login">Login</Link>
           </p>
         </div>
       </div>

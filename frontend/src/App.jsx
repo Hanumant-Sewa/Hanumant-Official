@@ -8,10 +8,18 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Layout
+import { AuthProvider } from "./context/AuthContext";
+
+// =====================================================
+// LAYOUT
+// =====================================================
+
 import Layout from "./components/Layout";
 
-// Landing Page Sections
+// =====================================================
+// LANDING PAGE SECTIONS
+// =====================================================
+
 import Hero from "./components/Hero";
 import UpcomingEvent from "./components/UpcomingEvent";
 import About from "./components/About";
@@ -27,17 +35,32 @@ import FAQ from "./components/FAQ";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
-// Authentication
+// =====================================================
+// AUTHENTICATION
+// =====================================================
+
 import Login from "./components/Login";
 import Register from "./components/Register";
 import ForgotPassword from "./components/ForgotPassword";
 
-// Donation
+// =====================================================
+// PROTECTED ROUTE
+// =====================================================
+
+import ProtectedRoute from "./components/ProtectedRoute";
+
+// =====================================================
+// DONATION
+// =====================================================
+
 import Donate from "./components/Donate";
 import DonationCheckout from "./components/DonationCheckout";
 import DonationReceipt from "./components/DonationReceipt";
 
-// Volunteer Pages
+// =====================================================
+// VOLUNTEER PAGES
+// =====================================================
+
 import Volunteer from "./pages/Volunteer";
 import VolunteerApplication from "./pages/VolunteerApplication";
 import ApplicationStatus from "./pages/ApplicationStatus";
@@ -49,138 +72,256 @@ import VolunteerTasks from "./pages/VolunteerTasks";
 import VolunteerImpact from "./pages/VolunteerImpact";
 import VolunteerCertificates from "./pages/VolunteerCertificates";
 
-//community page
+// =====================================================
+// COMMUNITY
+// =====================================================
+
 import Community from "./pages/Community";
-//transparency
+import JoinCommunity from "./pages/JoinCommunity";
+
+// =====================================================
+// TRANSPARENCY
+// =====================================================
+
 import Transparency from "./pages/Transparency";
+
+// =====================================================
+// MAIN DASHBOARD
+// =====================================================
 
 import Dashboard from "./pages/Dashboard";
 
-import JoinCommunity from "./pages/JoinCommunity";
+// =====================================================
+// APP
+// =====================================================
+
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* =================================================
-            PAGES WITH NAVBAR
-        ================================================= */}
-
-        <Route element={<Layout />}>
-          {/* =========================
-              HOME / LANDING PAGE
-          ========================== */}
-
-          <Route
-            path="/"
-            element={
-              <>
-                <UpcomingEvent />
-                <Hero />
-                <About />
-                <Programs />
-                <Impact />
-                <Campaigns />
-                <Gallery />
-                <Events />
-                <Testimonials />
-                <DonateSection />
-                <Volunteers />
-                <FAQ />
-                <Contact />
-                <Footer />
-              </>
-            }
-          />
-
-          {/* =========================
-              DONATION
-          ========================== */}
-
-          <Route path="/donate" element={<Donate />} />
-
-          <Route path="/donate/checkout" element={<DonationCheckout />} />
-
-          <Route path="/donate/receipt/:id" element={<DonationReceipt />} />
-          {/* =========================
-    MAIN DASHBOARD
-========================== */}
-
-          <Route path="/dashboard" element={<Dashboard />} />
-
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
           {/* =================================================
-              VOLUNTEER FLOW
+              PUBLIC PAGES WITH NAVBAR
           ================================================= */}
 
-          {/* Volunteer Home */}
+          <Route element={<Layout />}>
+            {/* =================================================
+                HOME / LANDING PAGE
+            ================================================= */}
 
-          <Route path="/volunteer" element={<Volunteer />} />
+            <Route
+              path="/"
+              element={
+                <>
+                  <UpcomingEvent />
+                  <Hero />
+                  <About />
+                  <Programs />
+                  <Impact />
+                  <Campaigns />
+                  <Gallery />
+                  <Events />
+                  <Testimonials />
+                  <DonateSection />
+                  <Volunteers />
+                  <FAQ />
+                  <Contact />
+                  <Footer />
+                </>
+              }
+            />
 
-          {/* Volunteer Application */}
+            {/* =================================================
+                DONATION
+            ================================================= */}
 
-          <Route
-            path="/volunteer/application"
-            element={<VolunteerApplication />}
-          />
+            <Route
+              path="/donate"
+              element={
+                <ProtectedRoute>
+                  <Donate />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Application Status */}
+            <Route
+              path="/donate/checkout"
+              element={
+                <ProtectedRoute>
+                  <DonationCheckout />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/volunteer/application-status"
-            element={<ApplicationStatus />}
-          />
+            <Route
+              path="/donate/receipt/:id"
+              element={
+                <ProtectedRoute>
+                  <DonationReceipt />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="/volunteer/status" element={<ApplicationStatus />} />
+            {/* =================================================
+                MAIN USER DASHBOARD
+            ================================================= */}
 
-          {/* Volunteer Dashboard */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="/volunteer/dashboard" element={<VolunteerDashboard />} />
+            {/* =================================================
+                VOLUNTEER FLOW
+            ================================================= */}
 
-          {/* Volunteer Profile */}
+            {/* Volunteer Home */}
 
-          <Route path="/volunteer/profile" element={<VolunteerProfile />} />
+            <Route
+              path="/volunteer"
+              element={
+                <ProtectedRoute>
+                  <Volunteer />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Volunteer Events */}
+            {/* Volunteer Application */}
 
-          <Route path="/volunteer/events" element={<VolunteerEvents />} />
+            <Route
+              path="/volunteer/application"
+              element={
+                <ProtectedRoute>
+                  <VolunteerApplication />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Event Details */}
+            {/* Application Status */}
 
-          <Route path="/volunteer/events/:eventId" element={<EventDetails />} />
+            <Route
+              path="/volunteer/application-status"
+              element={
+                <ProtectedRoute>
+                  <ApplicationStatus />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Volunteer Tasks */}
+            <Route
+              path="/volunteer/status"
+              element={
+                <ProtectedRoute>
+                  <ApplicationStatus />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="/volunteer/tasks" element={<VolunteerTasks />} />
+            {/* Volunteer Dashboard */}
 
-          {/* Volunteer Impact */}
+            <Route
+              path="/volunteer/dashboard"
+              element={
+                <ProtectedRoute>
+                  <VolunteerDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="/volunteer/impact" element={<VolunteerImpact />} />
+            {/* Volunteer Profile */}
 
-          {/* Volunteer Certificates */}
+            <Route
+              path="/volunteer/profile"
+              element={
+                <ProtectedRoute>
+                  <VolunteerProfile />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/volunteer/certificates"
-            element={<VolunteerCertificates />}
-          />
-        </Route>
+            {/* Volunteer Events */}
 
-        {/* =================================================
-            AUTHENTICATION PAGES
-            NO NAVBAR
-        ================================================= */}
+            <Route
+              path="/volunteer/events"
+              element={
+                <ProtectedRoute>
+                  <VolunteerEvents />
+                </ProtectedRoute>
+              }
+            />
 
-        <Route path="/login" element={<Login />} />
+            {/* Event Details */}
 
-        <Route path="/register" element={<Register />} />
+            <Route
+              path="/volunteer/events/:eventId"
+              element={
+                <ProtectedRoute>
+                  <EventDetails />
+                </ProtectedRoute>
+              }
+            />
 
-        <Route path="/community" element={<Community />} />
+            {/* Volunteer Tasks */}
 
-        <Route path="/transparency" element={<Transparency />} />
+            <Route
+              path="/volunteer/tasks"
+              element={
+                <ProtectedRoute>
+                  <VolunteerTasks />
+                </ProtectedRoute>
+              }
+            />
 
-        <Route path="/community/join" element={<JoinCommunity />} />
+            {/* Volunteer Impact */}
 
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-      </Routes>
-    </BrowserRouter>
+            <Route
+              path="/volunteer/impact"
+              element={
+                <ProtectedRoute>
+                  <VolunteerImpact />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Volunteer Certificates */}
+
+            <Route
+              path="/volunteer/certificates"
+              element={
+                <ProtectedRoute>
+                  <VolunteerCertificates />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+
+          {/* =================================================
+              AUTHENTICATION PAGES
+              NO NAVBAR
+          ================================================= */}
+
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/register" element={<Register />} />
+
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          {/* =================================================
+              PUBLIC PAGES
+              ================================================= */}
+
+          <Route path="/community" element={<Community />} />
+
+          <Route path="/transparency" element={<Transparency />} />
+
+          <Route path="/community/join" element={<JoinCommunity />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
