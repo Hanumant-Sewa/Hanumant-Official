@@ -212,6 +212,7 @@ exports.Prisma.DonationScalarFieldEnum = {
   userId: 'userId',
   campaignId: 'campaignId',
   amount: 'amount',
+  frequency: 'frequency',
   currency: 'currency',
   paymentMethod: 'paymentMethod',
   status: 'status',

@@ -4,6 +4,7 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./src/routes/authRoutes.js";
+import donationRoutes from "./src/routes/donationRoutes.js";
 
 const app = express();
 
@@ -40,6 +41,9 @@ app.get("/", (req, res) => {
 // =====================================================
 
 app.use("/api/auth", authRoutes);
+
+//Donation Routes
+app.use("/api/donations", donationRoutes);
 
 // =====================================================
 // SERVER

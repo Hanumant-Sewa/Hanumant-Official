@@ -1,8 +1,3 @@
-
-/**
- * Client
-**/
-
 import * as runtime from './runtime/client.js';
 import $Types = runtime.Types // general types
 import $Public = runtime.Types.Public
@@ -10378,6 +10373,7 @@ export namespace Prisma {
     userId: number | null
     campaignId: number | null
     amount: Decimal | null
+    frequency: string | null
     currency: string | null
     paymentMethod: $Enums.PaymentMethod | null
     status: $Enums.DonationStatus | null
@@ -10402,6 +10398,7 @@ export namespace Prisma {
     userId: number | null
     campaignId: number | null
     amount: Decimal | null
+    frequency: string | null
     currency: string | null
     paymentMethod: $Enums.PaymentMethod | null
     status: $Enums.DonationStatus | null
@@ -10426,6 +10423,7 @@ export namespace Prisma {
     userId: number
     campaignId: number
     amount: number
+    frequency: number
     currency: number
     paymentMethod: number
     status: number
@@ -10466,6 +10464,7 @@ export namespace Prisma {
     userId?: true
     campaignId?: true
     amount?: true
+    frequency?: true
     currency?: true
     paymentMethod?: true
     status?: true
@@ -10490,6 +10489,7 @@ export namespace Prisma {
     userId?: true
     campaignId?: true
     amount?: true
+    frequency?: true
     currency?: true
     paymentMethod?: true
     status?: true
@@ -10514,6 +10514,7 @@ export namespace Prisma {
     userId?: true
     campaignId?: true
     amount?: true
+    frequency?: true
     currency?: true
     paymentMethod?: true
     status?: true
@@ -10625,6 +10626,7 @@ export namespace Prisma {
     userId: number | null
     campaignId: number | null
     amount: Decimal
+    frequency: string
     currency: string
     paymentMethod: $Enums.PaymentMethod
     status: $Enums.DonationStatus
@@ -10668,6 +10670,7 @@ export namespace Prisma {
     userId?: boolean
     campaignId?: boolean
     amount?: boolean
+    frequency?: boolean
     currency?: boolean
     paymentMethod?: boolean
     status?: boolean
@@ -10694,6 +10697,7 @@ export namespace Prisma {
     userId?: boolean
     campaignId?: boolean
     amount?: boolean
+    frequency?: boolean
     currency?: boolean
     paymentMethod?: boolean
     status?: boolean
@@ -10720,6 +10724,7 @@ export namespace Prisma {
     userId?: boolean
     campaignId?: boolean
     amount?: boolean
+    frequency?: boolean
     currency?: boolean
     paymentMethod?: boolean
     status?: boolean
@@ -10746,6 +10751,7 @@ export namespace Prisma {
     userId?: boolean
     campaignId?: boolean
     amount?: boolean
+    frequency?: boolean
     currency?: boolean
     paymentMethod?: boolean
     status?: boolean
@@ -10765,7 +10771,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type DonationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "campaignId" | "amount" | "currency" | "paymentMethod" | "status" | "transactionId" | "paymentId" | "orderId" | "paymentGateway" | "donorName" | "donorEmail" | "donorPhone" | "isAnonymous" | "message" | "receiptNumber" | "receiptUrl" | "donatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["donation"]>
+  export type DonationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "campaignId" | "amount" | "frequency" | "currency" | "paymentMethod" | "status" | "transactionId" | "paymentId" | "orderId" | "paymentGateway" | "donorName" | "donorEmail" | "donorPhone" | "isAnonymous" | "message" | "receiptNumber" | "receiptUrl" | "donatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["donation"]>
   export type DonationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | Donation$userArgs<ExtArgs>
     campaign?: boolean | Donation$campaignArgs<ExtArgs>
@@ -10805,6 +10811,7 @@ export namespace Prisma {
        *   =================================================
        */
       amount: Prisma.Decimal
+      frequency: string
       currency: string
       paymentMethod: $Enums.PaymentMethod
       status: $Enums.DonationStatus
@@ -11266,6 +11273,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"Donation", 'Int'>
     readonly campaignId: FieldRef<"Donation", 'Int'>
     readonly amount: FieldRef<"Donation", 'Decimal'>
+    readonly frequency: FieldRef<"Donation", 'String'>
     readonly currency: FieldRef<"Donation", 'String'>
     readonly paymentMethod: FieldRef<"Donation", 'PaymentMethod'>
     readonly status: FieldRef<"Donation", 'DonationStatus'>
@@ -21542,6 +21550,7 @@ export namespace Prisma {
     userId: 'userId',
     campaignId: 'campaignId',
     amount: 'amount',
+    frequency: 'frequency',
     currency: 'currency',
     paymentMethod: 'paymentMethod',
     status: 'status',
@@ -22572,6 +22581,7 @@ export namespace Prisma {
     userId?: IntNullableFilter<"Donation"> | number | null
     campaignId?: IntNullableFilter<"Donation"> | number | null
     amount?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    frequency?: StringFilter<"Donation"> | string
     currency?: StringFilter<"Donation"> | string
     paymentMethod?: EnumPaymentMethodFilter<"Donation"> | $Enums.PaymentMethod
     status?: EnumDonationStatusFilter<"Donation"> | $Enums.DonationStatus
@@ -22598,6 +22608,7 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     campaignId?: SortOrderInput | SortOrder
     amount?: SortOrder
+    frequency?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -22628,6 +22639,7 @@ export namespace Prisma {
     userId?: IntNullableFilter<"Donation"> | number | null
     campaignId?: IntNullableFilter<"Donation"> | number | null
     amount?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    frequency?: StringFilter<"Donation"> | string
     currency?: StringFilter<"Donation"> | string
     paymentMethod?: EnumPaymentMethodFilter<"Donation"> | $Enums.PaymentMethod
     status?: EnumDonationStatusFilter<"Donation"> | $Enums.DonationStatus
@@ -22653,6 +22665,7 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     campaignId?: SortOrderInput | SortOrder
     amount?: SortOrder
+    frequency?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -22685,6 +22698,7 @@ export namespace Prisma {
     userId?: IntNullableWithAggregatesFilter<"Donation"> | number | null
     campaignId?: IntNullableWithAggregatesFilter<"Donation"> | number | null
     amount?: DecimalWithAggregatesFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    frequency?: StringWithAggregatesFilter<"Donation"> | string
     currency?: StringWithAggregatesFilter<"Donation"> | string
     paymentMethod?: EnumPaymentMethodWithAggregatesFilter<"Donation"> | $Enums.PaymentMethod
     status?: EnumDonationStatusWithAggregatesFilter<"Donation"> | $Enums.DonationStatus
@@ -24043,6 +24057,7 @@ export namespace Prisma {
 
   export type DonationCreateInput = {
     amount: Decimal | DecimalJsLike | number | string
+    frequency?: string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
     status?: $Enums.DonationStatus
@@ -24069,6 +24084,7 @@ export namespace Prisma {
     userId?: number | null
     campaignId?: number | null
     amount: Decimal | DecimalJsLike | number | string
+    frequency?: string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
     status?: $Enums.DonationStatus
@@ -24090,6 +24106,7 @@ export namespace Prisma {
 
   export type DonationUpdateInput = {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
@@ -24116,6 +24133,7 @@ export namespace Prisma {
     userId?: NullableIntFieldUpdateOperationsInput | number | null
     campaignId?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
@@ -24140,6 +24158,7 @@ export namespace Prisma {
     userId?: number | null
     campaignId?: number | null
     amount: Decimal | DecimalJsLike | number | string
+    frequency?: string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
     status?: $Enums.DonationStatus
@@ -24161,6 +24180,7 @@ export namespace Prisma {
 
   export type DonationUpdateManyMutationInput = {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
@@ -24185,6 +24205,7 @@ export namespace Prisma {
     userId?: NullableIntFieldUpdateOperationsInput | number | null
     campaignId?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
@@ -25701,6 +25722,7 @@ export namespace Prisma {
     userId?: SortOrder
     campaignId?: SortOrder
     amount?: SortOrder
+    frequency?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -25732,6 +25754,7 @@ export namespace Prisma {
     userId?: SortOrder
     campaignId?: SortOrder
     amount?: SortOrder
+    frequency?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -25756,6 +25779,7 @@ export namespace Prisma {
     userId?: SortOrder
     campaignId?: SortOrder
     amount?: SortOrder
+    frequency?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
     status?: SortOrder
@@ -28239,6 +28263,7 @@ export namespace Prisma {
 
   export type DonationCreateWithoutUserInput = {
     amount: Decimal | DecimalJsLike | number | string
+    frequency?: string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
     status?: $Enums.DonationStatus
@@ -28263,6 +28288,7 @@ export namespace Prisma {
     id?: number
     campaignId?: number | null
     amount: Decimal | DecimalJsLike | number | string
+    frequency?: string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
     status?: $Enums.DonationStatus
@@ -28745,6 +28771,7 @@ export namespace Prisma {
     userId?: IntNullableFilter<"Donation"> | number | null
     campaignId?: IntNullableFilter<"Donation"> | number | null
     amount?: DecimalFilter<"Donation"> | Decimal | DecimalJsLike | number | string
+    frequency?: StringFilter<"Donation"> | string
     currency?: StringFilter<"Donation"> | string
     paymentMethod?: EnumPaymentMethodFilter<"Donation"> | $Enums.PaymentMethod
     status?: EnumDonationStatusFilter<"Donation"> | $Enums.DonationStatus
@@ -30050,6 +30077,7 @@ export namespace Prisma {
 
   export type DonationCreateWithoutCampaignInput = {
     amount: Decimal | DecimalJsLike | number | string
+    frequency?: string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
     status?: $Enums.DonationStatus
@@ -30074,6 +30102,7 @@ export namespace Prisma {
     id?: number
     userId?: number | null
     amount: Decimal | DecimalJsLike | number | string
+    frequency?: string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
     status?: $Enums.DonationStatus
@@ -32046,6 +32075,7 @@ export namespace Prisma {
     id?: number
     campaignId?: number | null
     amount: Decimal | DecimalJsLike | number | string
+    frequency?: string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
     status?: $Enums.DonationStatus
@@ -32201,6 +32231,7 @@ export namespace Prisma {
 
   export type DonationUpdateWithoutUserInput = {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
@@ -32225,6 +32256,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     campaignId?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
@@ -32248,6 +32280,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     campaignId?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
@@ -32964,6 +32997,7 @@ export namespace Prisma {
     id?: number
     userId?: number | null
     amount: Decimal | DecimalJsLike | number | string
+    frequency?: string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
     status?: $Enums.DonationStatus
@@ -32985,6 +33019,7 @@ export namespace Prisma {
 
   export type DonationUpdateWithoutCampaignInput = {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
@@ -33009,6 +33044,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
@@ -33032,6 +33068,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    frequency?: StringFieldUpdateOperationsInput | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     status?: EnumDonationStatusFieldUpdateOperationsInput | $Enums.DonationStatus
