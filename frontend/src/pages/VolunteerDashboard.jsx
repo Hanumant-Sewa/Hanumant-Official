@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   UserRound,
@@ -11,7 +11,6 @@ import {
   Award,
   TrendingUp,
   MapPin,
-  Bell,
   ChevronRight,
 } from "lucide-react";
 
@@ -20,22 +19,228 @@ import "../css/Volunteer.css";
 const VolunteerDashboard = () => {
   const navigate = useNavigate();
 
-  const applicationData = JSON.parse(
-    localStorage.getItem("volunteerApplication") || "{}",
-  );
+  // =========================================
+  // STATES
+  // =========================================
 
-  const volunteerName = applicationData.fullName || "Volunteer";
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // =========================================
+  // FETCH DASHBOARD DATA
+  // =========================================
+
+  const fetchDashboard = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await fetch(
+        "http://localhost:5000/api/volunteer-dashboard",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("Volunteer Dashboard Response:", data);
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to load volunteer dashboard"
+        );
+      }
+
+      setDashboardData(data);
+    } catch (error) {
+      console.error("Volunteer Dashboard Error:", error);
+
+      setError(
+        error.message || "Unable to load dashboard"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =========================================
+  // LOAD DASHBOARD
+  // =========================================
+
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
+
+  // =========================================
+  // LOADING
+  // =========================================
+
+  if (loading) {
+    return (
+      <div className="volunteer-dashboard-page">
+        <div
+          style={{
+            minHeight: "60vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            gap: "15px",
+          }}
+        >
+          <h2>Loading Dashboard...</h2>
+
+          <p>
+            Please wait while we load your volunteer
+            information.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================
+  // ERROR
+  // =========================================
+
+  if (error) {
+    return (
+      <div className="volunteer-dashboard-page">
+        <div
+          style={{
+            minHeight: "60vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            gap: "15px",
+          }}
+        >
+          <h2>Unable to Load Dashboard</h2>
+
+          <p>{error}</p>
+
+          <button
+            type="button"
+            onClick={fetchDashboard}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================
+  // DATA
+  // =========================================
+
+  const user = dashboardData?.user || {};
+
+  const volunteerProfile =
+    dashboardData?.volunteerProfile || {};
+
+  const application =
+    dashboardData?.application || {};
+
+  const statistics =
+    dashboardData?.statistics || {};
+
+  const upcomingEvents =
+    dashboardData?.upcomingEvents || [];
+
+  const tasks =
+    dashboardData?.tasks || [];
+
+  // =========================================
+  // VOLUNTEER NAME
+  // =========================================
+
+  const volunteerName =
+    user.name || "Volunteer";
+
+  // =========================================
+  // FORMAT DATE
+  // =========================================
+
+  const formatDate = (date) => {
+    if (!date) return "";
+
+    return new Date(date).toLocaleDateString(
+      "en-US",
+      {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }
+    );
+  };
+
+  // =========================================
+  // FORMAT DATE PARTS
+  // =========================================
+
+  const getMonth = (date) => {
+    if (!date) return "";
+
+    return new Date(date)
+      .toLocaleDateString("en-US", {
+        month: "short",
+      })
+      .toUpperCase();
+  };
+
+  const getDay = (date) => {
+    if (!date) return "";
+
+    return new Date(date).getDate();
+  };
+
+  // =========================================
+  // FORMAT TIME
+  // =========================================
+
+  const formatTime = (date) => {
+    if (!date) return "";
+
+    return new Date(date).toLocaleTimeString(
+      "en-US",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
+  };
+
+  // =========================================
+  // TASK STATUS
+  // =========================================
+
+  const isTaskCompleted = (status) => {
+    return (
+      status?.toUpperCase() === "COMPLETED"
+    );
+  };
 
   return (
     <div className="volunteer-dashboard-page">
+
       {/* =========================================
           DASHBOARD HEADER
       ========================================== */}
 
       <section className="dashboard-header">
+
         <div className="dashboard-header-content">
+
           <div className="dashboard-welcome">
-            <span className="dashboard-label">VOLUNTEER DASHBOARD</span>
+
+            <span className="dashboard-label">
+              VOLUNTEER DASHBOARD
+            </span>
 
             <h1>
               Welcome,
@@ -43,21 +248,30 @@ const VolunteerDashboard = () => {
             </h1>
 
             <p>
-              Thank you for being part of Hanumant Seva. Together, we can create
-              a meaningful impact.
+              Thank you for being part of Hanumant
+              Seva. Together, we can create a
+              meaningful impact.
             </p>
+
           </div>
 
           <div className="dashboard-profile-button">
+
             <button
               type="button"
-              onClick={() => navigate("/volunteer/profile")}
+              onClick={() =>
+                navigate("/volunteer/profile")
+              }
             >
               <UserRound size={18} />
+
               My Profile
             </button>
+
           </div>
+
         </div>
+
       </section>
 
       {/* =========================================
@@ -65,74 +279,101 @@ const VolunteerDashboard = () => {
       ========================================== */}
 
       <main className="dashboard-main">
+
         {/* =====================================
             QUICK STATS
         ====================================== */}
 
         <section className="dashboard-stats">
-          {/* Events */}
+
+          {/* EVENTS */}
 
           <div className="dashboard-stat-card">
+
             <div className="dashboard-stat-icon">
               <CalendarDays size={22} />
             </div>
 
             <div>
+
               <span>EVENTS</span>
 
-              <h3>12</h3>
+              <h3>
+                {statistics.totalEvents || 0}
+              </h3>
 
               <p>Events joined</p>
+
             </div>
+
           </div>
 
-          {/* Tasks */}
+          {/* TASKS */}
 
           <div className="dashboard-stat-card">
+
             <div className="dashboard-stat-icon">
               <CheckCircle size={22} />
             </div>
 
             <div>
+
               <span>TASKS</span>
 
-              <h3>28</h3>
+              <h3>
+                {statistics.completedTasks || 0}
+              </h3>
 
               <p>Tasks completed</p>
+
             </div>
+
           </div>
 
-          {/* Hours */}
+          {/* HOURS */}
 
           <div className="dashboard-stat-card">
+
             <div className="dashboard-stat-icon">
               <Clock3 size={22} />
             </div>
 
             <div>
+
               <span>HOURS</span>
 
-              <h3>46</h3>
+              <h3>
+                {statistics.totalHours || 0}
+              </h3>
 
               <p>Hours contributed</p>
+
             </div>
+
           </div>
 
-          {/* Impact */}
+          {/* IMPACT */}
 
           <div className="dashboard-stat-card">
+
             <div className="dashboard-stat-icon">
               <Heart size={22} />
             </div>
 
             <div>
+
               <span>IMPACT</span>
 
-              <h3>125</h3>
+              <h3>
+                {statistics.peopleSupported || 0}
+              </h3>
 
               <p>People supported</p>
+
             </div>
+
           </div>
+
         </section>
 
         {/* =====================================
@@ -140,128 +381,169 @@ const VolunteerDashboard = () => {
         ====================================== */}
 
         <section className="dashboard-grid">
+
           {/* ===================================
               LEFT COLUMN
           ==================================== */}
 
           <div className="dashboard-left">
+
             {/* =================================
                 UPCOMING EVENTS
             ================================== */}
 
             <div className="dashboard-card">
-              <div className="dashboard-card-header">
-                <div>
-                  <span className="card-small-label">YOUR SCHEDULE</span>
 
-                  <h2>Upcoming Events</h2>
+              <div className="dashboard-card-header">
+
+                <div>
+
+                  <span className="card-small-label">
+                    YOUR SCHEDULE
+                  </span>
+
+                  <h2>
+                    Upcoming Events
+                  </h2>
+
                 </div>
 
                 <button
                   type="button"
                   className="view-all-button"
-                  onClick={() => navigate("/volunteer/events")}
+                  onClick={() =>
+                    navigate("/volunteer/events")
+                  }
                 >
                   View All
+
                   <ChevronRight size={16} />
+
                 </button>
+
               </div>
 
-              {/* Event 1 */}
+              {/* =================================
+                  NO EVENTS
+              ================================== */}
 
-              <div className="dashboard-event">
-                <div className="event-date">
-                  <span>AUG</span>
+              {upcomingEvents.length === 0 ? (
 
-                  <strong>22</strong>
-                </div>
-
-                <div className="event-information">
-                  <h3>Community Food Distribution</h3>
-
-                  <p>
-                    <MapPin size={14} />
-                    Solapur Community Center
-                  </p>
-
-                  <p>
-                    <Clock3 size={14} />
-                    09:00 AM - 01:00 PM
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  className="event-arrow"
-                  onClick={() => navigate("/volunteer/events/1")}
+                <div
+                  style={{
+                    padding: "30px 10px",
+                    textAlign: "center",
+                  }}
                 >
-                  <ArrowRight size={18} />
-                </button>
-              </div>
-
-              {/* Event 2 */}
-
-              <div className="dashboard-event">
-                <div className="event-date">
-                  <span>AUG</span>
-
-                  <strong>28</strong>
-                </div>
-
-                <div className="event-information">
-                  <h3>Food Rescue Drive</h3>
+                  <CalendarDays
+                    size={35}
+                  />
 
                   <p>
-                    <MapPin size={14} />
-                    Hanumat Seva Center
+                    No upcoming events.
                   </p>
 
-                  <p>
-                    <Clock3 size={14} />
-                    10:00 AM - 02:00 PM
-                  </p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigate(
+                        "/volunteer/events"
+                      )
+                    }
+                  >
+                    Explore Events
+                  </button>
+
                 </div>
 
-                <button
-                  type="button"
-                  className="event-arrow"
-                  onClick={() => navigate("/volunteer/events/2")}
-                >
-                  <ArrowRight size={18} />
-                </button>
-              </div>
+              ) : (
 
-              {/* Event 3 */}
+                /* =================================
+                   EVENTS FROM DATABASE
+                ================================= */
 
-              <div className="dashboard-event">
-                <div className="event-date">
-                  <span>SEP</span>
+                upcomingEvents
+                  .slice(0, 3)
+                  .map((registration) => {
 
-                  <strong>05</strong>
-                </div>
+                    const event =
+                      registration.event;
 
-                <div className="event-information">
-                  <h3>Community Awareness Program</h3>
+                    return (
+                      <div
+                        className="dashboard-event"
+                        key={event.id}
+                      >
 
-                  <p>
-                    <MapPin size={14} />
-                    City Hall
-                  </p>
+                        <div className="event-date">
 
-                  <p>
-                    <Clock3 size={14} />
-                    11:00 AM - 03:00 PM
-                  </p>
-                </div>
+                          <span>
+                            {getMonth(
+                              event.startDate
+                            )}
+                          </span>
 
-                <button
-                  type="button"
-                  className="event-arrow"
-                  onClick={() => navigate("/volunteer/events/3")}
-                >
-                  <ArrowRight size={18} />
-                </button>
-              </div>
+                          <strong>
+                            {getDay(
+                              event.startDate
+                            )}
+                          </strong>
+
+                        </div>
+
+                        <div className="event-information">
+
+                          <h3>
+                            {event.title}
+                          </h3>
+
+                          <p>
+
+                            <MapPin size={14} />
+
+                            {event.location ||
+                              event.city ||
+                              "Location not specified"}
+
+                          </p>
+
+                          <p>
+
+                            <Clock3 size={14} />
+
+                            {formatTime(
+                              event.startDate
+                            )}
+
+                            {event.endDate &&
+                              ` - ${formatTime(
+                                event.endDate
+                              )}`}
+
+                          </p>
+
+                        </div>
+
+                        <button
+                          type="button"
+                          className="event-arrow"
+                          onClick={() =>
+                            navigate(
+                              `/volunteer/events/${event.id}`
+                            )
+                          }
+                        >
+                          <ArrowRight
+                            size={18}
+                          />
+                        </button>
+
+                      </div>
+                    );
+                  })
+
+              )}
+
             </div>
 
             {/* =================================
@@ -269,71 +551,143 @@ const VolunteerDashboard = () => {
             ================================== */}
 
             <div className="dashboard-card">
-              <div className="dashboard-card-header">
-                <div>
-                  <span className="card-small-label">YOUR WORK</span>
 
-                  <h2>Current Tasks</h2>
+              <div className="dashboard-card-header">
+
+                <div>
+
+                  <span className="card-small-label">
+                    YOUR WORK
+                  </span>
+
+                  <h2>
+                    Current Tasks
+                  </h2>
+
                 </div>
 
                 <button
                   type="button"
                   className="view-all-button"
-                  onClick={() => navigate("/volunteer/tasks")}
+                  onClick={() =>
+                    navigate(
+                      "/volunteer/tasks"
+                    )
+                  }
                 >
+
                   View Tasks
+
                   <ChevronRight size={16} />
+
                 </button>
+
               </div>
 
-              {/* Task 1 */}
+              {/* =================================
+                  NO TASKS
+              ================================== */}
 
-              <div className="task-item">
-                <div className="task-icon">
-                  <ClipboardCheck size={19} />
+              {tasks.length === 0 ? (
+
+                <div
+                  style={{
+                    padding: "30px 10px",
+                    textAlign: "center",
+                  }}
+                >
+
+                  <ClipboardCheck
+                    size={35}
+                  />
+
+                  <p>
+                    No tasks assigned yet.
+                  </p>
+
                 </div>
 
-                <div className="task-information">
-                  <h3>Prepare Food Distribution List</h3>
+              ) : (
 
-                  <p>Due: August 20, 2026</p>
-                </div>
+                /* =================================
+                   TASKS FROM DATABASE
+                ================================= */
 
-                <span className="task-status">Pending</span>
-              </div>
+                tasks
+                  .slice(0, 3)
+                  .map((task) => {
 
-              {/* Task 2 */}
+                    const completed =
+                      isTaskCompleted(
+                        task.status
+                      );
 
-              <div className="task-item">
-                <div className="task-icon completed">
-                  <CheckCircle size={19} />
-                </div>
+                    return (
+                      <div
+                        className="task-item"
+                        key={task.id}
+                      >
 
-                <div className="task-information">
-                  <h3>Volunteer Orientation</h3>
+                        <div
+                          className={`task-icon ${
+                            completed
+                              ? "completed"
+                              : ""
+                          }`}
+                        >
 
-                  <p>Completed: August 12, 2026</p>
-                </div>
+                          {completed ? (
+                            <CheckCircle
+                              size={19}
+                            />
+                          ) : (
+                            <ClipboardCheck
+                              size={19}
+                            />
+                          )}
 
-                <span className="task-status completed-status">Completed</span>
-              </div>
+                        </div>
 
-              {/* Task 3 */}
+                        <div className="task-information">
 
-              <div className="task-item">
-                <div className="task-icon">
-                  <ClipboardCheck size={19} />
-                </div>
+                          <h3>
+                            {task.title}
+                          </h3>
 
-                <div className="task-information">
-                  <h3>Community Visit Report</h3>
+                          <p>
 
-                  <p>Due: August 25, 2026</p>
-                </div>
+                            {completed
+                              ? `Completed: ${formatDate(
+                                  task.completedAt
+                                )}`
+                              : task.dueDate
+                              ? `Due: ${formatDate(
+                                  task.dueDate
+                                )}`
+                              : "No due date"}
 
-                <span className="task-status">Pending</span>
-              </div>
+                          </p>
+
+                        </div>
+
+                        <span
+                          className={`task-status ${
+                            completed
+                              ? "completed-status"
+                              : ""
+                          }`}
+                        >
+                          {task.status}
+                        </span>
+
+                      </div>
+                    );
+                  })
+
+              )}
+
             </div>
+
           </div>
 
           {/* ===================================
@@ -341,49 +695,87 @@ const VolunteerDashboard = () => {
           ==================================== */}
 
           <div className="dashboard-right">
+
             {/* =================================
                 PROFILE CARD
             ================================== */}
 
             <div className="dashboard-profile-card">
+
               <div className="profile-card-top">
+
                 <div className="profile-avatar">
+
                   <UserRound size={32} />
+
                 </div>
 
                 <div>
-                  <span>VOLUNTEER</span>
 
-                  <h3>{volunteerName}</h3>
+                  <span>
+                    VOLUNTEER
+                  </span>
 
-                  <p>Active Volunteer</p>
+                  <h3>
+                    {volunteerName}
+                  </h3>
+
+                  <p>
+                    {volunteerProfile.isVerified
+                      ? "Verified Volunteer"
+                      : "Active Volunteer"}
+                  </p>
+
                 </div>
+
               </div>
 
               <div className="profile-card-info">
+
                 <div>
-                  <small>Email</small>
+
+                  <small>
+                    Email
+                  </small>
 
                   <strong>
-                    {applicationData.email || "volunteer@example.com"}
+                    {user.email ||
+                      "Not available"}
                   </strong>
+
                 </div>
 
                 <div>
-                  <small>City</small>
 
-                  <strong>{applicationData.city || "Solapur"}</strong>
+                  <small>
+                    City
+                  </small>
+
+                  <strong>
+                    {volunteerProfile.city ||
+                      "Not specified"}
+                  </strong>
+
                 </div>
+
               </div>
 
               <button
                 type="button"
                 className="outline-button profile-button"
-                onClick={() => navigate("/volunteer/profile")}
+                onClick={() =>
+                  navigate(
+                    "/volunteer/profile"
+                  )
+                }
               >
+
                 View Profile
+
                 <ArrowRight size={17} />
+
               </button>
+
             </div>
 
             {/* =================================
@@ -391,23 +783,42 @@ const VolunteerDashboard = () => {
             ================================== */}
 
             <div className="dashboard-impact-card">
+
               <div className="impact-icon">
+
                 <TrendingUp size={25} />
+
               </div>
 
-              <span>YOUR IMPACT</span>
+              <span>
+                YOUR IMPACT
+              </span>
 
-              <h2>125</h2>
+              <h2>
+                {statistics.peopleSupported ||
+                  0}
+              </h2>
 
-              <p>people supported through your volunteer activities</p>
+              <p>
+                people supported through your
+                volunteer activities
+              </p>
 
               <button
                 type="button"
-                onClick={() => navigate("/volunteer/impact")}
+                onClick={() =>
+                  navigate(
+                    "/volunteer/impact"
+                  )
+                }
               >
+
                 View My Impact
+
                 <ArrowRight size={16} />
+
               </button>
+
             </div>
 
             {/* =================================
@@ -415,24 +826,45 @@ const VolunteerDashboard = () => {
             ================================== */}
 
             <div className="dashboard-certificate-card">
+
               <div className="certificate-icon">
+
                 <Award size={25} />
+
               </div>
 
               <div>
-                <span>CERTIFICATES</span>
 
-                <h3>2 Certificates</h3>
+                <span>
+                  CERTIFICATES
+                </span>
 
-                <p>Keep serving and unlock more achievements.</p>
+                <h3>
+                  {statistics.certificates ||
+                    0}{" "}
+                  Certificates
+                </h3>
+
+                <p>
+                  Keep serving and unlock more
+                  achievements.
+                </p>
+
               </div>
 
               <button
                 type="button"
-                onClick={() => navigate("/volunteer/certificates")}
+                onClick={() =>
+                  navigate(
+                    "/volunteer/certificates"
+                  )
+                }
               >
+
                 <ArrowRight size={18} />
+
               </button>
+
             </div>
 
             {/* =================================
@@ -440,47 +872,87 @@ const VolunteerDashboard = () => {
             ================================== */}
 
             <div className="dashboard-quick-card">
-              <span className="card-small-label">QUICK ACCESS</span>
 
-              <h2>Explore</h2>
+              <span className="card-small-label">
+                QUICK ACCESS
+              </span>
+
+              <h2>
+                Explore
+              </h2>
 
               <button
                 type="button"
-                onClick={() => navigate("/volunteer/events")}
+                onClick={() =>
+                  navigate(
+                    "/volunteer/events"
+                  )
+                }
               >
+
                 <CalendarDays size={18} />
+
                 Events
+
                 <ArrowRight size={16} />
+
               </button>
 
               <button
                 type="button"
-                onClick={() => navigate("/volunteer/tasks")}
+                onClick={() =>
+                  navigate(
+                    "/volunteer/tasks"
+                  )
+                }
               >
+
                 <ClipboardCheck size={18} />
+
                 My Tasks
+
                 <ArrowRight size={16} />
+
               </button>
 
               <button
                 type="button"
-                onClick={() => navigate("/volunteer/impact")}
+                onClick={() =>
+                  navigate(
+                    "/volunteer/impact"
+                  )
+                }
               >
+
                 <TrendingUp size={18} />
+
                 My Impact
+
                 <ArrowRight size={16} />
+
               </button>
 
               <button
                 type="button"
-                onClick={() => navigate("/volunteer/certificates")}
+                onClick={() =>
+                  navigate(
+                    "/volunteer/certificates"
+                  )
+                }
               >
+
                 <Award size={18} />
+
                 Certificates
+
                 <ArrowRight size={16} />
+
               </button>
+
             </div>
+
           </div>
+
         </section>
 
         {/* =====================================
@@ -488,37 +960,58 @@ const VolunteerDashboard = () => {
         ====================================== */}
 
         <section className="dashboard-motivation">
+
           <div className="motivation-image">
+
             <img
               src="/images/volunteer-dashboard.png"
               alt="Volunteers working together"
             />
+
           </div>
 
           <div className="motivation-content">
-            <span>EVERY ACTION MATTERS</span>
+
+            <span>
+              EVERY ACTION MATTERS
+            </span>
 
             <h2>
               Your time can
-              <strong> change a life.</strong>
+              <strong>
+                {" "}change a life.
+              </strong>
             </h2>
 
             <p>
-              Every hour you contribute, every task you complete and every
-              person you help brings us one step closer to a stronger community.
+              Every hour you contribute, every
+              task you complete and every person
+              you help brings us one step closer
+              to a stronger community.
             </p>
 
             <button
               type="button"
               className="orange-button"
-              onClick={() => navigate("/volunteer/events")}
+              onClick={() =>
+                navigate(
+                  "/volunteer/events"
+                )
+              }
             >
+
               Explore Events
+
               <ArrowRight size={18} />
+
             </button>
+
           </div>
+
         </section>
+
       </main>
+
     </div>
   );
 };
