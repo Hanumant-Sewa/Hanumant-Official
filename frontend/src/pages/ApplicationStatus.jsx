@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Clock3,
@@ -8,30 +8,180 @@ import {
   ArrowRight,
   UserRound,
   LayoutDashboard,
+  Loader2,
 } from "lucide-react";
 
 const ApplicationStatus = () => {
   const navigate = useNavigate();
 
-  const applicationData = JSON.parse(
-    localStorage.getItem("volunteerApplication") || "{}"
-  );
+  const [application, setApplication] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // ADDED: Get latest application status
-  const applicationStatus =
-    localStorage.getItem("volunteerApplicationStatus") || "Pending";
+  // =====================================================
+  // GET APPLICATION STATUS FROM BACKEND
+  // =====================================================
 
-  // ADDED: Check whether application was submitted
-  const applicationSubmitted =
-    localStorage.getItem("volunteerApplicationSubmitted") === "true";
+  useEffect(() => {
+    const fetchApplicationStatus = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-  const isPending = applicationStatus === "Pending";
-  const isApproved = applicationStatus === "Approved";
-  const isRejected = applicationStatus === "Rejected";
+        const response = await fetch(
+          "http://localhost:5000/api/volunteer-applications/status",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
-  // ADDED: Demo dashboard access
-  const canAccessDashboard =
-    applicationSubmitted && isApproved;
+        const data = await response.json();
+
+        console.log("Application Status Response:", data);
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Failed to fetch application status"
+          );
+        }
+
+        setApplication(data.application);
+      } catch (error) {
+        console.error("Application Status Error:", error);
+
+        setError(
+          error.message || "Unable to fetch application status"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplicationStatus();
+  }, []);
+
+  // =====================================================
+  // LOADING
+  // =====================================================
+
+  if (loading) {
+    return (
+      <div className="application-status-page">
+        <section className="application-section">
+          <div className="status-container">
+            <div className="status-card">
+              <div className="status-icon pending">
+                <Loader2 size={42} className="loading-icon" />
+              </div>
+
+              <h2>
+                Loading <span>Application Status...</span>
+              </h2>
+
+              <p>
+                Please wait while we fetch your volunteer
+                application status.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // =====================================================
+  // ERROR
+  // =====================================================
+
+  if (error) {
+    return (
+      <div className="application-status-page">
+
+        <section className="application-hero">
+          <div className="application-hero-overlay"></div>
+
+          <div className="application-hero-content">
+
+            <button
+              type="button"
+              className="back-button"
+              onClick={() => navigate("/volunteer")}
+            >
+              <ArrowLeft size={17} />
+              Back to Volunteer
+            </button>
+
+            <span className="application-label">
+              HANUMAT SEVA
+            </span>
+
+            <h1>
+              Application
+              <span> Status</span>
+            </h1>
+
+            <p>
+              Track the current status of your volunteer
+              application and your next steps.
+            </p>
+
+          </div>
+        </section>
+
+        <section className="application-section">
+          <div className="status-container">
+
+            <div className="status-card">
+
+              <div className="status-icon rejected">
+                <XCircle size={42} />
+              </div>
+
+              <span className="status-label">
+                APPLICATION STATUS
+              </span>
+
+              <h2>
+                Unable to Load
+                <span> Application</span>
+              </h2>
+
+              <p>
+                {error}
+              </p>
+
+              <button
+                type="button"
+                className="orange-button status-action"
+                onClick={() => window.location.reload()}
+              >
+                Try Again
+                <ArrowRight size={18} />
+              </button>
+
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    );
+  }
+
+  // =====================================================
+  // APPLICATION STATUS
+  // =====================================================
+
+  const status = application?.status?.toUpperCase();
+
+  const isPending = status === "PENDING";
+  const isApproved = status === "APPROVED";
+  const isRejected = status === "REJECTED";
+
+  // =====================================================
+  // MAIN UI
+  // =====================================================
 
   return (
     <div className="application-status-page">
@@ -89,7 +239,9 @@ const ApplicationStatus = () => {
 
           <div className="status-card">
 
-            {/* Pending */}
+            {/* ===============================
+                PENDING
+            ================================ */}
 
             {isPending && (
               <>
@@ -121,7 +273,9 @@ const ApplicationStatus = () => {
             )}
 
 
-            {/* Approved */}
+            {/* ===============================
+                APPROVED
+            ================================ */}
 
             {isApproved && (
               <>
@@ -165,7 +319,9 @@ const ApplicationStatus = () => {
             )}
 
 
-            {/* Rejected */}
+            {/* ===============================
+                REJECTED
+            ================================ */}
 
             {isRejected && (
               <>
@@ -186,7 +342,7 @@ const ApplicationStatus = () => {
                   Unfortunately, your volunteer
                   application was not approved at this
                   time. You may review your details and
-                  contact the Hanumant Seva team for more
+                  contact the Hanumat Seva team for more
                   information.
                 </p>
 
@@ -194,6 +350,13 @@ const ApplicationStatus = () => {
                   <XCircle size={16} />
                   Application Rejected
                 </div>
+
+                {application?.adminRemarks && (
+                  <div className="admin-remarks">
+                    <strong>Admin Remarks:</strong>
+                    <p>{application.adminRemarks}</p>
+                  </div>
+                )}
 
                 <button
                   type="button"
@@ -215,7 +378,7 @@ const ApplicationStatus = () => {
               APPLICATION DETAILS
           ====================================== */}
 
-          {Object.keys(applicationData).length > 0 && (
+          {application && (
             <div className="application-details-card">
 
               <div className="details-heading">
@@ -240,51 +403,52 @@ const ApplicationStatus = () => {
               <div className="details-grid">
 
                 <div className="detail-item">
-                  <small>Full Name</small>
+                  <small>Application ID</small>
                   <strong>
-                    {applicationData.fullName || "-"}
+                    #{application.id || "-"}
                   </strong>
                 </div>
 
                 <div className="detail-item">
-                  <small>Email</small>
+                  <small>Status</small>
                   <strong>
-                    {applicationData.email || "-"}
+                    {application.status || "-"}
                   </strong>
                 </div>
 
                 <div className="detail-item">
-                  <small>Phone</small>
+                  <small>Preferred Activity</small>
                   <strong>
-                    {applicationData.phone || "-"}
-                  </strong>
-                </div>
-
-                <div className="detail-item">
-                  <small>City</small>
-                  <strong>
-                    {applicationData.city || "-"}
-                  </strong>
-                </div>
-
-                <div className="detail-item">
-                  <small>Age Group</small>
-                  <strong>
-                    {applicationData.ageGroup || "-"}
+                    {application.preferredArea || "-"}
                   </strong>
                 </div>
 
                 <div className="detail-item">
                   <small>Availability</small>
                   <strong>
-                    {applicationData.availability || "-"}
+                    {application.availability || "-"}
                   </strong>
                 </div>
 
-                <div className="detail-item full-width">
-                  <small>Preferred Activity</small>
+                <div className="detail-item">
+                  <small>Application Date</small>
                   <strong>
-                    {applicationData.preferredActivity || "-"}
+                    {application.createdAt
+                      ? new Date(
+                          application.createdAt
+                        ).toLocaleDateString()
+                      : "-"}
+                  </strong>
+                </div>
+
+                <div className="detail-item">
+                  <small>Last Updated</small>
+                  <strong>
+                    {application.updatedAt
+                      ? new Date(
+                          application.updatedAt
+                        ).toLocaleDateString()
+                      : "-"}
                   </strong>
                 </div>
 
@@ -310,6 +474,8 @@ const ApplicationStatus = () => {
 
             <div className="journey-steps">
 
+              {/* STEP 1 */}
+
               <div className="journey-step active">
 
                 <div className="journey-number">
@@ -333,9 +499,13 @@ const ApplicationStatus = () => {
               <div className="journey-line"></div>
 
 
+              {/* STEP 2 */}
+
               <div
                 className={`journey-step ${
-                  isApproved ? "active" : ""
+                  isApproved || isRejected
+                    ? "active"
+                    : ""
                 }`}
               >
 
@@ -359,6 +529,8 @@ const ApplicationStatus = () => {
 
               <div className="journey-line"></div>
 
+
+              {/* STEP 3 */}
 
               <div
                 className={`journey-step ${
@@ -388,41 +560,58 @@ const ApplicationStatus = () => {
           </div>
 
 
-                 {/* BUTTON ACTIONS */}
-        <div className="status-bottom-actions">
+          {/* =====================================
+              BUTTON ACTIONS
+          ====================================== */}
 
-          {/* DEMO DASHBOARD ACCESS */}
-          {canAccessDashboard && (
+          <div className="status-bottom-actions">
+
+            {/* APPROVED → DASHBOARD */}
+
+            {isApproved && (
+              <div className="status-bottom-action">
+
+                <button
+                  type="button"
+                  className="orange-button status-action"
+                  onClick={() =>
+                    navigate("/volunteer/dashboard")
+                  }
+                >
+                  <LayoutDashboard size={18} />
+                  Go to Volunteer Dashboard
+                  <ArrowRight size={18} />
+                </button>
+
+              </div>
+            )}
+
+
+            {/* BACK TO VOLUNTEER */}
+
             <div className="status-bottom-action">
+
               <button
                 type="button"
-                className="orange-button status-action"
-                onClick={() => navigate("/volunteer/dashboard")}
+                className="outline-button"
+                onClick={() =>
+                  navigate("/volunteer")
+                }
               >
-                <LayoutDashboard size={18} />
-                Go to Volunteer Dashboard
-                <ArrowRight size={18} />
+                <ArrowLeft size={17} />
+                Back to Volunteer Page
               </button>
-            </div>
-          )}
 
-          {/* BACK HOME BUTTON */}
-          <div className="status-bottom-action">
-            <button
-              type="button"
-              className="outline-button"
-              onClick={() => navigate("/volunteer")}
-            >
-              <ArrowLeft size={17} />
-              Back to Volunteer Page
-            </button>
+            </div>
+
           </div>
 
         </div>
-      </div>
-    </section>
-  </div>
-);
+
+      </section>
+
+    </div>
+  );
 };
 
 export default ApplicationStatus;
