@@ -2,9 +2,87 @@ import { Heart, Users, ShieldCheck, ArrowRight } from "lucide-react";
 
 import { Link } from "react-router-dom";
 
+import ProtectedButton from "./ProtectedButton";
+import ProtectedLink from "./ProtectedLink";
+
 const About = () => {
   return (
     <>
+      {/* =====================================================
+          3. ONE PERSON. ONE MEAL. ONE MONTH.
+      ===================================================== */}
+
+      <section className="about">
+        <div className="container about-container">
+          {/* ================= LEFT - IMAGE ================= */}
+
+          <div className="about-image">
+            <div className="about-image-wrapper">
+              <img src="/images/about.jpg" alt="Hanumat Seva food service" />
+
+              <div className="about-image-badge">
+                <Heart size={20} fill="currentColor" />
+
+                <span>Small acts. Big impact.</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ================= RIGHT - CONTENT ================= */}
+
+          <div className="about-content">
+            <span className="section-badge">₹50 MONTHLY MISSION</span>
+
+            <h2>
+              One Person.
+              <span> One Meal. One Month.</span>
+            </h2>
+
+            <p className="about-intro">
+              You don't have to do everything to help someone. Sometimes, one
+              small contribution can become someone's meal.
+            </p>
+
+            <p>
+              A simple ₹50 monthly contribution can become part of a collective
+              effort to support food-related initiatives and people who need
+              support.
+            </p>
+
+            {/* ================= CONTRIBUTION OPTIONS ================= */}
+
+            <div className="about-highlights">
+              <div className="about-highlight">
+                <strong>₹50</strong>
+                <span>1 Person</span>
+              </div>
+
+              <div className="about-highlight">
+                <strong>₹100</strong>
+                <span>2 People</span>
+              </div>
+
+              <div className="about-highlight">
+                <strong>₹250</strong>
+                <span>5 People</span>
+              </div>
+
+              <div className="about-highlight">
+                <strong>₹500</strong>
+                <span>10 People</span>
+              </div>
+            </div>
+
+            {/* ================= MONTHLY SUPPORT ================= */}
+
+            <ProtectedButton to="/donate" className="about-btn">
+              Start Monthly Support
+              <ArrowRight size={18} />
+            </ProtectedButton>
+          </div>
+        </div>
+      </section>
+
       {/* =====================================================
           1. TRANSPARENCY PROMISE
       ===================================================== */}
@@ -122,171 +200,17 @@ const About = () => {
             <div className="transparency-footer">
               <p>Every contribution should have a visible journey.</p>
 
-              <Link to="/transparency">
+              <ProtectedLink
+                to="/transparency"
+                state={{
+                  from: "/transparency",
+                }}
+                className="transparency-link"
+              >
                 View Transparency
                 <ArrowRight size={17} />
-              </Link>
+              </ProtectedLink>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          2. FOLLOW YOUR CONTRIBUTION
-      ===================================================== */}
-
-      <section className="about" id="about">
-        <div className="container about-container">
-          {/* ================= LEFT - CONTENT ================= */}
-
-          <div className="about-content">
-            <span className="section-badge">YOUR CONTRIBUTION</span>
-
-            <h2>
-              Follow Your
-              <span> Contribution.</span>
-            </h2>
-
-            <p className="about-intro">
-              We believe every contribution deserves a visible journey. You
-              should know where your support goes and what it helps create.
-            </p>
-
-            <p>
-              From contribution to campaign, purchase, distribution, and impact
-              — Hanumat Seva is built around transparency and responsible
-              service.
-            </p>
-
-            {/* ================= HIGHLIGHTS ================= */}
-
-            <div className="about-highlights">
-              <div className="about-highlight">
-                <strong>01</strong>
-                <span>Your Support</span>
-              </div>
-
-              <div className="about-highlight">
-                <strong>02</strong>
-                <span>Campaign</span>
-              </div>
-
-              <div className="about-highlight">
-                <strong>03</strong>
-                <span>Distribution</span>
-              </div>
-
-              <div className="about-highlight">
-                <strong>04</strong>
-                <span>Impact</span>
-              </div>
-            </div>
-
-            {/* ================= BUTTON ================= */}
-
-            <Link to="/transparency" className="about-btn">
-              Follow Your Contribution
-              <ArrowRight size={18} />
-            </Link>
-          </div>
-
-          {/* ================= RIGHT - VISUAL ================= */}
-
-          <div className="about-image">
-            <div className="about-image-wrapper">
-              <div className="about-image-badge">
-                <Heart size={20} fill="currentColor" />
-
-                <span>Small acts. Big impact.</span>
-              </div>
-
-              <div className="about-image-placeholder">
-                <ShieldCheck size={70} />
-
-                <span>Every contribution has a journey.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          3. ONE PERSON. ONE MEAL. ONE MONTH.
-      ===================================================== */}
-
-      <section className="about">
-        <div className="container about-container">
-          {/* ================= LEFT - IMAGE ================= */}
-
-          <div className="about-image">
-            <div className="about-image-wrapper">
-              <img src="/images/about.jpg" alt="Hanumat Seva food service" />
-
-              <div className="about-image-badge">
-                <Heart size={20} fill="currentColor" />
-
-                <span>Small acts. Big impact.</span>
-              </div>
-            </div>
-          </div>
-
-          {/* ================= RIGHT - CONTENT ================= */}
-
-          <div className="about-content">
-            <span className="section-badge">₹50 MONTHLY MISSION</span>
-
-            <h2>
-              One Person.
-              <span> One Meal. One Month.</span>
-            </h2>
-
-            <p className="about-intro">
-              You don't have to do everything to help someone. Sometimes, one
-              small contribution can become someone's meal.
-            </p>
-
-            <p>
-              A simple ₹50 monthly contribution can become part of a collective
-              effort to support food-related initiatives and people who need
-              support.
-            </p>
-
-            {/* ================= CONTRIBUTION OPTIONS ================= */}
-
-            <div className="about-highlights">
-              <div className="about-highlight">
-                <strong>₹50</strong>
-                <span>1 Person</span>
-              </div>
-
-              <div className="about-highlight">
-                <strong>₹100</strong>
-                <span>2 People</span>
-              </div>
-
-              <div className="about-highlight">
-                <strong>₹250</strong>
-                <span>5 People</span>
-              </div>
-
-              <div className="about-highlight">
-                <strong>₹500</strong>
-                <span>10 People</span>
-              </div>
-            </div>
-
-            {/* ================= MONTHLY SUPPORT ================= */}
-
-            <Link
-              to="/login"
-              state={{
-                from: "/donate",
-              }}
-              className="about-btn"
-            >
-              Start Monthly Support
-              <ArrowRight size={18} />
-            </Link>
           </div>
         </div>
       </section>
@@ -295,7 +219,7 @@ const About = () => {
           4. FOUNDER SECTION
       ===================================================== */}
 
-      <section className="founder-section">
+      <section className="founder-section" id="about">
         <div className="container">
           {/* ================= FOUNDER HEADING ================= */}
 

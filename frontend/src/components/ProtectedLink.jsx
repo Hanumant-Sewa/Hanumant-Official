@@ -1,39 +1,33 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
 
-function ProtectedButton({ to, className, children, ...props }) {
-  const navigate = useNavigate();
+function ProtectedLink({ to, children, ...props }) {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
   const handleClick = (e) => {
-    e.preventDefault();
-
-    // Wait until authentication status is checked
     if (loading) {
+      e.preventDefault();
       return;
     }
 
-    // User is not logged in
     if (!user) {
+      e.preventDefault();
+
       Swal.fire({
         title: "Login Required",
-        text: "Please login first to continue.",
+        text: "Please login to view your contribution history.",
         icon: "warning",
         confirmButtonText: "Go to Login",
         showCancelButton: true,
         cancelButtonText: "Cancel",
-
-        // Hanumat Seva theme
         background: "#fffaf3",
         color: "#3b2a1f",
-
         confirmButtonColor: "#e87524",
         cancelButtonColor: "#8b6f5a",
-
         buttonsStyling: true,
-
         customClass: {
           popup: "hanumat-swal-popup",
           title: "hanumat-swal-title",
@@ -45,29 +39,19 @@ function ProtectedButton({ to, className, children, ...props }) {
         if (result.isConfirmed) {
           navigate("/login", {
             state: {
-              intendedPage: to,
+              from: to,
             },
           });
         }
       });
-
-      return;
     }
-
-    // User is authenticated
-    navigate(to);
   };
 
   return (
-    <button
-      type="button"
-      className={className}
-      onClick={handleClick}
-      {...props}
-    >
+    <Link to={to} {...props} onClick={handleClick}>
       {children}
-    </button>
+    </Link>
   );
 }
 
-export default ProtectedButton;
+export default ProtectedLink;
