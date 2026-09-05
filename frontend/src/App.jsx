@@ -100,11 +100,13 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+
           {/* =================================================
               PUBLIC PAGES WITH NAVBAR
           ================================================= */}
 
           <Route element={<Layout />}>
+
             {/* =================================================
                 HOME / LANDING PAGE
             ================================================= */}
@@ -212,6 +214,8 @@ function App() {
               }
             />
 
+            {/* Short URL for Application Status */}
+
             <Route
               path="/volunteer/status"
               element={
@@ -297,6 +301,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
           </Route>
 
           {/* =================================================
@@ -312,13 +317,14 @@ function App() {
 
           {/* =================================================
               PUBLIC PAGES
-              ================================================= */}
+          ================================================= */}
 
           <Route path="/community" element={<Community />} />
 
           <Route path="/transparency" element={<Transparency />} />
 
           <Route path="/community/join" element={<JoinCommunity />} />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>
