@@ -1,4 +1,4 @@
-import "./Transparency.css";
+import "../css/Transparency.css";
 
 import {
   ArrowRight,

@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
+import ProtectedButton from "./ProtectedButton";
 
 function Campaigns() {
   const campaigns = [
@@ -100,6 +101,8 @@ function Campaigns() {
 
             return (
               <div className="campaign-card" key={campaign.title}>
+                {/* TOP */}
+
                 <div className="campaign-top">
                   <div className="campaign-icon">
                     <Icon size={28} strokeWidth={2} />
@@ -107,6 +110,8 @@ function Campaigns() {
 
                   <span className="campaign-status">Active</span>
                 </div>
+
+                {/* CONTENT */}
 
                 <div className="campaign-content">
                   <h3>{campaign.title}</h3>
@@ -139,14 +144,21 @@ function Campaigns() {
                 <div className="campaign-meta">
                   <div>
                     <span>Supported</span>
+
                     <strong>{campaign.amount}</strong>
                   </div>
 
                   <div>
                     <span>Target</span>
+
                     <strong>{campaign.target} meals</strong>
                   </div>
                 </div>
+
+                {/* CAMPAIGN DETAILS */}
+
+                {/* Keep this public for now because
+                    the Campaign page has not been created yet. */}
 
                 <Link to="/campaigns" className="campaign-link">
                   View Campaign
@@ -182,24 +194,37 @@ function Campaigns() {
 
               return (
                 <div className="community-journey-item" key={item.title}>
+                  {/* ICON */}
+
                   <div className="community-journey-icon">
                     <Icon size={25} />
                   </div>
 
+                  {/* NUMBER */}
+
                   <span className="community-journey-number">
                     {item.number}
                   </span>
+
+                  {/* CONTENT */}
 
                   <div className="community-journey-content">
                     <h4>{item.title}</h4>
 
                     <p>{item.text}</p>
 
-                    <Link to={item.link}>
+                    {/* PROTECTED ACTION */}
+
+                    <ProtectedButton
+                      to={item.link}
+                      className="community-journey-explore"
+                    >
                       Explore
                       <ArrowRight size={15} />
-                    </Link>
+                    </ProtectedButton>
                   </div>
+
+                  {/* CONNECTING LINE */}
 
                   {index < communityJourney.length - 1 && (
                     <div className="community-journey-line"></div>
@@ -219,10 +244,12 @@ function Campaigns() {
             <h3>Every small contribution can help move a campaign forward.</h3>
           </div>
 
-          <Link to="/donate" className="campaigns-cta-btn">
+          {/* PROTECTED DONATION ACTION */}
+
+          <ProtectedButton to="/donate" className="campaigns-cta-btn">
             Support a Campaign
             <Heart size={18} />
-          </Link>
+          </ProtectedButton>
         </div>
       </div>
     </section>

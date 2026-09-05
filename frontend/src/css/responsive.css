@@ -1594,3 +1594,82 @@
     }
 
 }
+
+/* =====================================================
+   FOUNDER RESPONSIVE
+===================================================== */
+
+@media (max-width: 700px) {
+
+  .founder-card-top {
+    grid-template-columns: auto 1fr;
+  }
+
+  .founder-year {
+    grid-column: 2;
+    align-items: flex-start;
+    text-align: left;
+    margin-top: -0.5rem;
+  }
+
+  .founder-footer {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .founder-card {
+    padding: 1.5rem;
+  }
+
+  .founder-card-top {
+    gap: 1rem;
+  }
+
+  .founder-mark {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .founder-message {
+    padding: 0;
+  }
+
+  .founder-message p {
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .founder-footer-item {
+    padding-left: 0.8rem;
+  }
+
+}
+/* =====================================================
+   RESPONSIVE PROFILE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .profile-dropdown-container {
+    display: none;
+  }
+
+}
+
+
+/* =====================================================
+   SMALL SCREENS
+===================================================== */
+
+@media (max-width: 480px) {
+
+  .mobile-menu {
+    width: 100%;
+  }
+
+}
+
