@@ -7,9 +7,7 @@ import {
   HandHeart,
   Star,
 } from "lucide-react";
-
-import { Link } from "react-router-dom";
-
+import ProtectedButton from "./ProtectedButton";
 function Hero() {
   return (
     <section className="hero" id="home">
@@ -24,7 +22,9 @@ function Hero() {
           <h1>
             सेवा से बड़ा
             <br />
-            कोई <span>धर्म</span> नहीं
+            <span className="second-line">
+              कोई <span className="orange">धर्म</span> नहीं
+            </span>
           </h1>
 
           <div className="hero-divider">
@@ -38,33 +38,26 @@ function Hero() {
             small contribution can become someone's meal.
           </p>
 
+          {/* =========================
+              HERO BUTTONS
+          ========================== */}
+
           <div className="hero-buttons">
-            <Link to="/login" className="hero-btn hero-btn-primary">
+            <ProtectedButton to="/donate" className="hero-btn hero-btn-primary">
               <Heart size={20} />
               Support 1 Person – ₹50
-            </Link>
+            </ProtectedButton>
 
-            <Link to="/community" className="hero-btn hero-btn-outline">
+            <ProtectedButton
+              to="/community"
+              className="hero-btn hero-btn-outline"
+            >
               <Users size={25} />
               Join Our Community
-            </Link>
+            </ProtectedButton>
           </div>
 
           <p className="hero-founder">Founded in 2026 by Manisha Nigam</p>
-
-          {/* BUTTONS */}
-          {/* <div className="hero-buttons">
-            <Link to="/login" className="hero-btn hero-btn-primary">
-              <Heart size={25} />
-              Donate Now
-            </Link> */}
-
-          {/* Your other button */}
-          {/* <Link to="/volunteer" className="hero-btn hero-btn-outline">
-              <Users size={25} />
-              Become a Volunteer
-            </Link>
-          </div> */}
 
           {/* =========================
               TRUST FEATURES
