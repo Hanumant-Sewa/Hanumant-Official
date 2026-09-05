@@ -10,14 +10,26 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
 
+    // =================================================
+    // VALIDATION
+    // =================================================
+
     if (!name || !email || !phone || !password) {
       return res.status(400).json({
         message: "Name, email, phone and password are required",
       });
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // =================================================
+    // CHECK EXISTING USER
+    // =================================================
+
     const existingUser = await prisma.user.findUnique({
-      where: { email },
+      where: {
+        email: normalizedEmail,
+      },
     });
 
     if (existingUser) {
@@ -26,16 +38,38 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // =================================================
+    // HASH PASSWORD
+    // =================================================
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // =================================================
+    // CREATE USER
+    // IMPORTANT:
+    // Public registration can NEVER create ADMIN
+    // or VOLUNTEER accounts.
+    // =================================================
 
     const user = await prisma.user.create({
       data: {
-        name,
-        email,
-        phone,
+        name: name.trim(),
+        email: normalizedEmail,
+        phone: phone.trim(),
         password: hashedPassword,
+
+        // Always USER for public registration
+        role: "USER",
+
+        // Explicitly active
+        status: "ACTIVE",
       },
     });
+
+    // =================================================
+    // RESPONSE
+    // Never return password
+    // =================================================
 
     return res.status(201).json({
       message: "Registration successful",
@@ -46,6 +80,7 @@ export const registerUser = async (req, res) => {
         email: user.email,
         phone: user.phone,
         role: user.role,
+        status: user.status,
       },
     });
   } catch (error) {
@@ -63,7 +98,11 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, loginType = "user", adminKey = "" } = req.body;
+
+    // =================================================
+    // VALIDATION
+    // =================================================
 
     if (!email || !password) {
       return res.status(400).json({
@@ -71,8 +110,20 @@ export const loginUser = async (req, res) => {
       });
     }
 
+    // =================================================
+    // NORMALIZE EMAIL
+    // =================================================
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // =================================================
+    // FIND USER
+    // =================================================
+
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: {
+        email: normalizedEmail,
+      },
     });
 
     if (!user) {
@@ -80,6 +131,27 @@ export const loginUser = async (req, res) => {
         message: "Invalid email or password",
       });
     }
+
+    // =================================================
+    // CHECK ACCOUNT STATUS
+    // =================================================
+
+    if (user.status === "SUSPENDED") {
+      return res.status(403).json({
+        message:
+          "Your account has been suspended. Please contact the administrator.",
+      });
+    }
+
+    if (user.status === "INACTIVE") {
+      return res.status(403).json({
+        message: "Your account is inactive. Please contact the administrator.",
+      });
+    }
+
+    // =================================================
+    // CHECK PASSWORD
+    // =================================================
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
@@ -90,8 +162,82 @@ export const loginUser = async (req, res) => {
     }
 
     // =================================================
+    // ADMIN LOGIN SECURITY
+    // =================================================
+    //
+    // Admin login requires THREE things:
+    //
+    // 1. Correct email
+    // 2. Correct password
+    // 3. Correct ADMIN_SECURITY_KEY
+    //
+    // AND the database account itself must have
+    // role = ADMIN.
+    //
+    // The frontend loginType is NOT trusted by itself.
+    // =================================================
+
+    if (loginType === "admin") {
+      // -------------------------------------------------
+      // CHECK DATABASE ROLE
+      // -------------------------------------------------
+
+      if (user.role !== "ADMIN") {
+        return res.status(403).json({
+          message: "This account does not have administrator privileges.",
+        });
+      }
+
+      // -------------------------------------------------
+      // CHECK ADMIN SECURITY KEY
+      // -------------------------------------------------
+
+      if (!process.env.ADMIN_SECURITY_KEY) {
+        console.error(
+          "ADMIN_SECURITY_KEY is not configured in the backend .env file.",
+        );
+
+        return res.status(500).json({
+          message: "Admin login is not configured correctly on the server.",
+        });
+      }
+
+      if (!adminKey || adminKey !== process.env.ADMIN_SECURITY_KEY) {
+        return res.status(401).json({
+          message: "Invalid admin security key.",
+        });
+      }
+    }
+
+    // =================================================
+    // PREVENT ADMIN FROM USING NORMAL USER LOGIN
+    // =================================================
+    //
+    // This prevents an ADMIN account from accidentally
+    // entering the normal user flow.
+    //
+    // If you want admins to also be able to use the
+    // normal user dashboard later, this block can be
+    // removed.
+    // =================================================
+
+    if (loginType === "user" && user.role === "ADMIN") {
+      return res.status(403).json({
+        message: "Administrator accounts must use the admin login.",
+      });
+    }
+
+    // =================================================
     // CREATE JWT
     // =================================================
+
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is not configured in the backend .env file.");
+
+      return res.status(500).json({
+        message: "Authentication is not configured correctly.",
+      });
+    }
 
     const token = jwt.sign(
       {
@@ -111,9 +257,16 @@ export const loginUser = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
+
+      // HTTPS required in production
       secure: process.env.NODE_ENV === "production",
+
+      // Works with your current frontend/backend setup
       sameSite: "lax",
+
       maxAge: 7 * 24 * 60 * 60 * 1000,
+
+      path: "/",
     });
 
     // =================================================
@@ -121,7 +274,8 @@ export const loginUser = async (req, res) => {
     // =================================================
 
     return res.status(200).json({
-      message: "Login successful",
+      message:
+        loginType === "admin" ? "Admin login successful" : "Login successful",
 
       user: {
         id: user.id,
@@ -129,6 +283,8 @@ export const loginUser = async (req, res) => {
         email: user.email,
         phone: user.phone,
         role: user.role,
+        status: user.status,
+        avatar: user.avatar,
       },
     });
   } catch (error) {
@@ -150,6 +306,7 @@ export const logoutUser = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      path: "/",
     });
 
     return res.status(200).json({
@@ -170,6 +327,20 @@ export const logoutUser = async (req, res) => {
 
 export const getProfile = async (req, res) => {
   try {
+    // =================================================
+    // CHECK AUTHENTICATED USER
+    // =================================================
+
+    if (!req.user?.userId) {
+      return res.status(401).json({
+        message: "Authentication required",
+      });
+    }
+
+    // =================================================
+    // GET USER
+    // =================================================
+
     const user = await prisma.user.findUnique({
       where: {
         id: req.user.userId,
@@ -188,11 +359,34 @@ export const getProfile = async (req, res) => {
       },
     });
 
+    // =================================================
+    // USER NOT FOUND
+    // =================================================
+
     if (!user) {
       return res.status(404).json({
         message: "User not found",
       });
     }
+
+    // =================================================
+    // CHECK ACCOUNT STATUS AGAIN
+    // =================================================
+    //
+    // This is important because an admin could suspend
+    // a user while that user's JWT is still technically
+    // valid.
+    // =================================================
+
+    if (user.status !== "ACTIVE") {
+      return res.status(403).json({
+        message: "Your account is not active.",
+      });
+    }
+
+    // =================================================
+    // RESPONSE
+    // =================================================
 
     return res.status(200).json({
       user,
@@ -201,7 +395,7 @@ export const getProfile = async (req, res) => {
     console.error("Profile Error:", error);
 
     return res.status(500).json({
-      message: "Server error",
+      message: "Server error while loading profile",
     });
   }
 };
@@ -212,6 +406,16 @@ export const getProfile = async (req, res) => {
 
 export const getDashboard = async (req, res) => {
   try {
+    // =================================================
+    // AUTHENTICATED USER ID
+    // =================================================
+
+    if (!req.user?.userId) {
+      return res.status(401).json({
+        message: "Authentication required",
+      });
+    }
+
     const userId = req.user.userId;
 
     // =================================================
@@ -254,6 +458,16 @@ export const getDashboard = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         message: "User not found",
+      });
+    }
+
+    // =================================================
+    // ACCOUNT STATUS
+    // =================================================
+
+    if (user.status !== "ACTIVE") {
+      return res.status(403).json({
+        message: "Your account is not active.",
       });
     }
 

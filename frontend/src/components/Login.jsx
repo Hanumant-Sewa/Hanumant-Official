@@ -60,19 +60,6 @@ function Login() {
 
     if (loading) return;
 
-    // -----------------------------------------------------
-    // ADMIN KEY NOTICE
-    // -----------------------------------------------------
-    // The current backend authenticates using:
-    // email + password
-    //
-    // Administrator access is determined by the user's
-    // database role (ADMIN).
-    //
-    // Therefore, adminKey is currently only a UI field.
-    // It is NOT used as an authentication credential.
-    // -----------------------------------------------------
-
     setLoading(true);
 
     try {
@@ -80,7 +67,12 @@ function Login() {
       // LOGIN THROUGH AUTH CONTEXT
       // ===================================================
 
-      const data = await login(formData.email, formData.password);
+      const data = await login(
+        formData.email,
+        formData.password,
+        loginType,
+        formData.adminKey,
+      );
 
       // ===================================================
       // SAFETY CHECK
@@ -91,24 +83,18 @@ function Login() {
       }
 
       // ===================================================
-      // ADMIN ROLE CHECK
+      // ADMIN SAFETY CHECK
       // ===================================================
 
-      if (loginType === "admin") {
-        if (data.user.role !== "ADMIN") {
-          // If backend has already created the session cookie,
-          // we should not leave a normal user logged in after
-          // failing the admin-role check.
+      if (loginType === "admin" && data.user.role !== "ADMIN") {
+        await Swal.fire({
+          icon: "error",
+          title: "Access Denied",
+          text: "This account does not have administrator access.",
+          confirmButtonText: "OK",
+        });
 
-          await Swal.fire({
-            icon: "error",
-            title: "Access Denied",
-            text: "This account does not have administrator access.",
-            confirmButtonText: "OK",
-          });
-
-          return;
-        }
+        return;
       }
 
       // ===================================================
@@ -117,14 +103,27 @@ function Login() {
 
       await Swal.fire({
         icon: "success",
-        title: "Login Successful",
+        title:
+          loginType === "admin" ? "Admin Login Successful" : "Login Successful",
         text: `Welcome back, ${data.user.name}!`,
         timer: 1500,
         showConfirmButton: false,
       });
 
       // ===================================================
-      // REDIRECT
+      // ADMIN
+      // ===================================================
+
+      if (loginType === "admin") {
+        navigate("/admin", {
+          replace: true,
+        });
+
+        return;
+      }
+
+      // ===================================================
+      // NORMAL USER
       // ===================================================
 
       const redirectPath = location.state?.from;
@@ -136,22 +135,6 @@ function Login() {
 
         return;
       }
-
-      // ---------------------------------------------------
-      // ADMIN
-      // ---------------------------------------------------
-
-      if (loginType === "admin") {
-        navigate("/transparency", {
-          replace: true,
-        });
-
-        return;
-      }
-
-      // ---------------------------------------------------
-      // NORMAL USER
-      // ---------------------------------------------------
 
       navigate("/dashboard", {
         replace: true,
