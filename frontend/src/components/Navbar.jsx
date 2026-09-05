@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+
 import {
   Heart,
   Users,
@@ -8,7 +9,9 @@ import {
   LayoutDashboard,
   LogOut,
 } from "lucide-react";
+
 import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import Swal from "sweetalert2";
 
 import { useAuth } from "../context/AuthContext";
@@ -19,17 +22,13 @@ function Navbar() {
 
   const { user, loading, logout } = useAuth();
 
+  const isHomePage = location.pathname === "/";
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
   const profileRef = useRef(null);
-
-  // =====================================================
-  // CHECK CURRENT PAGE
-  // =====================================================
-
-  const isHomePage = location.pathname === "/";
 
   // =====================================================
   // CLOSE MENUS WHEN ROUTE CHANGES
@@ -62,6 +61,7 @@ function Navbar() {
   }, []);
 
   // =====================================================
+<<<<<<< HEAD
   // HOME SECTION SCROLL SPY
   // =====================================================
 
@@ -103,14 +103,57 @@ function Navbar() {
 
   // =====================================================
   // SCROLL TO SECTION AFTER NAVIGATING FROM ANOTHER PAGE
+=======
+  // HOME PAGE SCROLL SPY
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
   // =====================================================
 
   useEffect(() => {
-    if (!isHomePage) return;
+    if (!isHomePage) {
+      return;
+    }
+
+    const sections = ["home", "about", "programs", "impact", "campaigns"];
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 150;
+
+      let currentSection = "home";
+
+      sections.forEach((section) => {
+        const element = document.getElementById(section);
+
+        if (element && scrollPosition >= element.offsetTop) {
+          currentSection = section;
+        }
+      });
+
+      setActiveSection(currentSection);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isHomePage]);
+
+  // =====================================================
+  // HANDLE SCROLLING TO SECTION FROM OTHER PAGES
+  // =====================================================
+
+  useEffect(() => {
+    if (!isHomePage) {
+      return;
+    }
 
     const section = location.state?.scrollTo;
 
-    if (!section) return;
+    if (!section) {
+      return;
+    }
 
     const timer = setTimeout(() => {
       const element = document.getElementById(section);
@@ -131,7 +174,6 @@ function Navbar() {
         setActiveSection(section);
       }
 
-      // Remove navigation state so refresh does not scroll again
       navigate("/", {
         replace: true,
         state: {},
@@ -142,7 +184,7 @@ function Navbar() {
   }, [isHomePage, location.state, navigate]);
 
   // =====================================================
-  // HOME CLICK
+  // HOME BUTTON
   // =====================================================
 
   const handleHomeClick = (event) => {
@@ -150,9 +192,14 @@ function Navbar() {
 
     setMenuOpen(false);
     setProfileOpen(false);
+
     setActiveSection("home");
 
+<<<<<<< HEAD
     if (location.pathname !== "/") {
+=======
+    if (!isHomePage) {
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
       navigate("/");
       return;
     }
@@ -164,7 +211,7 @@ function Navbar() {
   };
 
   // =====================================================
-  // SECTION CLICK
+  // SECTION NAVIGATION
   // =====================================================
 
   const handleSectionClick = (event, section) => {
@@ -173,8 +220,7 @@ function Navbar() {
     setMenuOpen(false);
     setProfileOpen(false);
 
-    // Already on Home
-    if (location.pathname === "/") {
+    if (isHomePage) {
       const element = document.getElementById(section);
 
       if (element) {
@@ -196,7 +242,6 @@ function Navbar() {
       return;
     }
 
-    // Coming from another page
     navigate("/", {
       state: {
         scrollTo: section,
@@ -212,6 +257,7 @@ function Navbar() {
     setMenuOpen(false);
     setProfileOpen(false);
 
+    // USER IS NOT LOGGED IN
     if (!user) {
       Swal.fire({
         icon: "warning",
@@ -231,6 +277,7 @@ function Navbar() {
       return;
     }
 
+    // USER IS LOGGED IN
     navigate(path);
   };
 
@@ -270,11 +317,11 @@ function Navbar() {
   // DESKTOP NAVIGATION
   // =====================================================
 
-  const renderDesktopNavigation = () => {
-    return (
-      <>
-        {/* HOME */}
+  const renderDesktopNavigation = () => (
+    <>
+      {/* HOME */}
 
+<<<<<<< HEAD
         <a
           href="/"
           className={
@@ -284,9 +331,19 @@ function Navbar() {
         >
           Home
         </a>
+=======
+      <a
+        href="/"
+        className={isHomePage && activeSection === "home" ? "active" : ""}
+        onClick={handleHomeClick}
+      >
+        Home
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* ABOUT */}
+      {/* ABOUT */}
 
+<<<<<<< HEAD
         <a
           href="/#about"
           className={
@@ -296,9 +353,19 @@ function Navbar() {
         >
           About
         </a>
+=======
+      <a
+        href="/#about"
+        className={isHomePage && activeSection === "about" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "about")}
+      >
+        About
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* PROGRAMS */}
+      {/* PROGRAMS */}
 
+<<<<<<< HEAD
         <a
           href="/#programs"
           className={
@@ -308,9 +375,19 @@ function Navbar() {
         >
           Programs
         </a>
+=======
+      <a
+        href="/#programs"
+        className={isHomePage && activeSection === "programs" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "programs")}
+      >
+        Programs
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* IMPACT */}
+      {/* IMPACT */}
 
+<<<<<<< HEAD
         <a
           href="/#impact"
           className={
@@ -320,9 +397,19 @@ function Navbar() {
         >
           Impact
         </a>
+=======
+      <a
+        href="/#impact"
+        className={isHomePage && activeSection === "impact" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "impact")}
+      >
+        Impact
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* CAMPAIGNS */}
+      {/* CAMPAIGNS */}
 
+<<<<<<< HEAD
         <a
           href="/#campaigns"
           className={
@@ -336,9 +423,19 @@ function Navbar() {
         >
           Campaigns
         </a>
+=======
+      <a
+        href="/#campaigns"
+        className={isHomePage && activeSection === "campaigns" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "campaigns")}
+      >
+        Campaigns
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* COMMUNITY */}
+      {/* COMMUNITY */}
 
+<<<<<<< HEAD
         <Link
           to="/community"
           onClick={() => {
@@ -354,16 +451,30 @@ function Navbar() {
       </>
     );
   };
+=======
+      <Link
+        to="/community"
+        className={location.pathname === "/community" ? "active" : ""}
+        onClick={() => {
+          setMenuOpen(false);
+          setProfileOpen(false);
+        }}
+      >
+        Community
+      </Link>
+    </>
+  );
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
   // =====================================================
   // MOBILE NAVIGATION
   // =====================================================
 
-  const renderMobileNavigation = () => {
-    return (
-      <>
-        {/* HOME */}
+  const renderMobileNavigation = () => (
+    <>
+      {/* HOME */}
 
+<<<<<<< HEAD
         <a
           href="/"
           className={
@@ -373,9 +484,19 @@ function Navbar() {
         >
           Home
         </a>
+=======
+      <a
+        href="/"
+        className={isHomePage && activeSection === "home" ? "active" : ""}
+        onClick={handleHomeClick}
+      >
+        Home
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* ABOUT */}
+      {/* ABOUT */}
 
+<<<<<<< HEAD
         <a
           href="/#about"
           className={
@@ -385,9 +506,19 @@ function Navbar() {
         >
           About
         </a>
+=======
+      <a
+        href="/#about"
+        className={isHomePage && activeSection === "about" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "about")}
+      >
+        About
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* PROGRAMS */}
+      {/* PROGRAMS */}
 
+<<<<<<< HEAD
         <a
           href="/#programs"
           className={
@@ -399,9 +530,19 @@ function Navbar() {
         >
           Programs
         </a>
+=======
+      <a
+        href="/#programs"
+        className={isHomePage && activeSection === "programs" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "programs")}
+      >
+        Programs
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* IMPACT */}
+      {/* IMPACT */}
 
+<<<<<<< HEAD
         <a
           href="/#impact"
           className={
@@ -411,9 +552,19 @@ function Navbar() {
         >
           Impact
         </a>
+=======
+      <a
+        href="/#impact"
+        className={isHomePage && activeSection === "impact" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "impact")}
+      >
+        Impact
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* CAMPAIGNS */}
+      {/* CAMPAIGNS */}
 
+<<<<<<< HEAD
         <a
           href="/#campaigns"
           className={
@@ -427,9 +578,19 @@ function Navbar() {
         >
           Campaigns
         </a>
+=======
+      <a
+        href="/#campaigns"
+        className={isHomePage && activeSection === "campaigns" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "campaigns")}
+      >
+        Campaigns
+      </a>
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
-        {/* COMMUNITY */}
+      {/* COMMUNITY */}
 
+<<<<<<< HEAD
         <Link
           to="/community"
           onClick={() => {
@@ -445,6 +606,17 @@ function Navbar() {
       </>
     );
   };
+=======
+      <Link
+        to="/community"
+        className={location.pathname === "/community" ? "active" : ""}
+        onClick={() => setMenuOpen(false)}
+      >
+        Community
+      </Link>
+    </>
+  );
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
   // =====================================================
   // AUTH LOADING
@@ -467,7 +639,7 @@ function Navbar() {
   }
 
   // =====================================================
-  // JSX
+  // MAIN NAVBAR
   // =====================================================
 
   return (
@@ -478,7 +650,14 @@ function Navbar() {
             LOGO
         ================================================= */}
 
-        <Link to="/" className="navbar-logo">
+        <Link
+          to="/"
+          className="navbar-logo"
+          onClick={() => {
+            setMenuOpen(false);
+            setProfileOpen(false);
+          }}
+        >
           <img
             src="/images/logo.png"
             alt="Hanumat Seva"
@@ -495,18 +674,23 @@ function Navbar() {
         </nav>
 
         {/* =================================================
-            DESKTOP ACTIONS
+            RIGHT SIDE ACTIONS
         ================================================= */}
 
         <div className="navbar-actions">
+<<<<<<< HEAD
 
           {/* =================================================
               LOGGED IN
           ================================================= */}
 
+=======
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
           {user ? (
             <>
-              {/* DONATE */}
+              {/* ==============================
+                  LOGGED-IN DONATE
+              ============================== */}
 
               <Link
                 to="/donate"
@@ -520,7 +704,9 @@ function Navbar() {
                 Donate
               </Link>
 
-              {/* PROFILE */}
+              {/* ==============================
+                  PROFILE
+              ============================== */}
 
               <div
                 className="profile-dropdown-container"
@@ -529,9 +715,13 @@ function Navbar() {
                 <button
                   type="button"
                   className="navbar-profile-button"
+<<<<<<< HEAD
                   onClick={() =>
                     setProfileOpen((prev) => !prev)
                   }
+=======
+                  onClick={() => setProfileOpen((previous) => !previous)}
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
                   aria-expanded={profileOpen}
                   aria-label="Open profile menu"
                 >
@@ -542,7 +732,9 @@ function Navbar() {
                   </span>
                 </button>
 
-                {/* PROFILE DROPDOWN */}
+                {/* ==============================
+                    PROFILE DROPDOWN
+                ============================== */}
 
                 {profileOpen && (
                   <div className="profile-dropdown">
@@ -559,6 +751,7 @@ function Navbar() {
                       }
                     >
                       <LayoutDashboard size={19} />
+
                       <span>Dashboard</span>
                     </button>
 
@@ -574,6 +767,7 @@ function Navbar() {
                       }
                     >
                       <UserCircle size={19} />
+
                       <span>Profile</span>
                     </button>
 
@@ -589,6 +783,7 @@ function Navbar() {
                       }
                     >
                       <Users size={19} />
+
                       <span>Volunteer</span>
                     </button>
 
@@ -602,6 +797,7 @@ function Navbar() {
                       onClick={handleLogout}
                     >
                       <LogOut size={19} />
+
                       <span>Logout</span>
                     </button>
                   </div>
@@ -609,13 +805,18 @@ function Navbar() {
               </div>
             </>
           ) : (
+<<<<<<< HEAD
 
             /* =================================================
                LOGGED OUT
             ================================================= */
 
+=======
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
             <>
-              {/* VOLUNTEER */}
+              {/* ==============================
+                  LOGGED-OUT VOLUNTEER
+              ============================== */}
 
               <button
                 type="button"
@@ -631,10 +832,20 @@ function Navbar() {
                 Volunteer
               </button>
 
-              {/* DONATE */}
+              {/* ==============================
+                  LOGGED-OUT DONATE
+                  
+                  IMPORTANT:
+                  We remember /donate so after
+                  login the user can continue
+                  to donation.
+              ============================== */}
 
               <Link
                 to="/login"
+                state={{
+                  from: "/donate",
+                }}
                 className="navbar-donate"
                 onClick={() => {
                   setMenuOpen(false);
@@ -655,7 +866,7 @@ function Navbar() {
         <button
           type="button"
           className="mobile-menu-button"
-          onClick={() => setMenuOpen((prev) => !prev)}
+          onClick={() => setMenuOpen((previous) => !previous)}
           aria-label="Toggle navigation"
           aria-expanded={menuOpen}
         >
@@ -668,11 +879,15 @@ function Navbar() {
 
         {menuOpen && (
           <div className="mobile-menu">
+<<<<<<< HEAD
+=======
+            {/* MAIN NAVIGATION */}
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
 
             {renderMobileNavigation()}
 
             {/* =================================================
-                MOBILE LOGGED IN
+                LOGGED-IN MOBILE OPTIONS
             ================================================= */}
 
             {user ? (
@@ -745,13 +960,18 @@ function Navbar() {
                 </button>
               </>
             ) : (
+<<<<<<< HEAD
 
               /* =================================================
                  MOBILE LOGGED OUT
               ================================================= */
 
+=======
+>>>>>>> 986eaac6e31296adeef79929d43d379a8d77ed68
               <>
-                {/* VOLUNTEER */}
+                {/* =================================================
+                    LOGGED-OUT MOBILE VOLUNTEER
+                ================================================= */}
 
                 <button
                   type="button"
@@ -767,10 +987,18 @@ function Navbar() {
                   Volunteer
                 </button>
 
-                {/* DONATE */}
+                {/* =================================================
+                    LOGGED-OUT MOBILE DONATE
+
+                    IMPORTANT:
+                    Remember /donate after login.
+                ================================================= */}
 
                 <Link
                   to="/login"
+                  state={{
+                    from: "/donate",
+                  }}
                   className="mobile-donate"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -787,4 +1015,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
