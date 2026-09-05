@@ -91,6 +91,7 @@ import Transparency from "./pages/Transparency";
 
 import Dashboard from "./pages/Dashboard";
 
+import Admin from "./pages/Admin/Admin";
 // =====================================================
 // APP
 // =====================================================
@@ -100,13 +101,11 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-
           {/* =================================================
               PUBLIC PAGES WITH NAVBAR
           ================================================= */}
 
           <Route element={<Layout />}>
-
             {/* =================================================
                 HOME / LANDING PAGE
             ================================================= */}
@@ -301,7 +300,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           {/* =================================================
@@ -324,7 +330,6 @@ function App() {
           <Route path="/transparency" element={<Transparency />} />
 
           <Route path="/community/join" element={<JoinCommunity />} />
-
         </Routes>
       </BrowserRouter>
     </AuthProvider>

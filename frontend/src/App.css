@@ -3783,7 +3783,6 @@
     resize: vertical;
 }
 
-
 /*====================================================
                     FOOTER
 ====================================================*/
@@ -3791,38 +3790,38 @@
 footer {
     background: #1F2937;
     color: #fff;
-    padding: clamp(50px, 6vw, 90px) 0 0;
+    padding: clamp(30px, 3vw, 45px) 0 0;
 }
 
 .footer-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1.5fr;
-    gap: clamp(20px, 3vw, 40px);
+    gap: clamp(18px, 2.5vw, 32px);
 }
 
 .footer-col h2,
 .footer-col h3 {
     font-family: 'Poppins', sans-serif;
-    margin-bottom: clamp(14px, 1.5vw, 20px);
+    margin-bottom: clamp(10px, 1vw, 15px);
 }
 
 .footer-col h2 {
-    font-size: clamp(22px, 2vw, 28px);
+    font-size: clamp(21px, 1.8vw, 26px);
 }
 
 .footer-col h3 {
-    font-size: clamp(16px, 1.4vw, 20px);
+    font-size: clamp(15px, 1.3vw, 18px);
 }
 
 .footer-col p {
     color: #d5d5d5;
-    line-height: 1.8;
-    font-size: clamp(13px, 1.1vw, 15px);
+    line-height: 1.6;
+    font-size: clamp(13px, 1vw, 14px);
 }
 
 .footer-col ul li {
-    margin-bottom: clamp(8px, 1vw, 12px);
-    font-size: clamp(13px, 1.1vw, 15px);
+    margin-bottom: clamp(6px, 0.7vw, 9px);
+    font-size: clamp(13px, 1vw, 14px);
 }
 
 .footer-col ul li a {
@@ -3837,13 +3836,13 @@ footer {
 
 .social-links {
     display: flex;
-    gap: clamp(10px, 1.2vw, 15px);
-    margin-top: clamp(18px, 2vw, 25px);
+    gap: clamp(8px, 1vw, 12px);
+    margin-top: clamp(14px, 1.5vw, 18px);
 }
 
 .social-links a {
-    width: clamp(38px, 4vw, 45px);
-    height: clamp(38px, 4vw, 45px);
+    width: clamp(34px, 3.2vw, 40px);
+    height: clamp(34px, 3.2vw, 40px);
     border-radius: 50%;
     background: rgba(255, 255, 255, .08);
     display: flex;
@@ -3855,41 +3854,41 @@ footer {
 
 .social-links a:hover {
     background: var(--primary);
-    transform: translateY(-5px);
+    transform: translateY(-4px);
 }
 
 .newsletter {
     display: flex;
     flex-direction: column;
-    gap: clamp(10px, 1.2vw, 15px);
+    gap: clamp(8px, 1vw, 12px);
 }
 
 .newsletter input {
-    padding: clamp(12px, 1.2vw, 15px);
+    padding: clamp(10px, 1vw, 12px);
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     outline: none;
-    font-size: clamp(13px, 1.1vw, 15px);
+    font-size: clamp(13px, 1vw, 14px);
 }
 
 .newsletter button {
     border: none;
     background: linear-gradient(135deg, #D97706, #B45309);
     color: #fff;
-    padding: clamp(12px, 1.2vw, 15px);
-    border-radius: 10px;
+    padding: clamp(10px, 1vw, 12px);
+    border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
-    font-size: clamp(13px, 1.1vw, 15px);
+    font-size: clamp(13px, 1vw, 14px);
 }
 
 .footer-bottom {
-    margin-top: clamp(35px, 5vw, 60px);
+    margin-top: clamp(16px, 1vw, 25px);
     text-align: center;
     border-top: 1px solid rgba(255, 255, 255, .1);
-    padding: clamp(18px, 2vw, 25px) 0;
+    padding: clamp(15px, 1.5vw, 20px) 0;
     color: #bbb;
-    font-size: clamp(12px, 1vw, 14px);
+    font-size: clamp(12px, 0.9vw, 13px);
 }
 
 
