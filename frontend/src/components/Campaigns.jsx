@@ -7,8 +7,8 @@ import {
   Award,
 } from "lucide-react";
 
-import { Link } from "react-router-dom";
 import ProtectedButton from "./ProtectedButton";
+import ProtectedLink from "./ProtectedLink";
 
 function Campaigns() {
   const campaigns = [
@@ -157,13 +157,10 @@ function Campaigns() {
 
                 {/* CAMPAIGN DETAILS */}
 
-                {/* Keep this public for now because
-                    the Campaign page has not been created yet. */}
-
-                <Link to="/campaigns" className="campaign-link">
+                <ProtectedLink to="/campaigns" className="campaign-link">
                   View Campaign
                   <ArrowRight size={17} />
-                </Link>
+                </ProtectedLink>
               </div>
             );
           })}
@@ -213,15 +210,15 @@ function Campaigns() {
 
                     <p>{item.text}</p>
 
-                    {/* PROTECTED ACTION */}
+                    {/* PROTECTED LINK */}
 
-                    <ProtectedButton
+                    <ProtectedLink
                       to={item.link}
                       className="community-journey-explore"
                     >
                       Explore
                       <ArrowRight size={15} />
-                    </ProtectedButton>
+                    </ProtectedLink>
                   </div>
 
                   {/* CONNECTING LINE */}
