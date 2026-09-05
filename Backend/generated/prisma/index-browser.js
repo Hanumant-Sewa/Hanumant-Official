@@ -142,6 +142,7 @@ exports.Prisma.VolunteerProfileScalarFieldEnum = {
   city: 'city',
   state: 'state',
   country: 'country',
+  ageGroup: 'ageGroup',
   availability: 'availability',
   totalHours: 'totalHours',
   totalEvents: 'totalEvents',

@@ -5,30 +5,36 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./src/routes/authRoutes.js";
 import donationRoutes from "./src/routes/donationRoutes.js";
+import volunteerApplicationRoutes from "./src/routes/volunteerApplicationRoutes.js";
+import volunteerProfileRoutes from "./src/routes/volunteerProfileRoutes.js";
+import volunteerDashboardRoutes from "./src/routes/volunteerDashboardRoutes.js";
+import volunteerEventRoutes from "./src/routes/volunteerEventRoutes.js";
+import volunteerImpactRoutes from "./src/routes/volunteerImpactRoutes.js";
+import volunteerTaskRoutes from "./src/routes/volunteerTaskRoutes.js";
+import volunteerCertificateRoutes from "./src/routes/volunteerCertificateRoutes.js";
 
 const app = express();
 
-// =====================================================
-// CORS
-// =====================================================
+
+// ===============================
+// MIDDLEWARE
+// ===============================
 
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-  }),
+  })
 );
 
-// =====================================================
-// MIDDLEWARE
-// =====================================================
-
 app.use(express.json());
+
 app.use(cookieParser());
 
-// =====================================================
+
+// ===============================
 // TEST ROUTE
-// =====================================================
+// ===============================
 
 app.get("/", (req, res) => {
   res.json({
@@ -36,18 +42,45 @@ app.get("/", (req, res) => {
   });
 });
 
-// =====================================================
-// AUTH ROUTES
-// =====================================================
+
+// ===============================
+// ROUTES
+// ===============================
 
 app.use("/api/auth", authRoutes);
 
-//Donation Routes
 app.use("/api/donations", donationRoutes);
 
-// =====================================================
+app.use(
+  "/api/volunteer-applications",
+  volunteerApplicationRoutes
+);
+app.use(
+  "/api/volunteer-profile",
+  volunteerProfileRoutes
+);
+app.use(
+  "/api/volunteer-dashboard",
+  volunteerDashboardRoutes
+);
+app.use(
+  "/api/volunteer-events",
+  volunteerEventRoutes
+);
+app.use("/api/volunteer-impact", 
+  volunteerImpactRoutes);
+app.use(
+  "/api/volunteer-tasks",
+  volunteerTaskRoutes
+);
+app.use(
+  "/api/volunteer-certificates",
+  volunteerCertificateRoutes
+);
+
+// ===============================
 // SERVER
-// =====================================================
+// ===============================
 
 const PORT = process.env.PORT || 5000;
 

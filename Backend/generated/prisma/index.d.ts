@@ -1,3 +1,8 @@
+
+/**
+ * Client
+**/
+
 import * as runtime from './runtime/client.js';
 import $Types = runtime.Types // general types
 import $Public = runtime.Types.Public
@@ -4187,6 +4192,7 @@ export namespace Prisma {
     city: string | null
     state: string | null
     country: string | null
+    ageGroup: string | null
     availability: string | null
     totalHours: number | null
     totalEvents: number | null
@@ -4205,6 +4211,7 @@ export namespace Prisma {
     city: string | null
     state: string | null
     country: string | null
+    ageGroup: string | null
     availability: string | null
     totalHours: number | null
     totalEvents: number | null
@@ -4223,6 +4230,7 @@ export namespace Prisma {
     city: number
     state: number
     country: number
+    ageGroup: number
     availability: number
     totalHours: number
     totalEvents: number
@@ -4257,6 +4265,7 @@ export namespace Prisma {
     city?: true
     state?: true
     country?: true
+    ageGroup?: true
     availability?: true
     totalHours?: true
     totalEvents?: true
@@ -4275,6 +4284,7 @@ export namespace Prisma {
     city?: true
     state?: true
     country?: true
+    ageGroup?: true
     availability?: true
     totalHours?: true
     totalEvents?: true
@@ -4293,6 +4303,7 @@ export namespace Prisma {
     city?: true
     state?: true
     country?: true
+    ageGroup?: true
     availability?: true
     totalHours?: true
     totalEvents?: true
@@ -4398,6 +4409,7 @@ export namespace Prisma {
     city: string | null
     state: string | null
     country: string | null
+    ageGroup: string | null
     availability: string | null
     totalHours: number
     totalEvents: number
@@ -4435,6 +4447,7 @@ export namespace Prisma {
     city?: boolean
     state?: boolean
     country?: boolean
+    ageGroup?: boolean
     availability?: boolean
     totalHours?: boolean
     totalEvents?: boolean
@@ -4460,6 +4473,7 @@ export namespace Prisma {
     city?: boolean
     state?: boolean
     country?: boolean
+    ageGroup?: boolean
     availability?: boolean
     totalHours?: boolean
     totalEvents?: boolean
@@ -4479,6 +4493,7 @@ export namespace Prisma {
     city?: boolean
     state?: boolean
     country?: boolean
+    ageGroup?: boolean
     availability?: boolean
     totalHours?: boolean
     totalEvents?: boolean
@@ -4498,6 +4513,7 @@ export namespace Prisma {
     city?: boolean
     state?: boolean
     country?: boolean
+    ageGroup?: boolean
     availability?: boolean
     totalHours?: boolean
     totalEvents?: boolean
@@ -4507,7 +4523,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type VolunteerProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "bio" | "skills" | "interests" | "city" | "state" | "country" | "availability" | "totalHours" | "totalEvents" | "joinedAt" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["volunteerProfile"]>
+  export type VolunteerProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "bio" | "skills" | "interests" | "city" | "state" | "country" | "ageGroup" | "availability" | "totalHours" | "totalEvents" | "joinedAt" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["volunteerProfile"]>
   export type VolunteerProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     applications?: boolean | VolunteerProfile$applicationsArgs<ExtArgs>
@@ -4543,6 +4559,7 @@ export namespace Prisma {
       city: string | null
       state: string | null
       country: string | null
+      ageGroup: string | null
       availability: string | null
       totalHours: number
       totalEvents: number
@@ -4987,6 +5004,7 @@ export namespace Prisma {
     readonly city: FieldRef<"VolunteerProfile", 'String'>
     readonly state: FieldRef<"VolunteerProfile", 'String'>
     readonly country: FieldRef<"VolunteerProfile", 'String'>
+    readonly ageGroup: FieldRef<"VolunteerProfile", 'String'>
     readonly availability: FieldRef<"VolunteerProfile", 'String'>
     readonly totalHours: FieldRef<"VolunteerProfile", 'Int'>
     readonly totalEvents: FieldRef<"VolunteerProfile", 'Int'>
@@ -21465,6 +21483,7 @@ export namespace Prisma {
     city: 'city',
     state: 'state',
     country: 'country',
+    ageGroup: 'ageGroup',
     availability: 'availability',
     totalHours: 'totalHours',
     totalEvents: 'totalEvents',
@@ -22105,6 +22124,7 @@ export namespace Prisma {
     city?: StringNullableFilter<"VolunteerProfile"> | string | null
     state?: StringNullableFilter<"VolunteerProfile"> | string | null
     country?: StringNullableFilter<"VolunteerProfile"> | string | null
+    ageGroup?: StringNullableFilter<"VolunteerProfile"> | string | null
     availability?: StringNullableFilter<"VolunteerProfile"> | string | null
     totalHours?: IntFilter<"VolunteerProfile"> | number
     totalEvents?: IntFilter<"VolunteerProfile"> | number
@@ -22129,6 +22149,7 @@ export namespace Prisma {
     city?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
+    ageGroup?: SortOrderInput | SortOrder
     availability?: SortOrderInput | SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -22156,6 +22177,7 @@ export namespace Prisma {
     city?: StringNullableFilter<"VolunteerProfile"> | string | null
     state?: StringNullableFilter<"VolunteerProfile"> | string | null
     country?: StringNullableFilter<"VolunteerProfile"> | string | null
+    ageGroup?: StringNullableFilter<"VolunteerProfile"> | string | null
     availability?: StringNullableFilter<"VolunteerProfile"> | string | null
     totalHours?: IntFilter<"VolunteerProfile"> | number
     totalEvents?: IntFilter<"VolunteerProfile"> | number
@@ -22180,6 +22202,7 @@ export namespace Prisma {
     city?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
+    ageGroup?: SortOrderInput | SortOrder
     availability?: SortOrderInput | SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -22206,6 +22229,7 @@ export namespace Prisma {
     city?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
     state?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
     country?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
+    ageGroup?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
     availability?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
     totalHours?: IntWithAggregatesFilter<"VolunteerProfile"> | number
     totalEvents?: IntWithAggregatesFilter<"VolunteerProfile"> | number
@@ -23537,6 +23561,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -23561,6 +23586,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -23582,6 +23608,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -23606,6 +23633,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -23629,6 +23657,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -23645,6 +23674,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -23663,6 +23693,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -25253,6 +25284,7 @@ export namespace Prisma {
     city?: SortOrder
     state?: SortOrder
     country?: SortOrder
+    ageGroup?: SortOrder
     availability?: SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -25278,6 +25310,7 @@ export namespace Prisma {
     city?: SortOrder
     state?: SortOrder
     country?: SortOrder
+    ageGroup?: SortOrder
     availability?: SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -25296,6 +25329,7 @@ export namespace Prisma {
     city?: SortOrder
     state?: SortOrder
     country?: SortOrder
+    ageGroup?: SortOrder
     availability?: SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -28220,6 +28254,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -28242,6 +28277,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -28711,6 +28747,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -28733,6 +28770,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -29575,6 +29613,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -29598,6 +29637,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -29694,6 +29734,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -29717,6 +29758,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -30698,6 +30740,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -30721,6 +30764,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -30865,6 +30909,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -30888,6 +30933,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31004,6 +31050,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31027,6 +31074,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31225,6 +31273,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31248,6 +31297,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31328,6 +31378,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31351,6 +31402,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31429,6 +31481,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31452,6 +31505,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31574,6 +31628,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31597,6 +31652,7 @@ export namespace Prisma {
     city?: string | null
     state?: string | null
     country?: string | null
+    ageGroup?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31693,6 +31749,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31716,6 +31773,7 @@ export namespace Prisma {
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number

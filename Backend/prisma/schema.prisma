@@ -171,6 +171,8 @@ model VolunteerProfile {
   state   String?
   country String?
 
+  ageGroup String?
+
   availability String?
 
   totalHours  Int @default(0)
