@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   Clock3,
   CheckCircle,
@@ -10,6 +11,8 @@ import {
   LayoutDashboard,
   Loader2,
 } from "lucide-react";
+
+import "../css/volunteer.css";
 
 const ApplicationStatus = () => {
   const navigate = useNavigate();
@@ -48,10 +51,14 @@ const ApplicationStatus = () => {
 
         setApplication(data.application);
       } catch (error) {
-        console.error("Application Status Error:", error);
+        console.error(
+          "Application Status Error:",
+          error
+        );
 
         setError(
-          error.message || "Unable to fetch application status"
+          error.message ||
+            "Unable to fetch application status"
         );
       } finally {
         setLoading(false);
@@ -62,30 +69,70 @@ const ApplicationStatus = () => {
   }, []);
 
   // =====================================================
+  // FORMAT PREFERRED ACTIVITIES
+  // =====================================================
+
+  const formatActivities = (activities) => {
+    if (!activities) {
+      return "-";
+    }
+
+    const activityNames = {
+      "food-distribution": "Food Distribution",
+      "food-preparation": "Food Preparation",
+      "food-rescue": "Food Rescue",
+      "community-support": "Community Support",
+      documentation: "Documentation",
+      awareness: "Awareness",
+    };
+
+    return activities
+      .split(",")
+      .map((activity) => activity.trim())
+      .map(
+        (activity) =>
+          activityNames[activity] || activity
+      )
+      .join(", ");
+  };
+
+  // =====================================================
   // LOADING
   // =====================================================
 
   if (loading) {
     return (
       <div className="application-status-page">
+
         <section className="application-section">
+
           <div className="status-container">
+
             <div className="status-card">
+
               <div className="status-icon pending">
-                <Loader2 size={42} className="loading-icon" />
+                <Loader2
+                  size={42}
+                  className="loading-icon"
+                />
               </div>
 
               <h2>
-                Loading <span>Application Status...</span>
+                Loading
+                <span> Application Status...</span>
               </h2>
 
               <p>
-                Please wait while we fetch your volunteer
-                application status.
+                Please wait while we fetch your
+                volunteer application status.
               </p>
+
             </div>
+
           </div>
+
         </section>
+
       </div>
     );
   }
@@ -98,7 +145,12 @@ const ApplicationStatus = () => {
     return (
       <div className="application-status-page">
 
+        {/* =========================================
+            HERO
+        ========================================== */}
+
         <section className="application-hero">
+
           <div className="application-hero-overlay"></div>
 
           <div className="application-hero-content">
@@ -106,7 +158,9 @@ const ApplicationStatus = () => {
             <button
               type="button"
               className="back-button"
-              onClick={() => navigate("/volunteer")}
+              onClick={() =>
+                navigate("/volunteer")
+              }
             >
               <ArrowLeft size={17} />
               Back to Volunteer
@@ -122,14 +176,21 @@ const ApplicationStatus = () => {
             </h1>
 
             <p>
-              Track the current status of your volunteer
-              application and your next steps.
+              Track the current status of your
+              volunteer application and your next
+              steps.
             </p>
 
           </div>
+
         </section>
 
+        {/* =========================================
+            ERROR CARD
+        ========================================== */}
+
         <section className="application-section">
+
           <div className="status-container">
 
             <div className="status-card">
@@ -154,7 +215,9 @@ const ApplicationStatus = () => {
               <button
                 type="button"
                 className="orange-button status-action"
-                onClick={() => window.location.reload()}
+                onClick={() =>
+                  window.location.reload()
+                }
               >
                 Try Again
                 <ArrowRight size={18} />
@@ -163,6 +226,7 @@ const ApplicationStatus = () => {
             </div>
 
           </div>
+
         </section>
 
       </div>
@@ -173,7 +237,8 @@ const ApplicationStatus = () => {
   // APPLICATION STATUS
   // =====================================================
 
-  const status = application?.status?.toUpperCase();
+  const status =
+    application?.status?.toUpperCase();
 
   const isPending = status === "PENDING";
   const isApproved = status === "APPROVED";
@@ -187,7 +252,7 @@ const ApplicationStatus = () => {
     <div className="application-status-page">
 
       {/* =========================================
-          HERO
+          HERO SECTION
       ========================================== */}
 
       <section className="application-hero">
@@ -199,7 +264,9 @@ const ApplicationStatus = () => {
           <button
             type="button"
             className="back-button"
-            onClick={() => navigate("/volunteer")}
+            onClick={() =>
+              navigate("/volunteer")
+            }
           >
             <ArrowLeft size={17} />
             Back to Volunteer
@@ -215,14 +282,14 @@ const ApplicationStatus = () => {
           </h1>
 
           <p>
-            Track the current status of your volunteer
-            application and your next steps.
+            Track the current status of your
+            volunteer application and your next
+            steps.
           </p>
 
         </div>
 
       </section>
-
 
       {/* =========================================
           STATUS SECTION
@@ -232,16 +299,15 @@ const ApplicationStatus = () => {
 
         <div className="status-container">
 
-
           {/* =====================================
               STATUS CARD
           ====================================== */}
 
           <div className="status-card">
 
-            {/* ===============================
+            {/* =================================
                 PENDING
-            ================================ */}
+            ================================== */}
 
             {isPending && (
               <>
@@ -259,10 +325,11 @@ const ApplicationStatus = () => {
                 </h2>
 
                 <p>
-                  Thank you for applying to become a
-                  Hanumat Seva volunteer. Your application
-                  has been successfully submitted and is
-                  currently waiting for review.
+                  Thank you for applying to become
+                  a Hanumat Seva volunteer. Your
+                  application has been successfully
+                  submitted and is currently waiting
+                  for review.
                 </p>
 
                 <div className="status-badge pending-badge">
@@ -272,10 +339,9 @@ const ApplicationStatus = () => {
               </>
             )}
 
-
-            {/* ===============================
+            {/* =================================
                 APPROVED
-            ================================ */}
+            ================================== */}
 
             {isApproved && (
               <>
@@ -294,9 +360,10 @@ const ApplicationStatus = () => {
 
                 <p>
                   Congratulations! Your volunteer
-                  application has been approved. You can
-                  now access your volunteer dashboard and
-                  explore available activities.
+                  application has been approved. You
+                  can now access your volunteer
+                  dashboard and explore available
+                  activities.
                 </p>
 
                 <div className="status-badge approved-badge">
@@ -308,7 +375,9 @@ const ApplicationStatus = () => {
                   type="button"
                   className="orange-button status-action"
                   onClick={() =>
-                    navigate("/volunteer/dashboard")
+                    navigate(
+                      "/volunteer/dashboard"
+                    )
                   }
                 >
                   <LayoutDashboard size={18} />
@@ -318,10 +387,9 @@ const ApplicationStatus = () => {
               </>
             )}
 
-
-            {/* ===============================
+            {/* =================================
                 REJECTED
-            ================================ */}
+            ================================== */}
 
             {isRejected && (
               <>
@@ -340,10 +408,10 @@ const ApplicationStatus = () => {
 
                 <p>
                   Unfortunately, your volunteer
-                  application was not approved at this
-                  time. You may review your details and
-                  contact the Hanumat Seva team for more
-                  information.
+                  application was not approved at
+                  this time. You may review your
+                  details and contact the Hanumat
+                  Seva team for more information.
                 </p>
 
                 <div className="status-badge rejected-badge">
@@ -353,8 +421,15 @@ const ApplicationStatus = () => {
 
                 {application?.adminRemarks && (
                   <div className="admin-remarks">
-                    <strong>Admin Remarks:</strong>
-                    <p>{application.adminRemarks}</p>
+
+                    <strong>
+                      Admin Remarks:
+                    </strong>
+
+                    <p>
+                      {application.adminRemarks}
+                    </p>
+
                   </div>
                 )}
 
@@ -362,7 +437,9 @@ const ApplicationStatus = () => {
                   type="button"
                   className="outline-button status-action"
                   onClick={() =>
-                    navigate("/volunteer/application")
+                    navigate(
+                      "/volunteer/application"
+                    )
                   }
                 >
                   <ArrowLeft size={18} />
@@ -373,13 +450,16 @@ const ApplicationStatus = () => {
 
           </div>
 
-
           {/* =====================================
               APPLICATION DETAILS
           ====================================== */}
 
           {application && (
             <div className="application-details-card">
+
+              {/* =================================
+                  DETAILS HEADING
+              ================================== */}
 
               <div className="details-heading">
 
@@ -388,6 +468,7 @@ const ApplicationStatus = () => {
                 </div>
 
                 <div>
+
                   <span>
                     APPLICATION DETAILS
                   </span>
@@ -395,43 +476,84 @@ const ApplicationStatus = () => {
                   <h3>
                     Submitted Information
                   </h3>
+
                 </div>
 
               </div>
 
+              {/* =================================
+                  DETAILS GRID
+              ================================== */}
 
               <div className="details-grid">
 
+                {/* APPLICATION ID */}
+
                 <div className="detail-item">
-                  <small>Application ID</small>
+
+                  <small>
+                    Application ID
+                  </small>
+
                   <strong>
                     #{application.id || "-"}
                   </strong>
+
                 </div>
 
+                {/* STATUS */}
+
                 <div className="detail-item">
-                  <small>Status</small>
+
+                  <small>
+                    Status
+                  </small>
+
                   <strong>
                     {application.status || "-"}
                   </strong>
+
                 </div>
 
+                {/* PREFERRED ACTIVITIES */}
+
                 <div className="detail-item">
-                  <small>Preferred Activity</small>
+
+                  <small>
+                    Preferred Activities
+                  </small>
+
                   <strong>
-                    {application.preferredArea || "-"}
+                    {formatActivities(
+                      application.preferredArea
+                    )}
                   </strong>
+
                 </div>
 
+                {/* AVAILABILITY */}
+
                 <div className="detail-item">
-                  <small>Availability</small>
+
+                  <small>
+                    Availability
+                  </small>
+
                   <strong>
-                    {application.availability || "-"}
+                    {application.availability ||
+                      "-"}
                   </strong>
+
                 </div>
 
+                {/* APPLICATION DATE */}
+
                 <div className="detail-item">
-                  <small>Application Date</small>
+
+                  <small>
+                    Application Date
+                  </small>
+
                   <strong>
                     {application.createdAt
                       ? new Date(
@@ -439,10 +561,17 @@ const ApplicationStatus = () => {
                         ).toLocaleDateString()
                       : "-"}
                   </strong>
+
                 </div>
 
+                {/* LAST UPDATED */}
+
                 <div className="detail-item">
-                  <small>Last Updated</small>
+
+                  <small>
+                    Last Updated
+                  </small>
+
                   <strong>
                     {application.updatedAt
                       ? new Date(
@@ -450,13 +579,13 @@ const ApplicationStatus = () => {
                         ).toLocaleDateString()
                       : "-"}
                   </strong>
+
                 </div>
 
               </div>
 
             </div>
           )}
-
 
           {/* =====================================
               WHAT HAPPENS NEXT
@@ -474,7 +603,9 @@ const ApplicationStatus = () => {
 
             <div className="journey-steps">
 
-              {/* STEP 1 */}
+              {/* =================================
+                  STEP 1
+              ================================== */}
 
               <div className="journey-step active">
 
@@ -483,23 +614,25 @@ const ApplicationStatus = () => {
                 </div>
 
                 <div>
+
                   <h3>
                     Application Submitted
                   </h3>
 
                   <p>
-                    Your volunteer application has been
-                    successfully received.
+                    Your volunteer application has
+                    been successfully received.
                   </p>
+
                 </div>
 
               </div>
 
-
               <div className="journey-line"></div>
 
-
-              {/* STEP 2 */}
+              {/* =================================
+                  STEP 2
+              ================================== */}
 
               <div
                 className={`journey-step ${
@@ -514,23 +647,25 @@ const ApplicationStatus = () => {
                 </div>
 
                 <div>
+
                   <h3>
                     Admin Review
                   </h3>
 
                   <p>
-                    The Hanumat Seva team reviews your
-                    application.
+                    The Hanumat Seva team reviews
+                    your application.
                   </p>
+
                 </div>
 
               </div>
 
-
               <div className="journey-line"></div>
 
-
-              {/* STEP 3 */}
+              {/* =================================
+                  STEP 3
+              ================================== */}
 
               <div
                 className={`journey-step ${
@@ -543,14 +678,16 @@ const ApplicationStatus = () => {
                 </div>
 
                 <div>
+
                   <h3>
                     Volunteer Access
                   </h3>
 
                   <p>
-                    Once approved, you can access your
-                    volunteer dashboard.
+                    Once approved, you can access
+                    your volunteer dashboard.
                   </p>
+
                 </div>
 
               </div>
@@ -559,14 +696,15 @@ const ApplicationStatus = () => {
 
           </div>
 
-
           {/* =====================================
-              BUTTON ACTIONS
+              BOTTOM ACTIONS
           ====================================== */}
 
           <div className="status-bottom-actions">
 
-            {/* APPROVED → DASHBOARD */}
+            {/* =================================
+                APPROVED → DASHBOARD
+            ================================== */}
 
             {isApproved && (
               <div className="status-bottom-action">
@@ -575,19 +713,24 @@ const ApplicationStatus = () => {
                   type="button"
                   className="orange-button status-action"
                   onClick={() =>
-                    navigate("/volunteer/dashboard")
+                    navigate(
+                      "/volunteer/dashboard"
+                    )
                   }
                 >
                   <LayoutDashboard size={18} />
+
                   Go to Volunteer Dashboard
+
                   <ArrowRight size={18} />
                 </button>
 
               </div>
             )}
 
-
-            {/* BACK TO VOLUNTEER */}
+            {/* =================================
+                BACK TO VOLUNTEER
+            ================================== */}
 
             <div className="status-bottom-action">
 
@@ -599,7 +742,9 @@ const ApplicationStatus = () => {
                 }
               >
                 <ArrowLeft size={17} />
+
                 Back to Volunteer Page
+
               </button>
 
             </div>

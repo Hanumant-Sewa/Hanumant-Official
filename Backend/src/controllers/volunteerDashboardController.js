@@ -4,21 +4,38 @@ export const getVolunteerDashboard = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    // Find volunteer profile
-    const volunteerProfile = await prisma.volunteerProfile.findUnique({
+    // =========================================
+    // FIND USER
+    // =========================================
+
+    const user = await prisma.user.findUnique({
       where: {
-        userId: userId,
+        id: userId,
       },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
-            phone: true,
-          },
-        },
+      select: {
+        name: true,
+        email: true,
+        phone: true,
       },
     });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // =========================================
+    // FIND VOLUNTEER PROFILE
+    // =========================================
+
+    const volunteerProfile =
+      await prisma.volunteerProfile.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
 
     if (!volunteerProfile) {
       return res.status(404).json({
@@ -27,20 +44,56 @@ export const getVolunteerDashboard = async (req, res) => {
       });
     }
 
-    // Get upcoming events
-    const upcomingEvents = await prisma.volunteerEvent.findMany({
-      where: {
-        startDate: {
-          gte: new Date(),
-        },
-      },
-      orderBy: {
-        startDate: "asc",
-      },
-      take: 5,
-    });
+    // =========================================
+    // FIND APPLICATION
+    // =========================================
 
-    // Get volunteer tasks
+    const application =
+      await prisma.volunteerApplication.findFirst({
+        where: {
+          userId: userId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          status: true,
+          motivation: true,
+          preferredArea: true,
+          availability: true,
+          adminRemarks: true,
+          reviewedAt: true,
+          createdAt: true,
+        },
+      });
+
+    // =========================================
+    // UPCOMING EVENTS
+    // =========================================
+    // Get ALL upcoming events from VolunteerEvent
+    // table, not only events joined by this user.
+
+    const upcomingEvents =
+      await prisma.volunteerEvent.findMany({
+        where: {
+          startDate: {
+            gte: new Date(),
+          },
+          status: {
+            in: ["UPCOMING", "ONGOING"],
+          },
+        },
+        orderBy: {
+          startDate: "asc",
+        },
+        take: 5,
+      });
+
+    // =========================================
+    // VOLUNTEER TASKS
+    // =========================================
+
     const tasks = await prisma.volunteerTask.findMany({
       where: {
         volunteerProfileId: volunteerProfile.id,
@@ -51,63 +104,128 @@ export const getVolunteerDashboard = async (req, res) => {
       take: 5,
     });
 
-    // Get recent impact
-    const recentImpact = await prisma.volunteerImpact.findMany({
-      where: {
-        volunteerProfileId: volunteerProfile.id,
-      },
-      orderBy: {
-        recordedAt: "desc",
-      },
-      take: 5,
-    });
+    // =========================================
+    // IMPACT
+    // =========================================
 
-    // Calculate total meals served and people helped
-    const impactSummary = await prisma.volunteerImpact.aggregate({
-      where: {
-        volunteerProfileId: volunteerProfile.id,
-      },
-      _sum: {
-        mealsServed: true,
-        peopleHelped: true,
-      },
-    });
+    const impactSummary =
+      await prisma.volunteerImpact.aggregate({
+        where: {
+          volunteerProfileId: volunteerProfile.id,
+        },
+        _sum: {
+          mealsServed: true,
+          peopleHelped: true,
+        },
+      });
+
+    // =========================================
+    // COMPLETED TASKS
+    // =========================================
+
+    const completedTasks =
+      await prisma.volunteerTask.count({
+        where: {
+          volunteerProfileId: volunteerProfile.id,
+          status: "COMPLETED",
+        },
+      });
+
+    // =========================================
+    // CERTIFICATES
+    // =========================================
+
+    const certificates =
+      await prisma.certificate.count({
+        where: {
+          userId: userId,
+        },
+      });
+
+    // =========================================
+    // RESPONSE
+    // =========================================
 
     return res.status(200).json({
       success: true,
 
-      dashboard: {
-        profile: {
-          name: volunteerProfile.user.name,
-          email: volunteerProfile.user.email,
-          phone: volunteerProfile.user.phone,
-          city: volunteerProfile.city,
-          ageGroup: volunteerProfile.ageGroup,
-          skills: volunteerProfile.skills,
-          availability: volunteerProfile.availability,
-          isVerified: volunteerProfile.isVerified,
-        },
+      // =======================================
+      // USER
+      // =======================================
 
-        stats: {
-          totalHours: volunteerProfile.totalHours,
-          totalEvents: volunteerProfile.totalEvents,
-
-          totalMealsServed:
-            impactSummary._sum.mealsServed || 0,
-
-          totalPeopleHelped:
-            impactSummary._sum.peopleHelped || 0,
-        },
-
-        upcomingEvents: upcomingEvents,
-
-        tasks: tasks,
-
-        recentImpact: recentImpact,
+      user: {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
       },
+
+      // =======================================
+      // VOLUNTEER PROFILE
+      // =======================================
+
+      volunteerProfile: {
+        city: volunteerProfile.city,
+        state: volunteerProfile.state,
+        country: volunteerProfile.country,
+        ageGroup: volunteerProfile.ageGroup,
+        skills: volunteerProfile.skills,
+        interests: volunteerProfile.interests,
+        availability: volunteerProfile.availability,
+        totalHours: volunteerProfile.totalHours,
+        totalEvents: volunteerProfile.totalEvents,
+        isVerified: volunteerProfile.isVerified,
+        joinedAt: volunteerProfile.joinedAt,
+      },
+
+      // =======================================
+      // APPLICATION
+      // =======================================
+
+      application: application || {},
+
+      // =======================================
+      // STATISTICS
+      // =======================================
+
+      statistics: {
+        // Number of events the volunteer has joined
+        totalEvents: volunteerProfile.totalEvents || 0,
+
+        // Number of completed tasks
+        completedTasks: completedTasks || 0,
+
+        // Total volunteer hours
+        totalHours: volunteerProfile.totalHours || 0,
+
+        // Number of people helped
+        peopleSupported:
+          impactSummary._sum.peopleHelped || 0,
+
+        // Meals served
+        mealsServed:
+          impactSummary._sum.mealsServed || 0,
+
+        // Certificates
+        certificates: certificates || 0,
+      },
+
+      // =======================================
+      // UPCOMING EVENTS
+      // =======================================
+
+      upcomingEvents: upcomingEvents,
+
+      // =======================================
+      // TASKS
+      // =======================================
+
+      tasks: tasks,
     });
   } catch (error) {
-    console.error("Volunteer Dashboard Error:", error);
+    console.error(
+      "Volunteer Dashboard Error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
