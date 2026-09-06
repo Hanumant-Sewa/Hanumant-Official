@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   User,
   Mail,
@@ -12,12 +13,18 @@ import {
   ArrowLeft,
   ArrowRight,
   Send,
+  ChevronDown,
 } from "lucide-react";
 
 import "../css/Volunteer.css";
 
+
 const VolunteerApplication = () => {
   const navigate = useNavigate();
+
+  // =====================================================
+  // FORM DATA
+  // =====================================================
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -27,15 +34,18 @@ const VolunteerApplication = () => {
     ageGroup: "",
     skills: "",
     availability: "",
-    preferredActivity: "",
+    preferredActivity: [],
     reason: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // =========================================
-  // HANDLE INPUT CHANGE
-  // =========================================
+  // Preferred Activities dropdown state
+  const [activityOpen, setActivityOpen] = useState(false);
+
+  // =====================================================
+  // NORMAL INPUT CHANGE
+  // =====================================================
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,14 +56,76 @@ const VolunteerApplication = () => {
     }));
   };
 
-  // =========================================
-  // SUBMIT VOLUNTEER APPLICATION
-  // =========================================
+  // =====================================================
+  // MULTIPLE ACTIVITY CHECKBOX CHANGE
+  // =====================================================
+
+  const handleActivityChange = (e) => {
+    const { value, checked } = e.target;
+
+    setFormData((prev) => {
+      let updatedActivities = [
+        ...prev.preferredActivity,
+      ];
+
+      if (checked) {
+        updatedActivities.push(value);
+      } else {
+        updatedActivities = updatedActivities.filter(
+          (activity) => activity !== value
+        );
+      }
+
+      return {
+        ...prev,
+        preferredActivity: updatedActivities,
+      };
+    });
+  };
+
+  // =====================================================
+  // ACTIVITY DISPLAY TEXT
+  // =====================================================
+
+  const getActivityText = () => {
+    if (formData.preferredActivity.length === 0) {
+      return "Select activities";
+    }
+
+    if (formData.preferredActivity.length === 1) {
+      const selected = formData.preferredActivity[0];
+
+      const names = {
+        "food-distribution": "Food Distribution",
+        "food-preparation": "Food Preparation",
+        "food-rescue": "Food Rescue",
+        "community-support": "Community Support",
+        documentation: "Documentation",
+        awareness: "Awareness",
+      };
+
+      return names[selected];
+    }
+
+    return `${formData.preferredActivity.length} activities selected`;
+  };
+
+  // =====================================================
+  // SUBMIT APPLICATION
+  // =====================================================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (isSubmitting) return;
+
+    // At least one activity
+    if (formData.preferredActivity.length === 0) {
+      alert(
+        "Please select at least one preferred activity."
+      );
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -67,6 +139,7 @@ const VolunteerApplication = () => {
             "Content-Type": "application/json",
           },
 
+          // Send authentication cookie
           credentials: "include",
 
           body: JSON.stringify(formData),
@@ -75,46 +148,47 @@ const VolunteerApplication = () => {
 
       const data = await response.json();
 
-      console.log("Application response:", data);
-
-      // =========================================
-      // BACKEND ERROR
-      // =========================================
-
-      if (!response.ok) {
-        alert(
-          data.message ||
-            "Failed to submit volunteer application"
-        );
-
-        return;
-      }
-
-      // =========================================
-      // APPLICATION ALREADY EXISTS
-      // =========================================
-
-      if (data.alreadyApplied) {
-        console.log(
-          "Application already exists:",
-          data.application
-        );
-
-        navigate("/volunteer/dashboard");
-
-        return;
-      }
-
-      // =========================================
-      // NEW APPLICATION SUCCESS
-      // =========================================
-
       console.log(
-        "New volunteer application created:",
-        data.application
+        "Volunteer Application Response:",
+        data
       );
 
-      navigate("/volunteer/dashboard");
+      // =================================================
+      // ERROR
+      // =================================================
+
+      if (!response.ok) {
+        // Existing application
+        if (
+          data.message ===
+          "You already have a volunteer application"
+        ) {
+          navigate("/volunteer/application-status");
+          return;
+        }
+
+        alert(
+          data.message ||
+            "Failed to submit volunteer application."
+        );
+
+        return;
+      }
+
+      // =================================================
+      // APPLICATION ALREADY EXISTS
+      // =================================================
+
+      if (data.alreadyApplied) {
+        navigate("/volunteer/application-status");
+        return;
+      }
+
+      // =================================================
+      // SUCCESS
+      // =================================================
+
+      navigate("/volunteer/application-status");
 
     } catch (error) {
       console.error(
@@ -133,9 +207,9 @@ const VolunteerApplication = () => {
   return (
     <div className="volunteer-application-page">
 
-      {/* =========================================
+      {/* =================================================
           HERO SECTION
-      ========================================= */}
+      ================================================= */}
 
       <section className="application-hero">
 
@@ -149,16 +223,15 @@ const VolunteerApplication = () => {
             onClick={() => navigate("/volunteer")}
           >
             <ArrowLeft size={17} />
-
             Back to Volunteer
           </button>
 
           <span className="application-label">
-            HANUMAT SEVA
+            HANUMANT SEVA
           </span>
 
           <h1>
-            Become a<span> Volunteer</span>
+            Become a <span>Volunteer</span>
           </h1>
 
           <p>
@@ -171,17 +244,17 @@ const VolunteerApplication = () => {
 
       </section>
 
-      {/* =========================================
+      {/* =================================================
           APPLICATION SECTION
-      ========================================= */}
+      ================================================= */}
 
       <section className="application-section">
 
         <div className="application-layout">
 
-          {/* =====================================
+          {/* =================================================
               LEFT INFORMATION
-          ===================================== */}
+          ================================================= */}
 
           <div className="application-info">
 
@@ -200,7 +273,7 @@ const VolunteerApplication = () => {
 
             <h2>
               Give Your Time.
-              <span> Create Impact.</span>
+              <span>Create Impact.</span>
             </h2>
 
             <p>
@@ -209,11 +282,9 @@ const VolunteerApplication = () => {
               and make a positive difference.
             </p>
 
-            {/* Information Points */}
-
             <div className="info-points">
 
-              {/* Point 1 */}
+              {/* POINT 1 */}
 
               <div className="info-point">
 
@@ -223,7 +294,9 @@ const VolunteerApplication = () => {
 
                 <div>
 
-                  <h3>Serve With Purpose</h3>
+                  <h3>
+                    Serve With Purpose
+                  </h3>
 
                   <p>
                     Contribute your time to meaningful
@@ -234,7 +307,7 @@ const VolunteerApplication = () => {
 
               </div>
 
-              {/* Point 2 */}
+              {/* POINT 2 */}
 
               <div className="info-point">
 
@@ -257,7 +330,7 @@ const VolunteerApplication = () => {
 
               </div>
 
-              {/* Point 3 */}
+              {/* POINT 3 */}
 
               <div className="info-point">
 
@@ -267,7 +340,9 @@ const VolunteerApplication = () => {
 
                 <div>
 
-                  <h3>Use Your Skills</h3>
+                  <h3>
+                    Use Your Skills
+                  </h3>
 
                   <p>
                     Share your skills and support the
@@ -282,13 +357,11 @@ const VolunteerApplication = () => {
 
           </div>
 
-          {/* =====================================
-              APPLICATION FORM
-          ===================================== */}
+          {/* =================================================
+              RIGHT APPLICATION FORM
+          ================================================= */}
 
           <div className="application-form-card">
-
-            {/* Form Heading */}
 
             <div className="form-heading">
 
@@ -307,52 +380,46 @@ const VolunteerApplication = () => {
 
             </div>
 
-            {/* ===================================
+            {/* =================================================
                 FORM
-            =================================== */}
+            ================================================= */}
 
             <form onSubmit={handleSubmit}>
 
-              {/* =================================
-                  FULL NAME
-              ================================= */}
-
-              <div className="form-group">
-
-                <label htmlFor="fullName">
-                  Full Name
-                </label>
-
-                <div className="input-wrapper">
-
-                  <User size={18} />
-
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    placeholder="Enter your full name"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    required
-                  />
-
-                </div>
-
-              </div>
-
-              {/* =================================
-                  EMAIL + PHONE
-              ================================= */}
+              {/* =================================================
+                  FULL NAME + EMAIL
+              ================================================= */}
 
               <div className="form-row">
 
-                {/* Email */}
+                <div className="form-group">
+
+                  <label htmlFor="fullName">
+                    Full Name <span>*</span>
+                  </label>
+
+                  <div className="input-wrapper">
+
+                    <User size={18} />
+
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      placeholder="Enter your full name"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      required
+                    />
+
+                  </div>
+
+                </div>
 
                 <div className="form-group">
 
                   <label htmlFor="email">
-                    Email
+                    Email <span>*</span>
                   </label>
 
                   <div className="input-wrapper">
@@ -373,12 +440,18 @@ const VolunteerApplication = () => {
 
                 </div>
 
-                {/* Phone */}
+              </div>
+
+              {/* =================================================
+                  PHONE + CITY
+              ================================================= */}
+
+              <div className="form-row">
 
                 <div className="form-group">
 
                   <label htmlFor="phone">
-                    Phone
+                    Phone <span>*</span>
                   </label>
 
                   <div className="input-wrapper">
@@ -399,20 +472,10 @@ const VolunteerApplication = () => {
 
                 </div>
 
-              </div>
-
-              {/* =================================
-                  CITY + AGE GROUP
-              ================================= */}
-
-              <div className="form-row">
-
-                {/* City */}
-
                 <div className="form-group">
 
                   <label htmlFor="city">
-                    City
+                    City <span>*</span>
                   </label>
 
                   <div className="input-wrapper">
@@ -433,12 +496,18 @@ const VolunteerApplication = () => {
 
                 </div>
 
-                {/* Age Group */}
+              </div>
+
+              {/* =================================================
+                  AGE GROUP + AVAILABILITY
+              ================================================= */}
+
+              <div className="form-row">
 
                 <div className="form-group">
 
                   <label htmlFor="ageGroup">
-                    Age Group
+                    Age Group <span>*</span>
                   </label>
 
                   <div className="input-wrapper">
@@ -483,19 +552,63 @@ const VolunteerApplication = () => {
 
                 </div>
 
+                <div className="form-group">
+
+                  <label htmlFor="availability">
+                    Availability <span>*</span>
+                  </label>
+
+                  <div className="input-wrapper">
+
+                    <Clock size={18} />
+
+                    <select
+                      id="availability"
+                      name="availability"
+                      value={formData.availability}
+                      onChange={handleChange}
+                      required
+                    >
+
+                      <option value="">
+                        Select availability
+                      </option>
+
+                      <option value="weekdays">
+                        Weekdays
+                      </option>
+
+                      <option value="weekends">
+                        Weekends
+                      </option>
+
+                      <option value="both">
+                        Weekdays & Weekends
+                      </option>
+
+                      <option value="occasionally">
+                        Occasionally
+                      </option>
+
+                    </select>
+
+                  </div>
+
+                </div>
+
               </div>
 
-              {/* =================================
+              {/* =================================================
                   SKILLS
-              ================================= */}
+              ================================================= */}
 
               <div className="form-group">
 
                 <label htmlFor="skills">
-                  Skills
+                  Skills <span>*</span>
                 </label>
 
-                <div className="input-wrapper">
+                <div className="input-wrapper textarea-wrapper">
 
                   <Wrench size={18} />
 
@@ -513,128 +626,240 @@ const VolunteerApplication = () => {
 
               </div>
 
-              {/* =================================
-                  AVAILABILITY
-              ================================= */}
+              {/* =================================================
+                  PREFERRED ACTIVITIES
+              ================================================= */}
 
               <div className="form-group">
 
-                <label htmlFor="availability">
-                  Availability
+                <label className="activity-main-label">
+
+                  <Heart size={17} />
+
+                  Preferred Activities <span>*</span>
+
                 </label>
 
-                <div className="input-wrapper">
+                <p className="activity-help">
+                  Select all that apply
+                </p>
 
-                  <Clock size={18} />
+                {/* =================================================
+                    SINGLE MULTI-SELECT
+                ================================================= */}
 
-                  <select
-                    id="availability"
-                    name="availability"
-                    value={formData.availability}
-                    onChange={handleChange}
-                    required
+                <div className="activity-select-container">
+
+                  {/* MAIN BOX */}
+
+                  <button
+                    type="button"
+                    className={`activity-select-button ${
+                      activityOpen
+                        ? "activity-select-open"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      setActivityOpen(
+                        (prev) => !prev
+                      )
+                    }
                   >
 
-                    <option value="">
-                      Select availability
-                    </option>
+                    <div className="activity-select-left">
 
-                    <option value="weekdays">
-                      Weekdays
-                    </option>
+                      <Heart size={18} />
 
-                    <option value="weekends">
-                      Weekends
-                    </option>
+                      <span>
+                        {getActivityText()}
+                      </span>
 
-                    <option value="both">
-                      Weekdays & Weekends
-                    </option>
+                    </div>
 
-                    <option value="occasionally">
-                      Occasionally
-                    </option>
+                    <ChevronDown
+                      size={19}
+                      className={`activity-chevron ${
+                        activityOpen
+                          ? "rotate-chevron"
+                          : ""
+                      }`}
+                    />
 
-                  </select>
+                  </button>
+
+                  {/* =================================================
+                      OPTIONS OPEN ONLY AFTER CLICK
+                  ================================================= */}
+
+                  {activityOpen && (
+
+                    <div className="activity-dropdown">
+
+                      {/* FOOD DISTRIBUTION */}
+
+                      <label className="activity-option">
+
+                        <input
+                          type="checkbox"
+                          value="food-distribution"
+                          checked={formData.preferredActivity.includes(
+                            "food-distribution"
+                          )}
+                          onChange={
+                            handleActivityChange
+                          }
+                        />
+
+                        <span className="activity-checkmark"></span>
+
+                        <span className="activity-option-text">
+                          Food Distribution
+                        </span>
+
+                      </label>
+
+                      {/* FOOD PREPARATION */}
+
+                      <label className="activity-option">
+
+                        <input
+                          type="checkbox"
+                          value="food-preparation"
+                          checked={formData.preferredActivity.includes(
+                            "food-preparation"
+                          )}
+                          onChange={
+                            handleActivityChange
+                          }
+                        />
+
+                        <span className="activity-checkmark"></span>
+
+                        <span className="activity-option-text">
+                          Food Preparation
+                        </span>
+
+                      </label>
+
+                      {/* FOOD RESCUE */}
+
+                      <label className="activity-option">
+
+                        <input
+                          type="checkbox"
+                          value="food-rescue"
+                          checked={formData.preferredActivity.includes(
+                            "food-rescue"
+                          )}
+                          onChange={
+                            handleActivityChange
+                          }
+                        />
+
+                        <span className="activity-checkmark"></span>
+
+                        <span className="activity-option-text">
+                          Food Rescue
+                        </span>
+
+                      </label>
+
+                      {/* COMMUNITY SUPPORT */}
+
+                      <label className="activity-option">
+
+                        <input
+                          type="checkbox"
+                          value="community-support"
+                          checked={formData.preferredActivity.includes(
+                            "community-support"
+                          )}
+                          onChange={
+                            handleActivityChange
+                          }
+                        />
+
+                        <span className="activity-checkmark"></span>
+
+                        <span className="activity-option-text">
+                          Community Support
+                        </span>
+
+                      </label>
+
+                      {/* DOCUMENTATION */}
+
+                      <label className="activity-option">
+
+                        <input
+                          type="checkbox"
+                          value="documentation"
+                          checked={formData.preferredActivity.includes(
+                            "documentation"
+                          )}
+                          onChange={
+                            handleActivityChange
+                          }
+                        />
+
+                        <span className="activity-checkmark"></span>
+
+                        <span className="activity-option-text">
+                          Documentation
+                        </span>
+
+                      </label>
+
+                      {/* AWARENESS */}
+
+                      <label className="activity-option">
+
+                        <input
+                          type="checkbox"
+                          value="awareness"
+                          checked={formData.preferredActivity.includes(
+                            "awareness"
+                          )}
+                          onChange={
+                            handleActivityChange
+                          }
+                        />
+
+                        <span className="activity-checkmark"></span>
+
+                        <span className="activity-option-text">
+                          Awareness
+                        </span>
+
+                      </label>
+
+                    </div>
+
+                  )}
 
                 </div>
 
               </div>
 
-              {/* =================================
-                  PREFERRED ACTIVITY
-              ================================= */}
-
-              <div className="form-group">
-
-                <label htmlFor="preferredActivity">
-                  Preferred Activities
-                </label>
-
-                <div className="input-wrapper">
-
-                  <Heart size={18} />
-
-                  <select
-                    id="preferredActivity"
-                    name="preferredActivity"
-                    value={formData.preferredActivity}
-                    onChange={handleChange}
-                    required
-                  >
-
-                    <option value="">
-                      Select preferred activity
-                    </option>
-
-                    <option value="food-distribution">
-                      Food Distribution
-                    </option>
-
-                    <option value="food-preparation">
-                      Food Preparation
-                    </option>
-
-                    <option value="food-rescue">
-                      Food Rescue
-                    </option>
-
-                    <option value="community-support">
-                      Community Support
-                    </option>
-
-                    <option value="documentation">
-                      Documentation
-                    </option>
-
-                    <option value="awareness">
-                      Awareness
-                    </option>
-
-                  </select>
-
-                </div>
-
-              </div>
-
-              {/* =================================
+              {/* =================================================
                   REASON
-              ================================= */}
+              ================================================= */}
 
               <div className="form-group">
 
                 <label htmlFor="reason">
-                  Why do you want to volunteer?
+                  Why do you want to volunteer?{" "}
+                  <span>*</span>
                 </label>
 
-                <div className="input-wrapper">
+                <div className="input-wrapper textarea-wrapper">
 
                   <Heart size={18} />
 
                   <textarea
                     id="reason"
                     name="reason"
-                    placeholder="Tell us why you would like to volunteer with Hanumat Seva..."
+                    placeholder="Tell us why you would like to volunteer with Hanumant Seva..."
                     value={formData.reason}
                     onChange={handleChange}
                     rows="5"
@@ -645,9 +870,9 @@ const VolunteerApplication = () => {
 
               </div>
 
-              {/* =================================
-                  SUBMIT BUTTON
-              ================================= */}
+              {/* =================================================
+                  SUBMIT
+              ================================================= */}
 
               <button
                 type="submit"
