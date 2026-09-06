@@ -679,97 +679,922 @@
   margin: 0;
   padding: 0;
 }
-/*====================================================
-                APPLICATION FORM
-====================================================*/
 
-.application-form-card{
-    background:#fff;
-    padding:clamp(25px,3vw,38px);
-    border:1px solid var(--border);
-    border-radius:22px;
-    box-shadow:var(--shadow-md);
+/* =========================================================
+   VOLUNTEER APPLICATION PAGE
+========================================================= */
+
+.volunteer-application-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #faf9f6;
+  color: #17324d;
+  box-sizing: border-box;
 }
 
-.application-form-card h2{
-    margin:0 0 8px;
-    color:var(--text);
-    font-family:'Poppins',sans-serif;
+/* =========================================================
+   HERO
+========================================================= */
+
+.application-hero {
+  position: relative;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  background: #fff8f1;
+  overflow: hidden;
 }
 
-.application-form-card p{
-    color:var(--text-light);
-    line-height:1.6;
+.application-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.25);
 }
 
-.input-wrapper{
-    position:relative;
-    margin-bottom:15px;
+.application-hero-content {
+  position: relative;
+  z-index: 2;
+  width: min(1200px, 92%);
+  margin: 0 auto;
+  padding: 60px 0;
 }
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 9px 15px;
+
+  margin-bottom: 25px;
+
+  border: 1px solid #d8e0e7;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #17324d;
+
+  font-size: 14px;
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.back-button:hover {
+  border-color: #f47b20;
+}
+
+.application-label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #f47b20;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+}
+
+.application-hero-content h1 {
+  margin: 0 0 14px;
+
+  color: #17324d;
+
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.1;
+}
+
+.application-hero-content h1 span {
+  color: #f47b20;
+}
+
+.application-hero-content p {
+  max-width: 650px;
+
+  margin: 0;
+
+  color: #66788a;
+
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   APPLICATION SECTION
+========================================================= */
+
+.application-section {
+  width: 100%;
+  padding: 65px 20px;
+
+  box-sizing: border-box;
+}
+
+.application-layout {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 350px minmax(0, 1fr);
+
+  gap: 40px;
+
+  align-items: start;
+}
+
+/* =========================================================
+   LEFT INFORMATION
+========================================================= */
+
+.application-info {
+  background: #ffffff;
+
+  border: 1px solid #e5e8eb;
+  border-radius: 16px;
+
+  padding: 25px;
+
+  box-shadow: 0 7px 25px rgba(23, 50, 77, 0.06);
+
+  box-sizing: border-box;
+}
+
+.application-image {
+  width: 100%;
+  height: 205px;
+
+  margin-bottom: 24px;
+
+  overflow: hidden;
+
+  border-radius: 11px;
+}
+
+.application-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.section-label {
+  display: inline-block;
+
+  margin-bottom: 9px;
+
+  color: #f47b20;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.application-info h2 {
+  margin: 0 0 14px;
+
+  color: #17324d;
+
+  font-size: 29px;
+  line-height: 1.2;
+}
+
+.application-info h2 span {
+  display: block;
+
+  color: #f47b20;
+}
+
+.application-info > p {
+  margin: 0 0 27px;
+
+  color: #718096;
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   INFORMATION POINTS
+========================================================= */
+
+.info-points {
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+}
+
+.info-point {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 13px;
+}
+
+.info-point-icon {
+  width: 42px;
+  height: 42px;
+
+  min-width: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fff1e6;
+
+  color: #f47b20;
+}
+
+.info-point h3 {
+  margin: 1px 0 5px;
+
+  color: #17324d;
+
+  font-size: 15px;
+}
+
+.info-point p {
+  margin: 0;
+
+  color: #718096;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.application-form-card {
+  width: 100%;
+
+  background: #ffffff;
+
+  border: 1px solid #e3e7eb;
+  border-radius: 16px;
+
+  padding: 36px;
+
+  box-shadow: 0 7px 25px rgba(23, 50, 77, 0.07);
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   FORM HEADING
+========================================================= */
+
+.form-heading {
+  margin-bottom: 30px;
+}
+
+.form-label {
+  display: inline-block;
+
+  margin-bottom: 8px;
+
+  color: #f47b20;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.form-heading h2 {
+  margin: 0 0 8px;
+
+  color: #17324d;
+
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.form-heading p {
+  margin: 0;
+
+  color: #718096;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   FORM ROW
+========================================================= */
+
+.form-row {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 22px;
+
+  margin-bottom: 22px;
+}
+
+.form-group {
+  width: 100%;
+
+  margin-bottom: 22px;
+}
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #17324d;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group label span {
+  color: #f47b20;
+}
+
+/* =========================================================
+   INPUT WRAPPER
+========================================================= */
+
+.input-wrapper {
+  width: 100%;
+  min-height: 50px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 14px;
+
+  border: 1px solid #d5dce3;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+
+  transition: 0.2s ease;
+}
+
+.input-wrapper:hover {
+  border-color: #bfc8d1;
+}
+
+.input-wrapper:focus-within {
+  border-color: #f47b20;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(244, 123, 32, 0.08);
+}
+
+.input-wrapper svg {
+  flex-shrink: 0;
+
+  color: #718096;
+}
+
+/* =========================================================
+   INPUT / SELECT
+========================================================= */
 
 .input-wrapper input,
-.input-wrapper select,
-.input-wrapper textarea{
-    width:100%;
-    padding:13px 14px;
-    border:1px solid #ddd;
-    border-radius:12px;
-    background:#FFFDF9;
-    color:var(--text);
-    font:inherit;
-    outline:none;
-    transition:var(--transition);
+.input-wrapper select {
+  width: 100%;
+  height: 48px;
+
+  padding: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #17324d;
+
+  font-family: inherit;
+  font-size: 14px;
 }
 
-.input-wrapper textarea{
-    min-height:110px;
-    resize:vertical;
+.input-wrapper input::placeholder {
+  color: #9aa8b6;
 }
 
-.input-wrapper input:focus,
-.input-wrapper select:focus,
-.input-wrapper textarea:focus{
-    border-color:var(--primary);
-    background:#fff;
-    box-shadow:0 0 0 3px rgba(217,119,6,.10);
+.input-wrapper select {
+  cursor: pointer;
 }
 
-.input-wrapper input::placeholder,
-.input-wrapper textarea::placeholder{
-    color:#aaa;
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+.textarea-wrapper {
+  align-items: flex-start;
+
+  padding-top: 13px;
+  padding-bottom: 13px;
 }
 
-.submit-application-button{
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    margin-top:5px;
-    padding:13px 20px;
-    border:1px solid var(--primary);
-    border-radius:50px;
-    background:var(--primary);
-    color:#fff;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-    transition:var(--transition);
+.textarea-wrapper svg {
+  margin-top: 2px;
 }
 
-.submit-application-button:hover{
-    background:var(--primary-dark);
-    transform:translateY(-2px);
+.input-wrapper textarea {
+  width: 100%;
+
+  min-height: 90px;
+
+  padding: 0;
+
+  border: none;
+  outline: none;
+
+  resize: vertical;
+
+  background: transparent;
+
+  color: #17324d;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  line-height: 1.6;
 }
 
-.form-note{
-    margin:10px 0 0;
-    text-align:center;
-    color:var(--text-light);
-    font-size:11px;
-    line-height:1.5;
+.input-wrapper textarea::placeholder {
+  color: #9aa8b6;
 }
 
+/* =========================================================
+   PREFERRED ACTIVITIES LABEL
+========================================================= */
+
+.activity-main-label {
+  display: flex !important;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 5px !important;
+}
+
+.activity-main-label svg {
+  color: #718096;
+}
+
+.activity-help {
+  margin: 0 0 10px;
+
+  color: #718096;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   SINGLE MULTI SELECT CONTAINER
+========================================================= */
+
+.activity-select-container {
+  position: relative;
+
+  width: 100%;
+}
+
+/* =========================================================
+   MAIN SELECT BOX
+========================================================= */
+
+.activity-select-button {
+  width: 100%;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 14px;
+
+  border: 1px solid #d5dce3;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #17324d;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition: 0.2s ease;
+}
+
+.activity-select-button:hover {
+  border-color: #bfc8d1;
+}
+
+/* When dropdown is open */
+
+.activity-select-open {
+  border-color: #f47b20;
+
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(244, 123, 32, 0.08);
+}
+
+/* =========================================================
+   SELECT LEFT SIDE
+========================================================= */
+
+.activity-select-left {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+.activity-select-left svg {
+  flex-shrink: 0;
+
+  color: #718096;
+}
+
+.activity-select-left span {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #17324d;
+}
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.activity-chevron {
+  flex-shrink: 0;
+
+  color: #17324d;
+
+  transition: transform 0.2s ease;
+}
+
+.rotate-chevron {
+  transform: rotate(180deg);
+}
+
+/* =========================================================
+   DROPDOWN OPTIONS
+========================================================= */
+
+.activity-dropdown {
+  position: absolute;
+
+  top: 50px;
+  left: 0;
+  right: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+
+  padding: 5px 0;
+
+  background: #ffffff;
+
+  border: 1px solid #f47b20;
+
+  border-top: none;
+
+  border-bottom-left-radius: 9px;
+  border-bottom-right-radius: 9px;
+
+  box-shadow:
+    0 8px 18px
+    rgba(23, 50, 77, 0.10);
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   ACTIVITY OPTION
+   NO SEPARATE BOX
+========================================================= */
+
+.activity-option {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 44px;
+
+  display: flex !important;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 9px 14px;
+
+  margin: 0 !important;
+
+  border: none !important;
+
+  border-radius: 0 !important;
+
+  background: #ffffff !important;
+
+  color: #17324d !important;
+
+  font-family: inherit;
+
+  font-size: 14px !important;
+
+  font-weight: 400 !important;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition: background 0.15s ease;
+}
+
+/* Hover only changes background */
+
+.activity-option:hover {
+  background: #f7f9fb !important;
+}
+
+/* =========================================================
+   HIDE REAL CHECKBOX
+========================================================= */
+
+.activity-option input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   CUSTOM CHECKBOX
+========================================================= */
+
+.activity-checkmark {
+  position: relative;
+
+  width: 18px;
+  height: 18px;
+
+  min-width: 18px;
+
+  border: 1.5px solid #aeb9c4;
+
+  border-radius: 4px;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+
+  transition: 0.15s ease;
+}
+
+/* =========================================================
+   CHECKED CHECKBOX
+========================================================= */
+
+.activity-option input:checked
+  + .activity-checkmark {
+  background: #f47b20;
+
+  border-color: #f47b20;
+}
+
+/* =========================================================
+   CHECK MARK
+========================================================= */
+
+.activity-option
+  input:checked
+  + .activity-checkmark::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 5px;
+  top: 1px;
+
+  width: 5px;
+  height: 10px;
+
+  border: solid #ffffff;
+
+  border-width: 0 2px 2px 0;
+
+  transform: rotate(45deg);
+}
+
+/* =========================================================
+   ACTIVITY TEXT
+   ALL ACTIVITIES SAME COLOR
+========================================================= */
+
+.activity-option-text {
+  color: #17324d !important;
+
+  font-size: 14px !important;
+
+  font-weight: 400 !important;
+}
+
+/*
+   IMPORTANT:
+   We do NOT make Food Distribution orange.
+   We do NOT make selected text orange.
+   Every activity uses the SAME color.
+*/
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+.submit-application-button {
+  width: 100%;
+
+  min-height: 50px;
+
+  margin-top: 5px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  border: none;
+
+  border-radius: 9px;
+
+  background: #f47b20;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.submit-application-button:hover:not(:disabled) {
+  background: #df6912;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 14px
+    rgba(244, 123, 32, 0.20);
+}
+
+.submit-application-button:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   FORM NOTE
+========================================================= */
+
+.form-note {
+  margin: 12px 0 0;
+
+  text-align: center;
+
+  color: #718096;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .application-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .application-info {
+    max-width: 700px;
+
+    width: 100%;
+
+    margin: 0 auto;
+  }
+
+  .application-form-card {
+    max-width: 850px;
+
+    width: 100%;
+
+    margin: 0 auto;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+  .application-section {
+    padding: 40px 15px;
+  }
+
+  .application-form-card {
+    padding: 24px 18px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+
+    gap: 0;
+
+    margin-bottom: 0;
+  }
+
+  .form-row .form-group {
+    margin-bottom: 22px;
+  }
+
+  .application-hero-content {
+    width: 90%;
+
+    padding: 45px 0;
+  }
+
+  .application-hero-content h1 {
+    font-size: 38px;
+  }
+
+  .application-hero-content p {
+    font-size: 14px;
+  }
+
+  .application-info {
+    padding: 20px;
+  }
+
+  .form-heading h2 {
+    font-size: 26px;
+  }
+}
 
 /*====================================================
             OTHER VOLUNTEER PAGES
@@ -786,117 +1611,892 @@
     padding:clamp(35px,5vw,60px) 0;
 }
 
+/* =========================================================
+   APPLICATION STATUS PAGE
+   ========================================================= */
 
-/*====================================================
-                STATUS PAGE
-====================================================*/
-
-.status-container{
-    width:min(100%,900px);
-    margin:auto;
+.application-status-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #faf9f6;
+  color: #17324d;
+  box-sizing: border-box;
 }
 
-.status-card{
-    padding:clamp(30px,4vw,45px);
-    text-align:center;
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:22px;
-    box-shadow:var(--shadow-md);
+.application-status-page *,
+.application-status-page *::before,
+.application-status-page *::after {
+  box-sizing: border-box;
 }
 
-.status-icon{
-    width:75px;
-    height:75px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:0 auto 20px;
-    border-radius:50%;
+
+/* =========================================================
+   HERO SECTION
+   ========================================================= */
+
+.application-status-page .application-hero {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+
+  display: flex;
+  align-items: center;
+
+  background: #fff8f1;
+
+  overflow: hidden;
 }
 
-.status-icon.pending{
-    background:#FFF2DE;
-    color:var(--primary);
+.application-status-page .application-hero-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: rgba(255, 255, 255, 0.25);
 }
 
-.status-icon.approved{
-    background:#ECFDF5;
-    color:#16A34A;
+.application-status-page .application-hero-content {
+  position: relative;
+  z-index: 2;
+
+  width: 92%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  padding: 55px 0;
 }
 
-.status-icon.rejected{
-    background:#FEF2F2;
-    color:#DC2626;
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.application-status-page .back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-bottom: 25px;
+  padding: 9px 15px;
+
+  border: 1px solid #d8e0e7;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #17324d;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
-.status-label{
-    display:block;
-    margin-bottom:8px;
-    color:var(--primary);
-    font-size:12px;
-    font-weight:700;
-    letter-spacing:1.5px;
+.application-status-page .back-button:hover {
+  border-color: #f47b20;
+  color: #f47b20;
 }
 
-.status-card h2{
-    margin:0 0 12px;
-    color:var(--text);
-    font-family:'Poppins',sans-serif;
-    font-size:clamp(26px,3vw,36px);
+
+/* =========================================================
+   HERO TEXT
+   ========================================================= */
+
+.application-status-page .application-label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #f47b20;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
 }
 
-.status-card h2 span{
-    color:var(--primary);
+.application-status-page .application-hero-content h1 {
+  margin: 0 0 14px;
+
+  color: #17324d;
+
+  font-size: 52px;
+  font-weight: 700;
+
+  line-height: 1.1;
 }
 
-.status-card p{
-    max-width:650px;
-    margin:auto;
-    color:var(--text-light);
-    font-size:15px;
-    line-height:1.7;
+.application-status-page .application-hero-content h1 span {
+  color: #f47b20;
 }
 
-.status-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    margin-top:20px;
-    padding:8px 14px;
-    border-radius:50px;
-    font-size:12px;
-    font-weight:700;
+.application-status-page .application-hero-content > p {
+  max-width: 650px;
+
+  margin: 0;
+
+  color: #66788a;
+
+  font-size: 16px;
+
+  line-height: 1.7;
 }
 
-.pending-badge{
-    background:#FFF2DE;
-    color:var(--primary-dark);
+
+/* =========================================================
+   MAIN SECTION
+   ========================================================= */
+
+.application-status-page .application-section {
+  width: 100%;
+
+  padding: 60px 20px;
+
+  background: #faf9f6;
 }
 
-.approved-badge{
-    background:#ECFDF5;
-    color:#15803D;
+.application-status-page .status-container {
+  width: 100%;
+  max-width: 1000px;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 28px;
 }
 
-.rejected-badge{
-    background:#FEF2F2;
-    color:#B91C1C;
+
+/* =========================================================
+   MAIN STATUS CARD
+   ========================================================= */
+
+.application-status-page .status-card {
+  width: 100%;
+
+  padding: 45px 50px;
+
+  background: #ffffff;
+
+  border: 1px solid #e4e8ec;
+  border-radius: 18px;
+
+  box-shadow:
+    0 8px 30px rgba(23, 50, 77, 0.07);
+
+  text-align: center;
 }
 
-.status-action{
-    margin-top:22px;
+
+/* =========================================================
+   STATUS ICON
+   ========================================================= */
+
+.application-status-page .status-icon {
+  width: 82px;
+  height: 82px;
+
+  margin: 0 auto 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
 }
 
-.application-details-card{
-    margin-top:25px;
-    padding:28px;
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:20px;
-    box-shadow:var(--shadow-sm);
+.application-status-page .status-icon.pending {
+  background: #fff3df;
+  color: #f47b20;
 }
 
+.application-status-page .status-icon.approved {
+  background: #e9f8ef;
+  color: #2e9b5b;
+}
+
+.application-status-page .status-icon.rejected {
+  background: #fdecec;
+  color: #dc4c4c;
+}
+
+
+/* =========================================================
+   LOADING ICON
+   ========================================================= */
+
+.application-status-page .loading-icon {
+  animation: applicationStatusSpin 1s linear infinite;
+}
+
+@keyframes applicationStatusSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   STATUS LABEL
+   ========================================================= */
+
+.application-status-page .status-label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #f47b20;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 1.4px;
+}
+
+
+/* =========================================================
+   STATUS HEADING
+   ========================================================= */
+
+.application-status-page .status-card h2 {
+  margin: 0 0 14px;
+
+  color: #17324d;
+
+  font-size: 31px;
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+.application-status-page .status-card h2 span {
+  color: #f47b20;
+}
+
+
+/* =========================================================
+   STATUS DESCRIPTION
+   ========================================================= */
+
+.application-status-page .status-card > p {
+  max-width: 700px;
+
+  margin: 0 auto 22px;
+
+  color: #718096;
+
+  font-size: 15px;
+
+  line-height: 1.75;
+}
+
+
+/* =========================================================
+   STATUS BADGE
+   ========================================================= */
+
+.application-status-page .status-badge {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin: 5px auto 0;
+
+  padding: 9px 16px;
+
+  border-radius: 30px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.application-status-page .pending-badge {
+  background: #fff3df;
+  color: #d86d16;
+}
+
+.application-status-page .approved-badge {
+  background: #e9f8ef;
+  color: #27854d;
+}
+
+.application-status-page .rejected-badge {
+  background: #fdecec;
+  color: #c63f3f;
+}
+
+
+/* =========================================================
+   ORANGE BUTTON
+   ========================================================= */
+
+.application-status-page .orange-button {
+  min-height: 48px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 0 20px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #f47b20;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.application-status-page .orange-button:hover {
+  background: #df6912;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 15px rgba(244, 123, 32, 0.22);
+}
+
+.application-status-page .status-action {
+  margin-top: 22px;
+}
+
+
+/* =========================================================
+   OUTLINE BUTTON
+   ========================================================= */
+
+.application-status-page .outline-button {
+  min-height: 48px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 0 20px;
+
+  border: 1px solid #d5dce3;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #17324d;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.application-status-page .outline-button:hover {
+  border-color: #f47b20;
+  color: #f47b20;
+}
+
+
+/* =========================================================
+   ADMIN REMARKS
+   ========================================================= */
+
+.application-status-page .admin-remarks {
+  max-width: 650px;
+
+  margin: 25px auto 0;
+  padding: 18px 20px;
+
+  border-left: 4px solid #f47b20;
+  border-radius: 8px;
+
+  background: #fff8f1;
+
+  text-align: left;
+}
+
+.application-status-page .admin-remarks strong {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #17324d;
+
+  font-size: 14px;
+}
+
+.application-status-page .admin-remarks p {
+  margin: 0;
+
+  color: #66788a;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   APPLICATION DETAILS CARD
+   ========================================================= */
+
+.application-status-page .application-details-card {
+  width: 100%;
+
+  padding: 30px;
+
+  background: #ffffff;
+
+  border: 1px solid #e4e8ec;
+  border-radius: 16px;
+
+  box-shadow:
+    0 6px 24px rgba(23, 50, 77, 0.05);
+}
+
+
+/* =========================================================
+   DETAILS HEADING
+   ========================================================= */
+
+.application-status-page .details-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding-bottom: 22px;
+
+  margin-bottom: 22px;
+
+  border-bottom: 1px solid #edf0f2;
+}
+
+.application-status-page .details-heading-icon {
+  width: 43px;
+  height: 43px;
+
+  min-width: 43px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fff1e6;
+  color: #f47b20;
+}
+
+.application-status-page .details-heading span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #f47b20;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.application-status-page .details-heading h3 {
+  margin: 0;
+
+  color: #17324d;
+
+  font-size: 21px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   DETAILS GRID
+   ========================================================= */
+
+.application-status-page .details-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 1px;
+
+  overflow: hidden;
+
+  border: 1px solid #e8ecef;
+  border-radius: 10px;
+
+  background: #e8ecef;
+}
+
+.application-status-page .detail-item {
+  min-width: 0;
+
+  padding: 19px 20px;
+
+  background: #ffffff;
+}
+
+.application-status-page .detail-item small {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #8493a2;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.application-status-page .detail-item strong {
+  display: block;
+
+  overflow-wrap: anywhere;
+
+  color: #17324d;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   NEXT JOURNEY CARD
+   ========================================================= */
+
+.application-status-page .status-next-card {
+  width: 100%;
+
+  padding: 32px;
+
+  background: #ffffff;
+
+  border: 1px solid #e4e8ec;
+  border-radius: 16px;
+
+  box-shadow:
+    0 6px 24px rgba(23, 50, 77, 0.05);
+}
+
+.application-status-page .section-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #f47b20;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.3px;
+}
+
+.application-status-page .status-next-card > h2 {
+  margin: 0 0 28px;
+
+  color: #17324d;
+
+  font-size: 25px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   JOURNEY STEPS
+   ========================================================= */
+
+.application-status-page .journey-steps {
+  width: 100%;
+}
+
+.application-status-page .journey-step {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 16px;
+
+  opacity: 0.48;
+
+  transition: opacity 0.2s ease;
+}
+
+.application-status-page .journey-step.active {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   JOURNEY NUMBER
+   ========================================================= */
+
+.application-status-page .journey-number {
+  width: 46px;
+  height: 46px;
+
+  min-width: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d9e0e6;
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: #718096;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  transition: all 0.2s ease;
+}
+
+.application-status-page
+.journey-step.active
+.journey-number {
+  border-color: #f47b20;
+
+  background: #fff1e6;
+
+  color: #f47b20;
+}
+
+
+/* =========================================================
+   JOURNEY TEXT
+   ========================================================= */
+
+.application-status-page .journey-step h3 {
+  margin: 2px 0 5px;
+
+  color: #17324d;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.application-status-page .journey-step p {
+  max-width: 600px;
+
+  margin: 0;
+
+  color: #718096;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   JOURNEY LINE
+   ========================================================= */
+
+.application-status-page .journey-line {
+  width: 1px;
+  height: 27px;
+
+  margin-left: 22px;
+
+  background: #dce2e7;
+}
+
+
+/* =========================================================
+   BOTTOM ACTIONS
+   ========================================================= */
+
+.application-status-page .status-bottom-actions {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  flex-wrap: wrap;
+
+  padding-top: 5px;
+}
+
+.application-status-page .status-bottom-action {
+  display: flex;
+  justify-content: center;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  .application-status-page .application-hero-content {
+    width: 90%;
+  }
+
+  .application-status-page .application-hero-content h1 {
+    font-size: 42px;
+  }
+
+  .application-status-page .status-card {
+    padding: 38px 28px;
+  }
+
+  .application-status-page .application-details-card,
+  .application-status-page .status-next-card {
+    padding: 25px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .application-status-page .application-section {
+    padding: 40px 15px;
+  }
+
+  .application-status-page .application-hero {
+    min-height: 270px;
+  }
+
+  .application-status-page .application-hero-content {
+    padding: 40px 0;
+  }
+
+  .application-status-page .application-hero-content h1 {
+    font-size: 35px;
+  }
+
+  .application-status-page .application-hero-content > p {
+    font-size: 14px;
+  }
+
+  .application-status-page .status-card {
+    padding: 32px 20px;
+  }
+
+  .application-status-page .status-card h2 {
+    font-size: 25px;
+  }
+
+  .application-status-page .status-card > p {
+    font-size: 14px;
+  }
+
+  .application-status-page .status-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .application-status-page .application-details-card,
+  .application-status-page .status-next-card {
+    padding: 21px 18px;
+  }
+
+  .application-status-page .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .application-status-page .detail-item {
+    padding: 16px;
+  }
+
+  .application-status-page .status-next-card > h2 {
+    font-size: 22px;
+  }
+
+  .application-status-page .journey-step {
+    gap: 12px;
+  }
+
+  .application-status-page .journey-number {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+
+    font-size: 11px;
+  }
+
+  .application-status-page .journey-line {
+    margin-left: 19px;
+  }
+
+  .application-status-page .status-bottom-actions {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .application-status-page .status-bottom-action {
+    width: 100%;
+  }
+
+  .application-status-page .status-bottom-action button {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  .application-status-page .application-hero-content h1 {
+    font-size: 31px;
+  }
+
+  .application-status-page .status-card h2 {
+    font-size: 23px;
+  }
+
+  .application-status-page .status-icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .application-status-page .details-heading h3 {
+    font-size: 18px;
+  }
+}
 
 /*====================================================
                     COMMON CARDS
