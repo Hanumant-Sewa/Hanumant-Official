@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   CalendarDays,
@@ -16,105 +16,378 @@ import "../css/Volunteer.css";
 const VolunteerEvents = () => {
   const navigate = useNavigate();
 
-  const events = [
-    {
-      id: 1,
-      month: "AUG",
-      date: "22",
-      title: "Community Food Distribution",
-      description:
-        "Help distribute food and essential supplies to families in need.",
-      location: "Solapur Community Center",
-      time: "09:00 AM - 01:00 PM",
-      volunteers: "25 Volunteers",
-      category: "Food Support",
-      image: "/images/volunteer-event-food.jpeg",
-    },
-    {
-      id: 2,
-      month: "AUG",
-      date: "28",
-      title: "Food Rescue Drive",
-      description:
-        "Join the team in collecting surplus food and delivering it to communities.",
-      location: "Hanumant Seva Center",
-      time: "10:00 AM - 02:00 PM",
-      volunteers: "18 Volunteers",
-      category: "Food Rescue",
-      image: "/images/food-rescue.png",
-    },
-    {
-      id: 3,
-      month: "SEP",
-      date: "05",
-      title: "Community Awareness Program",
-      description:
-        "Spread awareness about food support and community welfare programs.",
-      location: "City Hall",
-      time: "11:00 AM - 03:00 PM",
-      volunteers: "30 Volunteers",
-      category: "Awareness",
-      image: "/images/awareness.jpeg",
-    },
-    {
-      id: 4,
-      month: "SEP",
-      date: "12",
-      title: "Community Kitchen Support",
-      description:
-        "Support our kitchen team with food preparation and distribution.",
-      location: "Hanumant Seva Kitchen",
-      time: "08:00 AM - 12:00 PM",
-      volunteers: "20 Volunteers",
-      category: "Community Kitchen",
-      image: "/images/benefit-skills.jpeg",
-    },
-    {
-      id: 5,
-      month: "SEP",
-      date: "20",
-      title: "Donation Collection Drive",
-      description:
-        "Help collect and organize essential donations for families.",
-      location: "Central Collection Point",
-      time: "09:30 AM - 01:30 PM",
-      volunteers: "15 Volunteers",
-      category: "Donation",
-      image: "/images/food-distribution.png",
-    },
-    {
-      id: 6,
-      month: "SEP",
-      date: "27",
-      title: "Community Outreach",
-      description:
-        "Visit local communities and understand their needs and challenges.",
-      location: "Solapur Community Area",
-      time: "10:00 AM - 02:00 PM",
-      volunteers: "22 Volunteers",
-      category: "Outreach",
-      image: "/images/community-support.jpeg",
-    },
-  ];
+  // =========================================
+  // STATES
+  // =========================================
+
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState("All Events");
+
+  // =========================================
+  // FETCH EVENTS FROM BACKEND
+  // =========================================
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await fetch(
+        "http://localhost:5000/api/volunteer-events",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("Volunteer Events Response:", data);
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to load volunteer events"
+        );
+      }
+
+      setEvents(data.events || []);
+      setFilteredEvents(data.events || []);
+    } catch (error) {
+      console.error("Volunteer Events Error:", error);
+
+      setError(
+        error.message || "Unable to load volunteer events"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =========================================
+  // LOAD EVENTS
+  // =========================================
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  // =========================================
+  // SEARCH + FILTER
+  // =========================================
+
+  useEffect(() => {
+    let result = [...events];
+
+    // Search
+    if (searchTerm.trim()) {
+      const search = searchTerm.toLowerCase();
+
+      result = result.filter((event) => {
+        return (
+          event.title?.toLowerCase().includes(search) ||
+          event.description?.toLowerCase().includes(search) ||
+          event.location?.toLowerCase().includes(search) ||
+          event.city?.toLowerCase().includes(search) ||
+          event.state?.toLowerCase().includes(search) ||
+          event.category?.toLowerCase().includes(search)
+        );
+      });
+    }
+
+    // Category filter
+    if (activeFilter !== "All Events") {
+      result = result.filter(
+        (event) =>
+          event.category?.toLowerCase() ===
+          activeFilter.toLowerCase()
+      );
+    }
+
+    setFilteredEvents(result);
+  }, [searchTerm, activeFilter, events]);
+
+  // =========================================
+  // GET MONTH
+  // =========================================
+
+  const getMonth = (date) => {
+    if (!date) return "";
+
+    return new Date(date)
+      .toLocaleDateString("en-US", {
+        month: "short",
+      })
+      .toUpperCase();
+  };
+
+  // =========================================
+  // GET DAY
+  // =========================================
+
+  const getDay = (date) => {
+    if (!date) return "";
+
+    return new Date(date).getDate();
+  };
+
+  // =========================================
+  // FORMAT TIME
+  // =========================================
+
+  const formatTime = (date) => {
+    if (!date) return "";
+
+    return new Date(date).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // =========================================
+  // EVENT TIME
+  // =========================================
+
+  const formatEventTime = (event) => {
+    if (!event.startDate) {
+      return "Time not specified";
+    }
+
+    const startTime = formatTime(event.startDate);
+
+    if (event.endDate) {
+      return `${startTime} - ${formatTime(event.endDate)}`;
+    }
+
+    return startTime;
+  };
+
+  // =========================================
+  // EVENT LOCATION
+  // =========================================
+
+  const getLocation = (event) => {
+    if (event.location) {
+      return event.location;
+    }
+
+    if (event.city && event.state) {
+      return `${event.city}, ${event.state}`;
+    }
+
+    if (event.city) {
+      return event.city;
+    }
+
+    return "Location not specified";
+  };
+
+  // =========================================
+  // VOLUNTEER CAPACITY
+  // =========================================
+
+  const getVolunteerText = (event) => {
+    if (!event.capacity) {
+      return "Open volunteering";
+    }
+
+    return `${event.capacity} Volunteers`;
+  };
+
+  // =========================================
+  // EVENT CATEGORY
+  // =========================================
+
+  const getCategory = (event) => {
+    return event.category || "Community";
+  };
+
+  // =========================================
+  // LOADING SCREEN
+  // =========================================
+
+  if (loading) {
+    return (
+      <div className="volunteer-events-page">
+
+        {/* HERO */}
+
+        <section className="events-page-hero">
+          <div className="events-hero-content">
+
+            <button
+              type="button"
+              className="back-button"
+              onClick={() =>
+                navigate("/volunteer/dashboard")
+              }
+            >
+              <ArrowLeft size={17} />
+              Back to Dashboard
+            </button>
+
+            <span className="application-label">
+              VOLUNTEER ACTIVITIES
+            </span>
+
+            <h1>
+              Upcoming
+              <span> Events</span>
+            </h1>
+
+            <p>
+              Find meaningful opportunities to volunteer,
+              serve the community and make an impact.
+            </p>
+
+          </div>
+        </section>
+
+        {/* LOADING */}
+
+        <main className="events-page-main">
+
+          <div
+            style={{
+              minHeight: "40vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              gap: "12px",
+            }}
+          >
+            <CalendarDays size={40} />
+
+            <h2>
+              Loading Events...
+            </h2>
+
+            <p>
+              Please wait while we load available
+              volunteer events.
+            </p>
+
+          </div>
+
+        </main>
+
+      </div>
+    );
+  }
+
+  // =========================================
+  // ERROR SCREEN
+  // =========================================
+
+  if (error) {
+    return (
+      <div className="volunteer-events-page">
+
+        {/* HERO */}
+
+        <section className="events-page-hero">
+          <div className="events-hero-content">
+
+            <button
+              type="button"
+              className="back-button"
+              onClick={() =>
+                navigate("/volunteer/dashboard")
+              }
+            >
+              <ArrowLeft size={17} />
+              Back to Dashboard
+            </button>
+
+            <span className="application-label">
+              VOLUNTEER ACTIVITIES
+            </span>
+
+            <h1>
+              Upcoming
+              <span> Events</span>
+            </h1>
+
+            <p>
+              Find meaningful opportunities to volunteer,
+              serve the community and make an impact.
+            </p>
+
+          </div>
+        </section>
+
+        {/* ERROR */}
+
+        <main className="events-page-main">
+
+          <div
+            style={{
+              minHeight: "40vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              gap: "15px",
+            }}
+          >
+            <h2>
+              Unable to Load Events
+            </h2>
+
+            <p>
+              {error}
+            </p>
+
+            <button
+              type="button"
+              onClick={fetchEvents}
+            >
+              Try Again
+            </button>
+
+          </div>
+
+        </main>
+
+      </div>
+    );
+  }
+
+  // =========================================
+  // MAIN PAGE
+  // =========================================
 
   return (
     <div className="volunteer-events-page">
+
       {/* =========================================
           HERO
       ========================================== */}
 
       <section className="events-page-hero">
+
         <div className="events-hero-content">
+
           <button
             type="button"
             className="back-button"
-            onClick={() => navigate("/volunteer/dashboard")}
+            onClick={() =>
+              navigate("/volunteer/dashboard")
+            }
           >
             <ArrowLeft size={17} />
             Back to Dashboard
           </button>
 
-          <span className="application-label">VOLUNTEER ACTIVITIES</span>
+          <span className="application-label">
+            VOLUNTEER ACTIVITIES
+          </span>
 
           <h1>
             Upcoming
@@ -122,10 +395,12 @@ const VolunteerEvents = () => {
           </h1>
 
           <p>
-            Find meaningful opportunities to volunteer, serve the community and
-            make an impact.
+            Find meaningful opportunities to volunteer,
+            serve the community and make an impact.
           </p>
+
         </div>
+
       </section>
 
       {/* =========================================
@@ -133,21 +408,33 @@ const VolunteerEvents = () => {
       ========================================== */}
 
       <main className="events-page-main">
+
         {/* =====================================
             TOP BAR
         ====================================== */}
 
         <div className="events-top-bar">
-          <div>
-            <span className="card-small-label">FIND YOUR OPPORTUNITY</span>
 
-            <h2>Available Events</h2>
+          <div>
+
+            <span className="card-small-label">
+              FIND YOUR OPPORTUNITY
+            </span>
+
+            <h2>
+              Available Events
+            </h2>
+
           </div>
 
           <div className="events-count">
+
             <CalendarDays size={17} />
-            {events.length} Events Available
+
+            {filteredEvents.length} Events Available
+
           </div>
+
         </div>
 
         {/* =====================================
@@ -155,130 +442,302 @@ const VolunteerEvents = () => {
         ====================================== */}
 
         <div className="events-filter-bar">
+
+          {/* SEARCH */}
+
           <div className="events-search">
+
             <Search size={18} />
 
-            <input type="text" placeholder="Search events..." />
+            <input
+              type="text"
+              placeholder="Search events..."
+              value={searchTerm}
+              onChange={(e) =>
+                setSearchTerm(e.target.value)
+              }
+            />
+
           </div>
 
-          <button type="button" className="event-filter active">
+          {/* ALL EVENTS */}
+
+          <button
+            type="button"
+            className={`event-filter ${
+              activeFilter === "All Events"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              setActiveFilter("All Events")
+            }
+          >
             All Events
           </button>
 
-          <button type="button" className="event-filter">
+          {/* FOOD SUPPORT */}
+
+          <button
+            type="button"
+            className={`event-filter ${
+              activeFilter === "Food Support"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              setActiveFilter("Food Support")
+            }
+          >
             Food Support
           </button>
 
-          <button type="button" className="event-filter">
+          {/* AWARENESS */}
+
+          <button
+            type="button"
+            className={`event-filter ${
+              activeFilter === "Awareness"
+                ? "active"
+                : ""
+            }`}
+            onClick={() =>
+              setActiveFilter("Awareness")
+            }
+          >
             Awareness
           </button>
+
         </div>
 
         {/* =====================================
-            EVENT CARDS
+            NO EVENTS
         ====================================== */}
 
-        <div className="events-grid">
-          {events.map((event) => (
-            <article className="volunteer-event-card" key={event.id}>
-              {/* Image */}
+        {filteredEvents.length === 0 ? (
 
-              <div className="event-card-image">
-                <img src={event.image} alt={event.title} />
+          <div
+            style={{
+              padding: "60px 20px",
+              textAlign: "center",
+            }}
+          >
 
-                <span className="event-category">{event.category}</span>
+            <CalendarDays size={40} />
 
-                <div className="event-card-date">
-                  <span>{event.month}</span>
+            <h2>
+              No Events Found
+            </h2>
 
-                  <strong>{event.date}</strong>
-                </div>
-              </div>
+            <p>
+              Try another search or category.
+            </p>
 
-              {/* Content */}
+          </div>
 
-              <div className="event-card-content">
-                <h3>{event.title}</h3>
+        ) : (
 
-                <p className="event-description">{event.description}</p>
+          /* =====================================
+             EVENT CARDS
+          ====================================== */
 
-                <div className="event-meta">
-                  <div>
-                    <MapPin size={15} />
+          <div className="events-grid">
 
-                    <span>{event.location}</span>
+            {filteredEvents.map((event) => (
+
+              <article
+                className="volunteer-event-card"
+                key={event.id}
+              >
+
+                {/* =================================
+                    EVENT IMAGE
+                ================================== */}
+
+                <div className="event-card-image">
+
+                  <img
+                    src={
+                      event.image ||
+                      "/images/volunteer-event-food.jpeg"
+                    }
+                    alt={event.title}
+                  />
+
+                  {/* CATEGORY */}
+
+                  <span className="event-category">
+                    {getCategory(event)}
+                  </span>
+
+                  {/* DATE */}
+
+                  <div className="event-card-date">
+
+                    <span>
+                      {getMonth(event.startDate)}
+                    </span>
+
+                    <strong>
+                      {getDay(event.startDate)}
+                    </strong>
+
                   </div>
 
-                  <div>
-                    <Clock3 size={15} />
-
-                    <span>{event.time}</span>
-                  </div>
-
-                  <div>
-                    <Users size={15} />
-
-                    <span>{event.volunteers}</span>
-                  </div>
                 </div>
 
-                <div className="event-card-footer">
-                  <button
-                    type="button"
-                    className="event-details-button"
-                    onClick={() => navigate(`/volunteer/events/${event.id}`)}
-                  >
-                    View Details
-                    <ArrowRight size={16} />
-                  </button>
+                {/* =================================
+                    EVENT CONTENT
+                ================================== */}
 
-                  <button
-                    type="button"
-                    className="event-heart-button"
-                    aria-label="Save event"
-                  >
-                    <Heart size={17} />
-                  </button>
+                <div className="event-card-content">
+
+                  <h3>
+                    {event.title}
+                  </h3>
+
+                  <p className="event-description">
+
+                    {event.description ||
+                      "Join us and make a meaningful contribution to the community."}
+
+                  </p>
+
+                  {/* EVENT META */}
+
+                  <div className="event-meta">
+
+                    {/* LOCATION */}
+
+                    <div>
+
+                      <MapPin size={15} />
+
+                      <span>
+                        {getLocation(event)}
+                      </span>
+
+                    </div>
+
+                    {/* TIME */}
+
+                    <div>
+
+                      <Clock3 size={15} />
+
+                      <span>
+                        {formatEventTime(event)}
+                      </span>
+
+                    </div>
+
+                    {/* CAPACITY */}
+
+                    <div>
+
+                      <Users size={15} />
+
+                      <span>
+                        {getVolunteerText(event)}
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                  {/* FOOTER */}
+
+                  <div className="event-card-footer">
+
+                    {/* VIEW DETAILS */}
+
+                    <button
+                      type="button"
+                      className="event-details-button"
+                      onClick={() =>
+                        navigate(
+                          `/volunteer/events/${event.id}`
+                        )
+                      }
+                    >
+                      View Details
+
+                      <ArrowRight size={16} />
+
+                    </button>
+
+                    {/* SAVE */}
+
+                    <button
+                      type="button"
+                      className="event-heart-button"
+                      aria-label="Save event"
+                    >
+                      <Heart size={17} />
+                    </button>
+
+                  </div>
+
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
+
+              </article>
+
+            ))}
+
+          </div>
+
+        )}
 
         {/* =====================================
             MOTIVATION SECTION
         ====================================== */}
 
         <section className="events-motivation">
+
           <div className="events-motivation-image">
+
             <img
               src="/images/volunteer-group.jpeg"
               alt="Volunteers helping community"
             />
+
           </div>
 
           <div className="events-motivation-content">
-            <span>SERVE WITH PURPOSE</span>
+
+            <span>
+              SERVE WITH PURPOSE
+            </span>
 
             <h2>
               There is always
-              <strong> a way to help.</strong>
+              <strong>
+                {" "}a way to help.
+              </strong>
             </h2>
 
             <p>
-              Choose an event that matches your interests and availability. Your
-              time and effort can create a real difference in someone's life.
+              Choose an event that matches your
+              interests and availability. Your time
+              and effort can create a real difference
+              in someone's life.
             </p>
 
             <button
               type="button"
               className="orange-button"
-              onClick={() => navigate("/volunteer/dashboard")}
+              onClick={() =>
+                navigate("/volunteer/dashboard")
+              }
             >
               Back to Dashboard
+
               <ArrowRight size={17} />
+
             </button>
+
           </div>
+
         </section>
 
         {/* =====================================
@@ -286,16 +745,24 @@ const VolunteerEvents = () => {
         ====================================== */}
 
         <div className="events-bottom-action">
+
           <button
             type="button"
             className="outline-button"
-            onClick={() => navigate("/volunteer/dashboard")}
+            onClick={() =>
+              navigate("/volunteer/dashboard")
+            }
           >
             <ArrowLeft size={17} />
+
             Back to Dashboard
+
           </button>
+
         </div>
+
       </main>
+
     </div>
   );
 };
