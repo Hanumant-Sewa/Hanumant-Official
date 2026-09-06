@@ -780,7 +780,52 @@
   animation: admin-spin-animation 0.8s linear infinite;
   margin-bottom: 12px;
 }
+/* =====================================================
+   BACK TO WEBSITE
+===================================================== */
 
+.admin-back-website-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: transparent;
+  color: #cbd5e1;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-back-website-button svg {
+  flex-shrink: 0;
+}
+
+.admin-back-website-button:hover {
+  background: rgba(232, 117, 36, 0.12);
+  border-color: rgba(232, 117, 36, 0.35);
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.admin-back-website-button:active {
+  transform: translateX(0);
+}
+
+.admin-back-website-button:focus-visible {
+  outline: 2px solid #e87524;
+  outline-offset: 2px;
+}
 @keyframes admin-spin-animation {
   to {
     transform: rotate(360deg);

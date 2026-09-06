@@ -31,7 +31,7 @@ function Dashboard() {
     const fetchDashboard = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/auth/dashboard",
+          `${import.meta.env.VITE_API_URL}/api/auth/dashboard`,
           {
             method: "GET",
             credentials: "include",

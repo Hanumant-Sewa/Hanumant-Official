@@ -170,7 +170,7 @@
 
     .hero {
         min-height: auto;
-        padding-bottom: 125px;
+        padding-bottom: 110px;
     }
 
     .hero-container {
@@ -355,11 +355,8 @@
         left: 5%;
         right: 5%;
         bottom: 0;
-
         transform: translateY(42%);
-
         grid-template-columns: repeat(4, minmax(0, 1fr));
-
         min-height: 100px;
     }
 
@@ -756,7 +753,7 @@
     ===================================================== */
 
     .hero {
-        padding-bottom: 118px;
+        padding-bottom: 96px;
     }
 
     .hero-container {
@@ -838,11 +835,8 @@
     .stats-card {
         left: 4%;
         right: 4%;
-
         grid-template-columns: repeat(4, minmax(0, 1fr));
-
         transform: translateY(43%);
-
         border-radius: 18px;
     }
 
@@ -1379,1395 +1373,1012 @@
 ========================================================= */
 
 @media (max-width: 768px) {
-
-    /* =====================================================
-       NAVBAR
-       This is the ONLY mobile navigation state.
-       Never re-enable .nav-links below this breakpoint.
-    ===================================================== */
-
     .navbar {
         height: 64px;
     }
-
     .navbar-container {
         position: relative;
-
         width: 94%;
         min-height: 64px;
-
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
-
     .nav-links,
     .navbar-actions {
         display: none !important;
     }
-
     .mobile-menu-button {
         display: flex !important;
-
         width: 42px;
         height: 42px;
-
         align-items: center;
         justify-content: center;
-
         flex-shrink: 0;
-
         padding: 6px;
-
-        border: none;
-        background: transparent;
-
-        cursor: pointer;
-
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--bg);
         color: var(--text);
-
+        cursor: pointer;
+        transition: all 0.2s ease;
         z-index: 1200;
     }
-
+    .mobile-menu-button:hover {
+        color: var(--primary);
+        border-color: var(--primary);
+        background: var(--primary-light);
+    }
+    .mobile-menu-button svg {
+        width: 21px;
+        height: 21px;
+    }
     .mobile-menu {
         position: absolute;
-        top: 100%;
+        top: calc(100% + 8px);
         right: 0;
         width: min(300px, calc(100vw - 24px));
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        padding: 12px;
+        gap: 2px;
+        padding: 10px;
         background: var(--bg);
         border: 1px solid var(--border);
-        border-radius: 0 0 14px 14px;
-        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
-        z-index: 1100;
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        z-index: 2000;
     }
-/* 
-    .mobile-menu.show {
-        display: flex;
-    } */
-
     .mobile-menu a,
     .mobile-menu > button {
         width: 100%;
-
+        min-height: 32px;
         display: flex;
         align-items: center;
-
-        gap: 9px;
-
-        padding: 11px 12px;
-
-        border-radius: 8px;
-
-        font-size: 14px;
-
+        justify-content: flex-start;
+        gap: 5px;
+        padding: 10px 13px;
+        border: 1px solid transparent;
+        border-radius: 9px;
+        background: transparent;
+        color: var(--text);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.2;
         text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
     }
-
-    .mobile-menu .mobile-donate {
-        width: 100%;
+    .mobile-menu a:hover {
+        color: var(--primary);
+        background: var(--primary-light);
+    }
+    .mobile-menu .mobile-community {
         justify-content: center;
-        margin-top: 5px;
+        margin-top: 3px;
+        border-color: var(--primary);
+        color: var(--primary);
     }
-
-
-    /* =====================================================
-       HERO — MOBILE
-       NO separate image block.
-       NO 55% image.
-       NO object-position that hides half the people.
-    ===================================================== */
-
+    .mobile-menu .mobile-community:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+    .mobile-menu .mobile-donate {
+        justify-content: center;
+        margin-top: 2px;
+        border-color: var(--primary);
+        background: var(--primary);
+        color: #fff;
+    }
+    .mobile-menu .mobile-donate:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+    }
+    .mobile-menu .mobile-logout {
+        justify-content: center;
+        margin-top: 3px;
+        border-color: var(--border);
+        color: var(--text);
+    }
+    .mobile-menu .mobile-logout:hover {
+        border-color: #dc2626;
+        background: rgba(220, 38, 38, 0.08);
+        color: #dc2626;
+    }
     .hero {
-        padding-bottom: 108px;
+        padding-bottom: 78px;
     }
-
     .hero-container {
         width: 94%;
-
         min-height: 570px;
-
         display: flex;
-
         align-items: center;
         justify-content: center;
-
         padding: 34px 12px 48px;
-
         overflow: hidden;
-
         border-radius: 0;
     }
-
     .hero-art {
         position: absolute;
-
         inset: 0;
-
         width: 100%;
         height: 100%;
-
         margin: 0;
-
         z-index: -2;
-
         overflow: hidden;
     }
-
     .hero-art img {
         width: 100%;
         height: 100%;
-
         max-width: none;
-
         display: block;
-
         object-fit: contain;
-
-        /* Preserve the complete artwork instead of cropping people out. */
-        object-position: center center;
-
+        object-position: center;
         opacity: 0.48;
-
         transform: none;
     }
-
     .hero-art::before {
-        background:
-            linear-gradient(
-                180deg,
-                rgba(255, 250, 243, 0.82) 0%,
-                rgba(255, 250, 243, 0.58) 34%,
-                rgba(255, 250, 243, 0.58) 68%,
-                rgba(255, 250, 243, 0.86) 100%
-            );
+        background: linear-gradient(
+            180deg,
+            rgba(255, 250, 243, 0.82) 0%,
+            rgba(255, 250, 243, 0.58) 34%,
+            rgba(255, 250, 243, 0.58) 68%,
+            rgba(255, 250, 243, 0.86) 100%
+        );
     }
-
     .hero-art::after {
         content: "";
-
         position: absolute;
         inset: 0;
-
         z-index: 2;
-
-        background:
-            radial-gradient(
-                ellipse at center,
-                rgba(255, 250, 243, 0.08) 0%,
-                rgba(255, 250, 243, 0.28) 100%
-            );
-
+        background: radial-gradient(
+            ellipse at center,
+            rgba(255, 250, 243, 0.08) 0%,
+            rgba(255, 250, 243, 0.28) 100%
+        );
         pointer-events: none;
     }
-
     .hero-content {
         width: min(100%, 680px);
-
         padding: 22px 10px;
-
         text-align: center;
-
         align-items: center;
     }
-
     .hero-badge {
         font-size: 0.76rem;
-
         padding: 7px 13px;
-
         margin-bottom: 12px;
     }
-
     .hero h1 {
         width: 100%;
         max-width: 600px;
-
         font-size: clamp(2.35rem, 9vw, 3.35rem);
-
         line-height: 1.06;
-
         letter-spacing: -1px;
     }
-
     .hero-divider {
         width: min(88%, 370px);
-
         margin: 14px auto;
     }
-
     .hero-theme {
         font-size: clamp(0.88rem, 3.2vw, 1.05rem);
-
-        margin-top: 0;
-        margin-bottom: 11px;
+        margin: 0 0 11px;
     }
-
     .hero-content > p {
         width: min(100%, 600px);
-
         font-size: 0.86rem;
-
         line-height: 1.6;
-
         margin-bottom: 15px;
     }
-
-
-    /* ---------- HERO BUTTONS ---------- */
-
     .hero-buttons {
         width: 100%;
-
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-
         justify-content: center;
         align-items: stretch;
-
         gap: 8px;
-
         margin: 16px auto 18px;
     }
-
     .hero-btn {
         flex: 1 1 0;
-
         width: auto;
         min-width: 0;
         max-width: none;
-
         min-height: 47px;
-
         padding: 0 8px;
-
         border-radius: 11px;
-
         font-size: clamp(0.68rem, 2.3vw, 0.84rem);
-
         line-height: 1.1;
-
         white-space: nowrap;
     }
-
     .hero-btn svg {
         width: 19px;
         height: 19px;
-
         flex-shrink: 0;
     }
-
     .hero-founder {
         font-size: 0.8rem;
-
         text-align: center;
-
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
     }
-
-
-    /* ---------- HERO TRUST FEATURES ---------- */
-
     .hero-features {
         width: 100%;
-
         display: grid;
-
         grid-template-columns: repeat(3, minmax(0, 1fr));
-
         gap: 0;
-
         margin-top: 9px;
     }
-
     .hero-feature {
         min-width: 0;
-
         display: flex;
         flex-direction: column;
-
         align-items: center;
         justify-content: center;
-
         gap: 5px;
-
         padding: 5px 4px;
-
         text-align: center;
     }
-
     .hero-feature + .hero-feature {
         border-left: 1px solid var(--primary-light);
-
         border-top: none;
-
-        padding-left: 4px;
-        padding-top: 5px;
+        padding: 5px 4px;
     }
-
     .hero-feature svg {
         width: 29px;
         height: 29px;
     }
-
     .hero-feature strong {
         font-size: 1rem;
     }
-
     .hero-feature span {
         margin-top: 2px;
-
         font-size: 0.58rem;
-
         line-height: 1.25;
     }
-
-
-    /* ---------- HERO STATS ---------- */
-
     .stats-card {
         width: 92%;
-
         left: 4%;
         right: 4%;
-
         bottom: 0;
-
         transform: translateY(50%);
-
         grid-template-columns: repeat(2, minmax(0, 1fr));
-
         min-height: auto;
-
         padding: 5px;
-
         border-radius: 16px;
     }
-
     .stat {
         min-width: 0;
-
         min-height: 68px;
-
         padding: 7px 6px;
-
         gap: 7px;
     }
-
     .stat:nth-child(3),
     .stat:nth-child(4) {
         border-top: 1px solid #eadfd5;
     }
-
     .stat:nth-child(3) {
         border-left: none;
     }
-
     .stat svg {
         width: 26px;
         height: 26px;
     }
-
     .stat strong {
         font-size: 1.1rem;
     }
-
     .stat span {
         font-size: 0.63rem;
         line-height: 1.2;
     }
-
-
-    /* =====================================================
-       LANDING PAGE — COMMON
-    ===================================================== */
-
     .section-title {
         margin-bottom: 30px;
-        padding-left: 5px;
-        padding-right: 5px;
+        padding: 0 5px;
     }
-
     .section-title h2 {
         font-size: clamp(1.75rem, 6vw, 2.25rem);
         line-height: 1.18;
     }
-
     .section-title p {
         font-size: 0.84rem;
         line-height: 1.65;
     }
-
-
-    /* ---------- ABOUT ---------- */
-
     .about-container {
         grid-template-columns: 1fr;
         gap: 28px;
     }
-
     .about-image-wrapper {
         width: 100%;
     }
-
     .about-image-wrapper img {
         height: clamp(280px, 60vw, 360px);
     }
-
     .about-image-badge {
         left: 15px;
         bottom: 15px;
         padding: 10px 14px;
         font-size: 0.76rem;
     }
-
     .about-content {
         width: 100%;
     }
-
     .about-content h2 {
         font-size: clamp(1.85rem, 7vw, 2.5rem);
     }
-
     .about-intro {
         font-size: 0.96rem;
     }
-
     .about-highlights {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 9px;
         margin: 22px 0;
     }
-
     .about-highlight {
         padding: 13px 8px;
     }
-
     .about-highlight strong {
         font-size: 1.1rem;
     }
-
     .about-highlight span {
         font-size: 0.68rem;
     }
-
     .about-btn {
         width: 100%;
         justify-content: center;
     }
-
-
-    /* ---------- TRANSPARENCY ---------- */
-
     .transparency-card {
         padding: 20px 15px;
         border-radius: 20px;
     }
-
     .transparency-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
         margin-bottom: 28px;
     }
-
     .transparency-header h3 {
         font-size: 1.45rem;
     }
-
     .transparency-flow {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 22px 10px;
     }
-
     .transparency-step {
         width: 100%;
     }
-
     .transparency-step-icon {
         width: 54px;
         height: 54px;
         margin-bottom: 10px;
     }
-
     .transparency-step strong {
         font-size: 0.76rem;
     }
-
     .transparency-step span {
         font-size: 0.66rem;
     }
-
     .flow-line {
         display: none;
     }
-
     .transparency-footer {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
-
     .transparency-footer a {
         white-space: normal;
     }
-
-
-    /* ---------- PROGRAMS ---------- */
-
     .programs-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-
     .program-card {
         padding: 24px 20px;
     }
-
     .program-icon {
         width: 64px;
         height: 64px;
     }
-
     .program-card h3 {
         font-size: 19px;
     }
-
     .program-card p {
         font-size: 13px;
     }
-
     .programs-cta {
         flex-direction: column;
         align-items: flex-start;
-
         margin-top: 35px;
-
         padding: 24px 20px;
-
         gap: 18px;
     }
-
     .programs-cta h3 {
         font-size: 20px;
     }
-
     .programs-cta-btn {
         width: 100%;
         justify-content: center;
     }
-
-
-    /* ---------- CAMPAIGNS ---------- */
-
     .campaigns-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-
     .campaign-card {
         padding: 23px 20px;
     }
-
     .community-journey {
         padding: 22px 15px;
         border-radius: 20px;
     }
-
     .community-journey-header {
         grid-template-columns: 1fr;
         gap: 12px;
         margin-bottom: 25px;
     }
-
     .community-journey-flow {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-
     .community-journey-item {
         padding: 17px;
     }
-
     .campaigns-cta {
         flex-direction: column;
         align-items: flex-start;
         gap: 18px;
     }
-
     .campaigns-cta-btn {
         width: 100%;
         justify-content: center;
     }
-
-
-    /* ---------- IMPACT ---------- */
-
     .impact-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
     }
-
     .impact-card {
         padding: 23px 10px;
         border-radius: 18px;
     }
-
     .impact-card i {
         font-size: 30px;
         margin-bottom: 12px;
     }
-
     .impact-card h3 {
         font-size: clamp(1.8rem, 7vw, 2.25rem);
     }
-
     .impact-card p {
         font-size: 0.72rem;
     }
-
-
-    /* ---------- GALLERY ---------- */
-
     .gallery-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-auto-rows: 175px;
         gap: 9px;
     }
-
     .gallery-item.large {
         grid-row: span 1;
     }
-
-
-    /* ---------- EVENTS / TESTIMONIALS ---------- */
-
     .events-grid,
     .testimonial-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-
     .event-card,
     .testimonial-card {
         width: 100%;
     }
-
-
-    /* ---------- CONTACT ---------- */
-
     .contact-wrapper {
         grid-template-columns: 1fr;
         gap: 18px;
     }
-
     .contact-box {
         padding: 17px;
     }
-
     .contact-form input,
     .contact-form textarea {
         width: 100%;
     }
-
-
-    /* ---------- FOOTER ---------- */
-
     .footer-grid {
         grid-template-columns: 1fr 1fr;
         gap: 26px 18px;
     }
-
     .footer-col p,
     .footer-col ul li {
         font-size: 0.82rem;
     }
-
     .footer-bottom {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding: 0 15px;
     }
-
-
-    /* ---------- FOUNDER ---------- */
-
     .founder-card {
         padding: 1.4rem;
     }
-
     .founder-card-top {
         grid-template-columns: auto 1fr;
         gap: 12px;
     }
-
     .founder-year {
         grid-column: 2;
         text-align: left;
         align-items: flex-start;
     }
-
     .founder-message {
         padding: 0;
     }
-
     .founder-message p {
         font-size: 0.9rem;
         line-height: 1.7;
     }
-
     .founder-footer {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-
-
-    /* ---------- FAQ ---------- */
-
     .faq-question {
         padding: 14px;
         font-size: 0.86rem;
     }
-
     .faq-answer p {
         padding: 0 14px 17px;
         font-size: 0.8rem;
         line-height: 1.65;
     }
-
-
-    /* =====================================================
-       AUTH PAGES
-    ===================================================== */
-
     .auth-page {
         padding: 32px 15px;
     }
-
     .auth-container {
         width: 100%;
         grid-template-columns: 1fr;
         gap: 22px;
     }
-
     .auth-info {
         padding: 5px;
         text-align: center;
     }
-
     .auth-back {
         margin-bottom: 20px;
     }
-
     .auth-heart {
-        width: 62px;
-        height: 62px;
-        margin: 0 auto 18px;
-        border-radius: 18px;
+       display: none;
     }
-
     .auth-info h1 {
         font-size: clamp(2rem, 8vw, 2.7rem);
     }
-
     .auth-info > p {
         font-size: 0.9rem;
     }
-
     .auth-quote {
         margin-top: 22px;
         padding: 18px;
     }
-
     .auth-points {
         margin-top: 20px;
         gap: 10px;
     }
-
     .auth-card {
         width: 100%;
         padding: 25px 18px;
         border-radius: 19px;
     }
-
     .auth-card h2 {
         font-size: 1.7rem;
     }
-
     .auth-subtitle {
         margin-bottom: 22px;
     }
-
     .form-group {
         margin-bottom: 16px;
     }
-
     .input-box {
         padding: 0 12px;
     }
-
     .input-box input {
         font-size: 0.9rem;
     }
-
     .auth-submit {
         height: 52px;
     }
-
     .register-text {
         font-size: 0.9rem;
     }
-
     .reset-methods {
         grid-template-columns: 1fr;
     }
-
-
-    /* =====================================================
-       DONATION
-    ===================================================== */
-
     .internal-hero {
         padding: 22px 15px 10px;
     }
-
     .internal-hero h1 {
         font-size: clamp(1.8rem, 7vw, 2.3rem);
     }
-
     .internal-hero p {
         font-size: 0.78rem;
     }
-
     .donation-section {
         padding: 12px 0 35px;
     }
-
     .donation-container {
         width: 94%;
         grid-template-columns: 1fr;
         gap: 16px;
     }
-
     .donation-summary {
         position: static;
         width: 100%;
         padding: 18px;
     }
-
     .donation-left {
         width: 100%;
         padding: 18px 15px;
     }
-
     .donation-header h2 {
         font-size: 21px;
     }
-
     .contribution-type {
         width: 100%;
         max-width: 300px;
     }
-
     .donation-options {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
     }
-
     .donation-card {
         min-height: 76px;
     }
-
     .payment-title {
         flex-direction: column;
         align-items: flex-start;
         gap: 7px;
     }
-
     .payment-methods {
         grid-template-columns: 1fr;
     }
-
     .card-row {
         grid-template-columns: 1fr;
     }
-
-
-    /* ---------- RECEIPT ---------- */
-
     .receipt-card {
         width: 94%;
         padding: 25px 18px;
         border-radius: 20px;
     }
-
     .receipt-success {
         width: 70px;
         height: 70px;
     }
-
     .receipt-card h1 {
         font-size: 1.9rem;
     }
-
     .receipt-details {
         grid-template-columns: 1fr;
         gap: 10px;
     }
-
     .receipt-details > div {
         padding: 16px;
     }
-
     .receipt-actions {
         flex-direction: column;
         gap: 10px;
     }
-
     .receipt-actions .btn {
         width: 100%;
     }
-
-
-    /* =====================================================
-       VOLUNTEER HOME
-    ===================================================== */
-
     .volunteer-container {
         width: 94%;
         grid-template-columns: 1fr;
         gap: 25px;
     }
-
     .volunteer-info {
         padding: 5px;
     }
-
     .volunteer-info h2 {
         font-size: clamp(1.9rem, 7vw, 2.5rem);
     }
-
     .volunteer-image {
         height: clamp(240px, 58vw, 330px);
     }
-
     .volunteer-form-card {
         padding: 22px 17px;
         border-radius: 18px;
     }
-
     .form-heading {
         gap: 11px;
     }
-
     .form-heading-icon {
         width: 48px;
         height: 48px;
         flex-shrink: 0;
     }
-
     .form-row {
         grid-template-columns: 1fr;
         gap: 0;
     }
-
     .volunteer-form-group input,
     .volunteer-form-group select,
     .volunteer-form-group textarea {
         font-size: 14px;
     }
-
-
-    /* =====================================================
-       VOLUNTEER FEATURE PAGES
-    ===================================================== */
-
     .volunteer-hero {
         min-height: 600px;
-
         padding: 48px 20px 135px;
-
         align-items: flex-start;
-
-        background-position: center center;
+        background-position: center;
     }
-
     .hero-text {
         width: 100%;
         max-width: 620px;
     }
-
     .hero-text h1 {
         font-size: clamp(38px, 9vw, 50px);
     }
-
     .hero-text p {
         font-size: 14px;
     }
-
     .hero-stats {
         width: calc(100% - 30px);
         grid-template-columns: repeat(2, minmax(0, 1fr));
         bottom: -65px;
     }
-
     .stat-box {
         min-height: 90px;
         padding: 12px 8px;
     }
-
     .stat-box:nth-child(2) {
         border-right: none;
     }
-
     .stat-box:nth-child(3),
     .stat-box:nth-child(4) {
         border-top: 1px solid var(--border);
     }
-
     .volunteer-intro {
         width: calc(100% - 30px);
         grid-template-columns: 1fr;
         gap: 28px;
         margin-top: 105px;
     }
-
     .section-image img {
         height: clamp(260px, 65vw, 350px);
     }
-
     .section-content h2 {
         font-size: clamp(1.9rem, 7vw, 2.5rem);
     }
-
     .section-content p {
         font-size: 14px;
     }
-
     .benefits-grid,
     .activities-grid {
         width: calc(100% - 30px);
         grid-template-columns: 1fr;
         gap: 15px;
     }
-
     .benefit-image,
     .activity-image {
         height: 210px;
     }
-
     .benefit-content,
     .activity-body {
         padding: 19px;
     }
-
     .why-volunteer {
         padding-left: 15px;
         padding-right: 15px;
     }
-
     .volunteer-activities {
         width: calc(100% - 30px);
     }
-
     .volunteer-cta {
         width: calc(100% - 30px);
         grid-template-columns: 1fr;
     }
-
     .cta-image {
         height: 260px;
         min-height: 260px;
     }
-
     .cta-content {
         padding: 30px 22px;
     }
-
     .cta-content h2 {
         font-size: 30px;
     }
-
     .cta-content .orange-button {
         width: 100%;
     }
-
-
-    /* ---------- APPLICATION ---------- */
-
     .application-hero {
         min-height: 500px;
         padding: 45px 20px;
     }
-
     .application-hero h1 {
         font-size: clamp(36px, 8vw, 48px);
     }
-
     .application-hero p {
         font-size: 14px;
     }
-
     .application-section {
         width: calc(100% - 30px);
     }
-
     .application-form-card {
         padding: 24px 18px;
         border-radius: 18px;
     }
-
     .input-wrapper input,
     .input-wrapper select,
     .input-wrapper textarea {
         font-size: 14px;
     }
-
     .status-container {
         width: calc(100% - 30px);
     }
-
     .status-card {
         padding: 27px 18px;
         border-radius: 18px;
     }
-
     .application-details-card {
         padding: 20px;
     }
-
-
-    /* ---------- IMPACT INTERNAL ---------- */
-
     .impact-page-hero {
         min-height: 480px;
         padding: 45px 20px;
     }
-
     .impact-hero-content {
         width: 100%;
     }
-
     .impact-hero-content h1 {
         font-size: clamp(36px, 8vw, 48px);
     }
-
     .impact-hero-content p {
         font-size: 14px;
     }
-
     .impact-page-main {
         width: calc(100% - 30px);
         padding: 50px 0;
     }
-
     .impact-intro {
         gap: 25px;
         margin-bottom: 55px;
     }
-
     .impact-intro-image {
         height: clamp(260px, 65vw, 340px);
     }
-
     .impact-intro-content h2 {
         font-size: clamp(1.9rem, 7vw, 2.5rem);
     }
-
     .impact-intro-content p {
         font-size: 14px;
     }
-
     .impact-statistics,
     .impact-activities-section,
     .impact-achievements-section {
         margin-bottom: 55px;
     }
-
     .impact-stat-grid {
         grid-template-columns: 1fr;
     }
-
     .impact-progress-section {
         grid-template-columns: 1fr;
         padding: 28px 20px;
     }
-
     .impact-achievements-grid {
         grid-template-columns: 1fr;
     }
-
     .impact-motivation {
         grid-template-columns: 1fr;
     }
-
     .impact-motivation-image {
         min-height: 260px;
         height: 260px;
     }
-
     .impact-motivation-content {
         padding: 32px 22px;
     }
-
-
-    /* ---------- EVENTS INTERNAL ---------- */
-
     .events-page-main,
     .tasks-page-main,
     .certificates-page-main {
         width: calc(100% - 30px);
     }
-
     .events-page-hero,
     .tasks-page-hero,
     .certificates-page-hero {
         padding: 50px 20px 55px;
     }
-
     .events-page-hero h1,
     .tasks-page-hero h1,
     .certificates-page-hero h1 {
         font-size: clamp(2.25rem, 8vw, 3.2rem);
     }
-
     .events-grid,
     .tasks-grid,
     .certificates-grid {
         grid-template-columns: 1fr;
     }
-
     .tasks-stat-grid,
     .certificate-stat-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
     .event-card-image {
         height: 220px;
     }
-
-
-    /* =====================================================
-       VOLUNTEER DASHBOARD
-    ===================================================== */
-
     .dashboard-header {
         padding: 40px 20px;
     }
-
     .dashboard-header-content {
         flex-direction: column;
         align-items: flex-start;
         gap: 20px;
     }
-
     .dashboard-welcome {
         width: 100%;
     }
-
     .dashboard-welcome h1 {
         font-size: clamp(2.1rem, 8vw, 2.8rem);
     }
-
     .dashboard-welcome p {
         font-size: 14px;
         line-height: 1.65;
     }
-
     .dashboard-profile-button {
         width: 100%;
     }
-
     .dashboard-profile-button button {
         width: 100%;
         justify-content: center;
     }
-
     .dashboard-main {
         padding: 35px 20px 55px;
     }
-
     .dashboard-stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
     }
-
     .dashboard-stat-card {
         min-height: 100px;
         padding: 17px;
     }
-
     .dashboard-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-
     .dashboard-right {
         display: flex;
         flex-direction: column;
         gap: 15px;
     }
-
     .dashboard-card {
         padding: 19px;
     }
-
     .dashboard-card-header {
         gap: 12px;
     }
-
     .dashboard-event {
         grid-template-columns: 58px minmax(0, 1fr) 36px;
         gap: 9px;
     }
-
     .task-item {
         grid-template-columns: 40px minmax(0, 1fr);
     }
-
     .task-status {
         grid-column: 2;
         justify-self: start;
         margin-top: -5px;
     }
-
     .dashboard-certificate-card {
         grid-template-columns: 45px minmax(0, 1fr) 34px;
     }
-
     .dashboard-motivation {
         grid-template-columns: 1fr;
         min-height: auto;
     }
-
     .motivation-image {
         height: 250px;
         min-height: 250px;
     }
-
     .motivation-content {
         padding: 32px 22px;
     }
-
     .motivation-content h2 {
         font-size: 30px;
     }
-
-    /* Dashboard.css */
     .dashboard-container {
         width: 94%;
     }
-
     .dashboard-hero .dashboard-container {
         flex-direction: column;
         align-items: flex-start;
     }
-
     .activity-grid {
         grid-template-columns: 1fr;
     }
@@ -2807,7 +2418,7 @@
     ===================================================== */
 
     .hero {
-        padding-bottom: 100px;
+        padding-bottom: 70px;
     }
 
     .hero-container {
@@ -3337,8 +2948,7 @@
     }
 
     .mobile-menu {
-        right: 2%;
-        width: min(270px, 94vw);
+        width: min(180px, 86vw);
         padding: 10px;
     }
 
@@ -3348,7 +2958,7 @@
     ===================================================== */
 
     .hero {
-        padding-bottom: 94px;
+        padding-bottom: 40px;
     }
 
     .hero-container {
@@ -3465,6 +3075,7 @@
         right: 2.5%;
         padding: 4px;
         border-radius: 12px;
+        margin-bottom: 24px;
     }
 
     .stat {
@@ -3603,7 +3214,13 @@
 
 
     /* ---------- DONATION ---------- */
-
+   .donation-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
     .donation-card {
         min-height: 72px;
     }
@@ -3937,6 +3554,12 @@
     .motivation-content h2 {
         font-size: 26px;
     }
+   .popular {
+    top: 10px;
+    right: -16px;
+    padding: 6px 26px;
+    font-size: 9px;
+}
 }
 
 
@@ -4117,7 +3740,24 @@
 
 
     /* ---------- DONATION ---------- */
-
+ .donation-card {
+    min-height: 0;
+    padding: 10px 8px;
+    gap: 3px;
+}
+.donation-card h3,
+.donation-card h4,
+.donation-card p {
+    margin: 0;
+}
+.donation-card p {
+    font-size: 11px;
+}
+.donation-card .donate-btn {
+    margin-top: 4px;
+    padding: 6px 12px;
+    font-size: 10px;
+}
     .donation-options {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 6px;

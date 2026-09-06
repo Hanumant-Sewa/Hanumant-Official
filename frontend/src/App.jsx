@@ -131,6 +131,11 @@ function App() {
                 </>
               }
             />
+            <Route path="/community" element={<Community />} />
+
+            <Route path="/transparency" element={<Transparency />} />
+
+            <Route path="/community/join" element={<JoinCommunity />} />
 
             {/* =================================================
                 DONATION
@@ -300,14 +305,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <Admin />
-                </ProtectedRoute>
-              }
-            />
           </Route>
 
           {/* =================================================
@@ -321,15 +318,14 @@ function App() {
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          {/* =================================================
-              PUBLIC PAGES
-          ================================================= */}
-
-          <Route path="/community" element={<Community />} />
-
-          <Route path="/transparency" element={<Transparency />} />
-
-          <Route path="/community/join" element={<JoinCommunity />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -6,7 +6,6 @@
     position: fixed;
     right: clamp(18px, 2vw, 32px);
     bottom: clamp(18px, 2vw, 30px);
-
     width: min(430px, calc(100vw - 36px));
     min-height: 125px;
 
@@ -211,16 +210,19 @@
 
 @media (max-width: 600px) {
 
-    .upcoming-event {
-        right: 12px;
-        left: 12px;
-        bottom: 12px;
+   .upcoming-event {
+    left: 12px;
+    right: auto;
+    bottom: 12px;
 
-        width: auto;
-        min-height: 105px;
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
 
-        border-radius: 16px;
-    }
+    min-height: 105px;
+
+    border-radius: 16px;
+}
 
 
     .upcoming-event-image {

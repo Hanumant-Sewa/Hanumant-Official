@@ -16,25 +16,20 @@ import {
   CheckCircle,
   XCircle,
   Eye,
-  Ban,
-  UserCheck,
-  Activity,
+  Home,
 } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
 import "../../css/Admin.css";
 
-const API_URL = "http://localhost:5000/api/admin";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/admin`;
 
 function Admin() {
   const { user, logout } = useAuth();
 
   const [activeSection, setActiveSection] = useState("dashboard");
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const [loading, setLoading] = useState(true);
-
   const [dashboard, setDashboard] = useState(null);
 
   const [users, setUsers] = useState([]);
@@ -46,9 +41,7 @@ function Admin() {
   const [auditLogs, setAuditLogs] = useState([]);
 
   const [selectedApplication, setSelectedApplication] = useState(null);
-
   const [applicationFilter, setApplicationFilter] = useState("PENDING");
-
   const [refreshing, setRefreshing] = useState(false);
 
   /* =====================================================
@@ -59,7 +52,6 @@ function Admin() {
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
       credentials: "include",
-
       headers: {
         "Content-Type": "application/json",
         ...(options.headers || {}),
@@ -264,15 +256,10 @@ function Admin() {
       title: "Approve Volunteer?",
       text: `Approve ${application.user.name} as a volunteer?`,
       icon: "question",
-
       showCancelButton: true,
-
       confirmButtonText: "Yes, Approve",
-
       cancelButtonText: "Cancel",
-
       confirmButtonColor: "#16a34a",
-
       cancelButtonColor: "#6b7280",
     });
 
@@ -283,7 +270,6 @@ function Admin() {
     try {
       await apiRequest(`/volunteer-applications/${application.id}/approve`, {
         method: "PATCH",
-
         body: JSON.stringify({
           adminRemarks: "Approved by administrator.",
         }),
@@ -317,25 +303,16 @@ function Admin() {
   const rejectApplication = async (application) => {
     const { value: remarks } = await Swal.fire({
       title: "Reject Application",
-
       input: "textarea",
-
       inputLabel: "Reason for rejection",
-
       inputPlaceholder: "Enter reason...",
-
       inputAttributes: {
         "aria-label": "Reason for rejection",
       },
-
       showCancelButton: true,
-
       confirmButtonText: "Reject Application",
-
       cancelButtonText: "Cancel",
-
       confirmButtonColor: "#dc2626",
-
       inputValidator: (value) => {
         if (!value?.trim()) {
           return "Please provide a reason.";
@@ -352,7 +329,6 @@ function Admin() {
     try {
       await apiRequest(`/volunteer-applications/${application.id}/reject`, {
         method: "PATCH",
-
         body: JSON.stringify({
           adminRemarks: remarks.trim(),
         }),
@@ -386,7 +362,6 @@ function Admin() {
     try {
       await apiRequest(`/users/${selectedUser.id}/status`, {
         method: "PATCH",
-
         body: JSON.stringify({
           status,
         }),
@@ -422,12 +397,21 @@ function Admin() {
   };
 
   /* =====================================================
+     BACK TO WEBSITE
+  ===================================================== */
+
+  const handleBackToWebsite = () => {
+    window.location.href = "/";
+  };
+
+  /* =====================================================
      LOGOUT
   ===================================================== */
 
   const handleLogout = async () => {
     try {
       await logout();
+      window.location.href = "/login";
     } catch (error) {
       console.error(error);
     }
@@ -465,43 +449,36 @@ function Admin() {
       label: "Dashboard",
       icon: LayoutDashboard,
     },
-
     {
       id: "volunteers",
       label: "Volunteer Applications",
       icon: HeartHandshake,
     },
-
     {
       id: "users",
       label: "Users",
       icon: Users,
     },
-
     {
       id: "donations",
       label: "Donations",
       icon: IndianRupee,
     },
-
     {
       id: "campaigns",
       label: "Campaigns",
       icon: Megaphone,
     },
-
     {
       id: "events",
       label: "Events",
       icon: CalendarDays,
     },
-
     {
       id: "communities",
       label: "Communities",
       icon: UsersRound,
     },
-
     {
       id: "audit",
       label: "Audit Logs",
@@ -561,7 +538,11 @@ function Admin() {
 
             <div>
               <span>Total Donations</span>
-              <strong>{formatCurrency(stats.totalDonationAmount)}</strong>
+              <strong>
+                {formatCurrency(
+                  stats.totalDonationAmount ?? stats.donationAmount,
+                )}
+              </strong>
             </div>
           </div>
 
@@ -593,7 +574,6 @@ function Admin() {
             <div className="admin-panel-header">
               <div>
                 <h3>Recent Volunteer Applications</h3>
-
                 <p>Latest requests waiting for review.</p>
               </div>
 
@@ -617,8 +597,14 @@ function Admin() {
                 </thead>
 
                 <tbody>
-                  {dashboard.recentApplications?.length ? (
-                    dashboard.recentApplications.map((application) => (
+                  {(
+                    dashboard.recentApplications ||
+                    dashboard.recentVolunteerApplications
+                  )?.length ? (
+                    (
+                      dashboard.recentApplications ||
+                      dashboard.recentVolunteerApplications
+                    ).map((application) => (
                       <tr key={application.id}>
                         <td>{application.user.name}</td>
 
@@ -651,7 +637,6 @@ function Admin() {
             <div className="admin-panel-header">
               <div>
                 <h3>Recent Donations</h3>
-
                 <p>Latest donation activity.</p>
               </div>
 
@@ -725,7 +710,6 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Volunteer Applications</h2>
-
             <p>Review and manage volunteer requests.</p>
           </div>
 
@@ -735,13 +719,9 @@ function Admin() {
             onChange={(e) => setApplicationFilter(e.target.value)}
           >
             <option value="PENDING">Pending</option>
-
             <option value="APPROVED">Approved</option>
-
             <option value="REJECTED">Rejected</option>
-
             <option value="WITHDRAWN">Withdrawn</option>
-
             <option value="ALL">All Applications</option>
           </select>
         </div>
@@ -768,14 +748,12 @@ function Admin() {
                       <td>
                         <div className="admin-user-cell">
                           <strong>{application.user.name}</strong>
-
                           <small>#{application.id}</small>
                         </div>
                       </td>
 
                       <td>
                         <div>{application.user.email}</div>
-
                         <small>{application.user.phone || "No phone"}</small>
                       </td>
 
@@ -854,7 +832,6 @@ function Admin() {
                       <td>
                         <div className="admin-user-cell">
                           <strong>{item.name}</strong>
-
                           <small>{item.email}</small>
                         </div>
                       </td>
@@ -885,9 +862,7 @@ function Admin() {
                             }
                           >
                             <option value="ACTIVE">Active</option>
-
                             <option value="INACTIVE">Inactive</option>
-
                             <option value="SUSPENDED">Suspended</option>
                           </select>
                         )}
@@ -993,7 +968,6 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Campaigns</h2>
-
             <p>Monitor all NGO campaigns.</p>
           </div>
         </div>
@@ -1017,7 +991,6 @@ function Admin() {
 
               <div className="admin-progress-info">
                 <span>Raised</span>
-
                 <strong>{formatCurrency(campaign.raisedAmount)}</strong>
               </div>
 
@@ -1065,7 +1038,6 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Events</h2>
-
             <p>Monitor volunteer events and registrations.</p>
           </div>
         </div>
@@ -1134,7 +1106,6 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Communities</h2>
-
             <p>Monitor NGO communities and members.</p>
           </div>
         </div>
@@ -1186,7 +1157,6 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Audit Logs</h2>
-
             <p>Security history of administrative actions.</p>
           </div>
         </div>
@@ -1301,7 +1271,6 @@ function Admin() {
 
           <div>
             <strong>Hanumant Seva</strong>
-
             <span>Admin Panel</span>
           </div>
 
@@ -1343,6 +1312,15 @@ function Admin() {
         </nav>
 
         <div className="admin-sidebar-footer">
+          {/* BACK TO WEBSITE */}
+          <button
+            className="admin-back-website-button"
+            onClick={handleBackToWebsite}
+          >
+            <Home size={18} />
+            <span>Back to Website</span>
+          </button>
+
           <div className="admin-admin-profile">
             <div className="admin-avatar">
               {user?.name?.charAt(0)?.toUpperCase()}
@@ -1350,7 +1328,6 @@ function Admin() {
 
             <div>
               <strong>{user?.name}</strong>
-
               <span>Administrator</span>
             </div>
           </div>
@@ -1363,7 +1340,7 @@ function Admin() {
 
       {/* MAIN */}
       <main className="admin-main">
-        {/* TOPBAR */}
+        {/* ADMIN TOPBAR */}
         <header className="admin-topbar">
           <button
             className="admin-mobile-menu"
@@ -1398,7 +1375,6 @@ function Admin() {
 
               <div>
                 <strong>{user?.name}</strong>
-
                 <span>ADMIN</span>
               </div>
             </div>
@@ -1419,7 +1395,6 @@ function Admin() {
             <div className="admin-modal-header">
               <div>
                 <span>VOLUNTEER APPLICATION</span>
-
                 <h2>{selectedApplication.user.name}</h2>
               </div>
 
@@ -1486,7 +1461,6 @@ function Admin() {
 
               <div className="admin-detail-long">
                 <span>Motivation</span>
-
                 <p>{selectedApplication.motivation}</p>
               </div>
             </div>
