@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   Clock3,
   CheckCircle,
@@ -10,6 +11,8 @@ import {
   LayoutDashboard,
   Loader2,
 } from "lucide-react";
+
+import "../css/volunteer.css";
 
 const ApplicationStatus = () => {
   const navigate = useNavigate();
@@ -58,6 +61,31 @@ const ApplicationStatus = () => {
   }, []);
 
   // =====================================================
+  // FORMAT PREFERRED ACTIVITIES
+  // =====================================================
+
+  const formatActivities = (activities) => {
+    if (!activities) {
+      return "-";
+    }
+
+    const activityNames = {
+      "food-distribution": "Food Distribution",
+      "food-preparation": "Food Preparation",
+      "food-rescue": "Food Rescue",
+      "community-support": "Community Support",
+      documentation: "Documentation",
+      awareness: "Awareness",
+    };
+
+    return activities
+      .split(",")
+      .map((activity) => activity.trim())
+      .map((activity) => activityNames[activity] || activity)
+      .join(", ");
+  };
+
+  // =====================================================
   // LOADING
   // =====================================================
 
@@ -72,7 +100,8 @@ const ApplicationStatus = () => {
               </div>
 
               <h2>
-                Loading <span>Application Status...</span>
+                Loading
+                <span> Application Status...</span>
               </h2>
 
               <p>
@@ -92,6 +121,10 @@ const ApplicationStatus = () => {
   if (error) {
     return (
       <div className="application-status-page">
+        {/* =========================================
+            HERO
+        ========================================== */}
+
         <section className="application-hero">
           <div className="application-hero-overlay"></div>
 
@@ -118,6 +151,10 @@ const ApplicationStatus = () => {
             </p>
           </div>
         </section>
+
+        {/* =========================================
+            ERROR CARD
+        ========================================== */}
 
         <section className="application-section">
           <div className="status-container">
@@ -167,7 +204,7 @@ const ApplicationStatus = () => {
   return (
     <div className="application-status-page">
       {/* =========================================
-          HERO
+          HERO SECTION
       ========================================== */}
 
       <section className="application-hero">
@@ -208,9 +245,9 @@ const ApplicationStatus = () => {
           ====================================== */}
 
           <div className="status-card">
-            {/* ===============================
+            {/* =================================
                 PENDING
-            ================================ */}
+            ================================== */}
 
             {isPending && (
               <>
@@ -238,9 +275,9 @@ const ApplicationStatus = () => {
               </>
             )}
 
-            {/* ===============================
+            {/* =================================
                 APPROVED
-            ================================ */}
+            ================================== */}
 
             {isApproved && (
               <>
@@ -278,9 +315,9 @@ const ApplicationStatus = () => {
               </>
             )}
 
-            {/* ===============================
+            {/* =================================
                 REJECTED
-            ================================ */}
+            ================================== */}
 
             {isRejected && (
               <>
@@ -309,6 +346,7 @@ const ApplicationStatus = () => {
                 {application?.adminRemarks && (
                   <div className="admin-remarks">
                     <strong>Admin Remarks:</strong>
+
                     <p>{application.adminRemarks}</p>
                   </div>
                 )}
@@ -331,6 +369,10 @@ const ApplicationStatus = () => {
 
           {application && (
             <div className="application-details-card">
+              {/* =================================
+                  DETAILS HEADING
+              ================================== */}
+
               <div className="details-heading">
                 <div className="details-heading-icon">
                   <UserRound size={20} />
@@ -343,29 +385,48 @@ const ApplicationStatus = () => {
                 </div>
               </div>
 
+              {/* =================================
+                  DETAILS GRID
+              ================================== */}
+
               <div className="details-grid">
+                {/* APPLICATION ID */}
+
                 <div className="detail-item">
                   <small>Application ID</small>
+
                   <strong>#{application.id || "-"}</strong>
                 </div>
 
+                {/* STATUS */}
+
                 <div className="detail-item">
                   <small>Status</small>
+
                   <strong>{application.status || "-"}</strong>
                 </div>
 
+                {/* PREFERRED ACTIVITIES */}
+
                 <div className="detail-item">
-                  <small>Preferred Activity</small>
-                  <strong>{application.preferredArea || "-"}</strong>
+                  <small>Preferred Activities</small>
+
+                  <strong>{formatActivities(application.preferredArea)}</strong>
                 </div>
+
+                {/* AVAILABILITY */}
 
                 <div className="detail-item">
                   <small>Availability</small>
+
                   <strong>{application.availability || "-"}</strong>
                 </div>
 
+                {/* APPLICATION DATE */}
+
                 <div className="detail-item">
                   <small>Application Date</small>
+
                   <strong>
                     {application.createdAt
                       ? new Date(application.createdAt).toLocaleDateString()
@@ -373,8 +434,11 @@ const ApplicationStatus = () => {
                   </strong>
                 </div>
 
+                {/* LAST UPDATED */}
+
                 <div className="detail-item">
                   <small>Last Updated</small>
+
                   <strong>
                     {application.updatedAt
                       ? new Date(application.updatedAt).toLocaleDateString()
@@ -395,7 +459,9 @@ const ApplicationStatus = () => {
             <h2>Your Volunteer Journey</h2>
 
             <div className="journey-steps">
-              {/* STEP 1 */}
+              {/* =================================
+                  STEP 1
+              ================================== */}
 
               <div className="journey-step active">
                 <div className="journey-number">01</div>
@@ -411,7 +477,9 @@ const ApplicationStatus = () => {
 
               <div className="journey-line"></div>
 
-              {/* STEP 2 */}
+              {/* =================================
+                  STEP 2
+              ================================== */}
 
               <div
                 className={`journey-step ${
@@ -429,7 +497,9 @@ const ApplicationStatus = () => {
 
               <div className="journey-line"></div>
 
-              {/* STEP 3 */}
+              {/* =================================
+                  STEP 3
+              ================================== */}
 
               <div className={`journey-step ${isApproved ? "active" : ""}`}>
                 <div className="journey-number">03</div>
@@ -444,11 +514,13 @@ const ApplicationStatus = () => {
           </div>
 
           {/* =====================================
-              BUTTON ACTIONS
+              BOTTOM ACTIONS
           ====================================== */}
 
           <div className="status-bottom-actions">
-            {/* APPROVED → DASHBOARD */}
+            {/* =================================
+                APPROVED → DASHBOARD
+            ================================== */}
 
             {isApproved && (
               <div className="status-bottom-action">
@@ -464,7 +536,9 @@ const ApplicationStatus = () => {
               </div>
             )}
 
-            {/* BACK TO VOLUNTEER */}
+            {/* =================================
+                BACK TO VOLUNTEER
+            ================================== */}
 
             <div className="status-bottom-action">
               <button

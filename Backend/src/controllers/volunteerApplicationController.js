@@ -54,6 +54,36 @@ export const applyVolunteer = async (req, res) => {
     }
 
     // =========================================
+    // CHECK ACTIVITY
+    // =========================================
+
+    if (
+      !Array.isArray(preferredActivity) ||
+      preferredActivity.length === 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please select at least one preferred activity",
+      });
+    }
+
+    // =========================================
+    // CONVERT ACTIVITIES ARRAY TO STRING
+    // =========================================
+
+    const preferredArea = preferredActivity.join(", ");
+
+    console.log(
+      "SELECTED ACTIVITIES:",
+      preferredActivity
+    );
+
+    console.log(
+      "ACTIVITIES TO SAVE:",
+      preferredArea
+    );
+
+    // =========================================
     // CHECK USER
     // =========================================
 
@@ -108,7 +138,7 @@ export const applyVolunteer = async (req, res) => {
           createdAt: existingApplication.createdAt,
         },
 
-        nextPage: "/volunteer/dashboard",
+        nextPage: "/volunteer/application-status",
       });
     }
 
@@ -158,7 +188,10 @@ export const applyVolunteer = async (req, res) => {
       },
     });
 
-    console.log("UPDATED USER:", updatedUser);
+    console.log(
+      "UPDATED USER:",
+      updatedUser
+    );
 
     // =========================================
     // CREATE VOLUNTEER APPLICATION
@@ -169,10 +202,17 @@ export const applyVolunteer = async (req, res) => {
         data: {
           userId: userId,
           volunteerProfileId: volunteerProfile.id,
+
           motivation: reason,
+
           skills: skills,
-          preferredArea: preferredActivity,
+
+          // IMPORTANT:
+          // Save ALL selected activities
+          preferredArea: preferredArea,
+
           availability: availability,
+
           status: "PENDING",
         },
       });
@@ -199,7 +239,7 @@ export const applyVolunteer = async (req, res) => {
         createdAt: application.createdAt,
       },
 
-      nextPage: "/volunteer/dashboard",
+      nextPage: "/volunteer/application-status",
     });
 
   } catch (error) {
@@ -234,7 +274,7 @@ export const getVolunteerApplicationStatus = async (
     );
 
     // =========================================
-    // FIND APPLICATION
+    // FIND LATEST APPLICATION
     // =========================================
 
     const application =

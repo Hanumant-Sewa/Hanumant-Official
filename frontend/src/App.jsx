@@ -64,7 +64,6 @@ import DonationReceipt from "./components/DonationReceipt";
 import Volunteer from "./pages/Volunteer";
 import VolunteerApplication from "./pages/VolunteerApplication";
 import ApplicationStatus from "./pages/ApplicationStatus";
-import VolunteerDashboard from "./pages/VolunteerDashboard";
 import VolunteerProfile from "./pages/VolunteerProfile";
 import VolunteerEvents from "./pages/VolunteerEvents";
 import EventDetails from "./pages/EventDetails";
@@ -229,16 +228,7 @@ function App() {
               }
             />
 
-            {/* Volunteer Dashboard */}
-
-            <Route
-              path="/volunteer/dashboard"
-              element={
-                <ProtectedRoute>
-                  <VolunteerDashboard />
-                </ProtectedRoute>
-              }
-            />
+          
 
             {/* Volunteer Profile */}
 
