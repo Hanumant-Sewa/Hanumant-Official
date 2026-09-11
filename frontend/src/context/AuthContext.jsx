@@ -12,10 +12,13 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/profile", {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/profile`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
 
       if (!response.ok) {
         setUser(null);
@@ -38,19 +41,22 @@ export const AuthProvider = ({ children }) => {
   // =====================================================
 
   const login = async (email, password, loginType = "user", adminKey = "") => {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+          password,
+          loginType,
+          adminKey,
+        }),
       },
-      credentials: "include",
-      body: JSON.stringify({
-        email,
-        password,
-        loginType,
-        adminKey,
-      }),
-    });
+    );
 
     const data = await response.json();
 
@@ -69,10 +75,13 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/logout`,
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
 
       const data = await response.json();
 

@@ -16,25 +16,23 @@ import {
   CheckCircle,
   XCircle,
   Eye,
-  Ban,
-  UserCheck,
-  Activity,
+  Home,
+  Edit,
+  Trash2,
+  Plus,
 } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
 import "../../css/Admin.css";
 
-const API_URL = "http://localhost:5000/api/admin";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/admin`;
 
 function Admin() {
   const { user, logout } = useAuth();
 
   const [activeSection, setActiveSection] = useState("dashboard");
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const [loading, setLoading] = useState(true);
-
   const [dashboard, setDashboard] = useState(null);
 
   const [users, setUsers] = useState([]);
@@ -45,10 +43,50 @@ function Admin() {
   const [communities, setCommunities] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
 
+  /* =====================================================
+     CAMPAIGN STATE
+  ===================================================== */
+
+  const [showCampaignModal, setShowCampaignModal] = useState(false);
+  const [editingCampaign, setEditingCampaign] = useState(null);
+  const [campaignSaving, setCampaignSaving] = useState(false);
+
+  const [campaignForm, setCampaignForm] = useState({
+    title: "",
+    description: "",
+    image: "",
+    targetAmount: "",
+    startDate: "",
+    endDate: "",
+    status: "DRAFT",
+  });
+
+  /* =====================================================
+     EVENT STATE
+  ===================================================== */
+
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [eventSaving, setEventSaving] = useState(false);
+
+  const [eventForm, setEventForm] = useState({
+    title: "",
+    description: "",
+    image: "",
+    location: "",
+    city: "",
+    state: "",
+    startDate: "",
+    endDate: "",
+    capacity: "",
+  });
+
+  /* =====================================================
+     APPLICATION / UI STATE
+  ===================================================== */
+
   const [selectedApplication, setSelectedApplication] = useState(null);
-
   const [applicationFilter, setApplicationFilter] = useState("PENDING");
-
   const [refreshing, setRefreshing] = useState(false);
 
   /* =====================================================
@@ -59,14 +97,19 @@ function Admin() {
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
       credentials: "include",
-
       headers: {
         "Content-Type": "application/json",
         ...(options.headers || {}),
       },
     });
 
-    const data = await response.json();
+    let data = {};
+
+    try {
+      data = await response.json();
+    } catch {
+      data = {};
+    }
 
     if (!response.ok) {
       throw new Error(data.message || "Something went wrong.");
@@ -90,6 +133,7 @@ function Admin() {
 
   const loadUsers = async () => {
     const data = await apiRequest("/users");
+
     setUsers(data.users || []);
   };
 
@@ -129,13 +173,504 @@ function Admin() {
   };
 
   /* =====================================================
-     EVENTS
+     CREATE CAMPAIGN
+  ===================================================== */
+
+  const openCreateCampaignModal = () => {
+    setEditingCampaign(null);
+
+    setCampaignForm({
+      title: "",
+      description: "",
+      image: "",
+      targetAmount: "",
+      startDate: "",
+      endDate: "",
+      status: "DRAFT",
+    });
+
+    setShowCampaignModal(true);
+  };
+
+  /* =====================================================
+     EDIT CAMPAIGN
+  ===================================================== */
+
+  const openEditCampaignModal = (campaign) => {
+    setEditingCampaign(campaign);
+
+    setCampaignForm({
+      title: campaign.title || "",
+      description: campaign.description || "",
+      image: campaign.image || "",
+      targetAmount: campaign.targetAmount ?? "",
+      startDate: toDateTimeLocalValue(campaign.startDate),
+      endDate: toDateTimeLocalValue(campaign.endDate),
+      status: campaign.status || "DRAFT",
+    });
+
+    setShowCampaignModal(true);
+  };
+
+  /* =====================================================
+     CAMPAIGN FORM CHANGE
+  ===================================================== */
+
+  const handleCampaignFormChange = (e) => {
+    const { name, value } = e.target;
+
+    setCampaignForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  /* =====================================================
+     SAVE CAMPAIGN
+  ===================================================== */
+
+  const handleSaveCampaign = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (!campaignForm.title.trim()) {
+        throw new Error("Campaign title is required.");
+      }
+
+      const targetAmount = Number(campaignForm.targetAmount);
+
+      if (!Number.isFinite(targetAmount) || targetAmount <= 0) {
+        throw new Error("Target amount must be greater than zero.");
+      }
+
+      let startDate = null;
+      let endDate = null;
+
+      if (campaignForm.startDate) {
+        startDate = new Date(campaignForm.startDate);
+
+        if (Number.isNaN(startDate.getTime())) {
+          throw new Error("Please enter a valid campaign start date.");
+        }
+      }
+
+      if (campaignForm.endDate) {
+        endDate = new Date(campaignForm.endDate);
+
+        if (Number.isNaN(endDate.getTime())) {
+          throw new Error("Please enter a valid campaign end date.");
+        }
+      }
+
+      if (startDate && endDate && endDate <= startDate) {
+        throw new Error("Campaign end date must be after the start date.");
+      }
+
+      setCampaignSaving(true);
+
+      const payload = {
+        title: campaignForm.title.trim(),
+        description: campaignForm.description.trim() || null,
+        image: campaignForm.image.trim() || null,
+        targetAmount,
+
+        startDate: startDate ? startDate.toISOString() : null,
+
+        endDate: endDate ? endDate.toISOString() : null,
+
+        status: campaignForm.status,
+      };
+
+      const endpoint = editingCampaign
+        ? `/campaigns/${editingCampaign.id}`
+        : "/campaigns";
+
+      const method = editingCampaign ? "PATCH" : "POST";
+
+      const data = await apiRequest(endpoint, {
+        method,
+        body: JSON.stringify(payload),
+      });
+
+      await loadCampaigns();
+
+      setShowCampaignModal(false);
+      setEditingCampaign(null);
+
+      Swal.fire({
+        icon: "success",
+        title: editingCampaign ? "Campaign Updated" : "Campaign Created",
+        text:
+          data.message ||
+          (editingCampaign
+            ? "Campaign updated successfully."
+            : "Campaign created successfully."),
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Save campaign error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Unable to save campaign",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
+      });
+    } finally {
+      setCampaignSaving(false);
+    }
+  };
+
+  /* =====================================================
+     CANCEL CAMPAIGN
+  ===================================================== */
+
+  const handleCancelCampaign = async (campaign) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Cancel this campaign?",
+      text: `"${campaign.title}" will no longer be an active fundraising campaign.`,
+      showCancelButton: true,
+      confirmButtonText: "Yes, Cancel",
+      cancelButtonText: "Keep Campaign",
+      confirmButtonColor: "#dc2626",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      const data = await apiRequest(`/campaigns/${campaign.id}/cancel`, {
+        method: "PATCH",
+      });
+
+      await loadCampaigns();
+
+      Swal.fire({
+        icon: "success",
+        title: "Campaign Cancelled",
+        text: data.message || "Campaign cancelled successfully.",
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Cancel campaign error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Unable to cancel campaign",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
+      });
+    }
+  };
+
+  /* =====================================================
+     DELETE CAMPAIGN
+  ===================================================== */
+
+  const handleDeleteCampaign = async (campaign) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Delete this campaign?",
+      text: `"${campaign.title}" will be permanently deleted if allowed by the database.`,
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      const data = await apiRequest(`/campaigns/${campaign.id}`, {
+        method: "DELETE",
+      });
+
+      await loadCampaigns();
+
+      Swal.fire({
+        icon: "success",
+        title: "Campaign Deleted",
+        text: data.message || "Campaign deleted successfully.",
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Delete campaign error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Cannot delete campaign",
+        text: error.message || "Campaign could not be deleted.",
+        confirmButtonColor: "#D97706",
+      });
+    }
+  };
+
+  /* =====================================================
+     EVENT LOAD
   ===================================================== */
 
   const loadEvents = async () => {
     const data = await apiRequest("/events");
 
     setEvents(data.events || []);
+  };
+
+  /* =====================================================
+     CREATE EVENT
+  ===================================================== */
+
+  const openCreateEventModal = () => {
+    setEditingEvent(null);
+
+    setEventForm({
+      title: "",
+      description: "",
+      image: "",
+      location: "",
+      city: "",
+      state: "",
+      startDate: "",
+      endDate: "",
+      capacity: "",
+    });
+
+    setShowEventModal(true);
+  };
+
+  /* =====================================================
+     EDIT EVENT
+  ===================================================== */
+
+  const openEditEventModal = (event) => {
+    setEditingEvent(event);
+
+    setEventForm({
+      title: event.title || "",
+      description: event.description || "",
+      image: event.image || "",
+      location: event.location || "",
+      city: event.city || "",
+      state: event.state || "",
+
+      startDate: toDateTimeLocalValue(event.startDate),
+
+      endDate: toDateTimeLocalValue(event.endDate),
+
+      capacity: event.capacity ?? "",
+    });
+
+    setShowEventModal(true);
+  };
+
+  /* =====================================================
+     EVENT FORM CHANGE
+  ===================================================== */
+
+  const handleEventFormChange = (e) => {
+    const { name, value } = e.target;
+
+    setEventForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  /* =====================================================
+     SAVE EVENT
+  ===================================================== */
+
+  const handleSaveEvent = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (!eventForm.title.trim()) {
+        throw new Error("Event title is required.");
+      }
+
+      if (!eventForm.startDate) {
+        throw new Error("Start date and time are required.");
+      }
+
+      if (!eventForm.endDate) {
+        throw new Error(
+          "End date and time are required so the event can automatically become completed.",
+        );
+      }
+
+      const startDate = new Date(eventForm.startDate);
+      const endDate = new Date(eventForm.endDate);
+
+      if (
+        Number.isNaN(startDate.getTime()) ||
+        Number.isNaN(endDate.getTime())
+      ) {
+        throw new Error("Please enter valid event dates.");
+      }
+
+      if (endDate <= startDate) {
+        throw new Error(
+          "End date and time must be after the start date and time.",
+        );
+      }
+
+      if (
+        eventForm.capacity !== "" &&
+        (!Number.isInteger(Number(eventForm.capacity)) ||
+          Number(eventForm.capacity) < 1)
+      ) {
+        throw new Error("Capacity must be a positive whole number.");
+      }
+
+      setEventSaving(true);
+
+      const payload = {
+        title: eventForm.title.trim(),
+
+        description: eventForm.description.trim() || null,
+
+        image: eventForm.image.trim() || null,
+
+        location: eventForm.location.trim() || null,
+
+        city: eventForm.city.trim() || null,
+
+        state: eventForm.state.trim() || null,
+
+        startDate: startDate.toISOString(),
+
+        endDate: endDate.toISOString(),
+
+        capacity: eventForm.capacity === "" ? null : Number(eventForm.capacity),
+      };
+
+      const endpoint = editingEvent ? `/events/${editingEvent.id}` : "/events";
+
+      const method = editingEvent ? "PATCH" : "POST";
+
+      const data = await apiRequest(endpoint, {
+        method,
+        body: JSON.stringify(payload),
+      });
+
+      await loadEvents();
+
+      setShowEventModal(false);
+      setEditingEvent(null);
+
+      Swal.fire({
+        icon: "success",
+        title: editingEvent ? "Event Updated" : "Event Created",
+        text:
+          data.message ||
+          (editingEvent
+            ? "Event updated successfully."
+            : "Event created successfully."),
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Save event error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Unable to save event",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
+      });
+    } finally {
+      setEventSaving(false);
+    }
+  };
+
+  /* =====================================================
+     CANCEL EVENT
+  ===================================================== */
+
+  const handleCancelEvent = async (event) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Cancel this event?",
+      text: `"${event.title}" will no longer be available as an active event.`,
+      showCancelButton: true,
+      confirmButtonText: "Yes, Cancel Event",
+      cancelButtonText: "Keep Event",
+      confirmButtonColor: "#dc2626",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      const data = await apiRequest(`/events/${event.id}/cancel`, {
+        method: "PATCH",
+      });
+
+      await loadEvents();
+
+      Swal.fire({
+        icon: "success",
+        title: "Event Cancelled",
+        text: data.message || "Event cancelled successfully.",
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Delete/cancel event error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Unable to cancel event",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
+      });
+    }
+  };
+
+  /* =====================================================
+     DELETE EVENT
+  ===================================================== */
+
+  const handleDeleteEvent = async (event) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Delete this event?",
+      text: `"${event.title}" will be permanently deleted if allowed by the database.`,
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      const data = await apiRequest(`/events/${event.id}`, {
+        method: "DELETE",
+      });
+
+      await loadEvents();
+
+      Swal.fire({
+        icon: "success",
+        title: "Event Deleted",
+        text: data.message || "Event deleted successfully.",
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Delete event error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Cannot delete event",
+        text: error.message || "Unable to delete this event.",
+        confirmButtonColor: "#D97706",
+      });
+    }
   };
 
   /* =====================================================
@@ -207,7 +742,7 @@ function Admin() {
 
       Swal.fire({
         title: "Unable to Load",
-        text: error.message,
+        text: error.message || "Something went wrong.",
         icon: "error",
         confirmButtonColor: "#e87524",
       });
@@ -264,15 +799,10 @@ function Admin() {
       title: "Approve Volunteer?",
       text: `Approve ${application.user.name} as a volunteer?`,
       icon: "question",
-
       showCancelButton: true,
-
       confirmButtonText: "Yes, Approve",
-
       cancelButtonText: "Cancel",
-
       confirmButtonColor: "#16a34a",
-
       cancelButtonColor: "#6b7280",
     });
 
@@ -283,27 +813,27 @@ function Admin() {
     try {
       await apiRequest(`/volunteer-applications/${application.id}/approve`, {
         method: "PATCH",
-
         body: JSON.stringify({
           adminRemarks: "Approved by administrator.",
         }),
       });
 
-      Swal.fire({
+      setSelectedApplication(null);
+
+      await Promise.all([loadApplications(), loadDashboard()]);
+
+      await Swal.fire({
         title: "Approved",
         text: `${application.user.name} is now a volunteer.`,
         icon: "success",
         confirmButtonColor: "#e87524",
       });
-
-      setSelectedApplication(null);
-
-      await loadApplications();
-      await loadDashboard();
     } catch (error) {
-      Swal.fire({
+      console.error("Approval error:", error);
+
+      await Swal.fire({
         title: "Approval Failed",
-        text: error.message,
+        text: error.message || "Unable to approve this application.",
         icon: "error",
         confirmButtonColor: "#e87524",
       });
@@ -317,23 +847,15 @@ function Admin() {
   const rejectApplication = async (application) => {
     const { value: remarks } = await Swal.fire({
       title: "Reject Application",
-
       input: "textarea",
-
       inputLabel: "Reason for rejection",
-
       inputPlaceholder: "Enter reason...",
-
       inputAttributes: {
         "aria-label": "Reason for rejection",
       },
-
       showCancelButton: true,
-
       confirmButtonText: "Reject Application",
-
       cancelButtonText: "Cancel",
-
       confirmButtonColor: "#dc2626",
 
       inputValidator: (value) => {
@@ -352,26 +874,27 @@ function Admin() {
     try {
       await apiRequest(`/volunteer-applications/${application.id}/reject`, {
         method: "PATCH",
-
         body: JSON.stringify({
           adminRemarks: remarks.trim(),
         }),
       });
 
-      Swal.fire({
+      setSelectedApplication(null);
+
+      await Promise.all([loadApplications(), loadDashboard()]);
+
+      await Swal.fire({
         title: "Application Rejected",
+        text: `${application.user.name}'s application has been rejected.`,
         icon: "success",
         confirmButtonColor: "#e87524",
       });
-
-      setSelectedApplication(null);
-
-      await loadApplications();
-      await loadDashboard();
     } catch (error) {
-      Swal.fire({
+      console.error("Rejection error:", error);
+
+      await Swal.fire({
         title: "Rejection Failed",
-        text: error.message,
+        text: error.message || "Unable to reject this application.",
         icon: "error",
         confirmButtonColor: "#e87524",
       });
@@ -386,7 +909,6 @@ function Admin() {
     try {
       await apiRequest(`/users/${selectedUser.id}/status`, {
         method: "PATCH",
-
         body: JSON.stringify({
           status,
         }),
@@ -422,19 +944,29 @@ function Admin() {
   };
 
   /* =====================================================
+     BACK TO WEBSITE
+  ===================================================== */
+
+  const handleBackToWebsite = () => {
+    window.location.href = "/";
+  };
+
+  /* =====================================================
      LOGOUT
   ===================================================== */
 
   const handleLogout = async () => {
     try {
       await logout();
+
+      window.location.href = "/login";
     } catch (error) {
       console.error(error);
     }
   };
 
   /* =====================================================
-     FORMAT
+     FORMAT HELPERS
   ===================================================== */
 
   const formatDate = (date) => {
@@ -447,12 +979,124 @@ function Admin() {
     });
   };
 
+  const formatDateTime = (date) => {
+    if (!date) return "—";
+
+    const parsed = new Date(date);
+
+    if (Number.isNaN(parsed.getTime())) {
+      return "—";
+    }
+
+    return parsed.toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
       maximumFractionDigits: 0,
     }).format(Number(amount || 0));
+  };
+
+  /* =====================================================
+     DATE/TIME HELPER
+  ===================================================== */
+
+  const toDateTimeLocalValue = (date) => {
+    if (!date) return "";
+
+    const parsed = new Date(date);
+
+    if (Number.isNaN(parsed.getTime())) {
+      return "";
+    }
+
+    const offset = parsed.getTimezoneOffset();
+
+    return new Date(parsed.getTime() - offset * 60000)
+      .toISOString()
+      .slice(0, 16);
+  };
+
+  /* =====================================================
+     EVENT STATUS
+     
+     Status is derived from actual date/time.
+     CANCELLED always has priority.
+  ===================================================== */
+
+  const getEventStatus = (event, now = new Date()) => {
+    if (event.status === "CANCELLED") {
+      return "CANCELLED";
+    }
+
+    const start = new Date(event.startDate);
+
+    if (Number.isNaN(start.getTime())) {
+      return "UPCOMING";
+    }
+
+    if (now < start) {
+      return "UPCOMING";
+    }
+
+    if (!event.endDate) {
+      return "ONGOING";
+    }
+
+    const end = new Date(event.endDate);
+
+    if (Number.isNaN(end.getTime())) {
+      return "ONGOING";
+    }
+
+    if (now >= end) {
+      return "COMPLETED";
+    }
+
+    return "ONGOING";
+  };
+
+  /* =====================================================
+     CAMPAIGN STATUS
+     
+     DRAFT/CANCELLED/COMPLETED are respected.
+     ACTIVE is calculated against dates.
+  ===================================================== */
+
+  const getCampaignStatus = (campaign, now = new Date()) => {
+    if (campaign.status === "CANCELLED") {
+      return "CANCELLED";
+    }
+
+    if (campaign.status === "DRAFT") {
+      return "DRAFT";
+    }
+
+    if (campaign.status === "COMPLETED") {
+      return "COMPLETED";
+    }
+
+    const start = campaign.startDate ? new Date(campaign.startDate) : null;
+
+    const end = campaign.endDate ? new Date(campaign.endDate) : null;
+
+    if (start && !Number.isNaN(start.getTime()) && now < start) {
+      return "SCHEDULED";
+    }
+
+    if (end && !Number.isNaN(end.getTime()) && now >= end) {
+      return "COMPLETED";
+    }
+
+    return "ACTIVE";
   };
 
   /* =====================================================
@@ -514,7 +1158,9 @@ function Admin() {
   ===================================================== */
 
   const renderDashboard = () => {
-    if (!dashboard) return null;
+    if (!dashboard) {
+      return null;
+    }
 
     const stats = dashboard.stats;
 
@@ -550,6 +1196,7 @@ function Admin() {
 
             <div>
               <span>Pending Applications</span>
+
               <strong>{stats.pendingVolunteerApplications}</strong>
             </div>
           </div>
@@ -561,7 +1208,12 @@ function Admin() {
 
             <div>
               <span>Total Donations</span>
-              <strong>{formatCurrency(stats.totalDonationAmount)}</strong>
+
+              <strong>
+                {formatCurrency(
+                  stats.totalDonationAmount ?? stats.donationAmount,
+                )}
+              </strong>
             </div>
           </div>
 
@@ -572,6 +1224,7 @@ function Admin() {
 
             <div>
               <span>Active Campaigns</span>
+
               <strong>{stats.activeCampaigns}</strong>
             </div>
           </div>
@@ -583,12 +1236,17 @@ function Admin() {
 
             <div>
               <span>Upcoming Events</span>
+
               <strong>{stats.upcomingEvents}</strong>
             </div>
           </div>
         </div>
 
         <div className="admin-dashboard-grid">
+          {/* =========================
+              RECENT APPLICATIONS
+          ========================= */}
+
           <div className="admin-panel">
             <div className="admin-panel-header">
               <div>
@@ -610,15 +1268,24 @@ function Admin() {
                 <thead>
                   <tr>
                     <th>Applicant</th>
+
                     <th>Email</th>
+
                     <th>Status</th>
+
                     <th>Date</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {dashboard.recentApplications?.length ? (
-                    dashboard.recentApplications.map((application) => (
+                  {(
+                    dashboard.recentApplications ||
+                    dashboard.recentVolunteerApplications
+                  )?.length ? (
+                    (
+                      dashboard.recentApplications ||
+                      dashboard.recentVolunteerApplications
+                    ).map((application) => (
                       <tr key={application.id}>
                         <td>{application.user.name}</td>
 
@@ -647,6 +1314,10 @@ function Admin() {
             </div>
           </div>
 
+          {/* =========================
+              RECENT DONATIONS
+          ========================= */}
+
           <div className="admin-panel">
             <div className="admin-panel-header">
               <div>
@@ -668,8 +1339,11 @@ function Admin() {
                 <thead>
                   <tr>
                     <th>Donor</th>
+
                     <th>Amount</th>
+
                     <th>Status</th>
+
                     <th>Date</th>
                   </tr>
                 </thead>
@@ -714,7 +1388,6 @@ function Admin() {
       </div>
     );
   };
-
   /* =====================================================
      RENDER VOLUNTEERS
   ===================================================== */
@@ -725,7 +1398,6 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Volunteer Applications</h2>
-
             <p>Review and manage volunteer requests.</p>
           </div>
 
@@ -735,13 +1407,9 @@ function Admin() {
             onChange={(e) => setApplicationFilter(e.target.value)}
           >
             <option value="PENDING">Pending</option>
-
             <option value="APPROVED">Approved</option>
-
             <option value="REJECTED">Rejected</option>
-
             <option value="WITHDRAWN">Withdrawn</option>
-
             <option value="ALL">All Applications</option>
           </select>
         </div>
@@ -953,7 +1621,7 @@ function Admin() {
                         <strong>{formatCurrency(donation.amount)}</strong>
                       </td>
 
-                      <td>{donation.paymentMethod}</td>
+                      <td>{donation.paymentMethod || "—"}</td>
 
                       <td>{donation.campaign?.title || "General Donation"}</td>
 
@@ -988,68 +1656,313 @@ function Admin() {
   ===================================================== */
 
   const renderCampaigns = () => {
+    const now = new Date();
+
     return (
       <div className="admin-content-section">
+        {/* HEADER */}
         <div className="admin-section-toolbar">
           <div>
             <h2>Campaigns</h2>
 
-            <p>Monitor all NGO campaigns.</p>
+            <p>Create and manage fundraising campaigns.</p>
           </div>
+
+          <button
+            type="button"
+            className="admin-primary-button"
+            onClick={openCreateCampaignModal}
+          >
+            <Plus size={18} />
+            Add Campaign
+          </button>
         </div>
 
+        {/* CAMPAIGN CARDS */}
         <div className="admin-card-grid">
-          {campaigns.map((campaign) => (
-            <div className="admin-management-card" key={campaign.id}>
-              <div className="admin-management-card-top">
-                <span
-                  className={`admin-status admin-status-${campaign.status.toLowerCase()}`}
-                >
-                  {campaign.status}
-                </span>
+          {campaigns.map((campaign) => {
+            const displayStatus = getCampaignStatus(campaign, now);
 
-                <span>#{campaign.id}</span>
+            const target = Number(campaign.targetAmount || 0);
+
+            const raised = Number(campaign.raisedAmount || 0);
+
+            const progress =
+              target > 0
+                ? Math.min(100, Math.max(0, (raised / target) * 100))
+                : 0;
+
+            return (
+              <div
+                className="admin-management-card admin-campaign-card"
+                key={campaign.id}
+              >
+                {/* IMAGE */}
+                {campaign.image && (
+                  <div className="admin-campaign-image">
+                    <img
+                      src={campaign.image}
+                      alt={campaign.title}
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* TOP */}
+                <div className="admin-management-card-top">
+                  <span
+                    className={`admin-status admin-status-${displayStatus.toLowerCase()}`}
+                  >
+                    {displayStatus}
+                  </span>
+
+                  <span>#{campaign.id}</span>
+                </div>
+
+                {/* TITLE */}
+                <h3>{campaign.title}</h3>
+
+                {/* DESCRIPTION */}
+                <p>{campaign.description || "No campaign description."}</p>
+
+                {/* RAISED */}
+                <div className="admin-progress-info">
+                  <span>Raised</span>
+
+                  <strong>{formatCurrency(raised)}</strong>
+                </div>
+
+                {/* PROGRESS */}
+                <div className="admin-progress-track">
+                  <div
+                    className="admin-progress-bar"
+                    style={{
+                      width: `${progress}%`,
+                    }}
+                  />
+                </div>
+
+                <div className="admin-campaign-progress-text">
+                  {progress.toFixed(0)}% of target
+                </div>
+
+                {/* META */}
+                <div className="admin-management-meta">
+                  <span>Target: {formatCurrency(target)}</span>
+
+                  <span>Donations: {campaign._count?.donations || 0}</span>
+                </div>
+
+                {/* DATES */}
+                {(campaign.startDate || campaign.endDate) && (
+                  <div className="admin-campaign-dates">
+                    {campaign.startDate && (
+                      <span>Start: {formatDateTime(campaign.startDate)}</span>
+                    )}
+
+                    {campaign.endDate && (
+                      <span>End: {formatDateTime(campaign.endDate)}</span>
+                    )}
+                  </div>
+                )}
+
+                {/* ACTIONS */}
+                <div className="admin-campaign-actions">
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    onClick={() => openEditCampaignModal(campaign)}
+                  >
+                    <Edit size={15} />
+                    Edit
+                  </button>
+
+                  {displayStatus !== "COMPLETED" &&
+                    displayStatus !== "CANCELLED" && (
+                      <button
+                        type="button"
+                        className="admin-icon-button admin-danger-button"
+                        title="Cancel campaign"
+                        onClick={() => handleCancelCampaign(campaign)}
+                      >
+                        <XCircle size={16} />
+                      </button>
+                    )}
+
+                  <button
+                    type="button"
+                    className="admin-icon-button admin-danger-button"
+                    title="Delete campaign"
+                    onClick={() => handleDeleteCampaign(campaign)}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </div>
-
-              <h3>{campaign.title}</h3>
-
-              <p>{campaign.description || "No campaign description."}</p>
-
-              <div className="admin-progress-info">
-                <span>Raised</span>
-
-                <strong>{formatCurrency(campaign.raisedAmount)}</strong>
-              </div>
-
-              <div className="admin-progress-track">
-                <div
-                  className="admin-progress-bar"
-                  style={{
-                    width: `${Math.min(
-                      100,
-                      Number(
-                        campaign.targetAmount
-                          ? (Number(campaign.raisedAmount) /
-                              Number(campaign.targetAmount)) *
-                              100
-                          : 0,
-                      ),
-                    )}%`,
-                  }}
-                />
-              </div>
-
-              <div className="admin-management-meta">
-                <span>Target: {formatCurrency(campaign.targetAmount)}</span>
-
-                <span>Donations: {campaign._count?.donations || 0}</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {!campaigns.length && (
           <div className="admin-empty-card">No campaigns found.</div>
+        )}
+
+        {/* CAMPAIGN MODAL */}
+        {showCampaignModal && (
+          <div className="admin-modal-backdrop">
+            <div className="admin-modal admin-campaign-modal">
+              <div className="admin-modal-header">
+                <div>
+                  <span>CAMPAIGN MANAGEMENT</span>
+
+                  <h2>{editingCampaign ? "Edit Campaign" : "Add Campaign"}</h2>
+                </div>
+
+                <button
+                  type="button"
+                  className="admin-modal-close"
+                  onClick={() => setShowCampaignModal(false)}
+                  disabled={campaignSaving}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <form
+                className="admin-campaign-form"
+                onSubmit={handleSaveCampaign}
+              >
+                {/* TITLE */}
+                <div className="admin-form-group">
+                  <label>Campaign Title *</label>
+
+                  <input
+                    type="text"
+                    name="title"
+                    value={campaignForm.title}
+                    onChange={handleCampaignFormChange}
+                    placeholder="e.g. Diwali Food Support 2026"
+                    required
+                  />
+                </div>
+
+                {/* DESCRIPTION */}
+                <div className="admin-form-group">
+                  <label>Description</label>
+
+                  <textarea
+                    name="description"
+                    value={campaignForm.description}
+                    onChange={handleCampaignFormChange}
+                    placeholder="Describe the purpose of this campaign..."
+                    rows="4"
+                  />
+                </div>
+
+                {/* IMAGE */}
+                <div className="admin-form-group">
+                  <label>Campaign Image URL</label>
+
+                  <input
+                    type="url"
+                    name="image"
+                    value={campaignForm.image}
+                    onChange={handleCampaignFormChange}
+                    placeholder="https://example.com/campaign-image.jpg"
+                  />
+                </div>
+
+                {/* TARGET */}
+                <div className="admin-form-group">
+                  <label>Target Amount *</label>
+
+                  <input
+                    type="number"
+                    name="targetAmount"
+                    value={campaignForm.targetAmount}
+                    onChange={handleCampaignFormChange}
+                    min="1"
+                    step="0.01"
+                    placeholder="e.g. 200000"
+                    required
+                  />
+                </div>
+
+                {/* DATES */}
+                <div className="admin-form-row">
+                  <div className="admin-form-group">
+                    <label>Start Date & Time</label>
+
+                    <input
+                      type="datetime-local"
+                      name="startDate"
+                      value={campaignForm.startDate}
+                      onChange={handleCampaignFormChange}
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label>End Date & Time</label>
+
+                    <input
+                      type="datetime-local"
+                      name="endDate"
+                      value={campaignForm.endDate}
+                      onChange={handleCampaignFormChange}
+                    />
+                  </div>
+                </div>
+
+                {/* STATUS */}
+                <div className="admin-form-group">
+                  <label>Status</label>
+
+                  <select
+                    name="status"
+                    value={campaignForm.status}
+                    onChange={handleCampaignFormChange}
+                  >
+                    <option value="DRAFT">Draft</option>
+
+                    <option value="ACTIVE">Active / Published</option>
+
+                    <option value="CANCELLED">Cancelled</option>
+                  </select>
+
+                  <small className="admin-form-help">
+                    Scheduled and completed states are determined automatically
+                    from the campaign dates.
+                  </small>
+                </div>
+
+                {/* FOOTER */}
+                <div className="admin-modal-footer">
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    onClick={() => setShowCampaignModal(false)}
+                    disabled={campaignSaving}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="admin-primary-button"
+                    disabled={campaignSaving}
+                  >
+                    {campaignSaving
+                      ? "Saving..."
+                      : editingCampaign
+                        ? "Update Campaign"
+                        : "Create Campaign"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         )}
       </div>
     );
@@ -1060,16 +1973,29 @@ function Admin() {
   ===================================================== */
 
   const renderEvents = () => {
+    const now = new Date();
+
     return (
       <div className="admin-content-section">
+        {/* HEADER */}
         <div className="admin-section-toolbar">
           <div>
             <h2>Events</h2>
 
-            <p>Monitor volunteer events and registrations.</p>
+            <p>Create and manage events visible to users and volunteers.</p>
           </div>
+
+          <button
+            type="button"
+            className="admin-primary-button"
+            onClick={openCreateEventModal}
+          >
+            <Plus size={18} />
+            Add Event
+          </button>
         </div>
 
+        {/* EVENT TABLE */}
         <div className="admin-panel">
           <div className="admin-table-wrapper">
             <table className="admin-table">
@@ -1077,41 +2003,128 @@ function Admin() {
                 <tr>
                   <th>Event</th>
                   <th>Location</th>
-                  <th>Date</th>
+                  <th>Schedule</th>
                   <th>Capacity</th>
                   <th>Registrations</th>
                   <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
               <tbody>
                 {events.length ? (
-                  events.map((event) => (
-                    <tr key={event.id}>
-                      <td>
-                        <strong>{event.title}</strong>
-                      </td>
+                  events.map((event) => {
+                    const displayStatus = getEventStatus(event, now);
 
-                      <td>{event.location || event.city || "—"}</td>
+                    const registrationCount = event._count?.registrations || 0;
 
-                      <td>{formatDate(event.startDate)}</td>
+                    const hasCapacity =
+                      event.capacity !== null && event.capacity !== undefined;
 
-                      <td>{event.capacity || "Unlimited"}</td>
+                    const isFull =
+                      hasCapacity &&
+                      registrationCount >= Number(event.capacity);
 
-                      <td>{event._count?.registrations || 0}</td>
+                    return (
+                      <tr key={event.id}>
+                        {/* EVENT */}
+                        <td>
+                          <strong>{event.title}</strong>
 
-                      <td>
-                        <span
-                          className={`admin-status admin-status-${event.status.toLowerCase()}`}
-                        >
-                          {event.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
+                          {event.description && (
+                            <div className="admin-event-description">
+                              {event.description}
+                            </div>
+                          )}
+                        </td>
+
+                        {/* LOCATION */}
+                        <td>
+                          {event.location || event.city || "—"}
+
+                          {(event.city || event.state) && (
+                            <small>
+                              {event.city || ""}
+                              {event.city && event.state ? ", " : ""}
+                              {event.state || ""}
+                            </small>
+                          )}
+                        </td>
+
+                        {/* SCHEDULE */}
+                        <td>
+                          <div className="admin-event-schedule">
+                            <strong>{formatDateTime(event.startDate)}</strong>
+
+                            {event.endDate && (
+                              <small>to {formatDateTime(event.endDate)}</small>
+                            )}
+                          </div>
+                        </td>
+
+                        {/* CAPACITY */}
+                        <td>{hasCapacity ? event.capacity : "Unlimited"}</td>
+
+                        {/* REGISTRATIONS */}
+                        <td>
+                          <strong>{registrationCount}</strong>
+
+                          {hasCapacity && <small> / {event.capacity}</small>}
+
+                          {isFull && (
+                            <span className="admin-event-full">Full</span>
+                          )}
+                        </td>
+
+                        {/* STATUS */}
+                        <td>
+                          <span
+                            className={`admin-status admin-status-${displayStatus.toLowerCase()}`}
+                          >
+                            {displayStatus}
+                          </span>
+                        </td>
+
+                        {/* ACTIONS */}
+                        <td>
+                          <div className="admin-event-actions">
+                            <button
+                              type="button"
+                              className="admin-icon-button"
+                              title="Edit event"
+                              onClick={() => openEditEventModal(event)}
+                            >
+                              <Edit size={16} />
+                            </button>
+
+                            {displayStatus !== "COMPLETED" &&
+                              displayStatus !== "CANCELLED" && (
+                                <button
+                                  type="button"
+                                  className="admin-icon-button admin-danger-button"
+                                  title="Cancel event"
+                                  onClick={() => handleCancelEvent(event)}
+                                >
+                                  <XCircle size={16} />
+                                </button>
+                              )}
+
+                            <button
+                              type="button"
+                              className="admin-icon-button admin-danger-button"
+                              title="Delete event"
+                              onClick={() => handleDeleteEvent(event)}
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
-                    <td colSpan="6" className="admin-empty">
+                    <td colSpan="7" className="admin-empty">
                       No events found.
                     </td>
                   </tr>
@@ -1120,6 +2133,203 @@ function Admin() {
             </table>
           </div>
         </div>
+
+        {/* EVENT MODAL */}
+        {showEventModal && (
+          <div className="admin-modal-backdrop">
+            <div className="admin-modal admin-event-modal">
+              <div className="admin-modal-header">
+                <div>
+                  <span>EVENT MANAGEMENT</span>
+
+                  <h2>{editingEvent ? "Edit Event" : "Add Event"}</h2>
+
+                  <p>
+                    {editingEvent
+                      ? "Update the event details."
+                      : "Create a new volunteer event."}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="admin-modal-close"
+                  onClick={() => setShowEventModal(false)}
+                  disabled={eventSaving}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <form className="admin-event-form" onSubmit={handleSaveEvent}>
+                {/* TITLE */}
+                <div className="admin-form-group">
+                  <label>Event Title *</label>
+
+                  <input
+                    type="text"
+                    name="title"
+                    value={eventForm.title}
+                    onChange={handleEventFormChange}
+                    placeholder="e.g. Community Food Distribution"
+                    required
+                  />
+                </div>
+
+                {/* DESCRIPTION */}
+                <div className="admin-form-group">
+                  <label>Description</label>
+
+                  <textarea
+                    name="description"
+                    value={eventForm.description}
+                    onChange={handleEventFormChange}
+                    placeholder="Describe the event..."
+                    rows="4"
+                  />
+                </div>
+
+                {/* IMAGE */}
+                <div className="admin-form-group">
+                  <label>Event Image URL</label>
+
+                  <input
+                    type="url"
+                    name="image"
+                    value={eventForm.image}
+                    onChange={handleEventFormChange}
+                    placeholder="https://example.com/event-image.jpg"
+                  />
+                </div>
+
+                {/* LOCATION + CITY */}
+                <div className="admin-form-row">
+                  <div className="admin-form-group">
+                    <label>Location</label>
+
+                    <input
+                      type="text"
+                      name="location"
+                      value={eventForm.location}
+                      onChange={handleEventFormChange}
+                      placeholder="Venue / address"
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label>City</label>
+
+                    <input
+                      type="text"
+                      name="city"
+                      value={eventForm.city}
+                      onChange={handleEventFormChange}
+                      placeholder="City"
+                    />
+                  </div>
+                </div>
+
+                {/* STATE + CAPACITY */}
+                <div className="admin-form-row">
+                  <div className="admin-form-group">
+                    <label>State</label>
+
+                    <input
+                      type="text"
+                      name="state"
+                      value={eventForm.state}
+                      onChange={handleEventFormChange}
+                      placeholder="State"
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label>Capacity</label>
+
+                    <input
+                      type="number"
+                      name="capacity"
+                      value={eventForm.capacity}
+                      onChange={handleEventFormChange}
+                      min="1"
+                      step="1"
+                      placeholder="Leave empty for unlimited"
+                    />
+                  </div>
+                </div>
+
+                {/* DATES */}
+                <div className="admin-form-row">
+                  <div className="admin-form-group">
+                    <label>Start Date & Time *</label>
+
+                    <input
+                      type="datetime-local"
+                      name="startDate"
+                      value={eventForm.startDate}
+                      onChange={handleEventFormChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label>End Date & Time *</label>
+
+                    <input
+                      type="datetime-local"
+                      name="endDate"
+                      value={eventForm.endDate}
+                      onChange={handleEventFormChange}
+                      required
+                    />
+
+                    <small className="admin-form-help">
+                      The event automatically becomes COMPLETED after this time.
+                    </small>
+                  </div>
+                </div>
+
+                {/* AUTOMATIC STATUS INFO */}
+                <div className="admin-event-status-info">
+                  <span>Automatic Status</span>
+
+                  <strong>
+                    {editingEvent ? getEventStatus(editingEvent) : "UPCOMING"}
+                  </strong>
+
+                  <p>
+                    Event status is determined automatically from its start and
+                    end date/time. Only cancellation is manually controlled.
+                  </p>
+                </div>
+
+                {/* FOOTER */}
+                <div className="admin-modal-footer">
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    onClick={() => setShowEventModal(false)}
+                    disabled={eventSaving}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="admin-primary-button"
+                    disabled={eventSaving}
+                  >
+                    {eventSaving
+                      ? "Saving..."
+                      : editingEvent
+                        ? "Update Event"
+                        : "Create Event"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -1177,7 +2387,7 @@ function Admin() {
   };
 
   /* =====================================================
-     RENDER AUDIT
+     RENDER AUDIT LOGS
   ===================================================== */
 
   const renderAuditLogs = () => {
@@ -1245,6 +2455,7 @@ function Admin() {
       return (
         <div className="admin-loading">
           <div className="admin-spinner" />
+
           <p>Loading admin data...</p>
         </div>
       );
@@ -1280,9 +2491,16 @@ function Admin() {
     }
   };
 
+  /* =====================================================
+     MAIN ADMIN LAYOUT
+  ===================================================== */
+
   return (
     <div className="admin-dashboard">
-      {/* MOBILE OVERLAY */}
+      {/* =================================================
+         MOBILE OVERLAY
+      ================================================= */}
+
       {sidebarOpen && (
         <div
           className="admin-sidebar-overlay"
@@ -1290,10 +2508,14 @@ function Admin() {
         />
       )}
 
-      {/* SIDEBAR */}
+      {/* =================================================
+         SIDEBAR
+      ================================================= */}
+
       <aside
         className={`admin-sidebar ${sidebarOpen ? "admin-sidebar-open" : ""}`}
       >
+        {/* BRAND */}
         <div className="admin-brand">
           <div className="admin-brand-icon">
             <ShieldCheck size={22} />
@@ -1313,6 +2535,7 @@ function Admin() {
           </button>
         </div>
 
+        {/* NAVIGATION */}
         <nav className="admin-navigation">
           <span className="admin-navigation-title">MANAGEMENT</span>
 
@@ -1342,7 +2565,18 @@ function Admin() {
           })}
         </nav>
 
+        {/* SIDEBAR FOOTER */}
         <div className="admin-sidebar-footer">
+          <button
+            className="admin-back-website-button"
+            onClick={handleBackToWebsite}
+          >
+            <Home size={18} />
+
+            <span>Back to Home</span>
+          </button>
+
+          {/* ADMIN PROFILE */}
           <div className="admin-admin-profile">
             <div className="admin-avatar">
               {user?.name?.charAt(0)?.toUpperCase()}
@@ -1355,13 +2589,17 @@ function Admin() {
             </div>
           </div>
 
+          {/* LOGOUT */}
           <button className="admin-logout-button" onClick={handleLogout}>
             Logout
           </button>
         </div>
       </aside>
 
-      {/* MAIN */}
+      {/* =================================================
+         MAIN CONTENT
+      ================================================= */}
+
       <main className="admin-main">
         {/* TOPBAR */}
         <header className="admin-topbar">
@@ -1405,11 +2643,14 @@ function Admin() {
           </div>
         </header>
 
-        {/* CONTENT */}
+        {/* PAGE CONTENT */}
         <section className="admin-page-content">{renderContent()}</section>
       </main>
 
-      {/* APPLICATION MODAL */}
+      {/* =================================================
+         VOLUNTEER APPLICATION MODAL
+      ================================================= */}
+
       {selectedApplication && (
         <div
           className="admin-modal-backdrop"
@@ -1435,16 +2676,19 @@ function Admin() {
               <div className="admin-detail-grid">
                 <div className="admin-detail-item">
                   <span>Name</span>
+
                   <strong>{selectedApplication.user.name}</strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Email</span>
+
                   <strong>{selectedApplication.user.email}</strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Phone</span>
+
                   <strong>
                     {selectedApplication.user.phone || "Not provided"}
                   </strong>
@@ -1452,11 +2696,13 @@ function Admin() {
 
                 <div className="admin-detail-item">
                   <span>Applied</span>
+
                   <strong>{formatDate(selectedApplication.createdAt)}</strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Skills</span>
+
                   <strong>
                     {selectedApplication.skills || "Not provided"}
                   </strong>
@@ -1464,6 +2710,7 @@ function Admin() {
 
                 <div className="admin-detail-item">
                   <span>Preferred Area</span>
+
                   <strong>
                     {selectedApplication.preferredArea || "Not provided"}
                   </strong>
@@ -1471,6 +2718,7 @@ function Admin() {
 
                 <div className="admin-detail-item">
                   <span>Availability</span>
+
                   <strong>
                     {selectedApplication.availability || "Not provided"}
                   </strong>
@@ -1478,6 +2726,7 @@ function Admin() {
 
                 <div className="admin-detail-item">
                   <span>Experience</span>
+
                   <strong>
                     {selectedApplication.experience || "Not provided"}
                   </strong>
@@ -1487,10 +2736,13 @@ function Admin() {
               <div className="admin-detail-long">
                 <span>Motivation</span>
 
-                <p>{selectedApplication.motivation}</p>
+                <p>
+                  {selectedApplication.motivation || "No motivation provided."}
+                </p>
               </div>
             </div>
 
+            {/* APPLICATION ACTIONS */}
             {selectedApplication.status === "PENDING" && (
               <div className="admin-modal-actions">
                 <button

@@ -215,102 +215,149 @@ const About = () => {
         </div>
       </section>
 
-      {/* =====================================================
-          4. FOUNDER SECTION
-      ===================================================== */}
-
       <section className="founder-section" id="about">
         <div className="container">
-          {/* ================= FOUNDER HEADING ================= */}
-
           <div className="founder-heading">
             <span className="section-badge">OUR FOUNDER</span>
-
             <h2>
-              A Simple Belief.
-              <span> A Meaningful Mission.</span>
+              Meet the <span>Founder</span>
             </h2>
-
             <p>
-              Hanumat Seva was founded with the belief that service does not
-              have to be complicated. Sometimes, meaningful change begins with
-              one simple act of kindness.
+              A simple belief in helping others grew into a vision for building
+              a transparent and compassionate food-support movement.
             </p>
           </div>
 
-          {/* ================= FOUNDER CARD ================= */}
-
-          <div className="founder-card">
-            {/* ================= CARD HEADER ================= */}
-
-            <div className="founder-card-top">
-              {/* FOUNDER MARK */}
-
-              <div className="founder-mark">
-                <span>HS</span>
-              </div>
-
-              {/* FOUNDER INFORMATION */}
-
-              <div className="founder-intro">
-                <span className="founder-label">FOUNDER — HANUMAT SEVA</span>
-
-                <h3>Manisha Nigam</h3>
-
-                <span className="founder-role">Founder &amp; Visionary</span>
-              </div>
-
-              {/* ESTABLISHED YEAR */}
-
-              <div className="founder-year">
-                <span>EST.</span>
-
-                <strong>2026</strong>
+          <div className="founder-profile">
+            <div className="founder-photo">
+              <img
+                src="/images/founder.jpeg"
+                alt="Manisha Nigam, Founder of Hanumat Seva Foundation"
+              />
+              <div className="founder-photo-badge">
+                <span>FOUNDER</span>
+                <strong>Hanumat Seva Foundation</strong>
               </div>
             </div>
 
-            {/* ================= DIVIDER ================= */}
-
-            <div className="founder-divider"></div>
-
-            {/* ================= FOUNDER MESSAGE ================= */}
-
-            <div className="founder-message">
-              <span className="founder-quote-mark">“</span>
+            <div className="founder-profile-content">
+              <span className="founder-label">MANISHA NIGAM</span>
+              <h3>Founder, Hanumat Seva Foundation</h3>
 
               <p>
-                I believe service should not be complicated. Sometimes helping
-                someone begins with something as simple as sharing a meal.
+                For over a decade, Manisha Nigam has been personally involved in
+                helping people and supporting communities in need in Kanpur.
               </p>
 
               <p>
-                Hanumat Seva was started to bring people together around that
-                simple idea and build a transparent, compassionate community
-                where every contribution can create meaningful impact.
+                Her journey has been driven not by the idea of building an
+                organization, but by a simple human responsibility — if we can
+                help someone, we should.
+              </p>
+
+              <p>
+                Seeing the everyday reality of hunger and food wastage inspired
+                her to think beyond individual acts of help and create a system
+                that could allow many more people to participate.
+              </p>
+
+              <p>
+                Hanumat Seva Foundation is an effort to turn that belief into a
+                larger, organized movement.
               </p>
             </div>
+          </div>
 
-            {/* ================= FOUNDER FOOTER ================= */}
+          <div className="founder-quote">
+            <span className="founder-quote-mark">“</span>
+            <p>
+              Seva does not begin with how much we have. It begins with how much
+              we are willing to share.
+            </p>
+          </div>
 
-            <div className="founder-footer">
-              <div className="founder-footer-item">
-                <span>OUR BELIEF</span>
+          <div className="founder-vision">
+            <div className="founder-vision-content">
+              <span className="founder-label">OUR VISION</span>
+              <h3>What We Want to Build</h3>
 
-                <strong>Service with compassion</strong>
-              </div>
+              <p>
+                We don't want to be just another organization that distributes
+                food.
+              </p>
 
-              <div className="founder-footer-item">
-                <span>OUR APPROACH</span>
+              <p>
+                We want to build an ecosystem where food rescue becomes simple,
+                transparent, and scalable.
+              </p>
 
-                <strong>Simple, transparent &amp; meaningful</strong>
-              </div>
+              <div className="founder-vision-points">
+                <div className="founder-vision-point">
+                  <span>01</span>
+                  <p>
+                    A restaurant should be able to report surplus food in
+                    seconds.
+                  </p>
+                </div>
 
-              <div className="founder-footer-item">
-                <span>FOUNDED</span>
+                <div className="founder-vision-point">
+                  <span>02</span>
+                  <p>A volunteer should be able to find a nearby pickup.</p>
+                </div>
 
-                <strong>2026</strong>
+                <div className="founder-vision-point">
+                  <span>03</span>
+                  <p>An organization should be able to request meals.</p>
+                </div>
+
+                <div className="founder-vision-point">
+                  <span>04</span>
+                  <p>
+                    A donor should be able to see the impact of their
+                    contribution.
+                  </p>
+                </div>
+
+                <div className="founder-vision-point">
+                  <span>05</span>
+                  <p>
+                    Every meal should have a journey that can be understood and
+                    trusted.
+                  </p>
+                </div>
               </div>
             </div>
+
+            <div className="founder-journey">
+              <span>THE JOURNEY</span>
+              <strong>One Meal</strong>
+              <i>↓</i>
+              <strong>One Community</strong>
+              <i>↓</i>
+              <strong>One City</strong>
+              <i>↓</i>
+              <strong>An Entire Movement</strong>
+            </div>
+          </div>
+
+          <div className="founder-promise">
+            <div className="founder-promise-heading">
+              <span className="founder-label">OUR PROMISE</span>
+              <h3>Simple words. A serious commitment.</h3>
+            </div>
+
+            <div className="founder-promise-list">
+              <div>Rescue what can be saved.</div>
+              <div>Share what can be shared.</div>
+              <div>Serve with dignity.</div>
+              <div>Waste less.</div>
+              <div>Feed more.</div>
+            </div>
+          </div>
+
+          <div className="founder-signature">
+            <strong>Hanumat Seva Foundation</strong>
+            <span>Serving Humanity. One Meal at a Time.</span>
           </div>
         </div>
       </section>

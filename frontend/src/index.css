@@ -55,6 +55,7 @@ textarea{
 
 section {
     padding: clamp(2.5rem, 4vw, 4rem) 0;
+    margin-top: 10px;
 }
 
 .container {
@@ -102,6 +103,7 @@ section {
     font-weight: 600;
     transition: var(--transition);
     cursor: pointer;
+    color: var(--primary);
 }
 
 .btn-primary{
