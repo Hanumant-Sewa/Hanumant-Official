@@ -15,8 +15,9 @@ function Donate() {
   const navigate = useNavigate();
 
   const [amount, setAmount] = useState(50);
-  const [frequency, setFrequency] = useState("monthly");
+  const [frequency, setFrequency] = useState("one-time");
   const [paymentMethod, setPaymentMethod] = useState("upi");
+  const [loading, setLoading] = useState(false);
 
   const amounts = [
     {
@@ -37,16 +38,423 @@ function Donate() {
     },
   ];
 
-  const handleContinue = (e) => {
+  // ==========================================
+  // LOAD RAZORPAY CHECKOUT
+  // ==========================================
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const existingScript = document.querySelector(
+        'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
+      );
+
+      if (existingScript) {
+        resolve(true);
+        return;
+      }
+
+      const script = document.createElement("script");
+
+      script.src =
+        "https://checkout.razorpay.com/v1/checkout.js";
+
+      script.onload = () => {
+        resolve(true);
+      };
+
+      script.onerror = () => {
+        resolve(false);
+      };
+
+      document.body.appendChild(script);
+    });
+  };
+
+  // ==========================================
+  // CREATE ORDER + OPEN RAZORPAY
+  // ==========================================
+
+  const handleContinue = async (e) => {
     e.preventDefault();
 
-    navigate("/donate/checkout", {
-      state: {
-        amount,
-        frequency,
-        paymentMethod,
-      },
-    });
+    if (!amount || Number(amount) < 50) {
+      alert("Minimum donation amount is ₹50");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // ========================================
+      // LOAD RAZORPAY
+      // ========================================
+
+      const razorpayLoaded = await loadRazorpayScript();
+
+      if (!razorpayLoaded) {
+        alert(
+          "Razorpay failed to load. Please check your internet connection."
+        );
+
+        setLoading(false);
+        return;
+      }
+
+      // ========================================
+      // CREATE ORDER FROM BACKEND
+      // ========================================
+
+      const orderResponse = await fetch(
+        "http://localhost:5000/api/donations/create-order",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          credentials: "include",
+
+          body: JSON.stringify({
+            amount: Number(amount),
+            frequency,
+            paymentMethod,
+          }),
+        }
+      );
+
+      // ========================================
+      // CHECK RESPONSE TYPE
+      // ========================================
+
+      const contentType =
+        orderResponse.headers.get("content-type");
+
+      if (!contentType?.includes("application/json")) {
+        const text = await orderResponse.text();
+
+        console.error(
+          "Backend returned non-JSON response:",
+          text
+        );
+
+        throw new Error(
+          "Backend returned an invalid response. Please make sure the backend is running on port 5000."
+        );
+      }
+
+      const orderData = await orderResponse.json();
+
+      console.log(
+        "Create Order Response:",
+        orderData
+      );
+
+      // ========================================
+      // CHECK ORDER RESPONSE
+      // ========================================
+
+      if (
+        !orderResponse.ok ||
+        !orderData.success
+      ) {
+        alert(
+          orderData.message ||
+            "Failed to create donation order."
+        );
+
+        setLoading(false);
+        return;
+      }
+
+      // ========================================
+      // RAZORPAY CHECKOUT OPTIONS
+      // ========================================
+
+      const options = {
+        key: orderData.keyId,
+
+        amount: orderData.order.amount,
+
+        currency: orderData.order.currency,
+
+        name: "Hanumant Seva Foundation",
+
+        description: "Food Support Donation",
+
+        order_id: orderData.order.id,
+
+        // IMPORTANT:
+        // Preselect the payment method
+        method: paymentMethod,
+
+        // ======================================
+        // CUSTOMER DETAILS
+        // ======================================
+
+        prefill: {
+          name: orderData.user?.name || "",
+
+          email: orderData.user?.email || "",
+
+          contact: orderData.user?.phone || "",
+        },
+
+        // ======================================
+        // NOTES
+        // ======================================
+
+        notes: {
+          donationId: String(
+            orderData.donation.id
+          ),
+
+          frequency: frequency,
+
+          paymentMethod: paymentMethod,
+        },
+
+        // ======================================
+        // THEME
+        // ======================================
+
+        theme: {
+          color: "#D97706",
+        },
+
+        // ======================================
+        // PAYMENT SUCCESS
+        // ======================================
+
+        handler: async function (response) {
+          console.log(
+            "Razorpay Payment Response:",
+            response
+          );
+
+          try {
+            // ==================================
+            // VERIFY PAYMENT
+            // ==================================
+
+            const verifyResponse = await fetch(
+              "http://localhost:5000/api/donations/verify-payment",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json",
+                },
+
+                credentials: "include",
+
+                body: JSON.stringify({
+                  razorpay_order_id:
+                    response.razorpay_order_id,
+
+                  razorpay_payment_id:
+                    response.razorpay_payment_id,
+
+                  razorpay_signature:
+                    response.razorpay_signature,
+
+                  donationId:
+                    orderData.donation.id,
+                }),
+              }
+            );
+
+            // ==================================
+            // CHECK VERIFICATION RESPONSE
+            // ==================================
+
+            const verifyContentType =
+              verifyResponse.headers.get(
+                "content-type"
+              );
+
+            if (
+              !verifyContentType?.includes(
+                "application/json"
+              )
+            ) {
+              const text =
+                await verifyResponse.text();
+
+              console.error(
+                "Verification returned non-JSON:",
+                text
+              );
+
+              throw new Error(
+                "Payment verification returned an invalid response."
+              );
+            }
+
+            const verifyData =
+              await verifyResponse.json();
+
+            console.log(
+              "Payment Verification Response:",
+              verifyData
+            );
+
+            // ==================================
+            // CHECK VERIFICATION
+            // ==================================
+
+            if (
+              !verifyResponse.ok ||
+              !verifyData.success
+            ) {
+              alert(
+                verifyData.message ||
+                  "Payment verification failed."
+              );
+
+              setLoading(false);
+              return;
+            }
+
+            // ==================================
+            // PAYMENT SUCCESS
+            // ==================================
+
+            alert(
+              "Donation successful! Thank you for your support ❤️"
+            );
+
+            // ==================================
+            // GO TO RECEIPT
+            // ==================================
+
+            navigate(
+              `/donate/receipt/${verifyData.donation.id}`,
+              {
+                state: {
+                  amount: Number(
+                    verifyData.donation.amount
+                  ),
+
+                  frequency:
+                    verifyData.donation
+                      .frequency,
+
+                  paymentMethod:
+                    verifyData.donation
+                      .paymentMethod,
+
+                  status:
+                    verifyData.donation.status,
+
+                  transactionId:
+                    verifyData.donation
+                      .transactionId,
+
+                  paymentId:
+                    verifyData.donation
+                      .paymentId,
+
+                  orderId:
+                    verifyData.donation
+                      .orderId,
+
+                  receiptNumber:
+                    verifyData.donation
+                      .receiptNumber,
+
+                  donatedAt:
+                    verifyData.donation
+                      .donatedAt,
+                },
+              }
+            );
+          } catch (error) {
+            console.error(
+              "Payment Verification Error:",
+              error
+            );
+
+            alert(
+              "Payment completed, but verification failed. Please contact support."
+            );
+          } finally {
+            setLoading(false);
+          }
+        },
+
+        // ========================================
+        // PAYMENT MODAL CLOSED
+        // ========================================
+
+        modal: {
+          ondismiss: function () {
+            console.log(
+              "Razorpay checkout closed."
+            );
+
+            setLoading(false);
+          },
+        },
+      };
+
+      // ========================================
+      // CHECK RAZORPAY
+      // ========================================
+
+      if (!window.Razorpay) {
+        throw new Error(
+          "Razorpay Checkout is not available."
+        );
+      }
+
+      // ========================================
+      // CREATE RAZORPAY INSTANCE
+      // ========================================
+
+      const razorpay =
+        new window.Razorpay(options);
+
+      // ========================================
+      // PAYMENT FAILED
+      // ========================================
+
+      razorpay.on(
+        "payment.failed",
+        function (response) {
+          console.error(
+            "Razorpay Payment Failed:",
+            response.error
+          );
+
+          alert(
+            response.error?.description ||
+              "Payment failed. Please try again."
+          );
+
+          setLoading(false);
+        }
+      );
+
+      // ========================================
+      // OPEN RAZORPAY
+      // ========================================
+
+      razorpay.open();
+    } catch (error) {
+      console.error(
+        "Donation Payment Error:",
+        error
+      );
+
+      alert(
+        error.message ||
+          "Something went wrong while starting the payment."
+      );
+
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,7 +465,6 @@ function Donate() {
       ========================== */}
 
       <section className="internal-hero">
-
         <div className="container">
 
           <span className="section-badge">
@@ -69,14 +476,13 @@ function Donate() {
           </h1>
 
           <p>
-            Choose the amount you are comfortable contributing.
-            Every contribution makes a difference.
+            Choose the amount you are comfortable
+            contributing. Every contribution makes a
+            difference.
           </p>
 
         </div>
-
       </section>
-
 
       {/* =========================
           DONATION CONTENT
@@ -86,10 +492,8 @@ function Donate() {
 
         <div className="donation-container">
 
-
           {/* =========================
               LEFT SIDE
-              YOUR CONTRIBUTION
           ========================== */}
 
           <aside className="donation-summary">
@@ -101,7 +505,6 @@ function Donate() {
             <strong className="summary-amount">
               ₹{amount || 0}
             </strong>
-
 
             <div className="summary-line">
 
@@ -116,7 +519,6 @@ function Donate() {
               </b>
 
             </div>
-
 
             <div className="summary-line">
 
@@ -134,7 +536,6 @@ function Donate() {
 
             </div>
 
-
             <div className="summary-line">
 
               <span>
@@ -147,26 +548,22 @@ function Donate() {
 
             </div>
 
-
             <div className="summary-divider"></div>
-
 
             <div className="summary-icon">
               <Heart size={28} />
             </div>
-
 
             <h3>
               Your support creates
               <span> meaningful impact.</span>
             </h3>
 
-
             <p>
-              Your contribution helps support food-related
-              service activities and community initiatives.
+              Your contribution helps support
+              food-related service activities and
+              community initiatives.
             </p>
-
 
             <div className="summary-security">
 
@@ -188,16 +585,11 @@ function Donate() {
 
           </aside>
 
-
           {/* =========================
               RIGHT SIDE
-              MAIN CONTRIBUTION
           ========================== */}
 
           <div className="donation-left">
-
-
-            {/* DONATION HEADER */}
 
             <div className="donation-header">
 
@@ -206,11 +598,11 @@ function Donate() {
               </h2>
 
               <p>
-                Choose the amount you are comfortable contributing.
+                Choose the amount you are comfortable
+                contributing.
               </p>
 
             </div>
-
 
             {/* =========================
                 CONTRIBUTION TYPE
@@ -225,11 +617,12 @@ function Donate() {
                     ? "frequency-button active"
                     : "frequency-button"
                 }
-                onClick={() => setFrequency("one-time")}
+                onClick={() =>
+                  setFrequency("one-time")
+                }
               >
                 One Time
               </button>
-
 
               <button
                 type="button"
@@ -238,13 +631,14 @@ function Donate() {
                     ? "frequency-button active"
                     : "frequency-button"
                 }
-                onClick={() => setFrequency("monthly")}
+                onClick={() =>
+                  setFrequency("monthly")
+                }
               >
                 Monthly
               </button>
 
             </div>
-
 
             {/* =========================
                 AMOUNT SECTION
@@ -255,7 +649,6 @@ function Donate() {
               <h3>
                 Select Contribution Amount
               </h3>
-
 
               <div className="donation-options">
 
@@ -269,7 +662,9 @@ function Donate() {
                         ? "donation-card selected"
                         : "donation-card"
                     }
-                    onClick={() => setAmount(item.value)}
+                    onClick={() =>
+                      setAmount(item.value)
+                    }
                   >
 
                     {amount === item.value && (
@@ -279,14 +674,11 @@ function Donate() {
                       />
                     )}
 
-
                     <Heart size={21} />
-
 
                     <strong>
                       ₹{item.value}
                     </strong>
-
 
                     <span>
                       {item.title}
@@ -298,10 +690,7 @@ function Donate() {
 
               </div>
 
-
-              {/* =========================
-                  CUSTOM AMOUNT
-              ========================== */}
+              {/* CUSTOM AMOUNT */}
 
               <div className="custom-donation">
 
@@ -309,13 +698,11 @@ function Donate() {
                   Custom Amount
                 </label>
 
-
                 <div className="amount-input">
 
                   <span>
                     ₹
                   </span>
-
 
                   <input
                     type="number"
@@ -324,16 +711,21 @@ function Donate() {
                     value={amount}
                     onChange={(e) => {
 
-                      const value = e.target.value;
+                      const value =
+                        e.target.value;
 
                       if (value === "") {
                         setAmount("");
                         return;
                       }
 
-                      const numberValue = Number(value);
+                      const numberValue =
+                        Number(value);
 
-                      if (numberValue >= 50) {
+                      if (
+                        numberValue >= 50 &&
+                        numberValue <= 1000000
+                      ) {
                         setAmount(numberValue);
                       }
 
@@ -342,22 +734,20 @@ function Donate() {
 
                 </div>
 
-
                 <small>
-                  Choose an amount from ₹50 to ₹10,00,000.
+                  Choose an amount from ₹50 to
+                  ₹10,00,000.
                 </small>
 
               </div>
 
             </div>
 
-
             {/* =========================
                 PAYMENT SECTION
             ========================== */}
 
             <div className="payment-section">
-
 
               <div className="payment-title">
 
@@ -373,7 +763,6 @@ function Donate() {
 
                 </div>
 
-
                 <span className="secure-payment">
 
                   <Lock size={14} />
@@ -384,13 +773,9 @@ function Donate() {
 
               </div>
 
-
-              {/* =========================
-                  PAYMENT METHODS
-              ========================== */}
+              {/* PAYMENT METHODS */}
 
               <div className="payment-methods">
-
 
                 {/* UPI */}
 
@@ -401,7 +786,9 @@ function Donate() {
                       ? "payment-method active"
                       : "payment-method"
                   }
-                  onClick={() => setPaymentMethod("upi")}
+                  onClick={() =>
+                    setPaymentMethod("upi")
+                  }
                 >
 
                   <Smartphone size={19} />
@@ -409,7 +796,6 @@ function Donate() {
                   UPI
 
                 </button>
-
 
                 {/* CARD */}
 
@@ -420,7 +806,9 @@ function Donate() {
                       ? "payment-method active"
                       : "payment-method"
                   }
-                  onClick={() => setPaymentMethod("card")}
+                  onClick={() =>
+                    setPaymentMethod("card")
+                  }
                 >
 
                   <CreditCard size={19} />
@@ -428,7 +816,6 @@ function Donate() {
                   Card
 
                 </button>
-
 
                 {/* NET BANKING */}
 
@@ -452,221 +839,69 @@ function Donate() {
 
               </div>
 
+              {/* PAYMENT INFORMATION */}
 
-              {/* =========================
-                  PAYMENT FORM
-              ========================== */}
+              <div className="payment-form">
 
-              <form
-                className="payment-form"
-                onSubmit={handleContinue}
-              >
+                <div className="form-group">
 
+                  <label>
+                    Payment Information
+                  </label>
 
-                {/* =====================
-                    UPI FORM
-                ====================== */}
+                  <div className="payment-input">
 
-                {paymentMethod === "upi" && (
-
-                  <div className="form-group">
-
-                    <label>
-                      UPI ID
-                    </label>
-
-
-                    <div className="payment-input">
-
+                    {paymentMethod === "upi" && (
                       <Smartphone size={18} />
+                    )}
 
-                      <input
-                        type="text"
-                        placeholder="example@upi"
-                        required
-                      />
+                    {paymentMethod === "card" && (
+                      <CreditCard size={18} />
+                    )}
 
-                    </div>
-
-
-                    <small>
-                      Enter your registered UPI ID.
-                    </small>
-
-                  </div>
-
-                )}
-
-
-                {/* =====================
-                    CARD FORM
-                ====================== */}
-
-                {paymentMethod === "card" && (
-
-                  <>
-
-                    <div className="form-group">
-
-                      <label>
-                        Card Number
-                      </label>
-
-
-                      <div className="payment-input">
-
-                        <CreditCard size={18} />
-
-                        <input
-                          type="text"
-                          placeholder="1234 5678 9012 3456"
-                          maxLength="19"
-                          required
-                        />
-
-                      </div>
-
-                    </div>
-
-
-                    <div className="card-row">
-
-                      <div className="form-group">
-
-                        <label>
-                          Expiry Date
-                        </label>
-
-
-                        <div className="payment-input">
-
-                          <input
-                            type="text"
-                            placeholder="MM/YY"
-                            maxLength="5"
-                            required
-                          />
-
-                        </div>
-
-                      </div>
-
-
-                      <div className="form-group">
-
-                        <label>
-                          CVV
-                        </label>
-
-
-                        <div className="payment-input">
-
-                          <input
-                            type="password"
-                            placeholder="CVV"
-                            maxLength="3"
-                            required
-                          />
-
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                  </>
-
-                )}
-
-
-                {/* =====================
-                    NET BANKING FORM
-                ====================== */}
-
-                {paymentMethod === "netbanking" && (
-
-                  <div className="form-group">
-
-                    <label>
-                      Select Your Bank
-                    </label>
-
-
-                    <div className="payment-input">
-
+                    {paymentMethod === "netbanking" && (
                       <Building2 size={18} />
+                    )}
 
+                    <span>
 
-                      <select
-                        required
-                        defaultValue=""
-                      >
+                      {paymentMethod === "upi"
+                        ? "UPI payment will be handled securely by Razorpay."
+                        : paymentMethod === "card"
+                        ? "Card details will be entered securely in Razorpay Checkout."
+                        : "Your bank will be selected securely in Razorpay Checkout."}
 
-                        <option
-                          value=""
-                          disabled
-                        >
-                          Select your bank
-                        </option>
-
-
-                        <option value="sbi">
-                          State Bank of India
-                        </option>
-
-
-                        <option value="hdfc">
-                          HDFC Bank
-                        </option>
-
-
-                        <option value="icici">
-                          ICICI Bank
-                        </option>
-
-
-                        <option value="axis">
-                          Axis Bank
-                        </option>
-
-
-                        <option value="kotak">
-                          Kotak Mahindra Bank
-                        </option>
-
-
-                        <option value="other">
-                          Other Bank
-                        </option>
-
-                      </select>
-
-                    </div>
+                    </span>
 
                   </div>
 
-                )}
+                  <small>
+                    You will enter your payment details
+                    in the secure Razorpay Checkout.
+                  </small>
 
+                </div>
 
-                {/* =====================
-                    CONTINUE BUTTON
-                ====================== */}
+                {/* CONTINUE BUTTON */}
 
                 <button
-                  type="submit"
+                  type="button"
                   className="btn btn-primary payment-submit"
+                  onClick={handleContinue}
+                  disabled={loading}
                 >
 
                   <Heart size={18} />
 
-                  Continue to Payment
+                  {loading
+                    ? "Opening Payment..."
+                    : "Continue to Payment"}
 
                   <ArrowRight size={18} />
 
                 </button>
 
-
-              </form>
+              </div>
 
             </div>
 
