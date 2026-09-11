@@ -222,7 +222,7 @@
         object-fit: contain;
         object-position: center center;
 
-        opacity: 0.62;
+        opacity: 1.62;
     }
 
     /* Existing ::before becomes the readability layer */
@@ -706,8 +706,27 @@
     .activity-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    /*founder section*/
+     .founder-section {
+        padding: 48px 0;
+    }
+    .founder-profile {
+        max-width: 900px;
+        gap: 36px;
+    }
+    .founder-photo {
+        height: 430px;
+    }
+    .founder-profile-content p {
+        font-size: .92rem;
+    }
+    .founder-vision {
+        max-width: 900px;
+    }
+    .founder-promise {
+        max-width: 900px;
+    }
 }
-
 
 /* =========================================================
    3. TABLET
@@ -766,8 +785,8 @@
     }
 
     .hero-art img {
-        object-position: center center;
-        opacity: 0.57;
+        object-position: center;
+        opacity: 3;
     }
 
     .hero-art::before {
@@ -1511,19 +1530,19 @@
         height: 100%;
         max-width: none;
         display: block;
-        object-fit: contain;
+        object-fit: fill;
         object-position: center;
         opacity: 0.48;
         transform: none;
     }
     .hero-art::before {
-        background: linear-gradient(
+        /* background: linear-gradient(
             180deg,
             rgba(255, 250, 243, 0.82) 0%,
             rgba(255, 250, 243, 0.58) 34%,
             rgba(255, 250, 243, 0.58) 68%,
             rgba(255, 250, 243, 0.86) 100%
-        );
+        ); */
     }
     .hero-art::after {
         content: "";
@@ -2382,8 +2401,119 @@
     .activity-grid {
         grid-template-columns: 1fr;
     }
+     .founder-section {
+        padding: 42px 0;
+    }
+    .founder-heading {
+        margin-bottom: 30px;
+    }
+    .founder-heading h2 {
+        font-size: clamp(1.9rem, 7vw, 2.6rem);
+    }
+    .founder-heading p {
+        margin-top: 12px;
+        font-size: .88rem;
+        line-height: 1.65;
+    }
+    .founder-profile {
+        grid-template-columns: 1fr;
+        gap: 26px;
+    }
+    .founder-photo {
+        width: min(100%, 500px);
+        height: 400px;
+        margin: 0 auto;
+        border-radius: 20px;
+    }
+    .founder-photo-badge {
+        left: 16px;
+        bottom: 16px;
+    }
+    .founder-profile-content {
+        max-width: none;
+    }
+    .founder-profile-content h3 {
+        margin-bottom: 15px;
+        font-size: clamp(1.65rem, 6vw, 2.15rem);
+    }
+    .founder-profile-content p {
+        margin-bottom: 12px;
+        font-size: .9rem;
+        line-height: 1.7;
+    }
+    .founder-quote {
+        margin: 38px auto;
+        padding: 25px 18px;
+        border-radius: 18px;
+    }
+    .founder-quote-mark {
+        height: 24px;
+        font-size: 3.8rem;
+    }
+    .founder-quote p {
+        margin-top: 8px;
+        font-size: 1.08rem;
+        line-height: 1.5;
+    }
+    .founder-vision {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .founder-vision-content {
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+    .founder-vision-content h3 {
+        margin-bottom: 12px;
+        font-size: 1.8rem;
+    }
+    .founder-vision-content > p {
+        font-size: .88rem;
+        line-height: 1.65;
+    }
+    .founder-vision-points {
+        margin-top: 16px;
+    }
+    .founder-vision-point {
+        grid-template-columns: 32px 1fr;
+        gap: 9px;
+        padding: 11px 0;
+    }
+    .founder-vision-point p {
+        font-size: .84rem;
+        line-height: 1.5;
+    }
+    .founder-journey {
+        padding: 25px 18px;
+        border-radius: 18px;
+    }
+    .founder-journey > span {
+        margin-bottom: 15px;
+    }
+    .founder-promise {
+        margin-top: 38px;
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+    .founder-promise-heading h3 {
+        font-size: 1.8rem;
+    }
+    .founder-promise-list {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+    }
+    .founder-promise-list div {
+        padding: 12px 5px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, .15);
+    }
+    .founder-promise-list div:last-child {
+        border-bottom: none;
+    }
+    .founder-signature {
+        margin-top: 24px;
+    }
 }
-
 
 /* =========================================================
    5. LARGE PHONE
@@ -3559,7 +3689,84 @@
     right: -16px;
     padding: 6px 26px;
     font-size: 9px;
-}
+} .founder-section {
+        padding: 36px 0;
+    }
+    .founder-heading {
+        margin-bottom: 26px;
+    }
+    .founder-heading h2 {
+        font-size: 1.9rem;
+    }
+    .founder-heading p {
+        font-size: .84rem;
+    }
+    .founder-profile {
+        gap: 22px;
+    }
+    .founder-photo {
+        height: 350px;
+        border-radius: 17px;
+    }
+    .founder-photo-badge {
+        left: 12px;
+        bottom: 12px;
+        padding: 9px 11px;
+    }
+    .founder-photo-badge span {
+        font-size: .58rem;
+    }
+    .founder-photo-badge strong {
+        font-size: .7rem;
+    }
+    .founder-profile-content h3 {
+        font-size: 1.6rem;
+    }
+    .founder-profile-content p {
+        font-size: .86rem;
+        line-height: 1.65;
+    }
+    .founder-quote {
+        margin: 32px auto;
+        padding: 22px 15px;
+    }
+    .founder-quote p {
+        font-size: 1rem;
+    }
+    .founder-vision-content {
+        padding: 21px 15px;
+    }
+    .founder-vision-content h3 {
+        font-size: 1.65rem;
+    }
+    .founder-vision-content > p {
+        font-size: .84rem;
+    }
+    .founder-vision-point {
+        grid-template-columns: 28px 1fr;
+        gap: 8px;
+        padding: 10px 0;
+    }
+    .founder-vision-point p {
+        font-size: .8rem;
+    }
+    .founder-journey {
+        padding: 22px 15px;
+    }
+    .founder-journey strong {
+        font-size: 1rem;
+    }
+    .founder-promise {
+        margin-top: 32px;
+        padding: 21px 15px;
+    }
+    .founder-promise-heading h3 {
+        font-size: 1.65rem;
+    }
+    .founder-promise-list div {
+        font-size: .78rem;
+        padding: 11px 4px;
+    }
 }
 
 
@@ -3928,6 +4135,36 @@
     .dashboard-card-header h2,
     .dashboard-quick-card h2 {
         font-size: 18px;
+    }
+    .founder-section {
+        padding: 32px 0;
+    }
+    .founder-photo {
+        height: 320px;
+    }
+    .founder-profile-content h3 {
+        font-size: 1.5rem;
+    }
+    .founder-profile-content p {
+        font-size: .82rem;
+    }
+    .founder-quote {
+        padding: 20px 13px;
+    }
+    .founder-quote p {
+        font-size: .94rem;
+    }
+    .founder-vision-content {
+        padding: 19px 13px;
+    }
+    .founder-vision-content h3 {
+        font-size: 1.55rem;
+    }
+    .founder-journey {
+        padding: 20px 12px;
+    }
+    .founder-promise {
+        padding: 19px 13px;
     }
 }
 

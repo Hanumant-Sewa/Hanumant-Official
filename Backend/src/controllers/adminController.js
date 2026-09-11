@@ -1,9 +1,39 @@
 import prisma from "../config/prisma.js";
 
 /* =====================================================
-   HELPER
+   HELPERS
 ===================================================== */
 
+const getEventLifecycleStatus = (event, now = new Date()) => {
+  if (event.status === "CANCELLED") {
+    return "CANCELLED";
+  }
+
+  const startDate = new Date(event.startDate);
+  const endDate = event.endDate ? new Date(event.endDate) : null;
+
+  if (Number.isNaN(startDate.getTime())) {
+    return "UPCOMING";
+  }
+
+  if (!endDate || Number.isNaN(endDate.getTime())) {
+    return now < startDate ? "UPCOMING" : "ONGOING";
+  }
+
+  if (now < startDate) {
+    return "UPCOMING";
+  }
+
+  if (now >= endDate) {
+    return "COMPLETED";
+  }
+
+  return "ONGOING";
+};
+
+/*
+  Audit logs should never break the main admin operation.
+*/
 const createAuditLog = async ({
   userId,
   action,
@@ -28,12 +58,46 @@ const createAuditLog = async ({
   }
 };
 
+/*
+  Convert a value into a valid Date.
+
+  Returns null when invalid.
+*/
+const parseDate = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return date;
+};
+
+/*
+  Event response helper.
+
+  Lifecycle status is calculated from the dates
+  instead of trusting a stale database status.
+*/
+const formatEvent = (event) => {
+  return {
+    ...event,
+    lifecycleStatus: getEventLifecycleStatus(event),
+  };
+};
+
 /* =====================================================
    ADMIN DASHBOARD
 ===================================================== */
 
 export const getAdminDashboard = async (req, res) => {
   try {
+    const now = new Date();
+
     const [
       totalUsers,
       totalVolunteers,
@@ -43,7 +107,7 @@ export const getAdminDashboard = async (req, res) => {
       totalCampaigns,
       activeCampaigns,
       totalEvents,
-      upcomingEvents,
+      allEvents,
       totalCommunities,
       recentApplications,
       recentDonations,
@@ -81,9 +145,12 @@ export const getAdminDashboard = async (req, res) => {
 
       prisma.volunteerEvent.count(),
 
-      prisma.volunteerEvent.count({
-        where: {
-          status: "UPCOMING",
+      prisma.volunteerEvent.findMany({
+        select: {
+          id: true,
+          startDate: true,
+          endDate: true,
+          status: true,
         },
       }),
 
@@ -91,9 +158,11 @@ export const getAdminDashboard = async (req, res) => {
 
       prisma.volunteerApplication.findMany({
         take: 5,
+
         orderBy: {
           createdAt: "desc",
         },
+
         include: {
           user: {
             select: {
@@ -108,9 +177,11 @@ export const getAdminDashboard = async (req, res) => {
 
       prisma.donation.findMany({
         take: 5,
+
         orderBy: {
           donatedAt: "desc",
         },
+
         include: {
           user: {
             select: {
@@ -119,6 +190,7 @@ export const getAdminDashboard = async (req, res) => {
               email: true,
             },
           },
+
           campaign: {
             select: {
               id: true,
@@ -130,9 +202,11 @@ export const getAdminDashboard = async (req, res) => {
 
       prisma.user.findMany({
         take: 5,
+
         orderBy: {
           createdAt: "desc",
         },
+
         select: {
           id: true,
           name: true,
@@ -144,10 +218,15 @@ export const getAdminDashboard = async (req, res) => {
       }),
     ]);
 
+    const upcomingEvents = allEvents.filter((event) => {
+      return getEventLifecycleStatus(event, now) === "UPCOMING";
+    }).length;
+
     const donationTotals = await prisma.donation.aggregate({
       where: {
         status: "SUCCESS",
       },
+
       _sum: {
         amount: true,
       },
@@ -167,7 +246,8 @@ export const getAdminDashboard = async (req, res) => {
         totalEvents,
         upcomingEvents,
         totalCommunities,
-        totalDonationAmount: donationTotals._sum.amount || 0,
+
+        totalDonationAmount: donationTotals._sum.amount?.toString() || "0",
       },
 
       recentApplications,
@@ -178,6 +258,7 @@ export const getAdminDashboard = async (req, res) => {
     console.error("Admin dashboard error:", error);
 
     return res.status(500).json({
+      success: false,
       message: "Failed to load admin dashboard.",
     });
   }
@@ -193,6 +274,7 @@ export const getAllUsers = async (req, res) => {
       orderBy: {
         createdAt: "desc",
       },
+
       select: {
         id: true,
         name: true,
@@ -213,14 +295,15 @@ export const getAllUsers = async (req, res) => {
       },
     });
 
-    res.json({
+    return res.json({
       success: true,
       users,
     });
   } catch (error) {
     console.error("Get users error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to load users.",
     });
   }
@@ -235,10 +318,18 @@ export const updateUserStatus = async (req, res) => {
     const userId = Number(req.params.id);
     const { status } = req.body;
 
+    if (!Number.isInteger(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID.",
+      });
+    }
+
     const allowedStatuses = ["ACTIVE", "INACTIVE", "SUSPENDED"];
 
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
+        success: false,
         message: "Invalid user status.",
       });
     }
@@ -251,12 +342,14 @@ export const updateUserStatus = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
+        success: false,
         message: "User not found.",
       });
     }
 
     if (user.id === req.user.userId && status !== "ACTIVE") {
       return res.status(400).json({
+        success: false,
         message: "You cannot deactivate or suspend yourself.",
       });
     }
@@ -265,9 +358,11 @@ export const updateUserStatus = async (req, res) => {
       where: {
         id: userId,
       },
+
       data: {
         status,
       },
+
       select: {
         id: true,
         name: true,
@@ -286,7 +381,7 @@ export const updateUserStatus = async (req, res) => {
       ipAddress: req.ip,
     });
 
-    res.json({
+    return res.json({
       success: true,
       message: "User status updated successfully.",
       user: updatedUser,
@@ -294,7 +389,8 @@ export const updateUserStatus = async (req, res) => {
   } catch (error) {
     console.error("Update user status error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to update user status.",
     });
   }
@@ -354,14 +450,15 @@ export const getVolunteerApplications = async (req, res) => {
       },
     });
 
-    res.json({
+    return res.json({
       success: true,
       applications,
     });
   } catch (error) {
     console.error("Get volunteer applications error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to load volunteer applications.",
     });
   }
@@ -376,6 +473,13 @@ export const approveVolunteerApplication = async (req, res) => {
     const applicationId = Number(req.params.id);
     const { adminRemarks = "" } = req.body;
 
+    if (!Number.isInteger(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid application ID.",
+      });
+    }
+
     const application = await prisma.volunteerApplication.findUnique({
       where: {
         id: applicationId,
@@ -389,12 +493,14 @@ export const approveVolunteerApplication = async (req, res) => {
 
     if (!application) {
       return res.status(404).json({
+        success: false,
         message: "Volunteer application not found.",
       });
     }
 
     if (application.status !== "PENDING") {
       return res.status(400).json({
+        success: false,
         message: `Application is already ${application.status}.`,
       });
     }
@@ -420,6 +526,7 @@ export const approveVolunteerApplication = async (req, res) => {
 
           data: {
             isVerified: true,
+
             skills: application.skills || application.volunteerProfile?.skills,
 
             availability:
@@ -499,7 +606,7 @@ export const approveVolunteerApplication = async (req, res) => {
       ipAddress: req.ip,
     });
 
-    res.json({
+    return res.json({
       success: true,
       message: "Volunteer application approved successfully.",
       ...result,
@@ -507,7 +614,8 @@ export const approveVolunteerApplication = async (req, res) => {
   } catch (error) {
     console.error("Approve volunteer error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to approve volunteer application.",
     });
   }
@@ -520,11 +628,18 @@ export const approveVolunteerApplication = async (req, res) => {
 export const rejectVolunteerApplication = async (req, res) => {
   try {
     const applicationId = Number(req.params.id);
-
     const { adminRemarks } = req.body;
+
+    if (!Number.isInteger(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid application ID.",
+      });
+    }
 
     if (!adminRemarks || !adminRemarks.trim()) {
       return res.status(400).json({
+        success: false,
         message: "Please provide a reason for rejection.",
       });
     }
@@ -541,12 +656,14 @@ export const rejectVolunteerApplication = async (req, res) => {
 
     if (!application) {
       return res.status(404).json({
+        success: false,
         message: "Volunteer application not found.",
       });
     }
 
     if (application.status !== "PENDING") {
       return res.status(400).json({
+        success: false,
         message: `Application is already ${application.status}.`,
       });
     }
@@ -596,7 +713,7 @@ export const rejectVolunteerApplication = async (req, res) => {
       ipAddress: req.ip,
     });
 
-    res.json({
+    return res.json({
       success: true,
       message: "Volunteer application rejected.",
       application: updatedApplication,
@@ -604,7 +721,8 @@ export const rejectVolunteerApplication = async (req, res) => {
   } catch (error) {
     console.error("Reject volunteer error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to reject volunteer application.",
     });
   }
@@ -639,14 +757,15 @@ export const getAllDonations = async (req, res) => {
       },
     });
 
-    res.json({
+    return res.json({
       success: true,
       donations,
     });
   } catch (error) {
     console.error("Get donations error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to load donations.",
     });
   }
@@ -654,6 +773,10 @@ export const getAllDonations = async (req, res) => {
 
 /* =====================================================
    CAMPAIGNS
+===================================================== */
+
+/* =====================================================
+   GET ALL CAMPAIGNS
 ===================================================== */
 
 export const getAllCampaigns = async (req, res) => {
@@ -672,21 +795,491 @@ export const getAllCampaigns = async (req, res) => {
       },
     });
 
-    res.json({
+    return res.json({
       success: true,
       campaigns,
     });
   } catch (error) {
     console.error("Get campaigns error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to load campaigns.",
     });
   }
 };
 
 /* =====================================================
+   CREATE CAMPAIGN
+===================================================== */
+
+export const createCampaign = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      image,
+      targetAmount,
+      raisedAmount,
+      status = "DRAFT",
+      startDate,
+      endDate,
+    } = req.body;
+
+    if (!title || !title.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Campaign title is required.",
+      });
+    }
+
+    const parsedTargetAmount = Number(targetAmount);
+
+    if (
+      targetAmount === undefined ||
+      targetAmount === null ||
+      targetAmount === "" ||
+      !Number.isFinite(parsedTargetAmount) ||
+      parsedTargetAmount <= 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Target amount must be greater than 0.",
+      });
+    }
+
+    let parsedRaisedAmount = 0;
+
+    if (
+      raisedAmount !== undefined &&
+      raisedAmount !== null &&
+      raisedAmount !== ""
+    ) {
+      parsedRaisedAmount = Number(raisedAmount);
+
+      if (!Number.isFinite(parsedRaisedAmount) || parsedRaisedAmount < 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Raised amount cannot be negative.",
+        });
+      }
+    }
+
+    const allowedStatuses = ["DRAFT", "ACTIVE", "COMPLETED", "CANCELLED"];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid campaign status.",
+      });
+    }
+
+    const parsedStartDate = startDate ? parseDate(startDate) : null;
+
+    const parsedEndDate = endDate ? parseDate(endDate) : null;
+
+    if (startDate && !parsedStartDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid campaign start date.",
+      });
+    }
+
+    if (endDate && !parsedEndDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid campaign end date.",
+      });
+    }
+
+    if (parsedStartDate && parsedEndDate && parsedEndDate <= parsedStartDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Campaign end date must be after the start date.",
+      });
+    }
+
+    const campaign = await prisma.campaign.create({
+      data: {
+        title: title.trim(),
+
+        description: description?.trim() || null,
+
+        image: image?.trim() || null,
+
+        targetAmount: parsedTargetAmount,
+
+        raisedAmount: parsedRaisedAmount,
+
+        status,
+
+        startDate: parsedStartDate,
+
+        endDate: parsedEndDate,
+      },
+
+      include: {
+        _count: {
+          select: {
+            donations: true,
+          },
+        },
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "CREATE_CAMPAIGN",
+      entity: "Campaign",
+      entityId: campaign.id,
+      details: `Created campaign "${campaign.title}"`,
+      ipAddress: req.ip,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Campaign created successfully.",
+      campaign,
+    });
+  } catch (error) {
+    console.error("Create campaign error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create campaign.",
+    });
+  }
+};
+
+/* =====================================================
+   UPDATE CAMPAIGN
+===================================================== */
+
+export const updateCampaign = async (req, res) => {
+  try {
+    const campaignId = Number(req.params.id);
+
+    if (!Number.isInteger(campaignId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid campaign ID.",
+      });
+    }
+
+    const existingCampaign = await prisma.campaign.findUnique({
+      where: {
+        id: campaignId,
+      },
+    });
+
+    if (!existingCampaign) {
+      return res.status(404).json({
+        success: false,
+        message: "Campaign not found.",
+      });
+    }
+
+    const {
+      title,
+      description,
+      image,
+      targetAmount,
+      raisedAmount,
+      status,
+      startDate,
+      endDate,
+    } = req.body;
+
+    if (!title || !title.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Campaign title is required.",
+      });
+    }
+
+    const parsedTargetAmount = Number(targetAmount);
+
+    if (
+      targetAmount === undefined ||
+      targetAmount === null ||
+      targetAmount === "" ||
+      !Number.isFinite(parsedTargetAmount) ||
+      parsedTargetAmount <= 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Target amount must be greater than 0.",
+      });
+    }
+
+    const parsedRaisedAmount = Number(raisedAmount);
+
+    if (
+      raisedAmount === undefined ||
+      raisedAmount === null ||
+      raisedAmount === "" ||
+      !Number.isFinite(parsedRaisedAmount) ||
+      parsedRaisedAmount < 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Raised amount cannot be negative.",
+      });
+    }
+
+    const allowedStatuses = ["DRAFT", "ACTIVE", "COMPLETED", "CANCELLED"];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid campaign status.",
+      });
+    }
+
+    const parsedStartDate = startDate ? parseDate(startDate) : null;
+
+    const parsedEndDate = endDate ? parseDate(endDate) : null;
+
+    if (startDate && !parsedStartDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid campaign start date.",
+      });
+    }
+
+    if (endDate && !parsedEndDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid campaign end date.",
+      });
+    }
+
+    if (parsedStartDate && parsedEndDate && parsedEndDate <= parsedStartDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Campaign end date must be after the start date.",
+      });
+    }
+
+    const updatedCampaign = await prisma.campaign.update({
+      where: {
+        id: campaignId,
+      },
+
+      data: {
+        title: title.trim(),
+
+        description: description?.trim() || null,
+
+        image: image?.trim() || null,
+
+        targetAmount: parsedTargetAmount,
+
+        raisedAmount: parsedRaisedAmount,
+
+        status,
+
+        startDate: parsedStartDate,
+
+        endDate: parsedEndDate,
+      },
+
+      include: {
+        _count: {
+          select: {
+            donations: true,
+          },
+        },
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "UPDATE_CAMPAIGN",
+      entity: "Campaign",
+      entityId: campaignId,
+      details: `Updated campaign "${updatedCampaign.title}"`,
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Campaign updated successfully.",
+      campaign: updatedCampaign,
+    });
+  } catch (error) {
+    console.error("Update campaign error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update campaign.",
+    });
+  }
+};
+
+/* =====================================================
+   CANCEL CAMPAIGN
+===================================================== */
+
+export const cancelCampaign = async (req, res) => {
+  try {
+    const campaignId = Number(req.params.id);
+
+    if (!Number.isInteger(campaignId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid campaign ID.",
+      });
+    }
+
+    const campaign = await prisma.campaign.findUnique({
+      where: {
+        id: campaignId,
+      },
+    });
+
+    if (!campaign) {
+      return res.status(404).json({
+        success: false,
+        message: "Campaign not found.",
+      });
+    }
+
+    if (campaign.status === "CANCELLED") {
+      return res.status(400).json({
+        success: false,
+        message: "Campaign is already cancelled.",
+      });
+    }
+
+    if (campaign.status === "COMPLETED") {
+      return res.status(400).json({
+        success: false,
+        message: "Completed campaigns cannot be cancelled.",
+      });
+    }
+
+    const updatedCampaign = await prisma.campaign.update({
+      where: {
+        id: campaignId,
+      },
+
+      data: {
+        status: "CANCELLED",
+      },
+
+      include: {
+        _count: {
+          select: {
+            donations: true,
+          },
+        },
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "CANCEL_CAMPAIGN",
+      entity: "Campaign",
+      entityId: campaignId,
+      details: `Cancelled campaign "${campaign.title}"`,
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Campaign cancelled successfully.",
+      campaign: updatedCampaign,
+    });
+  } catch (error) {
+    console.error("Cancel campaign error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to cancel campaign.",
+    });
+  }
+};
+
+/* =====================================================
+   DELETE CAMPAIGN
+===================================================== */
+
+export const deleteCampaign = async (req, res) => {
+  try {
+    const campaignId = Number(req.params.id);
+
+    if (!Number.isInteger(campaignId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid campaign ID.",
+      });
+    }
+
+    const campaign = await prisma.campaign.findUnique({
+      where: {
+        id: campaignId,
+      },
+
+      include: {
+        _count: {
+          select: {
+            donations: true,
+          },
+        },
+      },
+    });
+
+    if (!campaign) {
+      return res.status(404).json({
+        success: false,
+        message: "Campaign not found.",
+      });
+    }
+
+    if (campaign._count.donations > 0) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This campaign has donations and cannot be deleted. Mark it as CANCELLED instead.",
+      });
+    }
+
+    await prisma.campaign.delete({
+      where: {
+        id: campaignId,
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "DELETE_CAMPAIGN",
+      entity: "Campaign",
+      entityId: campaignId,
+      details: `Deleted campaign "${campaign.title}"`,
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Campaign deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Delete campaign error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete campaign.",
+    });
+  }
+};
+
+/* =====================================================
    EVENTS
+===================================================== */
+
+/* =====================================================
+   GET ALL EVENTS
 ===================================================== */
 
 export const getAllEvents = async (req, res) => {
@@ -707,15 +1300,509 @@ export const getAllEvents = async (req, res) => {
       },
     });
 
-    res.json({
+    const formattedEvents = events.map(formatEvent);
+
+    return res.json({
       success: true,
-      events,
+      events: formattedEvents,
     });
   } catch (error) {
     console.error("Get events error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to load events.",
+    });
+  }
+};
+
+/* =====================================================
+   CREATE EVENT
+===================================================== */
+
+export const createEvent = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      image,
+      location,
+      city,
+      state,
+      startDate,
+      endDate,
+      capacity,
+      status = "UPCOMING",
+    } = req.body;
+
+    if (!title || !title.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Event title is required.",
+      });
+    }
+
+    const parsedStartDate = parseDate(startDate);
+
+    if (!parsedStartDate) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid event start date is required.",
+      });
+    }
+
+    const parsedEndDate = parseDate(endDate);
+
+    if (!parsedEndDate) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "A valid event end date is required so the event lifecycle can be determined.",
+      });
+    }
+
+    if (parsedEndDate <= parsedStartDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Event end date must be after the start date.",
+      });
+    }
+
+    if (!["UPCOMING", "CANCELLED"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Event lifecycle status is determined automatically from its dates.",
+      });
+    }
+
+    const lifecycleStatus =
+      status === "CANCELLED"
+        ? "CANCELLED"
+        : getEventLifecycleStatus({
+            startDate: parsedStartDate,
+            endDate: parsedEndDate,
+            status: "UPCOMING",
+          });
+
+    if (lifecycleStatus === "COMPLETED" && status !== "CANCELLED") {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot create an event whose end date has already passed.",
+      });
+    }
+
+    let parsedCapacity = null;
+
+    if (capacity !== undefined && capacity !== null && capacity !== "") {
+      parsedCapacity = Number(capacity);
+
+      if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Capacity must be a positive whole number.",
+        });
+      }
+    }
+
+    const event = await prisma.volunteerEvent.create({
+      data: {
+        title: title.trim(),
+
+        description: description?.trim() || null,
+
+        image: image?.trim() || null,
+
+        location: location?.trim() || null,
+
+        city: city?.trim() || null,
+
+        state: state?.trim() || null,
+
+        startDate: parsedStartDate,
+
+        endDate: parsedEndDate,
+
+        capacity: parsedCapacity,
+
+        status: lifecycleStatus,
+
+        organizerId: req.user.userId,
+      },
+
+      include: {
+        _count: {
+          select: {
+            registrations: true,
+            tasks: true,
+            impactRecords: true,
+          },
+        },
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "CREATE_EVENT",
+      entity: "VolunteerEvent",
+      entityId: event.id,
+      details: `Created event "${event.title}" with lifecycle status ${lifecycleStatus}`,
+      ipAddress: req.ip,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Event created successfully.",
+      event: formatEvent(event),
+    });
+  } catch (error) {
+    console.error("Create event error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create event.",
+    });
+  }
+};
+
+/* =====================================================
+   UPDATE EVENT
+===================================================== */
+
+export const updateEvent = async (req, res) => {
+  try {
+    const eventId = Number(req.params.id);
+
+    if (!Number.isInteger(eventId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid event ID.",
+      });
+    }
+
+    const existingEvent = await prisma.volunteerEvent.findUnique({
+      where: {
+        id: eventId,
+      },
+    });
+
+    if (!existingEvent) {
+      return res.status(404).json({
+        success: false,
+        message: "Event not found.",
+      });
+    }
+
+    const {
+      title,
+      description,
+      image,
+      location,
+      city,
+      state,
+      startDate,
+      endDate,
+      capacity,
+      status,
+    } = req.body;
+
+    if (!title || !title.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Event title is required.",
+      });
+    }
+
+    const parsedStartDate = parseDate(startDate);
+
+    if (!parsedStartDate) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid event start date is required.",
+      });
+    }
+
+    const parsedEndDate = parseDate(endDate);
+
+    if (!parsedEndDate) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "A valid event end date is required so the event lifecycle can be determined.",
+      });
+    }
+
+    if (parsedEndDate <= parsedStartDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Event end date must be after the start date.",
+      });
+    }
+
+    if (status && !["UPCOMING", "CANCELLED"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "ONGOING and COMPLETED are automatically determined from event dates.",
+      });
+    }
+
+    /*
+      If the existing event is cancelled and the request
+      does not explicitly change that status, keep it cancelled.
+    */
+    let newStatus;
+
+    if (status === "CANCELLED") {
+      newStatus = "CANCELLED";
+    } else if (existingEvent.status === "CANCELLED") {
+      newStatus = "CANCELLED";
+    } else {
+      newStatus = getEventLifecycleStatus({
+        startDate: parsedStartDate,
+        endDate: parsedEndDate,
+        status: "UPCOMING",
+      });
+    }
+
+    let parsedCapacity = null;
+
+    if (capacity !== undefined && capacity !== null && capacity !== "") {
+      parsedCapacity = Number(capacity);
+
+      if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Capacity must be a positive whole number.",
+        });
+      }
+    }
+
+    const updatedEvent = await prisma.volunteerEvent.update({
+      where: {
+        id: eventId,
+      },
+
+      data: {
+        title: title.trim(),
+
+        description: description?.trim() || null,
+
+        image: image?.trim() || null,
+
+        location: location?.trim() || null,
+
+        city: city?.trim() || null,
+
+        state: state?.trim() || null,
+
+        startDate: parsedStartDate,
+
+        endDate: parsedEndDate,
+
+        capacity: parsedCapacity,
+
+        status: newStatus,
+      },
+
+      include: {
+        _count: {
+          select: {
+            registrations: true,
+            tasks: true,
+            impactRecords: true,
+          },
+        },
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "UPDATE_EVENT",
+      entity: "VolunteerEvent",
+      entityId: eventId,
+      details: `Updated event "${updatedEvent.title}". Lifecycle status: ${newStatus}`,
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Event updated successfully.",
+      event: formatEvent(updatedEvent),
+    });
+  } catch (error) {
+    console.error("Update event error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update event.",
+    });
+  }
+};
+
+/* =====================================================
+   CANCEL EVENT
+===================================================== */
+
+export const cancelEvent = async (req, res) => {
+  try {
+    const eventId = Number(req.params.id);
+
+    if (!Number.isInteger(eventId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid event ID.",
+      });
+    }
+
+    const event = await prisma.volunteerEvent.findUnique({
+      where: {
+        id: eventId,
+      },
+    });
+
+    if (!event) {
+      return res.status(404).json({
+        success: false,
+        message: "Event not found.",
+      });
+    }
+
+    const currentStatus = getEventLifecycleStatus(event);
+
+    if (currentStatus === "CANCELLED") {
+      return res.status(400).json({
+        success: false,
+        message: "Event is already cancelled.",
+      });
+    }
+
+    if (currentStatus === "COMPLETED") {
+      return res.status(400).json({
+        success: false,
+        message: "Completed events cannot be cancelled.",
+      });
+    }
+
+    const updatedEvent = await prisma.volunteerEvent.update({
+      where: {
+        id: eventId,
+      },
+
+      data: {
+        status: "CANCELLED",
+      },
+
+      include: {
+        _count: {
+          select: {
+            registrations: true,
+            tasks: true,
+            impactRecords: true,
+          },
+        },
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "CANCEL_EVENT",
+      entity: "VolunteerEvent",
+      entityId: eventId,
+      details: `Cancelled event "${event.title}"`,
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Event cancelled successfully.",
+      event: formatEvent(updatedEvent),
+    });
+  } catch (error) {
+    console.error("Cancel event error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to cancel event.",
+    });
+  }
+};
+
+/* =====================================================
+   DELETE EVENT
+===================================================== */
+
+export const deleteEvent = async (req, res) => {
+  try {
+    const eventId = Number(req.params.id);
+
+    if (!Number.isInteger(eventId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid event ID.",
+      });
+    }
+
+    const event = await prisma.volunteerEvent.findUnique({
+      where: {
+        id: eventId,
+      },
+
+      include: {
+        _count: {
+          select: {
+            registrations: true,
+            tasks: true,
+            impactRecords: true,
+          },
+        },
+      },
+    });
+
+    if (!event) {
+      return res.status(404).json({
+        success: false,
+        message: "Event not found.",
+      });
+    }
+
+    if (
+      event._count.registrations > 0 ||
+      event._count.tasks > 0 ||
+      event._count.impactRecords > 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This event has registrations or related records and cannot be deleted. Mark it as CANCELLED instead.",
+      });
+    }
+
+    await prisma.volunteerEvent.delete({
+      where: {
+        id: eventId,
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "DELETE_EVENT",
+      entity: "VolunteerEvent",
+      entityId: eventId,
+      details: `Deleted event "${event.title}"`,
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Event deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Delete event error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete event.",
     });
   }
 };
@@ -748,14 +1835,15 @@ export const getAllCommunities = async (req, res) => {
       },
     });
 
-    res.json({
+    return res.json({
       success: true,
       communities,
     });
   } catch (error) {
     console.error("Get communities error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to load communities.",
     });
   }
@@ -785,14 +1873,15 @@ export const getAuditLogs = async (req, res) => {
       },
     });
 
-    res.json({
+    return res.json({
       success: true,
       logs,
     });
   } catch (error) {
     console.error("Get audit logs error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to load audit logs.",
     });
   }
