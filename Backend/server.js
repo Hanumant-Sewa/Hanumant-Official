@@ -3,8 +3,13 @@ import cors from "cors";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
 
+// ===============================
+// ROUTES
+// ===============================
+
 import authRoutes from "./src/routes/authRoutes.js";
 import donationRoutes from "./src/routes/donationRoutes.js";
+
 import volunteerApplicationRoutes from "./src/routes/volunteerApplicationRoutes.js";
 import volunteerProfileRoutes from "./src/routes/volunteerProfileRoutes.js";
 import volunteerDashboardRoutes from "./src/routes/volunteerDashboardRoutes.js";
@@ -50,15 +55,41 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/donations", donationRoutes);
 
-app.use("/api/volunteer-applications", volunteerApplicationRoutes);
-app.use("/api/volunteer-profile", volunteerProfileRoutes);
-app.use("/api/volunteer-dashboard", volunteerDashboardRoutes);
-app.use("/api/volunteer-events", volunteerEventRoutes);
-app.use("/api/volunteer-impact", volunteerImpactRoutes);
-app.use("/api/volunteer-tasks", volunteerTaskRoutes);
-app.use("/api/volunteer-certificates", volunteerCertificateRoutes);
+app.use(
+  "/api/volunteer-applications",
+  volunteerApplicationRoutes,
+);
 
-app.use("/api/auth", authRoutes);
+app.use(
+  "/api/volunteer-profile",
+  volunteerProfileRoutes,
+);
+
+app.use(
+  "/api/volunteer-dashboard",
+  volunteerDashboardRoutes,
+);
+
+app.use(
+  "/api/volunteer-events",
+  volunteerEventRoutes,
+);
+
+app.use(
+  "/api/volunteer-impact",
+  volunteerImpactRoutes,
+);
+
+app.use(
+  "/api/volunteer-tasks",
+  volunteerTaskRoutes,
+);
+
+app.use(
+  "/api/volunteer-certificates",
+  volunteerCertificateRoutes,
+);
+
 app.use("/api/admin", adminRoutes);
 
 // ===============================
