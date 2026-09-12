@@ -65,7 +65,6 @@ import Volunteer from "./pages/Volunteer";
 import VolunteerApplication from "./pages/VolunteerApplication";
 import ApplicationStatus from "./pages/ApplicationStatus";
 import VolunteerProfile from "./pages/VolunteerProfile";
-import VolunteerEvents from "./pages/VolunteerEvents";
 import EventDetails from "./pages/EventDetails";
 import VolunteerTasks from "./pages/VolunteerTasks";
 import VolunteerImpact from "./pages/VolunteerImpact";
@@ -241,16 +240,6 @@ function App() {
               }
             />
 
-            {/* Volunteer Events */}
-
-            <Route
-              path="/volunteer/events"
-              element={
-                <ProtectedRoute>
-                  <VolunteerEvents />
-                </ProtectedRoute>
-              }
-            />
 
             {/* Event Details */}
 

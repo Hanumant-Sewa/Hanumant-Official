@@ -31,7 +31,7 @@ function Dashboard() {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const response = await fetch(
+        const dashboardResponse = await fetch(
           `${import.meta.env.VITE_API_URL}/api/auth/dashboard`,
           {
             method: "GET",
@@ -55,7 +55,7 @@ function Dashboard() {
         // Volunteer Dashboard
         try {
           const volunteerResponse = await fetch(
-            "http://localhost:5000/api/volunteer-dashboard",
+            `${import.meta.env.VITE_API_URL}/api/volunteer-dashboard`,
             {
               method: "GET",
               credentials: "include",
@@ -608,20 +608,6 @@ function Dashboard() {
             <Link to="/volunteer/events" className="quick-action">
               <div className="quick-action-icon">
                 <CalendarDays size={21} />
-              </div>
-
-              <div>
-                <strong>Volunteer Events</strong>
-
-                <span>Find upcoming seva opportunities</span>
-              </div>
-
-              <ArrowRight size={17} />
-            </Link>
-
-            <Link to="/volunteer/certificates" className="quick-action">
-              <div className="quick-action-icon">
-                <Award size={21} />
               </div>
 
               <div>
