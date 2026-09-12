@@ -117,6 +117,12 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  /**
+   * =================================================
+   * USER RELATIONS
+   * =================================================
+   */
+
   volunteerProfile VolunteerProfile?
 
   donations Donation[]
@@ -161,28 +167,20 @@ model VolunteerProfile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  /**
-   * =================================================
-   * VOLUNTEER INFORMATION
-   * =================================================
-   */
+  bio String?
 
-  age Int?
+  skills    String?
+  interests String?
 
-  city String?
+  city    String?
+  state   String?
+  country String?
 
-  skills String?
+  ageGroup String?
 
   availability String?
 
-  /**
-   * =================================================
-   * VOLUNTEER STATISTICS
-   * =================================================
-   */
-
-  totalHours Int @default(0)
-
+  totalHours  Int @default(0)
   totalEvents Int @default(0)
 
   joinedAt DateTime @default(now())
@@ -190,14 +188,7 @@ model VolunteerProfile {
   isVerified Boolean @default(false)
 
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
-
-  /**
-   * =================================================
-   * RELATIONS
-   * =================================================
-   */
 
   applications VolunteerApplication[]
 
@@ -248,7 +239,6 @@ model VolunteerApplication {
   reviewedBy Int?
 
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
 
   @@index([userId])
@@ -270,10 +260,8 @@ model Community {
 
   image String?
 
-  city String?
-
-  state String?
-
+  city    String?
+  state   String?
   country String?
 
   isPublic Boolean @default(true)
@@ -287,7 +275,6 @@ model Community {
   members CommunityMember[]
 
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
 
   @@index([createdById])
@@ -476,8 +463,7 @@ model VolunteerEvent {
 
   location String?
 
-  city String?
-
+  city  String?
   state String?
 
   startDate DateTime
@@ -769,23 +755,3 @@ model AuditLog {
   @@index([entity])
   @@index([createdAt])
 }
-<<<<<<< HEAD
-enum ContactStatus {
-  UNREAD
-  READ
-  REPLIED
-}
-
-model ContactMessage {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  subject   String
-  message   String
-  status    ContactStatus @default(UNREAD)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-=======
->>>>>>> 7a3a50b1ba118dc62108e402a66e94df3f2cb470

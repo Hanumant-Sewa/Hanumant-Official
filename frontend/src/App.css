@@ -2809,6 +2809,7 @@
 
 .form-heading {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 15px;
   margin-bottom: 25px;
@@ -3782,7 +3783,10 @@
 .contact-form textarea {
     resize: vertical;
 }
-
+.contact-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 /*====================================================
                     FOOTER
 ====================================================*/
@@ -4400,7 +4404,7 @@ footer {
     display: grid;
     grid-template-columns: minmax(280px, .82fr) minmax(0, 1.18fr);
     gap: clamp(32px, 5vw, 62px);
-    align-items: center;
+    align-items: start;
 }
 .founder-photo::after {
     content: "";
@@ -4412,13 +4416,13 @@ footer {
 .founder-photo {
     position: relative;
     overflow: hidden;
+    height: 400px;
     border-radius: 24px;
     background: #eadfd5;
     box-shadow: 0 20px 45px rgba(74, 45, 20, .1);
 }
 .founder-photo img {
     width: 100%;
-    height: auto;
     display: block;
     object-fit: contain;
 }

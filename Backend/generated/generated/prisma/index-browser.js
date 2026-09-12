@@ -136,9 +136,13 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.VolunteerProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  age: 'age',
-  city: 'city',
+  bio: 'bio',
   skills: 'skills',
+  interests: 'interests',
+  city: 'city',
+  state: 'state',
+  country: 'country',
+  ageGroup: 'ageGroup',
   availability: 'availability',
   totalHours: 'totalHours',
   totalEvents: 'totalEvents',
@@ -330,17 +334,6 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.ContactMessageScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  subject: 'subject',
-  message: 'message',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -438,12 +431,6 @@ exports.CertificateType = exports.$Enums.CertificateType = {
   SPECIAL_RECOGNITION: 'SPECIAL_RECOGNITION'
 };
 
-exports.ContactStatus = exports.$Enums.ContactStatus = {
-  UNREAD: 'UNREAD',
-  READ: 'READ',
-  REPLIED: 'REPLIED'
-};
-
 exports.Prisma.ModelName = {
   User: 'User',
   VolunteerProfile: 'VolunteerProfile',
@@ -459,8 +446,7 @@ exports.Prisma.ModelName = {
   Certificate: 'Certificate',
   Notification: 'Notification',
   PasswordResetToken: 'PasswordResetToken',
-  AuditLog: 'AuditLog',
-  ContactMessage: 'ContactMessage'
+  AuditLog: 'AuditLog'
 };
 
 /**

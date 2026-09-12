@@ -39,14 +39,14 @@ function Dashboard() {
           },
         );
 
-        if (dashboardResponse.status === 401) {
+        if (response.status === 401) {
           navigate("/login");
           return;
         }
 
-        const dashboardData = await dashboardResponse.json();
+        const dashboardData = await response.json();
 
-        if (!dashboardResponse.ok) {
+        if (!response.ok) {
           throw new Error(dashboardData.message || "Failed to load dashboard");
         }
 
