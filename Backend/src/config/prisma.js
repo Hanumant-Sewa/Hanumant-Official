@@ -10,4 +10,6 @@ const prisma = new PrismaClient({
   adapter,
 });
 
+console.log("Prisma contactMessage:", typeof prisma.contactMessage);
+
 export default prisma;

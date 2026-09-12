@@ -719,5 +719,20 @@ model AuditLog {
   @@index([entity])
   @@index([createdAt])
 }
+enum ContactStatus {
+  UNREAD
+  READ
+  REPLIED
+}
 
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    ContactStatus @default(UNREAD)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 

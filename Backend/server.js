@@ -20,6 +20,8 @@ import volunteerCertificateRoutes from "./src/routes/volunteerCertificateRoutes.
 
 import adminRoutes from "./src/routes/adminRoutes.js";
 
+import contactRoutes from "./src/routes/contactRoutes.js";
+
 const app = express();
 
 // ===============================
@@ -55,42 +57,23 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/donations", donationRoutes);
 
-app.use(
-  "/api/volunteer-applications",
-  volunteerApplicationRoutes,
-);
+app.use("/api/volunteer-applications", volunteerApplicationRoutes);
 
-app.use(
-  "/api/volunteer-profile",
-  volunteerProfileRoutes,
-);
+app.use("/api/volunteer-profile", volunteerProfileRoutes);
 
-app.use(
-  "/api/volunteer-dashboard",
-  volunteerDashboardRoutes,
-);
+app.use("/api/volunteer-dashboard", volunteerDashboardRoutes);
 
-app.use(
-  "/api/volunteer-events",
-  volunteerEventRoutes,
-);
+app.use("/api/volunteer-events", volunteerEventRoutes);
 
-app.use(
-  "/api/volunteer-impact",
-  volunteerImpactRoutes,
-);
+app.use("/api/volunteer-impact", volunteerImpactRoutes);
 
-app.use(
-  "/api/volunteer-tasks",
-  volunteerTaskRoutes,
-);
+app.use("/api/volunteer-tasks", volunteerTaskRoutes);
 
-app.use(
-  "/api/volunteer-certificates",
-  volunteerCertificateRoutes,
-);
+app.use("/api/volunteer-certificates", volunteerCertificateRoutes);
 
 app.use("/api/admin", adminRoutes);
+
+app.use("/api/contact", contactRoutes);
 
 // ===============================
 // SERVER
