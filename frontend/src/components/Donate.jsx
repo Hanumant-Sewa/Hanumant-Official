@@ -89,7 +89,8 @@ function Donate() {
       // LOAD RAZORPAY
       // ========================================
 
-      const razorpayLoaded = await loadRazorpayScript();
+      const razorpayLoaded =
+        await loadRazorpayScript();
 
       if (!razorpayLoaded) {
         alert(
@@ -101,11 +102,11 @@ function Donate() {
       }
 
       // ========================================
-      // CREATE ORDER FROM BACKEND
+      // CREATE ORDER
       // ========================================
 
       const orderResponse = await fetch(
-        "http://localhost:5000/api/donations/create-order",
+        `${import.meta.env.VITE_API_URL}/api/donations/create-order`,
         {
           method: "POST",
 
@@ -130,7 +131,9 @@ function Donate() {
       const contentType =
         orderResponse.headers.get("content-type");
 
-      if (!contentType?.includes("application/json")) {
+      if (
+        !contentType?.includes("application/json")
+      ) {
         const text = await orderResponse.text();
 
         console.error(
@@ -139,11 +142,12 @@ function Donate() {
         );
 
         throw new Error(
-          "Backend returned an invalid response. Please make sure the backend is running on port 5000."
+          "Backend returned an invalid response. Please make sure the backend is running."
         );
       }
 
-      const orderData = await orderResponse.json();
+      const orderData =
+        await orderResponse.json();
 
       console.log(
         "Create Order Response:",
@@ -168,7 +172,7 @@ function Donate() {
       }
 
       // ========================================
-      // RAZORPAY CHECKOUT OPTIONS
+      // RAZORPAY OPTIONS
       // ========================================
 
       const options = {
@@ -184,8 +188,6 @@ function Donate() {
 
         order_id: orderData.order.id,
 
-        // IMPORTANT:
-        // Preselect the payment method
         method: paymentMethod,
 
         // ======================================
@@ -209,9 +211,9 @@ function Donate() {
             orderData.donation.id
           ),
 
-          frequency: frequency,
+          frequency,
 
-          paymentMethod: paymentMethod,
+          paymentMethod,
         },
 
         // ======================================
@@ -237,36 +239,37 @@ function Donate() {
             // VERIFY PAYMENT
             // ==================================
 
-            const verifyResponse = await fetch(
-              "http://localhost:5000/api/donations/verify-payment",
-              {
-                method: "POST",
+            const verifyResponse =
+              await fetch(
+                `${import.meta.env.VITE_API_URL}/api/donations/verify-payment`,
+                {
+                  method: "POST",
 
-                headers: {
-                  "Content-Type":
-                    "application/json",
-                },
+                  headers: {
+                    "Content-Type":
+                      "application/json",
+                  },
 
-                credentials: "include",
+                  credentials: "include",
 
-                body: JSON.stringify({
-                  razorpay_order_id:
-                    response.razorpay_order_id,
+                  body: JSON.stringify({
+                    razorpay_order_id:
+                      response.razorpay_order_id,
 
-                  razorpay_payment_id:
-                    response.razorpay_payment_id,
+                    razorpay_payment_id:
+                      response.razorpay_payment_id,
 
-                  razorpay_signature:
-                    response.razorpay_signature,
+                    razorpay_signature:
+                      response.razorpay_signature,
 
-                  donationId:
-                    orderData.donation.id,
-                }),
-              }
-            );
+                    donationId:
+                      orderData.donation.id,
+                  }),
+                }
+              );
 
             // ==================================
-            // CHECK VERIFICATION RESPONSE
+            // CHECK RESPONSE TYPE
             // ==================================
 
             const verifyContentType =
@@ -333,6 +336,32 @@ function Donate() {
               `/donate/receipt/${verifyData.donation.id}`,
               {
                 state: {
+                  // ==============================
+                  // DONOR DETAILS
+                  // ==============================
+
+                  donorName:
+                    verifyData.donation
+                      .donorName ||
+                    orderData.user?.name ||
+                    "Donor",
+
+                  donorEmail:
+                    verifyData.donation
+                      .donorEmail ||
+                    orderData.user?.email ||
+                    "",
+
+                  donorPhone:
+                    verifyData.donation
+                      .donorPhone ||
+                    orderData.user?.phone ||
+                    "",
+
+                  // ==============================
+                  // DONATION DETAILS
+                  // ==============================
+
                   amount: Number(
                     verifyData.donation.amount
                   ),
@@ -346,7 +375,12 @@ function Donate() {
                       .paymentMethod,
 
                   status:
-                    verifyData.donation.status,
+                    verifyData.donation
+                      .status,
+
+                  // ==============================
+                  // PAYMENT DETAILS
+                  // ==============================
 
                   transactionId:
                     verifyData.donation
@@ -360,6 +394,10 @@ function Donate() {
                     verifyData.donation
                       .orderId,
 
+                  // ==============================
+                  // RECEIPT DETAILS
+                  // ==============================
+
                   receiptNumber:
                     verifyData.donation
                       .receiptNumber,
@@ -367,6 +405,9 @@ function Donate() {
                   donatedAt:
                     verifyData.donation
                       .donatedAt,
+
+                  donationId:
+                    verifyData.donation.id,
                 },
               }
             );
@@ -460,9 +501,7 @@ function Donate() {
   return (
     <main className="donate-page">
 
-      {/* =========================
-          PAGE HEADER
-      ========================== */}
+      {/* PAGE HEADER */}
 
       <section className="internal-hero">
         <div className="container">
@@ -472,7 +511,8 @@ function Donate() {
           </span>
 
           <h1>
-            Choose Your <span>Impact</span>
+            Choose Your{" "}
+            <span>Impact</span>
           </h1>
 
           <p>
@@ -484,17 +524,13 @@ function Donate() {
         </div>
       </section>
 
-      {/* =========================
-          DONATION CONTENT
-      ========================== */}
+      {/* DONATION CONTENT */}
 
       <section className="donation-section">
 
         <div className="donation-container">
 
-          {/* =========================
-              LEFT SIDE
-          ========================== */}
+          {/* LEFT SIDE */}
 
           <aside className="donation-summary">
 
@@ -507,24 +543,17 @@ function Donate() {
             </strong>
 
             <div className="summary-line">
-
-              <span>
-                Contribution
-              </span>
+              <span>Contribution</span>
 
               <b>
                 {frequency === "monthly"
                   ? "Monthly"
                   : "One Time"}
               </b>
-
             </div>
 
             <div className="summary-line">
-
-              <span>
-                Payment
-              </span>
+              <span>Payment</span>
 
               <b>
                 {paymentMethod === "upi"
@@ -533,19 +562,12 @@ function Donate() {
                   ? "Card"
                   : "Net Banking"}
               </b>
-
             </div>
 
             <div className="summary-line">
+              <span>Purpose</span>
 
-              <span>
-                Purpose
-              </span>
-
-              <b>
-                Food Support
-              </b>
-
+              <b>Food Support</b>
             </div>
 
             <div className="summary-divider"></div>
@@ -570,7 +592,6 @@ function Donate() {
               <Lock size={15} />
 
               <div>
-
                 <strong>
                   Secure Contribution
                 </strong>
@@ -578,23 +599,21 @@ function Donate() {
                 <span>
                   Your payment information is protected.
                 </span>
-
               </div>
 
             </div>
 
           </aside>
 
-          {/* =========================
-              RIGHT SIDE
-          ========================== */}
+          {/* RIGHT SIDE */}
 
           <div className="donation-left">
 
             <div className="donation-header">
 
               <h2>
-                Choose Your <span>Impact</span>
+                Choose Your{" "}
+                <span>Impact</span>
               </h2>
 
               <p>
@@ -604,9 +623,7 @@ function Donate() {
 
             </div>
 
-            {/* =========================
-                CONTRIBUTION TYPE
-            ========================== */}
+            {/* CONTRIBUTION TYPE */}
 
             <div className="contribution-type">
 
@@ -640,9 +657,7 @@ function Donate() {
 
             </div>
 
-            {/* =========================
-                AMOUNT SECTION
-            ========================== */}
+            {/* AMOUNT SECTION */}
 
             <div className="amount-section">
 
@@ -653,7 +668,6 @@ function Donate() {
               <div className="donation-options">
 
                 {amounts.map((item) => (
-
                   <button
                     key={item.value}
                     type="button"
@@ -685,7 +699,6 @@ function Donate() {
                     </span>
 
                   </button>
-
                 ))}
 
               </div>
@@ -700,9 +713,7 @@ function Donate() {
 
                 <div className="amount-input">
 
-                  <span>
-                    ₹
-                  </span>
+                  <span>₹</span>
 
                   <input
                     type="number"
@@ -743,9 +754,7 @@ function Donate() {
 
             </div>
 
-            {/* =========================
-                PAYMENT SECTION
-            ========================== */}
+            {/* PAYMENT SECTION */}
 
             <div className="payment-section">
 
@@ -777,8 +786,6 @@ function Donate() {
 
               <div className="payment-methods">
 
-                {/* UPI */}
-
                 <button
                   type="button"
                   className={
@@ -790,14 +797,9 @@ function Donate() {
                     setPaymentMethod("upi")
                   }
                 >
-
                   <Smartphone size={19} />
-
                   UPI
-
                 </button>
-
-                {/* CARD */}
 
                 <button
                   type="button"
@@ -810,14 +812,9 @@ function Donate() {
                     setPaymentMethod("card")
                   }
                 >
-
                   <CreditCard size={19} />
-
                   Card
-
                 </button>
-
-                {/* NET BANKING */}
 
                 <button
                   type="button"
@@ -830,11 +827,8 @@ function Donate() {
                     setPaymentMethod("netbanking")
                   }
                 >
-
                   <Building2 size={19} />
-
                   Net Banking
-
                 </button>
 
               </div>
@@ -864,13 +858,11 @@ function Donate() {
                     )}
 
                     <span>
-
                       {paymentMethod === "upi"
                         ? "UPI payment will be handled securely by Razorpay."
                         : paymentMethod === "card"
                         ? "Card details will be entered securely in Razorpay Checkout."
                         : "Your bank will be selected securely in Razorpay Checkout."}
-
                     </span>
 
                   </div>
