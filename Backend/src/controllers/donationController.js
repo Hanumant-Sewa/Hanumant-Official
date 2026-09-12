@@ -74,6 +74,7 @@ export const createDonationOrder = async (req, res) => {
       where: {
         id: req.user.userId,
       },
+
       select: {
         id: true,
         name: true,
@@ -98,7 +99,7 @@ export const createDonationOrder = async (req, res) => {
     const amountInPaise = Math.round(numericAmount * 100);
 
     // ------------------------------------------
-    // Generate receipt number
+    // Generate unique receipt number
     // ------------------------------------------
 
     const receiptNumber =
@@ -147,10 +148,12 @@ export const createDonationOrder = async (req, res) => {
 
         paymentGateway: "RAZORPAY",
 
+        // Save donor information
         donorName: user.name,
         donorEmail: user.email,
         donorPhone: user.phone,
 
+        // Receipt number
         receiptNumber: receiptNumber,
       },
     });
@@ -179,14 +182,21 @@ export const createDonationOrder = async (req, res) => {
         receiptNumber: donation.receiptNumber,
       },
 
+      // ----------------------------------------
+      // Donor information
+      // ----------------------------------------
+
       user: {
         name: user.name,
         email: user.email,
         phone: user.phone,
       },
 
+      // ----------------------------------------
       // Public Razorpay Key
       // Safe to send to frontend
+      // ----------------------------------------
+
       keyId: process.env.RAZORPAY_KEY_ID,
     });
   } catch (error) {
@@ -230,12 +240,25 @@ export const verifyDonationPayment = async (req, res) => {
     }
 
     // ------------------------------------------
+    // Convert donation ID to number
+    // ------------------------------------------
+
+    const numericDonationId = Number(donationId);
+
+    if (!Number.isInteger(numericDonationId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid donation ID",
+      });
+    }
+
+    // ------------------------------------------
     // Find donation
     // ------------------------------------------
 
     const donation = await prisma.donation.findFirst({
       where: {
-        id: Number(donationId),
+        id: numericDonationId,
         userId: req.user.userId,
       },
     });
@@ -267,19 +290,40 @@ export const verifyDonationPayment = async (req, res) => {
     if (donation.status === "SUCCESS") {
       return res.status(200).json({
         success: true,
+
         message: "Donation already verified",
 
         donation: {
           id: donation.id,
+
           amount: Number(donation.amount),
+
           frequency: donation.frequency,
+
           paymentMethod: donation.paymentMethod,
+
           status: donation.status,
+
           transactionId: donation.transactionId,
+
           paymentId: donation.paymentId,
+
           orderId: donation.orderId,
+
           receiptNumber: donation.receiptNumber,
+
           donatedAt: donation.donatedAt,
+
+          // ------------------------------------
+          // IMPORTANT:
+          // Return donor information
+          // ------------------------------------
+
+          donorName: donation.donorName,
+
+          donorEmail: donation.donorEmail,
+
+          donorPhone: donation.donorPhone,
         },
       });
     }
@@ -299,10 +343,26 @@ export const verifyDonationPayment = async (req, res) => {
       .digest("hex");
 
     // ------------------------------------------
-    // Compare signatures
+    // Compare signatures securely
     // ------------------------------------------
 
-    if (generatedSignature !== razorpay_signature) {
+    const generatedBuffer = Buffer.from(
+      generatedSignature,
+      "utf8"
+    );
+
+    const receivedBuffer = Buffer.from(
+      razorpay_signature,
+      "utf8"
+    );
+
+    if (
+      generatedBuffer.length !== receivedBuffer.length ||
+      !crypto.timingSafeEqual(
+        generatedBuffer,
+        receivedBuffer
+      )
+    ) {
       return res.status(400).json({
         success: false,
         message: "Payment verification failed",
@@ -333,6 +393,7 @@ export const verifyDonationPayment = async (req, res) => {
 
           paymentGateway: "RAZORPAY",
 
+          // Successful donation time
           donatedAt: new Date(),
         },
       });
@@ -348,15 +409,34 @@ export const verifyDonationPayment = async (req, res) => {
 
       donation: {
         id: updatedDonation.id,
+
         amount: Number(updatedDonation.amount),
+
         frequency: updatedDonation.frequency,
+
         paymentMethod: updatedDonation.paymentMethod,
+
         status: updatedDonation.status,
+
         transactionId: updatedDonation.transactionId,
+
         paymentId: updatedDonation.paymentId,
+
         orderId: updatedDonation.orderId,
+
         receiptNumber: updatedDonation.receiptNumber,
+
         donatedAt: updatedDonation.donatedAt,
+
+        // --------------------------------------
+        // IMPORTANT FOR RECEIPT
+        // --------------------------------------
+
+        donorName: updatedDonation.donorName,
+
+        donorEmail: updatedDonation.donorEmail,
+
+        donorPhone: updatedDonation.donorPhone,
       },
     });
   } catch (error) {

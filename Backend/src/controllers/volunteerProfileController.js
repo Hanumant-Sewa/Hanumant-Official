@@ -1,6 +1,9 @@
 import prisma from "../config/prisma.js";
 
-// GET Volunteer Profile
+// =====================================================
+// GET VOLUNTEER PROFILE
+// =====================================================
+
 export const getVolunteerProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -9,6 +12,7 @@ export const getVolunteerProfile = async (req, res) => {
       where: {
         userId: userId,
       },
+
       include: {
         user: {
           select: {
@@ -16,6 +20,7 @@ export const getVolunteerProfile = async (req, res) => {
             name: true,
             email: true,
             phone: true,
+            avatar: true,
           },
         },
       },
@@ -30,24 +35,25 @@ export const getVolunteerProfile = async (req, res) => {
 
     return res.status(200).json({
       success: true,
+
       profile: {
         id: volunteerProfile.id,
         userId: volunteerProfile.userId,
 
+        // User information
         fullName: volunteerProfile.user.name,
         email: volunteerProfile.user.email,
         phone: volunteerProfile.user.phone,
+        avatar: volunteerProfile.user.avatar,
 
+        // Volunteer information
+        age: volunteerProfile.age,
         city: volunteerProfile.city,
-        ageGroup: volunteerProfile.ageGroup,
         skills: volunteerProfile.skills,
-        availability: volunteerProfile.availability,
 
+        // Existing volunteer information
         totalHours: volunteerProfile.totalHours,
         totalEvents: volunteerProfile.totalEvents,
-        totalMealsServed: volunteerProfile.totalMealsServed,
-        totalPeopleHelped: volunteerProfile.totalPeopleHelped,
-
         isVerified: volunteerProfile.isVerified,
 
         createdAt: volunteerProfile.createdAt,
@@ -66,7 +72,10 @@ export const getVolunteerProfile = async (req, res) => {
 };
 
 
-// UPDATE Volunteer Profile
+// =====================================================
+// UPDATE VOLUNTEER PROFILE
+// =====================================================
+
 export const updateVolunteerProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -74,25 +83,43 @@ export const updateVolunteerProfile = async (req, res) => {
     const {
       fullName,
       phone,
+      age,
       city,
-      ageGroup,
       skills,
-      availability,
+      avatar,
     } = req.body || {};
 
+    // ==========================================
+    // VALIDATION
+    // ==========================================
+
+    if (!fullName || !phone || !age || !city || !skills) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, phone, age, city and skills are required",
+      });
+    }
+
+    // ==========================================
+    // VALIDATE AGE
+    // ==========================================
+
+    const numericAge = Number(age);
+
     if (
-      !fullName ||
-      !phone ||
-      !city ||
-      !ageGroup ||
-      !skills ||
-      !availability
+      !Number.isInteger(numericAge) ||
+      numericAge < 1 ||
+      numericAge > 100
     ) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required",
+        message: "Please enter a valid age",
       });
     }
+
+    // ==========================================
+    // CHECK USER
+    // ==========================================
 
     const user = await prisma.user.findUnique({
       where: {
@@ -107,40 +134,82 @@ export const updateVolunteerProfile = async (req, res) => {
       });
     }
 
-    const volunteerProfile = await prisma.volunteerProfile.update({
-      where: {
-        userId: userId,
-      },
-      data: {
-        city,
-        ageGroup,
-        skills,
-        availability,
-      },
-    });
+    // ==========================================
+    // UPDATE VOLUNTEER PROFILE
+    // ==========================================
 
-    await prisma.user.update({
+    const volunteerProfile =
+      await prisma.volunteerProfile.update({
+        where: {
+          userId: userId,
+        },
+
+        data: {
+          age: numericAge,
+          city: city.trim(),
+          skills: skills.trim(),
+        },
+      });
+
+    // ==========================================
+    // UPDATE USER
+    // ==========================================
+
+    const updatedUser = await prisma.user.update({
       where: {
         id: userId,
       },
+
       data: {
-        name: fullName,
-        phone,
+        name: fullName.trim(),
+        phone: phone.trim(),
+
+        // Update avatar only when provided
+        ...(avatar
+          ? {
+              avatar: avatar,
+            }
+          : {}),
+      },
+
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        avatar: true,
       },
     });
 
+    // ==========================================
+    // RESPONSE
+    // ==========================================
+
     return res.status(200).json({
       success: true,
+
       message: "Volunteer profile updated successfully",
+
       profile: {
         id: volunteerProfile.id,
-        fullName,
-        email: user.email,
-        phone,
-        city,
-        ageGroup,
-        skills,
-        availability,
+        userId: volunteerProfile.userId,
+
+        fullName: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        avatar: updatedUser.avatar,
+
+        age: volunteerProfile.age,
+        city: volunteerProfile.city,
+        skills: volunteerProfile.skills,
+
+        totalHours: volunteerProfile.totalHours,
+        totalEvents: volunteerProfile.totalEvents,
+
+        isVerified: volunteerProfile.isVerified,
+
+        createdAt: volunteerProfile.createdAt,
+        updatedAt: volunteerProfile.updatedAt,
       },
     });
   } catch (error) {
