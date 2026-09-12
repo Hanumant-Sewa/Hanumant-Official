@@ -17,6 +17,16 @@ import adminRoutes from "./src/routes/adminRoutes.js";
 
 const app = express();
 
+// Log which database is in use (password masked) — catches wrong-DATABASE_URL issues at boot
+try {
+  const u = new URL(process.env.DATABASE_URL || "");
+  console.log(
+    `Database: ${u.pathname.replace("/", "")} @ ${u.hostname}:${u.port || 5432} (user ${u.username})`,
+  );
+} catch {
+  console.log("Database: DATABASE_URL missing or invalid");
+}
+
 // ===============================
 // MIDDLEWARE
 // ===============================

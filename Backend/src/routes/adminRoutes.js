@@ -14,6 +14,13 @@ import {
   getAllCampaigns,
   getAllEvents,
   getAllCommunities,
+  createCommunity,
+  getCommunityById,
+  updateCommunity,
+  updateCommunityStatus,
+  deleteCommunity,
+  updateCommunityMember,
+  removeCommunityMember,
   getAuditLogs,
 } from "../controllers/adminController.js";
 
@@ -58,6 +65,13 @@ router.get("/events", getAllEvents);
 
 /* Communities */
 router.get("/communities", getAllCommunities);
+router.post("/communities", createCommunity);
+router.get("/communities/:id", getCommunityById);
+router.patch("/communities/:id", updateCommunity);
+router.patch("/communities/:id/status", updateCommunityStatus);
+router.delete("/communities/:id", deleteCommunity);
+router.patch("/communities/:id/members/:memberId", updateCommunityMember);
+router.delete("/communities/:id/members/:memberId", removeCommunityMember);
 
 /* Audit Logs */
 router.get("/audit-logs", getAuditLogs);
