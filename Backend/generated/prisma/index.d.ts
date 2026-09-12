@@ -2963,11 +2963,6 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      /**
-       * =================================================
-       *      USER RELATIONS
-       *   =================================================
-       */
       volunteerProfile: Prisma.$VolunteerProfilePayload<ExtArgs> | null
       donations: Prisma.$DonationPayload<ExtArgs>[]
       volunteerApplications: Prisma.$VolunteerApplicationPayload<ExtArgs>[]
@@ -4172,6 +4167,7 @@ export namespace Prisma {
   export type VolunteerProfileAvgAggregateOutputType = {
     id: number | null
     userId: number | null
+    age: number | null
     totalHours: number | null
     totalEvents: number | null
   }
@@ -4179,6 +4175,7 @@ export namespace Prisma {
   export type VolunteerProfileSumAggregateOutputType = {
     id: number | null
     userId: number | null
+    age: number | null
     totalHours: number | null
     totalEvents: number | null
   }
@@ -4186,13 +4183,9 @@ export namespace Prisma {
   export type VolunteerProfileMinAggregateOutputType = {
     id: number | null
     userId: number | null
-    bio: string | null
-    skills: string | null
-    interests: string | null
+    age: number | null
     city: string | null
-    state: string | null
-    country: string | null
-    ageGroup: string | null
+    skills: string | null
     availability: string | null
     totalHours: number | null
     totalEvents: number | null
@@ -4205,13 +4198,9 @@ export namespace Prisma {
   export type VolunteerProfileMaxAggregateOutputType = {
     id: number | null
     userId: number | null
-    bio: string | null
-    skills: string | null
-    interests: string | null
+    age: number | null
     city: string | null
-    state: string | null
-    country: string | null
-    ageGroup: string | null
+    skills: string | null
     availability: string | null
     totalHours: number | null
     totalEvents: number | null
@@ -4224,13 +4213,9 @@ export namespace Prisma {
   export type VolunteerProfileCountAggregateOutputType = {
     id: number
     userId: number
-    bio: number
-    skills: number
-    interests: number
+    age: number
     city: number
-    state: number
-    country: number
-    ageGroup: number
+    skills: number
     availability: number
     totalHours: number
     totalEvents: number
@@ -4245,6 +4230,7 @@ export namespace Prisma {
   export type VolunteerProfileAvgAggregateInputType = {
     id?: true
     userId?: true
+    age?: true
     totalHours?: true
     totalEvents?: true
   }
@@ -4252,6 +4238,7 @@ export namespace Prisma {
   export type VolunteerProfileSumAggregateInputType = {
     id?: true
     userId?: true
+    age?: true
     totalHours?: true
     totalEvents?: true
   }
@@ -4259,13 +4246,9 @@ export namespace Prisma {
   export type VolunteerProfileMinAggregateInputType = {
     id?: true
     userId?: true
-    bio?: true
-    skills?: true
-    interests?: true
+    age?: true
     city?: true
-    state?: true
-    country?: true
-    ageGroup?: true
+    skills?: true
     availability?: true
     totalHours?: true
     totalEvents?: true
@@ -4278,13 +4261,9 @@ export namespace Prisma {
   export type VolunteerProfileMaxAggregateInputType = {
     id?: true
     userId?: true
-    bio?: true
-    skills?: true
-    interests?: true
+    age?: true
     city?: true
-    state?: true
-    country?: true
-    ageGroup?: true
+    skills?: true
     availability?: true
     totalHours?: true
     totalEvents?: true
@@ -4297,13 +4276,9 @@ export namespace Prisma {
   export type VolunteerProfileCountAggregateInputType = {
     id?: true
     userId?: true
-    bio?: true
-    skills?: true
-    interests?: true
+    age?: true
     city?: true
-    state?: true
-    country?: true
-    ageGroup?: true
+    skills?: true
     availability?: true
     totalHours?: true
     totalEvents?: true
@@ -4403,13 +4378,9 @@ export namespace Prisma {
   export type VolunteerProfileGroupByOutputType = {
     id: number
     userId: number
-    bio: string | null
-    skills: string | null
-    interests: string | null
+    age: number | null
     city: string | null
-    state: string | null
-    country: string | null
-    ageGroup: string | null
+    skills: string | null
     availability: string | null
     totalHours: number
     totalEvents: number
@@ -4441,13 +4412,9 @@ export namespace Prisma {
   export type VolunteerProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    bio?: boolean
-    skills?: boolean
-    interests?: boolean
+    age?: boolean
     city?: boolean
-    state?: boolean
-    country?: boolean
-    ageGroup?: boolean
+    skills?: boolean
     availability?: boolean
     totalHours?: boolean
     totalEvents?: boolean
@@ -4467,13 +4434,9 @@ export namespace Prisma {
   export type VolunteerProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    bio?: boolean
-    skills?: boolean
-    interests?: boolean
+    age?: boolean
     city?: boolean
-    state?: boolean
-    country?: boolean
-    ageGroup?: boolean
+    skills?: boolean
     availability?: boolean
     totalHours?: boolean
     totalEvents?: boolean
@@ -4487,13 +4450,9 @@ export namespace Prisma {
   export type VolunteerProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    bio?: boolean
-    skills?: boolean
-    interests?: boolean
+    age?: boolean
     city?: boolean
-    state?: boolean
-    country?: boolean
-    ageGroup?: boolean
+    skills?: boolean
     availability?: boolean
     totalHours?: boolean
     totalEvents?: boolean
@@ -4507,13 +4466,9 @@ export namespace Prisma {
   export type VolunteerProfileSelectScalar = {
     id?: boolean
     userId?: boolean
-    bio?: boolean
-    skills?: boolean
-    interests?: boolean
+    age?: boolean
     city?: boolean
-    state?: boolean
-    country?: boolean
-    ageGroup?: boolean
+    skills?: boolean
     availability?: boolean
     totalHours?: boolean
     totalEvents?: boolean
@@ -4523,7 +4478,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type VolunteerProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "bio" | "skills" | "interests" | "city" | "state" | "country" | "ageGroup" | "availability" | "totalHours" | "totalEvents" | "joinedAt" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["volunteerProfile"]>
+  export type VolunteerProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "age" | "city" | "skills" | "availability" | "totalHours" | "totalEvents" | "joinedAt" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["volunteerProfile"]>
   export type VolunteerProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     applications?: boolean | VolunteerProfile$applicationsArgs<ExtArgs>
@@ -4544,6 +4499,12 @@ export namespace Prisma {
     name: "VolunteerProfile"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      /**
+       * *
+       *    * =================================================
+       *    * RELATIONS
+       *    * =================================================
+       */
       applications: Prisma.$VolunteerApplicationPayload<ExtArgs>[]
       eventRegistrations: Prisma.$EventRegistrationPayload<ExtArgs>[]
       tasks: Prisma.$VolunteerTaskPayload<ExtArgs>[]
@@ -4553,14 +4514,22 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       userId: number
-      bio: string | null
-      skills: string | null
-      interests: string | null
+      /**
+       * *
+       *    * =================================================
+       *    * VOLUNTEER INFORMATION
+       *    * =================================================
+       */
+      age: number | null
       city: string | null
-      state: string | null
-      country: string | null
-      ageGroup: string | null
+      skills: string | null
       availability: string | null
+      /**
+       * *
+       *    * =================================================
+       *    * VOLUNTEER STATISTICS
+       *    * =================================================
+       */
       totalHours: number
       totalEvents: number
       joinedAt: Date
@@ -4998,13 +4967,9 @@ export namespace Prisma {
   interface VolunteerProfileFieldRefs {
     readonly id: FieldRef<"VolunteerProfile", 'Int'>
     readonly userId: FieldRef<"VolunteerProfile", 'Int'>
-    readonly bio: FieldRef<"VolunteerProfile", 'String'>
-    readonly skills: FieldRef<"VolunteerProfile", 'String'>
-    readonly interests: FieldRef<"VolunteerProfile", 'String'>
+    readonly age: FieldRef<"VolunteerProfile", 'Int'>
     readonly city: FieldRef<"VolunteerProfile", 'String'>
-    readonly state: FieldRef<"VolunteerProfile", 'String'>
-    readonly country: FieldRef<"VolunteerProfile", 'String'>
-    readonly ageGroup: FieldRef<"VolunteerProfile", 'String'>
+    readonly skills: FieldRef<"VolunteerProfile", 'String'>
     readonly availability: FieldRef<"VolunteerProfile", 'String'>
     readonly totalHours: FieldRef<"VolunteerProfile", 'Int'>
     readonly totalEvents: FieldRef<"VolunteerProfile", 'Int'>
@@ -10812,21 +10777,24 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       /**
-       * =================================================
-       *      DONOR
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * DONOR
+       *    * =================================================
        */
       userId: number | null
       /**
-       * =================================================
-       *      CAMPAIGN
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * CAMPAIGN
+       *    * =================================================
        */
       campaignId: number | null
       /**
-       * =================================================
-       *      DONATION DETAILS
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * DONATION DETAILS
+       *    * =================================================
        */
       amount: Prisma.Decimal
       frequency: string
@@ -10834,18 +10802,20 @@ export namespace Prisma {
       paymentMethod: $Enums.PaymentMethod
       status: $Enums.DonationStatus
       /**
-       * =================================================
-       *      PAYMENT GATEWAY DETAILS
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * PAYMENT GATEWAY DETAILS
+       *    * =================================================
        */
       transactionId: string | null
       paymentId: string | null
       orderId: string | null
       paymentGateway: string | null
       /**
-       * =================================================
-       *      DONOR INFORMATION
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * DONOR INFORMATION
+       *    * =================================================
        */
       donorName: string | null
       donorEmail: string | null
@@ -10853,9 +10823,10 @@ export namespace Prisma {
       isAnonymous: boolean
       message: string | null
       /**
-       * =================================================
-       *      RECEIPT
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * RECEIPT
+       *    * =================================================
        */
       receiptNumber: string | null
       receiptUrl: string | null
@@ -14655,27 +14626,31 @@ export namespace Prisma {
       title: string
       description: string | null
       /**
-       * =================================================
-       *      EVENT
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * EVENT
+       *    * =================================================
        */
       eventId: number | null
       /**
-       * =================================================
-       *      ASSIGNED USER
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * ASSIGNED USER
+       *    * =================================================
        */
       assignedToId: number | null
       /**
-       * =================================================
-       *      VOLUNTEER PROFILE
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * VOLUNTEER PROFILE
+       *    * =================================================
        */
       volunteerProfileId: number | null
       /**
-       * =================================================
-       *      TASK CREATOR
-       *   =================================================
+       * *
+       *    * =================================================
+       *    * TASK CREATOR
+       *    * =================================================
        */
       createdById: number | null
       status: $Enums.TaskStatus
@@ -21477,13 +21452,9 @@ export namespace Prisma {
   export const VolunteerProfileScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
-    bio: 'bio',
-    skills: 'skills',
-    interests: 'interests',
+    age: 'age',
     city: 'city',
-    state: 'state',
-    country: 'country',
-    ageGroup: 'ageGroup',
+    skills: 'skills',
     availability: 'availability',
     totalHours: 'totalHours',
     totalEvents: 'totalEvents',
@@ -22118,13 +22089,9 @@ export namespace Prisma {
     NOT?: VolunteerProfileWhereInput | VolunteerProfileWhereInput[]
     id?: IntFilter<"VolunteerProfile"> | number
     userId?: IntFilter<"VolunteerProfile"> | number
-    bio?: StringNullableFilter<"VolunteerProfile"> | string | null
-    skills?: StringNullableFilter<"VolunteerProfile"> | string | null
-    interests?: StringNullableFilter<"VolunteerProfile"> | string | null
+    age?: IntNullableFilter<"VolunteerProfile"> | number | null
     city?: StringNullableFilter<"VolunteerProfile"> | string | null
-    state?: StringNullableFilter<"VolunteerProfile"> | string | null
-    country?: StringNullableFilter<"VolunteerProfile"> | string | null
-    ageGroup?: StringNullableFilter<"VolunteerProfile"> | string | null
+    skills?: StringNullableFilter<"VolunteerProfile"> | string | null
     availability?: StringNullableFilter<"VolunteerProfile"> | string | null
     totalHours?: IntFilter<"VolunteerProfile"> | number
     totalEvents?: IntFilter<"VolunteerProfile"> | number
@@ -22143,13 +22110,9 @@ export namespace Prisma {
   export type VolunteerProfileOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    bio?: SortOrderInput | SortOrder
-    skills?: SortOrderInput | SortOrder
-    interests?: SortOrderInput | SortOrder
+    age?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
-    state?: SortOrderInput | SortOrder
-    country?: SortOrderInput | SortOrder
-    ageGroup?: SortOrderInput | SortOrder
+    skills?: SortOrderInput | SortOrder
     availability?: SortOrderInput | SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -22171,13 +22134,9 @@ export namespace Prisma {
     AND?: VolunteerProfileWhereInput | VolunteerProfileWhereInput[]
     OR?: VolunteerProfileWhereInput[]
     NOT?: VolunteerProfileWhereInput | VolunteerProfileWhereInput[]
-    bio?: StringNullableFilter<"VolunteerProfile"> | string | null
-    skills?: StringNullableFilter<"VolunteerProfile"> | string | null
-    interests?: StringNullableFilter<"VolunteerProfile"> | string | null
+    age?: IntNullableFilter<"VolunteerProfile"> | number | null
     city?: StringNullableFilter<"VolunteerProfile"> | string | null
-    state?: StringNullableFilter<"VolunteerProfile"> | string | null
-    country?: StringNullableFilter<"VolunteerProfile"> | string | null
-    ageGroup?: StringNullableFilter<"VolunteerProfile"> | string | null
+    skills?: StringNullableFilter<"VolunteerProfile"> | string | null
     availability?: StringNullableFilter<"VolunteerProfile"> | string | null
     totalHours?: IntFilter<"VolunteerProfile"> | number
     totalEvents?: IntFilter<"VolunteerProfile"> | number
@@ -22196,13 +22155,9 @@ export namespace Prisma {
   export type VolunteerProfileOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    bio?: SortOrderInput | SortOrder
-    skills?: SortOrderInput | SortOrder
-    interests?: SortOrderInput | SortOrder
+    age?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
-    state?: SortOrderInput | SortOrder
-    country?: SortOrderInput | SortOrder
-    ageGroup?: SortOrderInput | SortOrder
+    skills?: SortOrderInput | SortOrder
     availability?: SortOrderInput | SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -22223,13 +22178,9 @@ export namespace Prisma {
     NOT?: VolunteerProfileScalarWhereWithAggregatesInput | VolunteerProfileScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"VolunteerProfile"> | number
     userId?: IntWithAggregatesFilter<"VolunteerProfile"> | number
-    bio?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
-    skills?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
-    interests?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
+    age?: IntNullableWithAggregatesFilter<"VolunteerProfile"> | number | null
     city?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
-    state?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
-    country?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
-    ageGroup?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
+    skills?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
     availability?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
     totalHours?: IntWithAggregatesFilter<"VolunteerProfile"> | number
     totalEvents?: IntWithAggregatesFilter<"VolunteerProfile"> | number
@@ -23555,13 +23506,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileCreateInput = {
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -23580,13 +23527,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedCreateInput = {
     id?: number
     userId: number
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -23602,13 +23545,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileUpdateInput = {
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -23627,13 +23566,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -23651,13 +23586,9 @@ export namespace Prisma {
   export type VolunteerProfileCreateManyInput = {
     id?: number
     userId: number
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -23668,13 +23599,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileUpdateManyMutationInput = {
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -23687,13 +23614,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -25255,6 +25178,17 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -25278,13 +25212,9 @@ export namespace Prisma {
   export type VolunteerProfileCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    bio?: SortOrder
-    skills?: SortOrder
-    interests?: SortOrder
+    age?: SortOrder
     city?: SortOrder
-    state?: SortOrder
-    country?: SortOrder
-    ageGroup?: SortOrder
+    skills?: SortOrder
     availability?: SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -25297,6 +25227,7 @@ export namespace Prisma {
   export type VolunteerProfileAvgOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    age?: SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
   }
@@ -25304,13 +25235,9 @@ export namespace Prisma {
   export type VolunteerProfileMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    bio?: SortOrder
-    skills?: SortOrder
-    interests?: SortOrder
+    age?: SortOrder
     city?: SortOrder
-    state?: SortOrder
-    country?: SortOrder
-    ageGroup?: SortOrder
+    skills?: SortOrder
     availability?: SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -25323,13 +25250,9 @@ export namespace Prisma {
   export type VolunteerProfileMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    bio?: SortOrder
-    skills?: SortOrder
-    interests?: SortOrder
+    age?: SortOrder
     city?: SortOrder
-    state?: SortOrder
-    country?: SortOrder
-    ageGroup?: SortOrder
+    skills?: SortOrder
     availability?: SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
@@ -25342,8 +25265,25 @@ export namespace Prisma {
   export type VolunteerProfileSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    age?: SortOrder
     totalHours?: SortOrder
     totalEvents?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -25352,17 +25292,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type EnumVolunteerApplicationStatusFilter<$PrismaModel = never> = {
@@ -25446,22 +25375,6 @@ export namespace Prisma {
     userId?: SortOrder
     volunteerProfileId?: SortOrder
     reviewedBy?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type EnumVolunteerApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -27026,6 +26939,14 @@ export namespace Prisma {
     connect?: CertificateWhereUniqueInput | CertificateWhereUniqueInput[]
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
@@ -27196,14 +27117,6 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutVolunteerApplicationsNestedInput = {
@@ -27963,32 +27876,6 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedEnumVolunteerApplicationStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.VolunteerApplicationStatus | EnumVolunteerApplicationStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.VolunteerApplicationStatus[] | ListEnumVolunteerApplicationStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.VolunteerApplicationStatus[] | ListEnumVolunteerApplicationStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumVolunteerApplicationStatusFilter<$PrismaModel> | $Enums.VolunteerApplicationStatus
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -28014,6 +27901,32 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumVolunteerApplicationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.VolunteerApplicationStatus | EnumVolunteerApplicationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.VolunteerApplicationStatus[] | ListEnumVolunteerApplicationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.VolunteerApplicationStatus[] | ListEnumVolunteerApplicationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumVolunteerApplicationStatusFilter<$PrismaModel> | $Enums.VolunteerApplicationStatus
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedEnumVolunteerApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -28248,13 +28161,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileCreateWithoutUserInput = {
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -28271,13 +28180,9 @@ export namespace Prisma {
 
   export type VolunteerProfileUncheckedCreateWithoutUserInput = {
     id?: number
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -28741,13 +28646,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileUpdateWithoutUserInput = {
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -28764,13 +28665,9 @@ export namespace Prisma {
 
   export type VolunteerProfileUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -29607,13 +29504,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileCreateWithoutApplicationsInput = {
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -29631,13 +29524,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedCreateWithoutApplicationsInput = {
     id?: number
     userId: number
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -29728,13 +29617,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileUpdateWithoutApplicationsInput = {
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -29752,13 +29637,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedUpdateWithoutApplicationsInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -30734,13 +30615,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileCreateWithoutEventRegistrationsInput = {
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -30758,13 +30635,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedCreateWithoutEventRegistrationsInput = {
     id?: number
     userId: number
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -30903,13 +30776,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileUpdateWithoutEventRegistrationsInput = {
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -30927,13 +30796,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedUpdateWithoutEventRegistrationsInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31044,13 +30909,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileCreateWithoutTasksInput = {
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31068,13 +30929,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedCreateWithoutTasksInput = {
     id?: number
     userId: number
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31267,13 +31124,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileUpdateWithoutTasksInput = {
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31291,13 +31144,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedUpdateWithoutTasksInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31372,13 +31221,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileCreateWithoutImpactRecordsInput = {
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31396,13 +31241,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedCreateWithoutImpactRecordsInput = {
     id?: number
     userId: number
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31475,13 +31316,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileUpdateWithoutImpactRecordsInput = {
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31499,13 +31336,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedUpdateWithoutImpactRecordsInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31622,13 +31455,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileCreateWithoutCertificatesInput = {
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31646,13 +31475,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedCreateWithoutCertificatesInput = {
     id?: number
     userId: number
-    bio?: string | null
-    skills?: string | null
-    interests?: string | null
+    age?: number | null
     city?: string | null
-    state?: string | null
-    country?: string | null
-    ageGroup?: string | null
+    skills?: string | null
     availability?: string | null
     totalHours?: number
     totalEvents?: number
@@ -31743,13 +31568,9 @@ export namespace Prisma {
   }
 
   export type VolunteerProfileUpdateWithoutCertificatesInput = {
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
@@ -31767,13 +31588,9 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedUpdateWithoutCertificatesInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: NullableStringFieldUpdateOperationsInput | string | null
-    interests?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     totalHours?: IntFieldUpdateOperationsInput | number
     totalEvents?: IntFieldUpdateOperationsInput | number
