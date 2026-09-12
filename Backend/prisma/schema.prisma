@@ -7,10 +7,11 @@ datasource db {
   provider = "postgresql"
 }
 
-
-/* =====================================================
-   ENUMS
-===================================================== */
+/**
+ * =====================================================
+ * ENUMS
+ * =====================================================
+ */
 
 enum Role {
   USER
@@ -95,10 +96,11 @@ enum CertificateType {
   SPECIAL_RECOGNITION
 }
 
-
-/* =====================================================
-   USER
-===================================================== */
+/**
+ * =====================================================
+ * USER
+ * =====================================================
+ */
 
 model User {
   id       Int    @id @default(autoincrement())
@@ -114,10 +116,6 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  /* =================================================
-     USER RELATIONS
-  ================================================= */
 
   volunteerProfile VolunteerProfile?
 
@@ -150,10 +148,11 @@ model User {
   @@index([status])
 }
 
-
-/* =====================================================
-   VOLUNTEER PROFILE
-===================================================== */
+/**
+ * =====================================================
+ * VOLUNTEER PROFILE
+ * =====================================================
+ */
 
 model VolunteerProfile {
   id Int @id @default(autoincrement())
@@ -162,20 +161,28 @@ model VolunteerProfile {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  bio String?
+  /**
+   * =================================================
+   * VOLUNTEER INFORMATION
+   * =================================================
+   */
 
-  skills     String?
-  interests  String?
+  age Int?
 
-  city    String?
-  state   String?
-  country String?
+  city String?
 
-  ageGroup String?
+  skills String?
 
   availability String?
 
-  totalHours  Int @default(0)
+  /**
+   * =================================================
+   * VOLUNTEER STATISTICS
+   * =================================================
+   */
+
+  totalHours Int @default(0)
+
   totalEvents Int @default(0)
 
   joinedAt DateTime @default(now())
@@ -183,7 +190,14 @@ model VolunteerProfile {
   isVerified Boolean @default(false)
 
   createdAt DateTime @default(now())
+
   updatedAt DateTime @updatedAt
+
+  /**
+   * =================================================
+   * RELATIONS
+   * =================================================
+   */
 
   applications VolunteerApplication[]
 
@@ -198,10 +212,11 @@ model VolunteerProfile {
   @@index([city])
 }
 
-
-/* =====================================================
-   VOLUNTEER APPLICATION
-===================================================== */
+/**
+ * =====================================================
+ * VOLUNTEER APPLICATION
+ * =====================================================
+ */
 
 model VolunteerApplication {
   id Int @id @default(autoincrement())
@@ -233,16 +248,18 @@ model VolunteerApplication {
   reviewedBy Int?
 
   createdAt DateTime @default(now())
+
   updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([status])
 }
 
-
-/* =====================================================
-   COMMUNITY
-===================================================== */
+/**
+ * =====================================================
+ * COMMUNITY
+ * =====================================================
+ */
 
 model Community {
   id Int @id @default(autoincrement())
@@ -253,8 +270,10 @@ model Community {
 
   image String?
 
-  city    String?
-  state   String?
+  city String?
+
+  state String?
+
   country String?
 
   isPublic Boolean @default(true)
@@ -268,16 +287,18 @@ model Community {
   members CommunityMember[]
 
   createdAt DateTime @default(now())
+
   updatedAt DateTime @updatedAt
 
   @@index([createdById])
   @@index([city])
 }
 
-
-/* =====================================================
-   COMMUNITY MEMBER
-===================================================== */
+/**
+ * =====================================================
+ * COMMUNITY MEMBER
+ * =====================================================
+ */
 
 model CommunityMember {
   id Int @id @default(autoincrement())
@@ -299,15 +320,15 @@ model CommunityMember {
   updatedAt DateTime @updatedAt
 
   @@unique([communityId, userId])
-
   @@index([communityId])
   @@index([userId])
 }
 
-
-/* =====================================================
-   CAMPAIGN
-===================================================== */
+/**
+ * =====================================================
+ * CAMPAIGN
+ * =====================================================
+ */
 
 model Campaign {
   id Int @id @default(autoincrement())
@@ -339,37 +360,44 @@ model Campaign {
   @@index([endDate])
 }
 
-
-/* =====================================================
-   DONATION
-===================================================== */
+/**
+ * =====================================================
+ * DONATION
+ * =====================================================
+ */
 
 model Donation {
   id Int @id @default(autoincrement())
 
-  /* =================================================
-     DONOR
-  ================================================= */
+  /**
+   * =================================================
+   * DONOR
+   * =================================================
+   */
 
   userId Int?
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  /* =================================================
-     CAMPAIGN
-  ================================================= */
+  /**
+   * =================================================
+   * CAMPAIGN
+   * =================================================
+   */
 
   campaignId Int?
 
   campaign Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
 
-  /* =================================================
-     DONATION DETAILS
-  ================================================= */
+  /**
+   * =================================================
+   * DONATION DETAILS
+   * =================================================
+   */
 
   amount Decimal @db.Decimal(12, 2)
 
-  frequency String @default("one-time") 
+  frequency String @default("one-time")
 
   currency String @default("INR")
 
@@ -377,9 +405,11 @@ model Donation {
 
   status DonationStatus @default(PENDING)
 
-  /* =================================================
-     PAYMENT GATEWAY DETAILS
-  ================================================= */
+  /**
+   * =================================================
+   * PAYMENT GATEWAY DETAILS
+   * =================================================
+   */
 
   transactionId String?
 
@@ -389,9 +419,11 @@ model Donation {
 
   paymentGateway String?
 
-  /* =================================================
-     DONOR INFORMATION
-  ================================================= */
+  /**
+   * =================================================
+   * DONOR INFORMATION
+   * =================================================
+   */
 
   donorName String?
 
@@ -403,9 +435,11 @@ model Donation {
 
   message String?
 
-  /* =================================================
-     RECEIPT
-  ================================================= */
+  /**
+   * =================================================
+   * RECEIPT
+   * =================================================
+   */
 
   receiptNumber String? @unique
 
@@ -425,10 +459,11 @@ model Donation {
   @@index([donatedAt])
 }
 
-
-/* =====================================================
-   VOLUNTEER EVENT
-===================================================== */
+/**
+ * =====================================================
+ * VOLUNTEER EVENT
+ * =====================================================
+ */
 
 model VolunteerEvent {
   id Int @id @default(autoincrement())
@@ -441,7 +476,8 @@ model VolunteerEvent {
 
   location String?
 
-  city  String?
+  city String?
+
   state String?
 
   startDate DateTime
@@ -471,10 +507,11 @@ model VolunteerEvent {
   @@index([city])
 }
 
-
-/* =====================================================
-   EVENT REGISTRATION
-===================================================== */
+/**
+ * =====================================================
+ * EVENT REGISTRATION
+ * =====================================================
+ */
 
 model EventRegistration {
   id Int @id @default(autoincrement())
@@ -502,16 +539,16 @@ model EventRegistration {
   feedback String?
 
   @@unique([eventId, userId])
-
   @@index([eventId])
   @@index([userId])
   @@index([status])
 }
 
-
-/* =====================================================
-   VOLUNTEER TASK
-===================================================== */
+/**
+ * =====================================================
+ * VOLUNTEER TASK
+ * =====================================================
+ */
 
 model VolunteerTask {
   id Int @id @default(autoincrement())
@@ -520,33 +557,41 @@ model VolunteerTask {
 
   description String?
 
-  /* =================================================
-     EVENT
-  ================================================= */
+  /**
+   * =================================================
+   * EVENT
+   * =================================================
+   */
 
   eventId Int?
 
   event VolunteerEvent? @relation(fields: [eventId], references: [id], onDelete: SetNull)
 
-  /* =================================================
-     ASSIGNED USER
-  ================================================= */
+  /**
+   * =================================================
+   * ASSIGNED USER
+   * =================================================
+   */
 
   assignedToId Int?
 
   assignedTo User? @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
 
-  /* =================================================
-     VOLUNTEER PROFILE
-  ================================================= */
+  /**
+   * =================================================
+   * VOLUNTEER PROFILE
+   * =================================================
+   */
 
   volunteerProfileId Int?
 
   volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
 
-  /* =================================================
-     TASK CREATOR
-  ================================================= */
+  /**
+   * =================================================
+   * TASK CREATOR
+   * =================================================
+   */
 
   createdById Int?
 
@@ -568,10 +613,11 @@ model VolunteerTask {
   @@index([dueDate])
 }
 
-
-/* =====================================================
-   VOLUNTEER IMPACT
-===================================================== */
+/**
+ * =====================================================
+ * VOLUNTEER IMPACT
+ * =====================================================
+ */
 
 model VolunteerImpact {
   id Int @id @default(autoincrement())
@@ -602,10 +648,11 @@ model VolunteerImpact {
   @@index([eventId])
 }
 
-
-/* =====================================================
-   CERTIFICATE
-===================================================== */
+/**
+ * =====================================================
+ * CERTIFICATE
+ * =====================================================
+ */
 
 model Certificate {
   id Int @id @default(autoincrement())
@@ -639,10 +686,11 @@ model Certificate {
   @@index([issueDate])
 }
 
-
-/* =====================================================
-   NOTIFICATION
-===================================================== */
+/**
+ * =====================================================
+ * NOTIFICATION
+ * =====================================================
+ */
 
 model Notification {
   id Int @id @default(autoincrement())
@@ -666,10 +714,11 @@ model Notification {
   @@index([createdAt])
 }
 
-
-/* =====================================================
-   PASSWORD RESET TOKEN
-===================================================== */
+/**
+ * =====================================================
+ * PASSWORD RESET TOKEN
+ * =====================================================
+ */
 
 model PasswordResetToken {
   id Int @id @default(autoincrement())
@@ -690,10 +739,11 @@ model PasswordResetToken {
   @@index([expiresAt])
 }
 
-
-/* =====================================================
-   AUDIT LOG
-===================================================== */
+/**
+ * =====================================================
+ * AUDIT LOG
+ * =====================================================
+ */
 
 model AuditLog {
   id Int @id @default(autoincrement())
@@ -719,5 +769,3 @@ model AuditLog {
   @@index([entity])
   @@index([createdAt])
 }
-
-
