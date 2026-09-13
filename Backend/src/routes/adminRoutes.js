@@ -5,14 +5,34 @@ import adminMiddleware from "../middleware/adminMiddleware.js";
 
 import {
   getAdminDashboard,
+
+  // Users
   getAllUsers,
   updateUserStatus,
+
+  // Volunteer Applications
   getVolunteerApplications,
   approveVolunteerApplication,
   rejectVolunteerApplication,
+
+  // Donations
   getAllDonations,
+
+  // Campaigns
   getAllCampaigns,
+  createCampaign,
+  updateCampaign,
+  cancelCampaign,
+  deleteCampaign,
+
+  // Events
   getAllEvents,
+  createEvent,
+  updateEvent,
+  cancelEvent,
+  deleteEvent,
+
+  // Communities
   getAllCommunities,
   createCommunity,
   getCommunityById,
@@ -21,6 +41,8 @@ import {
   deleteCommunity,
   updateCommunityMember,
   removeCommunityMember,
+
+  // Audit Logs
   getAuditLogs,
 } from "../controllers/adminController.js";
 
@@ -28,23 +50,40 @@ const router = express.Router();
 
 /*
 =====================================================
-ALL ADMIN ROUTES REQUIRE:
-1. Valid JWT
-2. ADMIN role
+ADMIN ROUTE PROTECTION
 =====================================================
+
+Every route in this router requires:
+
+1. Valid JWT
+2. User must have ADMIN role
+
+Order:
+authMiddleware -> identifies the user
+adminMiddleware -> checks ADMIN role
 */
 
 router.use(authMiddleware);
 router.use(adminMiddleware);
 
-/* Dashboard */
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
 router.get("/dashboard", getAdminDashboard);
 
-/* Users */
+/* =====================================================
+   USERS
+===================================================== */
+
 router.get("/users", getAllUsers);
+
 router.patch("/users/:id/status", updateUserStatus);
 
-/* Volunteer Applications */
+/* =====================================================
+   VOLUNTEER APPLICATIONS
+===================================================== */
+
 router.get("/volunteer-applications", getVolunteerApplications);
 
 router.patch(
@@ -54,16 +93,44 @@ router.patch(
 
 router.patch("/volunteer-applications/:id/reject", rejectVolunteerApplication);
 
-/* Donations */
+/* =====================================================
+   DONATIONS
+===================================================== */
+
 router.get("/donations", getAllDonations);
 
-/* Campaigns */
+/* =====================================================
+   CAMPAIGNS
+===================================================== */
+
 router.get("/campaigns", getAllCampaigns);
 
-/* Events */
+router.post("/campaigns", createCampaign);
+
+router.patch("/campaigns/:id", updateCampaign);
+
+router.patch("/campaigns/:id/cancel", cancelCampaign);
+
+router.delete("/campaigns/:id", deleteCampaign);
+
+/* =====================================================
+   EVENTS
+===================================================== */
+
 router.get("/events", getAllEvents);
 
-/* Communities */
+router.post("/events", createEvent);
+
+router.patch("/events/:id", updateEvent);
+
+router.patch("/events/:id/cancel", cancelEvent);
+
+router.delete("/events/:id", deleteEvent);
+
+/* =====================================================
+   COMMUNITIES
+===================================================== */
+
 router.get("/communities", getAllCommunities);
 router.post("/communities", createCommunity);
 router.get("/communities/:id", getCommunityById);
@@ -73,7 +140,10 @@ router.delete("/communities/:id", deleteCommunity);
 router.patch("/communities/:id/members/:memberId", updateCommunityMember);
 router.delete("/communities/:id/members/:memberId", removeCommunityMember);
 
-/* Audit Logs */
+/* =====================================================
+   AUDIT LOGS
+===================================================== */
+
 router.get("/audit-logs", getAuditLogs);
 
 export default router;

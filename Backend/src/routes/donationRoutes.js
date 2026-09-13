@@ -1,12 +1,32 @@
 import express from "express";
 
-import { createDonation } from "../controllers/donationController.js";
+import {
+  createDonationOrder,
+  verifyDonationPayment,
+} from "../controllers/donationController.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Protected donation route
-router.post("/", authMiddleware, createDonation);
+// ==========================================
+// CREATE RAZORPAY ORDER
+// ==========================================
+
+router.post(
+  "/create-order",
+  authMiddleware,
+  createDonationOrder
+);
+
+// ==========================================
+// VERIFY RAZORPAY PAYMENT
+// ==========================================
+
+router.post(
+  "/verify-payment",
+  authMiddleware,
+  verifyDonationPayment
+);
 
 export default router;

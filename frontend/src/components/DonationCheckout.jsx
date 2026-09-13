@@ -1,307 +1,137 @@
-import { useState } from "react";
+import { CheckCircle, Heart, ArrowRight } from "lucide-react";
 
-import {Heart,CreditCard,Smartphone,Building2,} from "lucide-react";
-
-import {useLocation,useNavigate,} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function DonationCheckout() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Get donation details from Donate.jsx
-  const amount = location.state?.amount || 50;
+  const donation = location.state?.donation || {};
+
+  const amount = location.state?.amount || donation.amount || 0;
+
   const frequency =
-    location.state?.frequency || "monthly";
+    location.state?.frequency || donation.frequency || "one-time";
 
-  const selectedPaymentMethod =
-    location.state?.paymentMethod || "upi";
+  const paymentMethod =
+    location.state?.paymentMethod || donation.paymentMethod || "UPI";
 
-  const [paymentMethod, setPaymentMethod] =
-    useState(selectedPaymentMethod);
+  const status = location.state?.status || donation.status || "SUCCESS";
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const transactionId =
+    location.state?.transactionId || donation.transactionId || "";
 
-  // =====================================================
-  // CREATE DONATION
-  // =====================================================
+  const receiptNumber =
+    location.state?.receiptNumber || donation.receiptNumber || "";
 
-  const handlePayment = async (e) => {
-    e.preventDefault();
-
-    setLoading(true);
-    setError("");
-
-    try {
-      // Get token if your login stores it
-      const token = localStorage.getItem("token");
-
-      const response = await fetch(
-        "http://localhost:5000/api/donations",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json",
-
-            ...(token
-              ? {
-                  Authorization: `Bearer ${token}`,
-                }
-              : {}),
-          },
-
-          // Important because your login uses HTTP-only cookie
-          credentials: "include",
-
-          body: JSON.stringify({
-            amount: Number(amount),
-            frequency: frequency,
-            paymentMethod: paymentMethod,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      // =================================================
-      // ERROR FROM BACKEND
-      // =================================================
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Donation failed"
-        );
-      }
-
-      // =================================================
-      // SUCCESS
-      // =================================================
-
-      console.log(
-        "Donation created successfully:",
-        data
-      );
-
-      // Go to receipt page
-      navigate(
-        `/donate/receipt/${data.donation.id}`,
-        {
-          state: {
-            amount: data.donation.amount,
-            frequency: data.donation.frequency,
-            paymentMethod:
-              data.donation.paymentMethod,
-            status: data.donation.status,
-            transactionId:
-              data.donation.transactionId,
-            receiptNumber:
-              data.donation.receiptNumber,
-          },
-        }
-      );
-    } catch (error) {
-      console.error(
-        "Donation Error:",
-        error
-      );
-
-      setError(
-        error.message ||
-          "Something went wrong while processing the donation."
-      );
-    } finally {
-      setLoading(false);
+  const handleViewReceipt = () => {
+    if (!donation.id) {
+      navigate("/donate");
+      return;
     }
+
+    navigate(`/donate/receipt/${donation.id}`, {
+      state: {
+        amount,
+        frequency,
+        paymentMethod,
+        status,
+        transactionId,
+        receiptNumber,
+        paymentId: location.state?.paymentId || donation.paymentId || "",
+        orderId: location.state?.orderId || donation.orderId || "",
+        donatedAt: location.state?.donatedAt || donation.donatedAt || "",
+      },
+    });
   };
 
   return (
     <main className="checkout-page">
-
       <section className="internal-section">
-
         <div className="checkout-container">
-
           <div className="checkout-card">
+            {/* SUCCESS ICON */}
 
-            {/* =================================================
-                HEADER
-            ================================================= */}
+            <div className="checkout-heart">
+              <CheckCircle size={65} />
+            </div>
+
+            {/* HEADER */}
 
             <div className="checkout-header">
-
-              <div className="checkout-heart">
-                <Heart size={45} />
-              </div>
-
               <h1>
-                Complete Your{" "}
-                <span>Contribution</span>
+                Payment <span>Successful</span>
               </h1>
 
-              <p>
-                Thank you for supporting
-                Hanumat Seva. Please confirm
-                your contribution details below.
-              </p>
-
+              <p>Thank you for supporting Hanumant Seva Foundation.</p>
             </div>
 
-            {/* =================================================
-                DONATION SUMMARY
-            ================================================= */}
+            {/* DONATION SUMMARY */}
 
             <div className="checkout-summary">
-
               <div className="checkout-summary-box">
+                <span>Donation Amount</span>
 
-                <span>
-                  Donation Amount
-                </span>
-
-                <strong>
-                  ₹{amount}
-                </strong>
-
+                <strong>₹{amount}</strong>
               </div>
 
               <div className="checkout-summary-box">
-
-                <span>
-                  Contribution
-                </span>
+                <span>Contribution</span>
 
                 <strong>
-                  {frequency === "monthly"
-                    ? "Monthly"
-                    : "One Time"}
+                  {frequency === "monthly" ? "Monthly" : "One Time"}
                 </strong>
-
               </div>
-
             </div>
 
-            {/* =================================================
-                PAYMENT METHOD
-            ================================================= */}
+            {/* PAYMENT DETAILS */}
 
-            <div className="payment-section">
-
-              <h3>
-                Select Payment Method
-              </h3>
-
-              <div className="payment-methods">
-
-                {/* UPI */}
-
-                <button
-                  type="button"
-                  className={`payment-method ${
-                    paymentMethod === "upi"
-                      ? "active"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setPaymentMethod("upi")
-                  }
-                >
-                  <Smartphone size={20} />
-                  UPI
-                </button>
-
-                {/* CARD */}
-
-                <button
-                  type="button"
-                  className={`payment-method ${
-                    paymentMethod === "card"
-                      ? "active"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setPaymentMethod("card")
-                  }
-                >
-                  <CreditCard size={20} />
-                  Card
-                </button>
-
-                {/* NET BANKING */}
-
-                <button
-                  type="button"
-                  className={`payment-method ${
-                    paymentMethod ===
-                    "netbanking"
-                      ? "active"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setPaymentMethod(
-                      "netbanking"
-                    )
-                  }
-                >
-                  <Building2 size={20} />
-                  Net Banking
-                </button>
-
-              </div>
-
-              {/* SELECTED PAYMENT */}
-
-              <div className="selected-payment">
-
-                Selected Payment Method:{" "}
-
-                <strong>
-                  {paymentMethod === "upi"
-                    ? "UPI"
-                    : paymentMethod === "card"
+            <div className="selected-payment">
+              Payment Method:{" "}
+              <strong>
+                {paymentMethod === "UPI"
+                  ? "UPI"
+                  : paymentMethod === "CARD"
                     ? "Card"
-                    : "Net Banking"}
-                </strong>
-
-              </div>
-
+                    : paymentMethod === "NET_BANKING"
+                      ? "Net Banking"
+                      : paymentMethod}
+              </strong>
             </div>
 
-            {/* =================================================
-                ERROR MESSAGE
-            ================================================= */}
+            <div className="selected-payment">
+              Payment Status:{" "}
+              <strong>{status === "SUCCESS" ? "Successful" : status}</strong>
+            </div>
 
-            {error && (
-              <div className="checkout-error">
-                {error}
+            {transactionId && (
+              <div className="selected-payment">
+                Transaction ID: <strong>{transactionId}</strong>
               </div>
             )}
 
-            {/* =================================================
-                CONFIRM DONATION
-            ================================================= */}
+            {receiptNumber && (
+              <div className="selected-payment">
+                Receipt Number: <strong>{receiptNumber}</strong>
+              </div>
+            )}
+
+            {/* ACTION */}
 
             <div className="checkout-actions">
-
               <button
                 type="button"
                 className="checkout-pay-button"
-                onClick={handlePayment}
-                disabled={loading}
+                onClick={handleViewReceipt}
               >
-                {loading
-                  ? "Processing..."
-                  : `Confirm Donation ₹${amount}`}
+                <Heart size={18} />
+                View Donation Receipt
+                <ArrowRight size={18} />
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       </section>
-
     </main>
   );
 }

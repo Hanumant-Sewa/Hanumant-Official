@@ -90,23 +90,26 @@ function Register() {
          SEND DATA TO BACKEND
       ========================= */
 
-      const response = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          // Required for cookie-based authentication.
+          credentials: "include",
+
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            password: formData.password,
+          }),
         },
-
-        // Required for cookie-based authentication.
-        credentials: "include",
-
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-          password: formData.password,
-        }),
-      });
+      );
 
       const data = await response.json();
 
