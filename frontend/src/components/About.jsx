@@ -75,7 +75,11 @@ const About = () => {
 
             {/* ================= MONTHLY SUPPORT ================= */}
 
-            <ProtectedButton to="/donate" className="about-btn">
+            <ProtectedButton
+              to="/donate"
+              allowedRoles={["USER", "VOLUNTEER"]}
+              className="about-btn"
+            >
               Start Monthly Support
               <ArrowRight size={18} />
             </ProtectedButton>
@@ -202,6 +206,7 @@ const About = () => {
 
               <ProtectedLink
                 to="/transparency"
+                allowedRoles={["USER", "VOLUNTEER"]}
                 state={{
                   from: "/transparency",
                 }}

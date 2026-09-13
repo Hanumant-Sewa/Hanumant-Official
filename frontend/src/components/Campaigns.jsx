@@ -157,7 +157,11 @@ function Campaigns() {
 
                 {/* CAMPAIGN DETAILS */}
 
-                <ProtectedLink to="/campaigns" className="campaign-link">
+                <ProtectedLink
+                  to="/campaigns"
+                  allowedRoles={["USER", "VOLUNTEER"]}
+                  className="campaign-link"
+                >
                   View Campaign
                   <ArrowRight size={17} />
                 </ProtectedLink>
@@ -214,6 +218,7 @@ function Campaigns() {
 
                     <ProtectedLink
                       to={item.link}
+                      allowedRoles={["USER", "VOLUNTEER"]}
                       className="community-journey-explore"
                     >
                       Explore
@@ -243,7 +248,11 @@ function Campaigns() {
 
           {/* PROTECTED DONATION ACTION */}
 
-          <ProtectedButton to="/donate" className="campaigns-cta-btn">
+          <ProtectedButton
+            to="/donate"
+            allowedRoles={["USER", "VOLUNTEER"]}
+            className="campaigns-cta-btn"
+          >
             Support a Campaign
             <Heart size={18} />
           </ProtectedButton>

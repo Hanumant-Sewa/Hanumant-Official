@@ -89,7 +89,12 @@ import Transparency from "./pages/Transparency";
 
 import Dashboard from "./pages/Dashboard";
 
+// =====================================================
+// ADMIN
+// =====================================================
+
 import Admin from "./pages/Admin/Admin";
+
 // =====================================================
 // APP
 // =====================================================
@@ -129,20 +134,38 @@ function App() {
                 </>
               }
             />
+
+            {/* =================================================
+                PUBLIC INFORMATION PAGES
+            ================================================= */}
+
             <Route path="/community" element={<Community />} />
 
             <Route path="/transparency" element={<Transparency />} />
 
-            <Route path="/community/join" element={<JoinCommunity />} />
+            {/* =================================================
+                COMMUNITY JOIN
+                USER / VOLUNTEER ONLY
+            ================================================= */}
+
+            <Route
+              path="/community/join"
+              element={
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
+                  <JoinCommunity />
+                </ProtectedRoute>
+              }
+            />
 
             {/* =================================================
                 DONATION
+                USER / VOLUNTEER ONLY
             ================================================= */}
 
             <Route
               path="/donate"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <Donate />
                 </ProtectedRoute>
               }
@@ -151,7 +174,7 @@ function App() {
             <Route
               path="/donate/checkout"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <DonationCheckout />
                 </ProtectedRoute>
               }
@@ -160,7 +183,7 @@ function App() {
             <Route
               path="/donate/receipt/:id"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <DonationReceipt />
                 </ProtectedRoute>
               }
@@ -168,12 +191,13 @@ function App() {
 
             {/* =================================================
                 MAIN USER DASHBOARD
+                USER / VOLUNTEER ONLY
             ================================================= */}
 
             <Route
               path="/dashboard"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <Dashboard />
                 </ProtectedRoute>
               }
@@ -181,6 +205,7 @@ function App() {
 
             {/* =================================================
                 VOLUNTEER FLOW
+                USER / VOLUNTEER ONLY
             ================================================= */}
 
             {/* Volunteer Home */}
@@ -188,7 +213,7 @@ function App() {
             <Route
               path="/volunteer"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <Volunteer />
                 </ProtectedRoute>
               }
@@ -199,7 +224,7 @@ function App() {
             <Route
               path="/volunteer/application"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <VolunteerApplication />
                 </ProtectedRoute>
               }
@@ -210,7 +235,7 @@ function App() {
             <Route
               path="/volunteer/application-status"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <ApplicationStatus />
                 </ProtectedRoute>
               }
@@ -221,32 +246,29 @@ function App() {
             <Route
               path="/volunteer/status"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <ApplicationStatus />
                 </ProtectedRoute>
               }
             />
-
-          
 
             {/* Volunteer Profile */}
 
             <Route
               path="/volunteer/profile"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <VolunteerProfile />
                 </ProtectedRoute>
               }
             />
-
 
             {/* Event Details */}
 
             <Route
               path="/volunteer/events/:eventId"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["USER", "VOLUNTEER"]}>
                   <EventDetails />
                 </ProtectedRoute>
               }
@@ -257,7 +279,7 @@ function App() {
             <Route
               path="/volunteer/tasks"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["VOLUNTEER"]}>
                   <VolunteerTasks />
                 </ProtectedRoute>
               }
@@ -268,7 +290,7 @@ function App() {
             <Route
               path="/volunteer/impact"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["VOLUNTEER"]}>
                   <VolunteerImpact />
                 </ProtectedRoute>
               }
@@ -279,7 +301,7 @@ function App() {
             <Route
               path="/volunteer/certificates"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["VOLUNTEER"]}>
                   <VolunteerCertificates />
                 </ProtectedRoute>
               }
@@ -297,10 +319,15 @@ function App() {
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
+          {/* =================================================
+              ADMIN
+              ADMIN ONLY
+          ================================================= */}
+
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <Admin />
               </ProtectedRoute>
             }

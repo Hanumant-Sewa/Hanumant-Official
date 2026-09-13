@@ -28,9 +28,18 @@ const app = express();
 // MIDDLEWARE
 // ===============================
 
+const allowedOrigins = [
+  // Local development frontend
+  "http://localhost:5173",
+
+  // Firebase production frontend
+  "https://hanumant-seva.web.app",
+  "https://hanumant-seva.firebaseapp.com",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
@@ -70,6 +79,22 @@ app.use("/api/volunteer-impact", volunteerImpactRoutes);
 app.use("/api/volunteer-tasks", volunteerTaskRoutes);
 
 app.use("/api/volunteer-certificates", volunteerCertificateRoutes);
+
+// ===============================
+// ADMIN ROUTES
+// ===============================
+//
+// adminRoutes already contains:
+//
+// authMiddleware
+//       ↓
+// adminMiddleware
+//       ↓
+// admin controller
+//
+// Therefore every /api/admin/*
+// endpoint requires ADMIN role.
+//
 
 app.use("/api/admin", adminRoutes);
 

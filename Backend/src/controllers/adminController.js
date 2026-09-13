@@ -435,16 +435,11 @@ export const getVolunteerApplications = async (req, res) => {
         volunteerProfile: {
           select: {
             id: true,
-            bio: true,
-            skills: true,
-            interests: true,
-            city: true,
-            state: true,
-            country: true,
-            availability: true,
-            totalHours: true,
-            totalEvents: true,
-            isVerified: true,
+            userId: true,
+            age: true,
+            joinedAt: true,
+            createdAt: true,
+            updatedAt: true,
           },
         },
       },
@@ -542,9 +537,6 @@ export const approveVolunteerApplication = async (req, res) => {
             skills: application.skills || null,
 
             availability: application.availability || null,
-
-            bio: application.experience || null,
-
             city: null,
             state: null,
             country: null,

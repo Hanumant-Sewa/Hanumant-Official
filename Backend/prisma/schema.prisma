@@ -769,7 +769,6 @@ model AuditLog {
   @@index([entity])
   @@index([createdAt])
 }
-<<<<<<< HEAD
 enum ContactStatus {
   UNREAD
   READ
@@ -787,5 +786,3 @@ model ContactMessage {
   updatedAt DateTime @updatedAt
 }
 
-=======
->>>>>>> 7a3a50b1ba118dc62108e402a66e94df3f2cb470
