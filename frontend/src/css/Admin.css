@@ -70,6 +70,8 @@
   z-index: 1000;
 
   overflow-y: auto;
+  overflow-x: hidden;
+  transition: width 0.25s ease;
 
   box-shadow: 8px 0 30px rgba(15, 23, 42, 0.08);
 
@@ -181,7 +183,6 @@
 
 .admin-dashboard .admin-nav-item {
   position: relative;
-
   width: 100%;
   min-height: 45px;
 
@@ -413,12 +414,12 @@
   color: #9faab5;
 
   font-family: inherit;
-  font-size: 10px;
-  font-weight: 500;
-
-  cursor: pointer;
-
-  transition: .2s ease;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.2s ease;
 }
 
 .admin-dashboard .admin-logout-button:hover {
@@ -429,8 +430,30 @@
   color: #fca5a5;
 }
 
+.admin-dashboard .admin-view-site {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #9aa6b2;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
 
-/* =========================================================
+.admin-dashboard .admin-view-site:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+/* =====================================================
    MAIN
 ========================================================= */
 
@@ -440,6 +463,9 @@
   margin-left: 258px;
 
   min-height: 100vh;
+  transition:
+    margin-left 0.25s ease,
+    width 0.25s ease;
 }
 
 
@@ -2973,5 +2999,312 @@
     animation-iteration-count: 1 !important;
 
     transition-duration: .01ms !important;
+  }
+}
+
+/* =====================================================
+   COMMUNITIES — TOOLBAR, SEARCH, FORMS
+===================================================== */
+
+.admin-dashboard .admin-toolbar-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+}
+
+.admin-dashboard .admin-search {
+  flex: 1;
+  min-width: 200px;
+  border: 1px solid #e2e7eb;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #303b43;
+  background: #ffffff;
+}
+
+.admin-dashboard .admin-search:focus {
+  outline: none;
+  border-color: #e87524;
+}
+
+.admin-dashboard .admin-primary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  background: #e87524;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-dashboard .admin-primary-button:hover {
+  background: #d1651a;
+}
+
+.admin-dashboard .admin-management-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eef1f3;
+}
+
+.admin-dashboard .admin-icon-danger {
+  color: #dc2626;
+}
+
+.admin-dashboard .admin-icon-danger:hover {
+  background: #fdecec;
+}
+
+.admin-dashboard .admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.admin-dashboard .admin-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-dashboard .admin-form-full {
+  grid-column: 1 / -1;
+}
+
+.admin-dashboard .admin-form-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #303b43;
+}
+
+.admin-dashboard .admin-form-group input[type="text"],
+.admin-dashboard .admin-form-group textarea {
+  border: 1px solid #e2e7eb;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #303b43;
+  background: #ffffff;
+  resize: vertical;
+}
+
+.admin-dashboard .admin-form-group input:focus,
+.admin-dashboard .admin-form-group textarea:focus {
+  outline: none;
+  border-color: #e87524;
+}
+
+.admin-dashboard .admin-checkbox-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-dashboard .admin-checkbox-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #e87524;
+}
+
+@media (max-width: 650px) {
+  .admin-dashboard .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =====================================================
+   COLLAPSIBLE SIDEBAR — ICON RAIL (DESKTOP ONLY)
+   Toggle adds .admin-collapsed on .admin-dashboard.
+   Pure CSS + React state, no libraries.
+===================================================== */
+
+.admin-dashboard .admin-edge-toggle {
+  position: fixed;
+  top: 50%;
+  left: 249px;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 60px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e7eb;
+  color: #8e9aa7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 4px 14px rgba(31, 41, 55, 0.14);
+  z-index: 1001;
+  transition:
+    left 0.25s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-dashboard .admin-edge-toggle:hover {
+  border-color: #e87524;
+  color: #e87524;
+  box-shadow: 0 4px 16px rgba(232, 117, 36, 0.35);
+}
+
+.admin-dashboard.admin-collapsed .admin-edge-toggle {
+  left: 67px;
+}
+
+/* Floating label tooltip for the icon rail.
+   Positioned with position:fixed from React
+   (getBoundingClientRect) so the sidebar's
+   overflow never clips it. */
+
+.admin-dashboard .admin-nav-tooltip {
+  position: fixed;
+  left: 88px;
+  transform: translateY(-50%);
+  background: #111827;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 13px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  z-index: 2000;
+  pointer-events: none;
+  white-space: nowrap;
+  animation: admin-tip-in 0.15s ease;
+}
+
+.admin-dashboard .admin-nav-tooltip::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: #111827;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+@keyframes admin-tip-in {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+@media (min-width: 901px) {
+  .admin-dashboard.admin-collapsed .admin-sidebar {
+    width: 78px;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-main {
+    width: calc(100% - 78px);
+    margin-left: 78px;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-brand {
+    justify-content: center;
+    padding: 18px 0;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-brand-text,
+  .admin-dashboard.admin-collapsed .admin-navigation-title,
+  .admin-dashboard.admin-collapsed .admin-nav-item span,
+  .admin-dashboard.admin-collapsed
+    .admin-admin-profile
+    div:not(.admin-avatar),
+  .admin-dashboard.admin-collapsed .admin-logout-button span {
+    display: none;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-navigation {
+    padding: 24px 13px;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-nav-item {
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-nav-item-active {
+    box-shadow: 0 4px 14px rgba(232, 117, 36, 0.45);
+  }
+
+  .admin-dashboard.admin-collapsed .admin-nav-count {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    font-size: 9px;
+    border: 2px solid #1f2937;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-sidebar-footer {
+    padding: 16px 12px;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-admin-profile {
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-logout-button {
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+    padding: 0;
+    border-radius: 13px;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-view-site span {
+    display: none;
+  }
+
+  .admin-dashboard.admin-collapsed .admin-view-site {
+    width: 46px;
+    height: 46px;
+    margin: 10px auto 0;
+    padding: 0;
+    border-radius: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-dashboard .admin-edge-toggle,
+  .admin-dashboard .admin-nav-tooltip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-dashboard .admin-sidebar,
+  .admin-dashboard .admin-main,
+  .admin-dashboard .admin-edge-toggle {
+    transition: none;
+  }
+
+  .admin-dashboard .admin-nav-tooltip {
+    animation: none;
   }
 }
