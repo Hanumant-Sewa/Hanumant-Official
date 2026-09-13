@@ -1842,6 +1842,506 @@ export const getAllCommunities = async (req, res) => {
 };
 
 /* =====================================================
+   CREATE COMMUNITY
+===================================================== */
+
+export const createCommunity = async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      image,
+      city,
+      state,
+      country,
+      isPublic = true,
+      isActive = true,
+    } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        message: "Community name is required.",
+      });
+    }
+
+    const community = await prisma.community.create({
+      data: {
+        name: name.trim(),
+        description: description?.trim() || null,
+        image: image?.trim() || null,
+        city: city?.trim() || null,
+        state: state?.trim() || null,
+        country: country?.trim() || null,
+        isPublic: isPublic !== false,
+        isActive: isActive !== false,
+        createdById: req.user.userId,
+      },
+
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "CREATE_COMMUNITY",
+      entity: "Community",
+      entityId: community.id,
+      details: `Created community "${community.name}"`,
+      ipAddress: req.ip,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Community created successfully.",
+      community,
+    });
+  } catch (error) {
+    console.error("Create community error:", error);
+
+    res.status(500).json({
+      message: "Failed to create community.",
+    });
+  }
+};
+
+/* =====================================================
+   COMMUNITY DETAILS (WITH MEMBERS)
+===================================================== */
+
+export const getCommunityById = async (req, res) => {
+  try {
+    const communityId = Number(req.params.id);
+
+    const community = await prisma.community.findUnique({
+      where: {
+        id: communityId,
+      },
+
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+
+        members: {
+          orderBy: {
+            joinedAt: "asc",
+          },
+
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+                role: true,
+                status: true,
+              },
+            },
+          },
+        },
+
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
+    });
+
+    if (!community) {
+      return res.status(404).json({
+        message: "Community not found.",
+      });
+    }
+
+    res.json({
+      success: true,
+      community,
+    });
+  } catch (error) {
+    console.error("Get community error:", error);
+
+    res.status(500).json({
+      message: "Failed to load community.",
+    });
+  }
+};
+
+/* =====================================================
+   UPDATE COMMUNITY
+===================================================== */
+
+export const updateCommunity = async (req, res) => {
+  try {
+    const communityId = Number(req.params.id);
+
+    const existing = await prisma.community.findUnique({
+      where: {
+        id: communityId,
+      },
+    });
+
+    if (!existing) {
+      return res.status(404).json({
+        message: "Community not found.",
+      });
+    }
+
+    const { name, description, image, city, state, country, isPublic } =
+      req.body;
+
+    if (name !== undefined && !String(name).trim()) {
+      return res.status(400).json({
+        message: "Community name cannot be empty.",
+      });
+    }
+
+    const data = {};
+
+    if (name !== undefined) data.name = String(name).trim();
+    if (description !== undefined) data.description = description?.trim() || null;
+    if (image !== undefined) data.image = image?.trim() || null;
+    if (city !== undefined) data.city = city?.trim() || null;
+    if (state !== undefined) data.state = state?.trim() || null;
+    if (country !== undefined) data.country = country?.trim() || null;
+    if (isPublic !== undefined) data.isPublic = isPublic !== false;
+
+    const community = await prisma.community.update({
+      where: {
+        id: communityId,
+      },
+
+      data,
+
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "UPDATE_COMMUNITY",
+      entity: "Community",
+      entityId: communityId,
+      details: `Updated community "${community.name}"`,
+      ipAddress: req.ip,
+    });
+
+    res.json({
+      success: true,
+      message: "Community updated successfully.",
+      community,
+    });
+  } catch (error) {
+    console.error("Update community error:", error);
+
+    res.status(500).json({
+      message: "Failed to update community.",
+    });
+  }
+};
+
+/* =====================================================
+   ACTIVATE / DEACTIVATE COMMUNITY
+===================================================== */
+
+export const updateCommunityStatus = async (req, res) => {
+  try {
+    const communityId = Number(req.params.id);
+    const { isActive } = req.body;
+
+    if (typeof isActive !== "boolean") {
+      return res.status(400).json({
+        message: "isActive must be true or false.",
+      });
+    }
+
+    const existing = await prisma.community.findUnique({
+      where: {
+        id: communityId,
+      },
+    });
+
+    if (!existing) {
+      return res.status(404).json({
+        message: "Community not found.",
+      });
+    }
+
+    const community = await prisma.community.update({
+      where: {
+        id: communityId,
+      },
+
+      data: {
+        isActive,
+      },
+
+      select: {
+        id: true,
+        name: true,
+        isActive: true,
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: isActive ? "ACTIVATE_COMMUNITY" : "DEACTIVATE_COMMUNITY",
+      entity: "Community",
+      entityId: communityId,
+      details: `Community "${existing.name}" ${isActive ? "activated" : "deactivated"}`,
+      ipAddress: req.ip,
+    });
+
+    res.json({
+      success: true,
+      message: `Community ${isActive ? "activated" : "deactivated"} successfully.`,
+      community,
+    });
+  } catch (error) {
+    console.error("Update community status error:", error);
+
+    res.status(500).json({
+      message: "Failed to update community status.",
+    });
+  }
+};
+
+/* =====================================================
+   DELETE COMMUNITY
+===================================================== */
+
+export const deleteCommunity = async (req, res) => {
+  try {
+    const communityId = Number(req.params.id);
+
+    const existing = await prisma.community.findUnique({
+      where: {
+        id: communityId,
+      },
+    });
+
+    if (!existing) {
+      return res.status(404).json({
+        message: "Community not found.",
+      });
+    }
+
+    await prisma.community.delete({
+      where: {
+        id: communityId,
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "DELETE_COMMUNITY",
+      entity: "Community",
+      entityId: communityId,
+      details: `Deleted community "${existing.name}"`,
+      ipAddress: req.ip,
+    });
+
+    res.json({
+      success: true,
+      message: "Community deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Delete community error:", error);
+
+    res.status(500).json({
+      message: "Failed to delete community.",
+    });
+  }
+};
+
+/* =====================================================
+   UPDATE COMMUNITY MEMBER (ROLE / STATUS)
+===================================================== */
+
+export const updateCommunityMember = async (req, res) => {
+  try {
+    const communityId = Number(req.params.id);
+    const memberId = Number(req.params.memberId);
+    const { role, status } = req.body;
+
+    const allowedRoles = ["MEMBER", "MODERATOR", "ADMIN"];
+    const allowedStatuses = ["ACTIVE", "INACTIVE", "BANNED"];
+
+    if (role !== undefined && !allowedRoles.includes(role)) {
+      return res.status(400).json({
+        message: "Invalid member role.",
+      });
+    }
+
+    if (status !== undefined && !allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "Invalid member status.",
+      });
+    }
+
+    if (role === undefined && status === undefined) {
+      return res.status(400).json({
+        message: "Provide role and/or status to update.",
+      });
+    }
+
+    const member = await prisma.communityMember.findFirst({
+      where: {
+        id: memberId,
+        communityId,
+      },
+
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!member) {
+      return res.status(404).json({
+        message: "Member not found in this community.",
+      });
+    }
+
+    const data = {};
+
+    if (role !== undefined) data.role = role;
+    if (status !== undefined) data.status = status;
+
+    const updated = await prisma.communityMember.update({
+      where: {
+        id: memberId,
+      },
+
+      data,
+
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "UPDATE_COMMUNITY_MEMBER",
+      entity: "CommunityMember",
+      entityId: memberId,
+      details: `Updated member ${member.user.email} in community #${communityId}`,
+      ipAddress: req.ip,
+    });
+
+    res.json({
+      success: true,
+      message: "Community member updated successfully.",
+      member: updated,
+    });
+  } catch (error) {
+    console.error("Update community member error:", error);
+
+    res.status(500).json({
+      message: "Failed to update community member.",
+    });
+  }
+};
+
+/* =====================================================
+   REMOVE COMMUNITY MEMBER
+===================================================== */
+
+export const removeCommunityMember = async (req, res) => {
+  try {
+    const communityId = Number(req.params.id);
+    const memberId = Number(req.params.memberId);
+
+    const member = await prisma.communityMember.findFirst({
+      where: {
+        id: memberId,
+        communityId,
+      },
+
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!member) {
+      return res.status(404).json({
+        message: "Member not found in this community.",
+      });
+    }
+
+    await prisma.communityMember.delete({
+      where: {
+        id: memberId,
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+      action: "REMOVE_COMMUNITY_MEMBER",
+      entity: "CommunityMember",
+      entityId: memberId,
+      details: `Removed member ${member.user.email} from community #${communityId}`,
+      ipAddress: req.ip,
+    });
+
+    res.json({
+      success: true,
+      message: "Member removed from community.",
+    });
+  } catch (error) {
+    console.error("Remove community member error:", error);
+
+    res.status(500).json({
+      message: "Failed to remove community member.",
+    });
+  }
+};
+
+/* =====================================================
    AUDIT LOGS
 ===================================================== */
 
