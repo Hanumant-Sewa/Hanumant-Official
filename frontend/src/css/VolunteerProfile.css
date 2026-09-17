@@ -596,6 +596,17 @@ input[type="number"]::-webkit-outer-spin-button {
 .profile-detail-content
 input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.volunteer-profile-page
+.profile-detail-content
+input[type="number"]::-webkit-inner-spin-button,
+.volunteer-profile-page
+.profile-detail-content
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 

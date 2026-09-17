@@ -5983,17 +5983,47 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      /**
+       * *
+       *    * =================================================
+       *    * USER WHO APPLIED
+       *    * =================================================
+       */
       userId: number
+      /**
+       * *
+       *    * =================================================
+       *    * OPTIONAL VOLUNTEER PROFILE
+       *    * =================================================
+       */
       volunteerProfileId: number | null
+      /**
+       * *
+       *    * =================================================
+       *    * APPLICATION INFORMATION
+       *    * =================================================
+       */
       motivation: string
       experience: string | null
       skills: string | null
       preferredArea: string | null
       availability: string | null
+      /**
+       * *
+       *    * =================================================
+       *    * APPLICATION STATUS
+       *    * =================================================
+       */
       status: $Enums.VolunteerApplicationStatus
       adminRemarks: string | null
       reviewedAt: Date | null
       reviewedBy: number | null
+      /**
+       * *
+       *    * =================================================
+       *    * TIMESTAMPS
+       *    * =================================================
+       */
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["volunteerApplication"]>
