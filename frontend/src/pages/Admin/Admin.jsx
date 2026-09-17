@@ -29,7 +29,6 @@ import {
   ChevronRight,
   Globe,
   LogOut,
-  Home,
   WalletCards,
 } from "lucide-react";
 
@@ -1006,6 +1005,24 @@ function Admin() {
   };
 
   /* =====================================================
+     EDIT TASK MODAL
+  ===================================================== */
+
+  const openEditTaskModal = (task) => {
+    setEditingTask(task);
+
+    setTaskForm({
+      title: task.title || "",
+      description: task.description || "",
+      eventId: task.eventId != null ? String(task.eventId) : "",
+      dueDate: toDateTimeLocalValue(task.dueDate),
+      status: task.status || "TODO",
+    });
+
+    setShowTaskModal(true);
+  };
+
+  /* =====================================================
      TASK FORM CHANGE
   ===================================================== */
 
@@ -1728,14 +1745,6 @@ function Admin() {
   const navigateSection = (section) => {
     setActiveSection(section);
     setSidebarOpen(false);
-  };
-
-  /* =====================================================
-     BACK TO WEBSITE
-  ===================================================== */
-
-  const handleBackToWebsite = () => {
-    window.location.href = "/";
   };
 
   /* =====================================================
@@ -3338,6 +3347,41 @@ function Admin() {
   ===================================================== */
 
   const renderCommunities = () => {
+    const activeCount = communities.filter(
+      (community) => community.isActive === true,
+    ).length;
+
+    const totalMembers = communities.reduce(
+      (total, community) => total + Number(community._count?.members || 0),
+      0,
+    );
+
+    const searchTerm = communitySearch.trim().toLowerCase();
+
+    const filteredCommunities = communities.filter((community) => {
+      const matchesSearch =
+        !searchTerm ||
+        community.name?.toLowerCase().includes(searchTerm) ||
+        community.description?.toLowerCase().includes(searchTerm) ||
+        community.city?.toLowerCase().includes(searchTerm) ||
+        community.state?.toLowerCase().includes(searchTerm) ||
+        community.country?.toLowerCase().includes(searchTerm);
+
+      const matchesStatus =
+        communityStatusFilter === "ALL" ||
+        (communityStatusFilter === "ACTIVE" && community.isActive === true) ||
+        (communityStatusFilter === "INACTIVE" && community.isActive !== true);
+
+      const matchesVisibility =
+        communityVisibilityFilter === "ALL" ||
+        (communityVisibilityFilter === "PUBLIC" &&
+          community.isPublic === true) ||
+        (communityVisibilityFilter === "PRIVATE" &&
+          community.isPublic !== true);
+
+      return matchesSearch && matchesStatus && matchesVisibility;
+    });
+
     return (
       <>
         <div className="admin-content-section">
@@ -4468,15 +4512,6 @@ function Admin() {
         {/* SIDEBAR FOOTER */}
 
         <div className="admin-sidebar-footer">
-          <button
-            className="admin-back-website-button"
-            onClick={handleBackToWebsite}
-          >
-            <Home size={18} />
-
-            <span>Back to Home</span>
-          </button>
-
           <div className="admin-admin-profile">
             <div className="admin-avatar">
               {user?.name?.charAt(0)?.toUpperCase()}

@@ -191,6 +191,16 @@ exports.Prisma.CommunityMemberScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CommunityInvitationScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  inviterId: 'inviterId',
+  communityId: 'communityId',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.CampaignScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -226,6 +236,19 @@ exports.Prisma.DonationScalarFieldEnum = {
   receiptNumber: 'receiptNumber',
   receiptUrl: 'receiptUrl',
   donatedAt: 'donatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ExpenseScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  title: 'title',
+  category: 'category',
+  amount: 'amount',
+  description: 'description',
+  expenseDate: 'expenseDate',
+  receiptUrl: 'receiptUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -342,29 +365,6 @@ exports.Prisma.ContactMessageScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.ExpenseScalarFieldEnum = {
-  id: 'id',
-  campaignId: 'campaignId',
-  title: 'title',
-  category: 'category',
-  amount: 'amount',
-  description: 'description',
-  expenseDate: 'expenseDate',
-  receiptUrl: 'receiptUrl',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CommunityInvitationScalarFieldEnum = {
-  id: 'id',
-  token: 'token',
-  inviterId: 'inviterId',
-  communityId: 'communityId',
-  status: 'status',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -474,8 +474,10 @@ exports.Prisma.ModelName = {
   VolunteerApplication: 'VolunteerApplication',
   Community: 'Community',
   CommunityMember: 'CommunityMember',
+  CommunityInvitation: 'CommunityInvitation',
   Campaign: 'Campaign',
   Donation: 'Donation',
+  Expense: 'Expense',
   VolunteerEvent: 'VolunteerEvent',
   EventRegistration: 'EventRegistration',
   VolunteerTask: 'VolunteerTask',
@@ -484,9 +486,7 @@ exports.Prisma.ModelName = {
   Notification: 'Notification',
   PasswordResetToken: 'PasswordResetToken',
   AuditLog: 'AuditLog',
-  ContactMessage: 'ContactMessage',
-  Expense: 'Expense',
-  CommunityInvitation: 'CommunityInvitation'
+  ContactMessage: 'ContactMessage'
 };
 
 /**

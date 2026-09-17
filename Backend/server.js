@@ -96,8 +96,6 @@ app.use("/api/volunteer-impact", volunteerImpactRoutes);
 
 app.use("/api/volunteer-tasks", volunteerTaskRoutes);
 
-app.use("/api/volunteer-certificates", volunteerCertificateRoutes);
-
 app.use("/api/community-invitations", communityInvitationRoutes);
 
 app.use("/api/transparency", transparencyRoute);
