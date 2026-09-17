@@ -30,7 +30,7 @@
 
     /* HERO — still desktop */
     .hero-container {
-        width: 92%;
+        width: 96%;
         grid-template-columns: 46% 54%;
     }
 
@@ -162,78 +162,120 @@
         height: 42px;
         font-size: 0.8rem;
     }
-
-
-    /* =====================================================
-       HERO — CINEMATIC TABLET LAYOUT
-    ===================================================== */
-
-    .hero {
+/* =====================================================
+   HERO — TABLET
+===================================================== */
+.hero {
+        width: 100%;
         min-height: auto;
-        padding-bottom: 110px;
+        padding-bottom: 90px;
+        margin: 0;
     }
-
-    .hero-container {
+.hero-container {
         position: relative;
         isolation: isolate;
-
-        width: 94%;
-        min-height: 590px;
-
+        width: 100%;
+        max-width: none;
+        min-height: 540px;
+        margin: 0;
+        padding: 35px 20px 55px;
         display: flex;
         align-items: center;
         justify-content: center;
-
-        padding: 55px 30px 75px;
-
         overflow: hidden;
-
-        grid-template-columns: none;
-
         border-radius: 0;
+        box-sizing: border-box;
     }
+    .hero-content {
+    position: relative;
+    z-index: 5;
+    width: 90%;
+    max-width: 760px;
+    padding: 20px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+ }
 
-    /* Full visual layer.
+.hero-badge {
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    max-width: 700px;
+
+    font-size: clamp(2.6rem, 5.5vw, 4rem);
+    line-height: 1.05;
+}
+
+.hero-divider {
+    width: min(85%, 450px);
+    margin: 15px auto;
+}
+
+.hero-theme {
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+}
+
+.hero-content > p {
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-buttons {
+    width: min(100%, 610px);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.hero-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    white-space: nowrap;
+}
+     /* Full visual layer.
        It is NOT a 50%/55% column anymore. */
-    .hero-art {
+     .hero-art {
         position: absolute;
-
-        inset: 0;
-
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-
         margin: 0;
-
+        padding: 0;
         z-index: -2;
-
         overflow: hidden;
         background: #f6eee5;
     }
 
     .hero-art img {
         display: block;
-
         width: 100%;
         height: 100%;
-
         max-width: none;
-
+        max-height: none;
         object-fit: contain;
         object-position: center center;
-
-        opacity: 1.62;
+        opacity: 1;
     }
 
     /* Existing ::before becomes the readability layer */
     .hero-art::before {
         content: "";
-
         position: absolute;
         inset: 0;
-
         z-index: 1;
-
         background:
             linear-gradient(
                 90deg,
@@ -249,12 +291,9 @@
     /* Second subtle layer makes the lower part readable */
     .hero-art::after {
         content: "";
-
         position: absolute;
         inset: 0;
-
         z-index: 2;
-
         background:
             linear-gradient(
                 180deg,
@@ -264,72 +303,6 @@
             );
 
         pointer-events: none;
-    }
-
-    .hero-content {
-        position: relative;
-        z-index: 5;
-
-        width: min(100%, 720px);
-
-        padding: 30px 24px;
-
-        margin: 0 auto;
-
-        text-align: center;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .hero-badge {
-        margin-bottom: 14px;
-    }
-
-    .hero h1 {
-        max-width: 700px;
-
-        font-size: clamp(2.9rem, 6.2vw, 4.5rem);
-        line-height: 1.05;
-    }
-
-    .hero-divider {
-        width: min(90%, 450px);
-        margin: 18px auto;
-    }
-
-    .hero-theme {
-        font-size: clamp(1rem, 2vw, 1.25rem);
-    }
-
-    .hero-content > p {
-        max-width: 620px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    /* Buttons remain horizontal */
-    .hero-buttons {
-        width: min(100%, 610px);
-
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-
-        justify-content: center;
-        align-items: stretch;
-
-        gap: 12px;
-    }
-
-    .hero-btn {
-        flex: 1 1 0;
-
-        min-width: 0;
-        max-width: none;
-
-        white-space: nowrap;
     }
 
     .hero-founder {
@@ -555,12 +528,6 @@
     }
 
 
-    /* ---------- LANDING VOLUNTEER ---------- */
-
-    .volunteer-wrapper {
-        grid-template-columns: 1fr 1fr;
-        gap: 28px;
-    }
 
 
     /* =====================================================
@@ -715,7 +682,7 @@
         gap: 36px;
     }
     .founder-photo {
-        height: 380px;
+        height: 280px;
     }
     .founder-profile-content p {
         font-size: .92rem;
@@ -776,10 +743,10 @@
     }
 
     .hero-container {
-        width: 94%;
+        width: 100%;
         min-height: 560px;
 
-        padding: 48px 24px 65px;
+        padding: 48px 18px 65px;
 
         border-radius: 0;
     }
@@ -1053,7 +1020,7 @@
 
     .footer-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 28px;
+        gap: 24px;
     }
 
 
@@ -1136,16 +1103,7 @@
     }
 
 
-    /* =====================================================
-       VOLUNTEER HOME
-    ===================================================== */
 
-    .volunteer-wrapper {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-
-    .volunteer-content,
     .volunteer-form {
         width: min(100%, 760px);
         margin: 0 auto;
@@ -1507,12 +1465,12 @@
         padding-bottom: 78px;
     }
     .hero-container {
-        width: 94%;
+        width: 100%;
         min-height: 570px;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 34px 12px 48px;
+        padding: 34px 8px 48px;
         overflow: hidden;
         border-radius: 0;
     }
@@ -1532,7 +1490,7 @@
         display: block;
         object-fit: fill;
         object-position: center;
-        opacity: 0.48;
+        opacity: 5;
         transform: none;
     }
     .hero-art::before {
@@ -1898,7 +1856,7 @@
     }
     .footer-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 26px 18px;
+        gap: 22px 14px;
     }
     .footer-col p,
     .footer-col ul li {
@@ -2552,15 +2510,15 @@
     }
 
     .hero-container {
-        width: 94%;
+        width: 100%;
 
         min-height: 545px;
 
-        padding: 28px 10px 42px;
+        padding: 28px 8px 42px;
     }
 
     .hero-art img {
-        opacity: 0.45;
+        opacity: 5;
         object-position: center center;
     }
 
@@ -2780,7 +2738,7 @@
 
     .footer-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 24px 14px;
+        gap: 18px 12px;
     }
 
 
@@ -3092,7 +3050,7 @@
     }
 
     .hero-container {
-        width: 95%;
+        width: 100%;
 
         min-height: 525px;
 
@@ -3100,7 +3058,7 @@
     }
 
     .hero-art img {
-        opacity: 0.40;
+        opacity: 5;
         object-position: center center;
     }
 
@@ -3324,7 +3282,7 @@
 
     .footer-grid {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 18px;
     }
 
 
@@ -3343,13 +3301,14 @@
     }
 
 
-    /* ---------- DONATION ---------- */
-   .donation-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+  /* ---------- DONATION ---------- */
+.donation-grid {
+  grid-template-columns: 1fr;
+  gap: 20px;
+  width: 90%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
     .donation-card {
         min-height: 72px;
@@ -3805,7 +3764,7 @@
     }
 
     .hero-art img {
-        opacity: 0.36;
+        opacity: 4;
         object-position: center center;
     }
 
@@ -4140,7 +4099,7 @@
         padding: 32px 0;
     }
     .founder-photo {
-        height: 320px;
+        height: 280px;
     }
     .founder-profile-content h3 {
         font-size: 1.5rem;

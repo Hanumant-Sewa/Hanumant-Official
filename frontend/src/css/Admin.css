@@ -348,55 +348,6 @@
   font-weight: 700;
 }
 
-
-/* =========================================================
-   BACK TO WEBSITE
-========================================================= */
-
-.admin-dashboard .admin-back-website-button {
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-
-  gap: 10px;
-
-  margin-bottom: 13px;
-
-  padding: 10px 12px;
-
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 9px;
-
-  background: rgba(255,255,255,.025);
-
-  color: #b9c3cc;
-
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 500;
-
-  cursor: pointer;
-
-  transition: .2s ease;
-}
-
-.admin-dashboard .admin-back-website-button:hover {
-  background: rgba(217,119,6,.10);
-
-  border-color: rgba(217,119,6,.25);
-
-  color: #fff;
-
-  transform: translateX(2px);
-}
-
-.admin-dashboard .admin-back-website-button:focus-visible {
-  outline: 2px solid #f59e0b;
-  outline-offset: 2px;
-}
-
-
 /* =========================================================
    LOGOUT
 ========================================================= */

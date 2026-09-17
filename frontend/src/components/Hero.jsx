@@ -43,13 +43,18 @@ function Hero() {
           ========================== */}
 
           <div className="hero-buttons">
-            <ProtectedButton to="/donate" className="hero-btn hero-btn-primary">
+            <ProtectedButton
+              to="/donate"
+              allowedRoles={["USER", "VOLUNTEER"]}
+              className="hero-btn hero-btn-primary"
+            >
               <Heart size={20} />
               Support 1 Person – ₹50
             </ProtectedButton>
 
             <ProtectedButton
               to="/community"
+              allowedRoles={["USER", "VOLUNTEER"]}
               className="hero-btn hero-btn-outline"
             >
               <Users size={25} />

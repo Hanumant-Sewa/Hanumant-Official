@@ -23,17 +23,22 @@ import {
   Activity,
   Plus,
   Pencil,
+  Edit,
   Trash2,
   ChevronLeft,
   ChevronRight,
   Globe,
   LogOut,
+  Home,
+  WalletCards,
 } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
 import "../../css/Admin.css";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/admin`;
+
+const EXPENSE_API_URL = `${import.meta.env.VITE_API_URL}/api/admin/expenses`;
 
 function Admin() {
   const { user, logout } = useAuth();
@@ -87,6 +92,23 @@ function Admin() {
   const [tasks, setTasks] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
+
+  //expenses
+  const [expenses, setExpenses] = useState([]);
+
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [editingExpense, setEditingExpense] = useState(null);
+  const [expenseSaving, setExpenseSaving] = useState(false);
+
+  const [expenseForm, setExpenseForm] = useState({
+    campaignId: "",
+    title: "",
+    category: "",
+    amount: "",
+    description: "",
+    expenseDate: "",
+    receiptUrl: "",
+  });
 
   /* =====================================================
      CAMPAIGN STATE
@@ -155,7 +177,7 @@ function Admin() {
   const [taskForm, setTaskForm] = useState({
     title: "",
     description: "",
-    
+
     eventId: "",
     dueDate: "",
     status: "TODO",
@@ -197,7 +219,34 @@ function Admin() {
 
     return data;
   };
+  /* =====================================================
+   EXPENSE API HELPER
+===================================================== */
 
+  const expenseRequest = async (endpoint = "", options = {}) => {
+    const response = await fetch(`${EXPENSE_API_URL}${endpoint}`, {
+      ...options,
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+    });
+
+    let data = {};
+
+    try {
+      data = await response.json();
+    } catch {
+      data = {};
+    }
+
+    if (!response.ok) {
+      throw new Error(data.message || "Something went wrong.");
+    }
+
+    return data;
+  };
   /* =====================================================
      DASHBOARD
   ===================================================== */
@@ -242,7 +291,194 @@ function Admin() {
 
     setDonations(data.donations || []);
   };
+  /* =====================================================
+   EXPENSES
+===================================================== */
 
+  const loadExpenses = async () => {
+    const data = await expenseRequest();
+
+    setExpenses(data.expenses || []);
+  };
+
+  /* =====================================================
+   CREATE / EDIT EXPENSE
+===================================================== */
+
+  const openCreateExpenseModal = () => {
+    setEditingExpense(null);
+
+    setExpenseForm({
+      campaignId: "",
+      title: "",
+      category: "",
+      amount: "",
+      description: "",
+      expenseDate: "",
+      receiptUrl: "",
+    });
+
+    setShowExpenseModal(true);
+  };
+
+  const openEditExpenseModal = (expense) => {
+    setEditingExpense(expense);
+
+    setExpenseForm({
+      campaignId: expense.campaignId ?? expense.campaign?.id ?? "",
+      title: expense.title || "",
+      category: expense.category || "",
+      amount: expense.amount ?? "",
+      description: expense.description || "",
+      expenseDate: toDateTimeLocalValue(expense.expenseDate),
+      receiptUrl: expense.receiptUrl || "",
+    });
+
+    setShowExpenseModal(true);
+  };
+
+  /* =====================================================
+   EXPENSE FORM CHANGE
+===================================================== */
+
+  const handleExpenseFormChange = (e) => {
+    const { name, value } = e.target;
+
+    setExpenseForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  /* =====================================================
+   SAVE EXPENSE
+===================================================== */
+
+  const handleSaveExpense = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (!expenseForm.campaignId) {
+        throw new Error("Please select a campaign.");
+      }
+
+      if (!expenseForm.title.trim()) {
+        throw new Error("Expense title is required.");
+      }
+
+      if (!expenseForm.category.trim()) {
+        throw new Error("Expense category is required.");
+      }
+
+      const amount = Number(expenseForm.amount);
+
+      if (!Number.isFinite(amount) || amount <= 0) {
+        throw new Error("Expense amount must be greater than zero.");
+      }
+
+      if (!expenseForm.expenseDate) {
+        throw new Error("Expense date is required.");
+      }
+
+      const expenseDate = new Date(expenseForm.expenseDate);
+
+      if (Number.isNaN(expenseDate.getTime())) {
+        throw new Error("Please enter a valid expense date.");
+      }
+
+      setExpenseSaving(true);
+
+      const payload = {
+        campaignId: Number(expenseForm.campaignId),
+        title: expenseForm.title.trim(),
+        category: expenseForm.category.trim(),
+        amount,
+        description: expenseForm.description.trim() || null,
+        expenseDate: expenseDate.toISOString(),
+        receiptUrl: expenseForm.receiptUrl.trim() || null,
+      };
+
+      const endpoint = editingExpense ? `/${editingExpense.id}` : "";
+
+      const method = editingExpense ? "PATCH" : "POST";
+
+      const data = await expenseRequest(endpoint, {
+        method,
+        body: JSON.stringify(payload),
+      });
+
+      await loadExpenses();
+
+      setShowExpenseModal(false);
+      setEditingExpense(null);
+
+      Swal.fire({
+        icon: "success",
+        title: editingExpense ? "Expense Updated" : "Expense Created",
+        text:
+          data.message ||
+          (editingExpense
+            ? "Expense updated successfully."
+            : "Expense created successfully."),
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Save expense error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Unable to save expense",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
+      });
+    } finally {
+      setExpenseSaving(false);
+    }
+  };
+
+  /* =====================================================
+   DELETE EXPENSE
+===================================================== */
+
+  const handleDeleteExpense = async (expense) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Delete this expense?",
+      text: `"${expense.title}" will be permanently deleted.`,
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      const data = await expenseRequest(`/${expense.id}`, {
+        method: "DELETE",
+      });
+
+      await loadExpenses();
+
+      Swal.fire({
+        icon: "success",
+        title: "Expense Deleted",
+        text: data.message || "Expense deleted successfully.",
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Delete expense error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Cannot delete expense",
+        text: error.message || "Unable to delete this expense.",
+        confirmButtonColor: "#D97706",
+      });
+    }
+  };
   /* =====================================================
      CAMPAIGNS
   ===================================================== */
@@ -611,8 +847,7 @@ function Admin() {
         state: eventForm.state.trim() || null,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
-        capacity:
-          eventForm.capacity === "" ? null : Number(eventForm.capacity),
+        capacity: eventForm.capacity === "" ? null : Number(eventForm.capacity),
       };
 
       const endpoint = editingEvent ? `/events/${editingEvent.id}` : "/events";
@@ -761,7 +996,7 @@ function Admin() {
     setTaskForm({
       title: "",
       description: "",
-      
+
       eventId: "",
       dueDate: "",
       status: "TODO",
@@ -769,7 +1004,6 @@ function Admin() {
 
     setShowTaskModal(true);
   };
-
 
   /* =====================================================
      TASK FORM CHANGE
@@ -788,82 +1022,75 @@ function Admin() {
    SAVE TASK
 ===================================================== */
 
-const handleSaveTask = async (e) => {
-  e.preventDefault();
+  const handleSaveTask = async (e) => {
+    e.preventDefault();
 
-  try {
-    if (!taskForm.title.trim()) {
-      throw new Error("Task title is required.");
+    try {
+      if (!taskForm.title.trim()) {
+        throw new Error("Task title is required.");
+      }
+
+      setTaskSaving(true);
+
+      const payload = {
+        title: taskForm.title.trim(),
+
+        description: taskForm.description.trim() || null,
+
+        eventId: taskForm.eventId === "" ? null : Number(taskForm.eventId),
+
+        dueDate: taskForm.dueDate
+          ? new Date(taskForm.dueDate).toISOString()
+          : null,
+
+        status: taskForm.status,
+      };
+
+      const endpoint = editingTask ? `/tasks/${editingTask.id}` : "/tasks";
+
+      const method = editingTask ? "PATCH" : "POST";
+
+      const data = await apiRequest(endpoint, {
+        method,
+        body: JSON.stringify(payload),
+      });
+
+      await loadTasks();
+
+      setShowTaskModal(false);
+      setEditingTask(null);
+
+      setTaskForm({
+        title: "",
+        description: "",
+        eventId: "",
+        dueDate: "",
+        status: "TODO",
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: editingTask ? "Task Updated" : "Task Created",
+        text:
+          data.message ||
+          (editingTask
+            ? "Task updated successfully."
+            : "Task created successfully."),
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Save task error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Unable to save task",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
+      });
+    } finally {
+      setTaskSaving(false);
     }
-
-    setTaskSaving(true);
-
-    const payload = {
-      title: taskForm.title.trim(),
-
-      description: taskForm.description.trim() || null,
-
-      eventId:
-        taskForm.eventId === ""
-          ? null
-          : Number(taskForm.eventId),
-
-      dueDate: taskForm.dueDate
-        ? new Date(taskForm.dueDate).toISOString()
-        : null,
-
-      status: taskForm.status,
-    };
-
-    const endpoint = editingTask
-      ? `/tasks/${editingTask.id}`
-      : "/tasks";
-
-    const method = editingTask ? "PATCH" : "POST";
-
-    const data = await apiRequest(endpoint, {
-      method,
-      body: JSON.stringify(payload),
-    });
-
-    await loadTasks();
-
-    setShowTaskModal(false);
-    setEditingTask(null);
-
-    setTaskForm({
-      title: "",
-      description: "",
-      eventId: "",
-      dueDate: "",
-      status: "TODO",
-    });
-
-    Swal.fire({
-      icon: "success",
-      title: editingTask ? "Task Updated" : "Task Created",
-      text:
-        data.message ||
-        (editingTask
-          ? "Task updated successfully."
-          : "Task created successfully."),
-      confirmButtonColor: "#D97706",
-    });
-
-  } catch (error) {
-    console.error("Save task error:", error);
-
-    Swal.fire({
-      icon: "error",
-      title: "Unable to save task",
-      text: error.message || "Something went wrong.",
-      confirmButtonColor: "#D97706",
-    });
-
-  } finally {
-    setTaskSaving(false);
-  }
-};
+  };
 
   /* =====================================================
      DELETE TASK
@@ -941,67 +1168,67 @@ const handleSaveTask = async (e) => {
      LOAD SECTION
   ===================================================== */
 
-const loadSection = async (section) => {
-  setLoading(true);
+  const loadSection = async (section) => {
+    setLoading(true);
 
-  try {
-    switch (section) {
-      case "dashboard":
-        await loadDashboard();
-        break;
+    try {
+      switch (section) {
+        case "dashboard":
+          await loadDashboard();
+          break;
 
-      case "users":
-        await loadUsers();
-        break;
+        case "users":
+          await loadUsers();
+          break;
 
-      case "volunteers":
-        await loadApplications();
-        break;
+        case "volunteers":
+          await loadApplications();
+          break;
 
-      case "donations":
-        await loadDonations();
-        break;
+        case "donations":
+          await loadDonations();
+          break;
 
-      case "campaigns":
-        await loadCampaigns();
-        break;
+        case "expenses":
+          await Promise.all([loadExpenses(), loadCampaigns()]);
+          break;
 
-      case "events":
-        await loadEvents();
-        break;
+        case "campaigns":
+          await loadCampaigns();
+          break;
 
-      case "tasks":
-        await Promise.all([
-          loadTasks(),
-          loadUsers(),
-          loadEvents(),
-        ]);
-        break;
+        case "events":
+          await loadEvents();
+          break;
 
-      case "communities":
-        await loadCommunities();
-        break;
+        case "tasks":
+          await Promise.all([loadTasks(), loadUsers(), loadEvents()]);
+          break;
 
-      case "audit":
-        await loadAuditLogs();
-        break;
+        case "communities":
+          await loadCommunities();
+          break;
 
-      default:
-        break;
+        case "audit":
+          await loadAuditLogs();
+          break;
+
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error(`Failed to load ${section}:`, error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Unable to load data",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
+      });
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error(`Failed to load ${section}:`, error);
-
-    Swal.fire({
-      icon: "error",
-      title: "Unable to load data",
-      text: error.message || "Something went wrong.",
-      confirmButtonColor: "#D97706",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   /* =====================================================
      INITIAL LOAD
@@ -1063,22 +1290,16 @@ const loadSection = async (section) => {
     }
 
     try {
-      await apiRequest(
-        `/volunteer-applications/${application.id}/approve`,
-        {
-          method: "PATCH",
-          body: JSON.stringify({
-            adminRemarks: "Approved by administrator.",
-          }),
-        },
-      );
+      await apiRequest(`/volunteer-applications/${application.id}/approve`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          adminRemarks: "Approved by administrator.",
+        }),
+      });
 
       setSelectedApplication(null);
 
-      await Promise.all([
-        loadApplications(),
-        loadDashboard(),
-      ]);
+      await Promise.all([loadApplications(), loadDashboard()]);
 
       await Swal.fire({
         title: "Approved",
@@ -1091,9 +1312,7 @@ const loadSection = async (section) => {
 
       await Swal.fire({
         title: "Approval Failed",
-        text:
-          error.message ||
-          "Unable to approve this application.",
+        text: error.message || "Unable to approve this application.",
         icon: "error",
         confirmButtonColor: "#e87524",
       });
@@ -1132,22 +1351,16 @@ const loadSection = async (section) => {
     }
 
     try {
-      await apiRequest(
-        `/volunteer-applications/${application.id}/reject`,
-        {
-          method: "PATCH",
-          body: JSON.stringify({
-            adminRemarks: remarks.trim(),
-          }),
-        },
-      );
+      await apiRequest(`/volunteer-applications/${application.id}/reject`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          adminRemarks: remarks.trim(),
+        }),
+      });
 
       setSelectedApplication(null);
 
-      await Promise.all([
-        loadApplications(),
-        loadDashboard(),
-      ]);
+      await Promise.all([loadApplications(), loadDashboard()]);
 
       await Swal.fire({
         title: "Application Rejected",
@@ -1160,9 +1373,7 @@ const loadSection = async (section) => {
 
       await Swal.fire({
         title: "Rejection Failed",
-        text:
-          error.message ||
-          "Unable to reject this application.",
+        text: error.message || "Unable to reject this application.",
         icon: "error",
         confirmButtonColor: "#e87524",
       });
@@ -1318,13 +1529,17 @@ const loadSection = async (section) => {
 
   const toggleCommunityStatus = async (community) => {
     const result = await Swal.fire({
-      title: community.isActive ? "Deactivate Community?" : "Activate Community?",
+      title: community.isActive
+        ? "Deactivate Community?"
+        : "Activate Community?",
       text: community.isActive
         ? `"${community.name}" will be hidden from new members.`
         : `"${community.name}" will become active again.`,
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: community.isActive ? "Yes, Deactivate" : "Yes, Activate",
+      confirmButtonText: community.isActive
+        ? "Yes, Deactivate"
+        : "Yes, Activate",
       cancelButtonText: "Cancel",
       confirmButtonColor: community.isActive ? "#dc2626" : "#16a34a",
       cancelButtonColor: "#6b7280",
@@ -1344,7 +1559,9 @@ const loadSection = async (section) => {
         toast: true,
         position: "top-end",
         icon: "success",
-        title: community.isActive ? "Community deactivated" : "Community activated",
+        title: community.isActive
+          ? "Community deactivated"
+          : "Community activated",
         showConfirmButton: false,
         timer: 1600,
       });
@@ -1648,27 +1865,15 @@ const loadSection = async (section) => {
       return "COMPLETED";
     }
 
-    const start = campaign.startDate
-      ? new Date(campaign.startDate)
-      : null;
+    const start = campaign.startDate ? new Date(campaign.startDate) : null;
 
-    const end = campaign.endDate
-      ? new Date(campaign.endDate)
-      : null;
+    const end = campaign.endDate ? new Date(campaign.endDate) : null;
 
-    if (
-      start &&
-      !Number.isNaN(start.getTime()) &&
-      now < start
-    ) {
+    if (start && !Number.isNaN(start.getTime()) && now < start) {
       return "SCHEDULED";
     }
 
-    if (
-      end &&
-      !Number.isNaN(end.getTime()) &&
-      now >= end
-    ) {
+    if (end && !Number.isNaN(end.getTime()) && now >= end) {
       return "COMPLETED";
     }
 
@@ -1702,6 +1907,12 @@ const loadSection = async (section) => {
       id: "donations",
       label: "Donations",
       icon: IndianRupee,
+    },
+
+    {
+      id: "expenses",
+      label: "Expenses",
+      icon: WalletCards,
     },
 
     {
@@ -1779,9 +1990,7 @@ const loadSection = async (section) => {
             <div>
               <span>Pending Applications</span>
 
-              <strong>
-                {stats.pendingVolunteerApplications}
-              </strong>
+              <strong>{stats.pendingVolunteerApplications}</strong>
             </div>
           </div>
 
@@ -1795,8 +2004,7 @@ const loadSection = async (section) => {
 
               <strong>
                 {formatCurrency(
-                  stats.totalDonationAmount ??
-                    stats.donationAmount,
+                  stats.totalDonationAmount ?? stats.donationAmount,
                 )}
               </strong>
             </div>
@@ -1835,16 +2043,12 @@ const loadSection = async (section) => {
               <div>
                 <h3>Recent Volunteer Applications</h3>
 
-                <p>
-                  Latest requests waiting for review.
-                </p>
+                <p>Latest requests waiting for review.</p>
               </div>
 
               <button
                 className="admin-text-button"
-                onClick={() =>
-                  navigateSection("volunteers")
-                }
+                onClick={() => navigateSection("volunteers")}
               >
                 View All
               </button>
@@ -1871,13 +2075,9 @@ const loadSection = async (section) => {
                       dashboard.recentVolunteerApplications
                     ).map((application) => (
                       <tr key={application.id}>
-                        <td>
-                          {application.user.name}
-                        </td>
+                        <td>{application.user.name}</td>
 
-                        <td>
-                          {application.user.email}
-                        </td>
+                        <td>{application.user.email}</td>
 
                         <td>
                           <span
@@ -1887,19 +2087,12 @@ const loadSection = async (section) => {
                           </span>
                         </td>
 
-                        <td>
-                          {formatDate(
-                            application.createdAt,
-                          )}
-                        </td>
+                        <td>{formatDate(application.createdAt)}</td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td
-                        colSpan="4"
-                        className="admin-empty"
-                      >
+                      <td colSpan="4" className="admin-empty">
                         No applications found.
                       </td>
                     </tr>
@@ -1916,16 +2109,12 @@ const loadSection = async (section) => {
               <div>
                 <h3>Recent Donations</h3>
 
-                <p>
-                  Latest donation activity.
-                </p>
+                <p>Latest donation activity.</p>
               </div>
 
               <button
                 className="admin-text-button"
-                onClick={() =>
-                  navigateSection("donations")
-                }
+                onClick={() => navigateSection("donations")}
               >
                 View All
               </button>
@@ -1944,45 +2133,32 @@ const loadSection = async (section) => {
 
                 <tbody>
                   {dashboard.recentDonations?.length ? (
-                    dashboard.recentDonations.map(
-                      (donation) => (
-                        <tr key={donation.id}>
-                          <td>
-                            {donation.isAnonymous
-                              ? "Anonymous"
-                              : donation.donorName ||
-                                donation.user?.name ||
-                                "Unknown"}
-                          </td>
+                    dashboard.recentDonations.map((donation) => (
+                      <tr key={donation.id}>
+                        <td>
+                          {donation.isAnonymous
+                            ? "Anonymous"
+                            : donation.donorName ||
+                              donation.user?.name ||
+                              "Unknown"}
+                        </td>
 
-                          <td>
-                            {formatCurrency(
-                              donation.amount,
-                            )}
-                          </td>
+                        <td>{formatCurrency(donation.amount)}</td>
 
-                          <td>
-                            <span
-                              className={`admin-status admin-status-${donation.status.toLowerCase()}`}
-                            >
-                              {donation.status}
-                            </span>
-                          </td>
+                        <td>
+                          <span
+                            className={`admin-status admin-status-${donation.status.toLowerCase()}`}
+                          >
+                            {donation.status}
+                          </span>
+                        </td>
 
-                          <td>
-                            {formatDate(
-                              donation.donatedAt,
-                            )}
-                          </td>
-                        </tr>
-                      ),
-                    )
+                        <td>{formatDate(donation.donatedAt)}</td>
+                      </tr>
+                    ))
                   ) : (
                     <tr>
-                      <td
-                        colSpan="4"
-                        className="admin-empty"
-                      >
+                      <td colSpan="4" className="admin-empty">
                         No donations found.
                       </td>
                     </tr>
@@ -2007,17 +2183,13 @@ const loadSection = async (section) => {
           <div>
             <h2>Volunteer Applications</h2>
 
-            <p>
-              Review and manage volunteer requests.
-            </p>
+            <p>Review and manage volunteer requests.</p>
           </div>
 
           <select
             className="admin-filter"
             value={applicationFilter}
-            onChange={(e) =>
-              setApplicationFilter(e.target.value)
-            }
+            onChange={(e) => setApplicationFilter(e.target.value)}
           >
             <option value="PENDING">Pending</option>
             <option value="APPROVED">Approved</option>
@@ -2048,36 +2220,21 @@ const loadSection = async (section) => {
                     <tr key={application.id}>
                       <td>
                         <div className="admin-user-cell">
-                          <strong>
-                            {application.user.name}
-                          </strong>
+                          <strong>{application.user.name}</strong>
 
-                          <small>
-                            #{application.id}
-                          </small>
+                          <small>#{application.id}</small>
                         </div>
                       </td>
 
                       <td>
-                        <div>
-                          {application.user.email}
-                        </div>
+                        <div>{application.user.email}</div>
 
-                        <small>
-                          {application.user.phone ||
-                            "No phone"}
-                        </small>
+                        <small>{application.user.phone || "No phone"}</small>
                       </td>
 
-                      <td>
-                        {application.skills ||
-                          "Not specified"}
-                      </td>
+                      <td>{application.skills || "Not specified"}</td>
 
-                      <td>
-                        {application.preferredArea ||
-                          "Not specified"}
-                      </td>
+                      <td>{application.preferredArea || "Not specified"}</td>
 
                       <td>
                         <span
@@ -2087,21 +2244,13 @@ const loadSection = async (section) => {
                         </span>
                       </td>
 
-                      <td>
-                        {formatDate(
-                          application.createdAt,
-                        )}
-                      </td>
+                      <td>{formatDate(application.createdAt)}</td>
 
                       <td>
                         <button
                           className="admin-icon-button"
                           title="View application"
-                          onClick={() =>
-                            setSelectedApplication(
-                              application,
-                            )
-                          }
+                          onClick={() => setSelectedApplication(application)}
                         >
                           <Eye size={17} />
                         </button>
@@ -2110,10 +2259,7 @@ const loadSection = async (section) => {
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="7"
-                      className="admin-empty"
-                    >
+                    <td colSpan="7" className="admin-empty">
                       No applications found.
                     </td>
                   </tr>
@@ -2137,9 +2283,7 @@ const loadSection = async (section) => {
           <div>
             <h2>Users</h2>
 
-            <p>
-              Manage registered users and account status.
-            </p>
+            <p>Manage registered users and account status.</p>
           </div>
         </div>
 
@@ -2172,9 +2316,7 @@ const loadSection = async (section) => {
                       <td>{item.phone || "—"}</td>
 
                       <td>
-                        <span className="admin-role">
-                          {item.role}
-                        </span>
+                        <span className="admin-role">{item.role}</span>
                       </td>
 
                       <td>
@@ -2185,9 +2327,7 @@ const loadSection = async (section) => {
                         </span>
                       </td>
 
-                      <td>
-                        {formatDate(item.createdAt)}
-                      </td>
+                      <td>{formatDate(item.createdAt)}</td>
 
                       <td>
                         {item.id !== user?.id && (
@@ -2195,23 +2335,14 @@ const loadSection = async (section) => {
                             className="admin-small-select"
                             value={item.status}
                             onChange={(e) =>
-                              changeUserStatus(
-                                item,
-                                e.target.value,
-                              )
+                              changeUserStatus(item, e.target.value)
                             }
                           >
-                            <option value="ACTIVE">
-                              Active
-                            </option>
+                            <option value="ACTIVE">Active</option>
 
-                            <option value="INACTIVE">
-                              Inactive
-                            </option>
+                            <option value="INACTIVE">Inactive</option>
 
-                            <option value="SUSPENDED">
-                              Suspended
-                            </option>
+                            <option value="SUSPENDED">Suspended</option>
                           </select>
                         )}
                       </td>
@@ -2219,10 +2350,7 @@ const loadSection = async (section) => {
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="6"
-                      className="admin-empty"
-                    >
+                    <td colSpan="6" className="admin-empty">
                       No users found.
                     </td>
                   </tr>
@@ -2235,10 +2363,6 @@ const loadSection = async (section) => {
     );
   };
 
-
-
-
-
   /* =====================================================
      RENDER DONATIONS
   ===================================================== */
@@ -2250,9 +2374,7 @@ const loadSection = async (section) => {
           <div>
             <h2>Donations</h2>
 
-            <p>
-              Monitor donation and payment activity.
-            </p>
+            <p>Monitor donation and payment activity.</p>
           </div>
         </div>
 
@@ -2283,21 +2405,12 @@ const loadSection = async (section) => {
                       </td>
 
                       <td>
-                        <strong>
-                          {formatCurrency(
-                            donation.amount,
-                          )}
-                        </strong>
+                        <strong>{formatCurrency(donation.amount)}</strong>
                       </td>
 
-                      <td>
-                        {donation.paymentMethod || "—"}
-                      </td>
+                      <td>{donation.paymentMethod || "—"}</td>
 
-                      <td>
-                        {donation.campaign?.title ||
-                          "General Donation"}
-                      </td>
+                      <td>{donation.campaign?.title || "General Donation"}</td>
 
                       <td>
                         <span
@@ -2307,19 +2420,12 @@ const loadSection = async (section) => {
                         </span>
                       </td>
 
-                      <td>
-                        {formatDate(
-                          donation.donatedAt,
-                        )}
-                      </td>
+                      <td>{formatDate(donation.donatedAt)}</td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="6"
-                      className="admin-empty"
-                    >
+                    <td colSpan="6" className="admin-empty">
                       No donations found.
                     </td>
                   </tr>
@@ -2345,9 +2451,7 @@ const loadSection = async (section) => {
           <div>
             <h2>Campaigns</h2>
 
-            <p>
-              Create and manage fundraising campaigns.
-            </p>
+            <p>Create and manage fundraising campaigns.</p>
           </div>
 
           <button
@@ -2362,26 +2466,15 @@ const loadSection = async (section) => {
 
         <div className="admin-card-grid">
           {campaigns.map((campaign) => {
-            const displayStatus =
-              getCampaignStatus(campaign, now);
+            const displayStatus = getCampaignStatus(campaign, now);
 
-            const target = Number(
-              campaign.targetAmount || 0,
-            );
+            const target = Number(campaign.targetAmount || 0);
 
-            const raised = Number(
-              campaign.raisedAmount || 0,
-            );
+            const raised = Number(campaign.raisedAmount || 0);
 
             const progress =
               target > 0
-                ? Math.min(
-                    100,
-                    Math.max(
-                      0,
-                      (raised / target) * 100,
-                    ),
-                  )
+                ? Math.min(100, Math.max(0, (raised / target) * 100))
                 : 0;
 
             return (
@@ -2395,8 +2488,7 @@ const loadSection = async (section) => {
                       src={campaign.image}
                       alt={campaign.title}
                       onError={(e) => {
-                        e.currentTarget.style.display =
-                          "none";
+                        e.currentTarget.style.display = "none";
                       }}
                     />
                   </div>
@@ -2414,17 +2506,12 @@ const loadSection = async (section) => {
 
                 <h3>{campaign.title}</h3>
 
-                <p>
-                  {campaign.description ||
-                    "No campaign description."}
-                </p>
+                <p>{campaign.description || "No campaign description."}</p>
 
                 <div className="admin-progress-info">
                   <span>Raised</span>
 
-                  <strong>
-                    {formatCurrency(raised)}
-                  </strong>
+                  <strong>{formatCurrency(raised)}</strong>
                 </div>
 
                 <div className="admin-progress-track">
@@ -2441,35 +2528,19 @@ const loadSection = async (section) => {
                 </div>
 
                 <div className="admin-management-meta">
-                  <span>
-                    Target: {formatCurrency(target)}
-                  </span>
+                  <span>Target: {formatCurrency(target)}</span>
 
-                  <span>
-                    Donations:{" "}
-                    {campaign._count?.donations || 0}
-                  </span>
+                  <span>Donations: {campaign._count?.donations || 0}</span>
                 </div>
 
-                {(campaign.startDate ||
-                  campaign.endDate) && (
+                {(campaign.startDate || campaign.endDate) && (
                   <div className="admin-campaign-dates">
                     {campaign.startDate && (
-                      <span>
-                        Start:{" "}
-                        {formatDateTime(
-                          campaign.startDate,
-                        )}
-                      </span>
+                      <span>Start: {formatDateTime(campaign.startDate)}</span>
                     )}
 
                     {campaign.endDate && (
-                      <span>
-                        End:{" "}
-                        {formatDateTime(
-                          campaign.endDate,
-                        )}
-                      </span>
+                      <span>End: {formatDateTime(campaign.endDate)}</span>
                     )}
                   </div>
                 )}
@@ -2478,11 +2549,7 @@ const loadSection = async (section) => {
                   <button
                     type="button"
                     className="admin-secondary-button"
-                    onClick={() =>
-                      openEditCampaignModal(
-                        campaign,
-                      )
-                    }
+                    onClick={() => openEditCampaignModal(campaign)}
                   >
                     <Edit size={15} />
                     Edit
@@ -2494,11 +2561,7 @@ const loadSection = async (section) => {
                         type="button"
                         className="admin-icon-button admin-danger-button"
                         title="Cancel campaign"
-                        onClick={() =>
-                          handleCancelCampaign(
-                            campaign,
-                          )
-                        }
+                        onClick={() => handleCancelCampaign(campaign)}
                       >
                         <XCircle size={16} />
                       </button>
@@ -2508,11 +2571,7 @@ const loadSection = async (section) => {
                     type="button"
                     className="admin-icon-button admin-danger-button"
                     title="Delete campaign"
-                    onClick={() =>
-                      handleDeleteCampaign(
-                        campaign,
-                      )
-                    }
+                    onClick={() => handleDeleteCampaign(campaign)}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -2523,9 +2582,7 @@ const loadSection = async (section) => {
         </div>
 
         {!campaigns.length && (
-          <div className="admin-empty-card">
-            No campaigns found.
-          </div>
+          <div className="admin-empty-card">No campaigns found.</div>
         )}
 
         {showCampaignModal && (
@@ -2533,23 +2590,15 @@ const loadSection = async (section) => {
             <div className="admin-modal admin-campaign-modal">
               <div className="admin-modal-header">
                 <div>
-                  <span>
-                    CAMPAIGN MANAGEMENT
-                  </span>
+                  <span>CAMPAIGN MANAGEMENT</span>
 
-                  <h2>
-                    {editingCampaign
-                      ? "Edit Campaign"
-                      : "Add Campaign"}
-                  </h2>
+                  <h2>{editingCampaign ? "Edit Campaign" : "Add Campaign"}</h2>
                 </div>
 
                 <button
                   type="button"
                   className="admin-modal-close"
-                  onClick={() =>
-                    setShowCampaignModal(false)
-                  }
+                  onClick={() => setShowCampaignModal(false)}
                   disabled={campaignSaving}
                 >
                   <X size={20} />
@@ -2567,9 +2616,7 @@ const loadSection = async (section) => {
                     type="text"
                     name="title"
                     value={campaignForm.title}
-                    onChange={
-                      handleCampaignFormChange
-                    }
+                    onChange={handleCampaignFormChange}
                     placeholder="e.g. Diwali Food Support 2026"
                     required
                   />
@@ -2580,12 +2627,8 @@ const loadSection = async (section) => {
 
                   <textarea
                     name="description"
-                    value={
-                      campaignForm.description
-                    }
-                    onChange={
-                      handleCampaignFormChange
-                    }
+                    value={campaignForm.description}
+                    onChange={handleCampaignFormChange}
                     placeholder="Describe the purpose of this campaign..."
                     rows="4"
                   />
@@ -2598,9 +2641,7 @@ const loadSection = async (section) => {
                     type="url"
                     name="image"
                     value={campaignForm.image}
-                    onChange={
-                      handleCampaignFormChange
-                    }
+                    onChange={handleCampaignFormChange}
                     placeholder="https://example.com/campaign-image.jpg"
                   />
                 </div>
@@ -2611,12 +2652,8 @@ const loadSection = async (section) => {
                   <input
                     type="number"
                     name="targetAmount"
-                    value={
-                      campaignForm.targetAmount
-                    }
-                    onChange={
-                      handleCampaignFormChange
-                    }
+                    value={campaignForm.targetAmount}
+                    onChange={handleCampaignFormChange}
                     min="1"
                     step="0.01"
                     placeholder="e.g. 200000"
@@ -2626,36 +2663,24 @@ const loadSection = async (section) => {
 
                 <div className="admin-form-row">
                   <div className="admin-form-group">
-                    <label>
-                      Start Date & Time
-                    </label>
+                    <label>Start Date & Time</label>
 
                     <input
                       type="datetime-local"
                       name="startDate"
-                      value={
-                        campaignForm.startDate
-                      }
-                      onChange={
-                        handleCampaignFormChange
-                      }
+                      value={campaignForm.startDate}
+                      onChange={handleCampaignFormChange}
                     />
                   </div>
 
                   <div className="admin-form-group">
-                    <label>
-                      End Date & Time
-                    </label>
+                    <label>End Date & Time</label>
 
                     <input
                       type="datetime-local"
                       name="endDate"
-                      value={
-                        campaignForm.endDate
-                      }
-                      onChange={
-                        handleCampaignFormChange
-                      }
+                      value={campaignForm.endDate}
+                      onChange={handleCampaignFormChange}
                     />
                   </div>
                 </div>
@@ -2666,26 +2691,17 @@ const loadSection = async (section) => {
                   <select
                     name="status"
                     value={campaignForm.status}
-                    onChange={
-                      handleCampaignFormChange
-                    }
+                    onChange={handleCampaignFormChange}
                   >
-                    <option value="DRAFT">
-                      Draft
-                    </option>
+                    <option value="DRAFT">Draft</option>
 
-                    <option value="ACTIVE">
-                      Active / Published
-                    </option>
+                    <option value="ACTIVE">Active / Published</option>
 
-                    <option value="CANCELLED">
-                      Cancelled
-                    </option>
+                    <option value="CANCELLED">Cancelled</option>
                   </select>
 
                   <small className="admin-form-help">
-                    Scheduled and completed states
-                    are determined automatically
+                    Scheduled and completed states are determined automatically
                     from the campaign dates.
                   </small>
                 </div>
@@ -2694,9 +2710,7 @@ const loadSection = async (section) => {
                   <button
                     type="button"
                     className="admin-secondary-button"
-                    onClick={() =>
-                      setShowCampaignModal(false)
-                    }
+                    onClick={() => setShowCampaignModal(false)}
                     disabled={campaignSaving}
                   >
                     Cancel
@@ -2735,10 +2749,7 @@ const loadSection = async (section) => {
           <div>
             <h2>Events</h2>
 
-            <p>
-              Create and manage events visible to
-              users and volunteers.
-            </p>
+            <p>Create and manage events visible to users and volunteers.</p>
           </div>
 
           <button
@@ -2769,27 +2780,21 @@ const loadSection = async (section) => {
               <tbody>
                 {events.length ? (
                   events.map((event) => {
-                    const displayStatus =
-                      getEventStatus(event, now);
+                    const displayStatus = getEventStatus(event, now);
 
-                    const registrationCount =
-                      event._count?.registrations || 0;
+                    const registrationCount = event._count?.registrations || 0;
 
                     const hasCapacity =
-                      event.capacity !== null &&
-                      event.capacity !== undefined;
+                      event.capacity !== null && event.capacity !== undefined;
 
                     const isFull =
                       hasCapacity &&
-                      registrationCount >=
-                        Number(event.capacity);
+                      registrationCount >= Number(event.capacity);
 
                     return (
                       <tr key={event.id}>
                         <td>
-                          <strong>
-                            {event.title}
-                          </strong>
+                          <strong>{event.title}</strong>
 
                           {event.description && (
                             <div className="admin-event-description">
@@ -2799,18 +2804,12 @@ const loadSection = async (section) => {
                         </td>
 
                         <td>
-                          {event.location ||
-                            event.city ||
-                            "—"}
+                          {event.location || event.city || "—"}
 
-                          {(event.city ||
-                            event.state) && (
+                          {(event.city || event.state) && (
                             <small>
                               {event.city || ""}
-                              {event.city &&
-                              event.state
-                                ? ", "
-                                : ""}
+                              {event.city && event.state ? ", " : ""}
                               {event.state || ""}
                             </small>
                           )}
@@ -2818,45 +2817,23 @@ const loadSection = async (section) => {
 
                         <td>
                           <div className="admin-event-schedule">
-                            <strong>
-                              {formatDateTime(
-                                event.startDate,
-                              )}
-                            </strong>
+                            <strong>{formatDateTime(event.startDate)}</strong>
 
                             {event.endDate && (
-                              <small>
-                                to{" "}
-                                {formatDateTime(
-                                  event.endDate,
-                                )}
-                              </small>
+                              <small>to {formatDateTime(event.endDate)}</small>
                             )}
                           </div>
                         </td>
 
-                        <td>
-                          {hasCapacity
-                            ? event.capacity
-                            : "Unlimited"}
-                        </td>
+                        <td>{hasCapacity ? event.capacity : "Unlimited"}</td>
 
                         <td>
-                          <strong>
-                            {registrationCount}
-                          </strong>
+                          <strong>{registrationCount}</strong>
 
-                          {hasCapacity && (
-                            <small>
-                              {" "}
-                              / {event.capacity}
-                            </small>
-                          )}
+                          {hasCapacity && <small> / {event.capacity}</small>}
 
                           {isFull && (
-                            <span className="admin-event-full">
-                              Full
-                            </span>
+                            <span className="admin-event-full">Full</span>
                           )}
                         </td>
 
@@ -2874,28 +2851,18 @@ const loadSection = async (section) => {
                               type="button"
                               className="admin-icon-button"
                               title="Edit event"
-                              onClick={() =>
-                                openEditEventModal(
-                                  event,
-                                )
-                              }
+                              onClick={() => openEditEventModal(event)}
                             >
                               <Edit size={16} />
                             </button>
 
-                            {displayStatus !==
-                              "COMPLETED" &&
-                              displayStatus !==
-                                "CANCELLED" && (
+                            {displayStatus !== "COMPLETED" &&
+                              displayStatus !== "CANCELLED" && (
                                 <button
                                   type="button"
                                   className="admin-icon-button admin-danger-button"
                                   title="Cancel event"
-                                  onClick={() =>
-                                    handleCancelEvent(
-                                      event,
-                                    )
-                                  }
+                                  onClick={() => handleCancelEvent(event)}
                                 >
                                   <XCircle size={16} />
                                 </button>
@@ -2905,11 +2872,7 @@ const loadSection = async (section) => {
                               type="button"
                               className="admin-icon-button admin-danger-button"
                               title="Delete event"
-                              onClick={() =>
-                                handleDeleteEvent(
-                                  event,
-                                )
-                              }
+                              onClick={() => handleDeleteEvent(event)}
                             >
                               <Trash2 size={16} />
                             </button>
@@ -2920,10 +2883,7 @@ const loadSection = async (section) => {
                   })
                 ) : (
                   <tr>
-                    <td
-                      colSpan="7"
-                      className="admin-empty"
-                    >
+                    <td colSpan="7" className="admin-empty">
                       No events found.
                     </td>
                   </tr>
@@ -2940,11 +2900,7 @@ const loadSection = async (section) => {
                 <div>
                   <span>EVENT MANAGEMENT</span>
 
-                  <h2>
-                    {editingEvent
-                      ? "Edit Event"
-                      : "Add Event"}
-                  </h2>
+                  <h2>{editingEvent ? "Edit Event" : "Add Event"}</h2>
 
                   <p>
                     {editingEvent
@@ -2956,19 +2912,14 @@ const loadSection = async (section) => {
                 <button
                   type="button"
                   className="admin-modal-close"
-                  onClick={() =>
-                    setShowEventModal(false)
-                  }
+                  onClick={() => setShowEventModal(false)}
                   disabled={eventSaving}
                 >
                   <X size={20} />
                 </button>
               </div>
 
-              <form
-                className="admin-event-form"
-                onSubmit={handleSaveEvent}
-              >
+              <form className="admin-event-form" onSubmit={handleSaveEvent}>
                 <div className="admin-form-group">
                   <label>Event Title *</label>
 
@@ -2987,9 +2938,7 @@ const loadSection = async (section) => {
 
                   <textarea
                     name="description"
-                    value={
-                      eventForm.description
-                    }
+                    value={eventForm.description}
                     onChange={handleEventFormChange}
                     placeholder="Describe the event..."
                     rows="4"
@@ -3064,25 +3013,19 @@ const loadSection = async (section) => {
 
                 <div className="admin-form-row">
                   <div className="admin-form-group">
-                    <label>
-                      Start Date & Time *
-                    </label>
+                    <label>Start Date & Time *</label>
 
                     <input
                       type="datetime-local"
                       name="startDate"
-                      value={
-                        eventForm.startDate
-                      }
+                      value={eventForm.startDate}
                       onChange={handleEventFormChange}
                       required
                     />
                   </div>
 
                   <div className="admin-form-group">
-                    <label>
-                      End Date & Time *
-                    </label>
+                    <label>End Date & Time *</label>
 
                     <input
                       type="datetime-local"
@@ -3093,8 +3036,7 @@ const loadSection = async (section) => {
                     />
 
                     <small className="admin-form-help">
-                      The event automatically becomes
-                      COMPLETED after this time.
+                      The event automatically becomes COMPLETED after this time.
                     </small>
                   </div>
                 </div>
@@ -3103,17 +3045,12 @@ const loadSection = async (section) => {
                   <span>Automatic Status</span>
 
                   <strong>
-                    {editingEvent
-                      ? getEventStatus(editingEvent)
-                      : "UPCOMING"}
+                    {editingEvent ? getEventStatus(editingEvent) : "UPCOMING"}
                   </strong>
 
                   <p>
-                    Event status is determined
-                    automatically from its start
-                    and end date/time. Only
-                    cancellation is manually
-                    controlled.
+                    Event status is determined automatically from its start and
+                    end date/time. Only cancellation is manually controlled.
                   </p>
                 </div>
 
@@ -3121,9 +3058,7 @@ const loadSection = async (section) => {
                   <button
                     type="button"
                     className="admin-secondary-button"
-                    onClick={() =>
-                      setShowEventModal(false)
-                    }
+                    onClick={() => setShowEventModal(false)}
                     disabled={eventSaving}
                   >
                     Cancel
@@ -3160,9 +3095,7 @@ const loadSection = async (section) => {
           <div>
             <h2>Tasks</h2>
 
-            <p>
-              Create and manage tasks for volunteers.
-            </p>
+            <p>Create and manage tasks for volunteers.</p>
           </div>
 
           <button
@@ -3195,31 +3128,20 @@ const loadSection = async (section) => {
                       {/* TASK */}
 
                       <td>
-                        <strong>
-                          {task.title}
-                        </strong>
+                        <strong>{task.title}</strong>
 
-                        {task.description && (
-                          <small>
-                            {task.description}
-                          </small>
-                        )}
+                        {task.description && <small>{task.description}</small>}
                       </td>
 
                       {/* EVENT */}
 
-                      <td>
-                        {task.event?.title ||
-                          "No event"}
-                      </td>
+                      <td>{task.event?.title || "No event"}</td>
 
                       {/* DUE DATE */}
 
                       <td>
                         {task.dueDate
-                          ? formatDateTime(
-                              task.dueDate,
-                            )
+                          ? formatDateTime(task.dueDate)
                           : "No due date"}
                       </td>
 
@@ -3241,11 +3163,7 @@ const loadSection = async (section) => {
                             type="button"
                             className="admin-icon-button"
                             title="Edit task"
-                            onClick={() =>
-                              openEditTaskModal(
-                                task,
-                              )
-                            }
+                            onClick={() => openEditTaskModal(task)}
                           >
                             <Edit size={16} />
                           </button>
@@ -3254,9 +3172,7 @@ const loadSection = async (section) => {
                             type="button"
                             className="admin-icon-button admin-danger-button"
                             title="Delete task"
-                            onClick={() =>
-                              handleDeleteTask(task)
-                            }
+                            onClick={() => handleDeleteTask(task)}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -3266,10 +3182,7 @@ const loadSection = async (section) => {
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="5"
-                      className="admin-empty"
-                    >
+                    <td colSpan="5" className="admin-empty">
                       No tasks found.
                     </td>
                   </tr>
@@ -3283,37 +3196,22 @@ const loadSection = async (section) => {
 
         {showTaskModal && (
           <div className="admin-modal-backdrop">
-            <div
-              className="admin-modal"
-              onClick={(e) =>
-                e.stopPropagation()
-              }
-            >
+            <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
               {/* MODAL HEADER */}
 
               <div className="admin-modal-header">
                 <div>
-                  <span>
-                    TASK MANAGEMENT
-                  </span>
+                  <span>TASK MANAGEMENT</span>
 
-                  <h2>
-                    {editingTask
-                      ? "Edit Task"
-                      : "Create Task"}
-                  </h2>
+                  <h2>{editingTask ? "Edit Task" : "Create Task"}</h2>
 
-                  <p>
-                    Create a task for volunteers.
-                  </p>
+                  <p>Create a task for volunteers.</p>
                 </div>
 
                 <button
                   type="button"
                   className="admin-modal-close"
-                  onClick={() =>
-                    setShowTaskModal(false)
-                  }
+                  onClick={() => setShowTaskModal(false)}
                   disabled={taskSaving}
                 >
                   <X size={20} />
@@ -3322,24 +3220,17 @@ const loadSection = async (section) => {
 
               {/* TASK FORM */}
 
-              <form
-                className="admin-event-form"
-                onSubmit={handleSaveTask}
-              >
+              <form className="admin-event-form" onSubmit={handleSaveTask}>
                 {/* TITLE */}
 
                 <div className="admin-form-group">
-                  <label>
-                    Task Title *
-                  </label>
+                  <label>Task Title *</label>
 
                   <input
                     type="text"
                     name="title"
                     value={taskForm.title}
-                    onChange={
-                      handleTaskFormChange
-                    }
+                    onChange={handleTaskFormChange}
                     placeholder="e.g. Food Distribution Support"
                     required
                   />
@@ -3348,18 +3239,12 @@ const loadSection = async (section) => {
                 {/* DESCRIPTION */}
 
                 <div className="admin-form-group">
-                  <label>
-                    Description
-                  </label>
+                  <label>Description</label>
 
                   <textarea
                     name="description"
-                    value={
-                      taskForm.description
-                    }
-                    onChange={
-                      handleTaskFormChange
-                    }
+                    value={taskForm.description}
+                    onChange={handleTaskFormChange}
                     placeholder="Describe the task..."
                     rows="4"
                   />
@@ -3368,28 +3253,17 @@ const loadSection = async (section) => {
                 {/* EVENT */}
 
                 <div className="admin-form-group">
-                  <label>
-                    Event
-                  </label>
+                  <label>Event</label>
 
                   <select
                     name="eventId"
-                    value={
-                      taskForm.eventId
-                    }
-                    onChange={
-                      handleTaskFormChange
-                    }
+                    value={taskForm.eventId}
+                    onChange={handleTaskFormChange}
                   >
-                    <option value="">
-                      No Event
-                    </option>
+                    <option value="">No Event</option>
 
                     {events.map((event) => (
-                      <option
-                        key={event.id}
-                        value={event.id}
-                      >
+                      <option key={event.id} value={event.id}>
                         {event.title}
                       </option>
                     ))}
@@ -3399,49 +3273,31 @@ const loadSection = async (section) => {
                 {/* DUE DATE */}
 
                 <div className="admin-form-group">
-                  <label>
-                    Due Date & Time
-                  </label>
+                  <label>Due Date & Time</label>
 
                   <input
                     type="datetime-local"
                     name="dueDate"
-                    value={
-                      taskForm.dueDate
-                    }
-                    onChange={
-                      handleTaskFormChange
-                    }
+                    value={taskForm.dueDate}
+                    onChange={handleTaskFormChange}
                   />
                 </div>
 
                 {/* STATUS */}
 
                 <div className="admin-form-group">
-                  <label>
-                    Status
-                  </label>
+                  <label>Status</label>
 
                   <select
                     name="status"
-                    value={
-                      taskForm.status
-                    }
-                    onChange={
-                      handleTaskFormChange
-                    }
+                    value={taskForm.status}
+                    onChange={handleTaskFormChange}
                   >
-                    <option value="TODO">
-                      Pending
-                    </option>
+                    <option value="TODO">Pending</option>
 
-                    <option value="IN_PROGRESS">
-                      In Progress
-                    </option>
+                    <option value="IN_PROGRESS">In Progress</option>
 
-                    <option value="COMPLETED">
-                      Completed
-                    </option>
+                    <option value="COMPLETED">Completed</option>
                   </select>
                 </div>
 
@@ -3451,9 +3307,7 @@ const loadSection = async (section) => {
                   <button
                     type="button"
                     className="admin-secondary-button"
-                    onClick={() =>
-                      setShowTaskModal(false)
-                    }
+                    onClick={() => setShowTaskModal(false)}
                     disabled={taskSaving}
                   >
                     Cancel
@@ -3484,55 +3338,6 @@ const loadSection = async (section) => {
   ===================================================== */
 
   const renderCommunities = () => {
-    const search = communitySearch.trim().toLowerCase();
-
-    const filteredCommunities = communities.filter((community) => {
-      if (
-        communityStatusFilter === "ACTIVE" &&
-        community.isActive === false
-      ) {
-        return false;
-      }
-
-      if (
-        communityStatusFilter === "INACTIVE" &&
-        community.isActive !== false
-      ) {
-        return false;
-      }
-
-      if (
-        communityVisibilityFilter === "PUBLIC" &&
-        community.isPublic === false
-      ) {
-        return false;
-      }
-
-      if (
-        communityVisibilityFilter === "PRIVATE" &&
-        community.isPublic !== false
-      ) {
-        return false;
-      }
-
-      if (!search) {
-        return true;
-      }
-
-      return [community.name, community.description, community.city]
-        .filter(Boolean)
-        .some((value) => value.toLowerCase().includes(search));
-    });
-
-    const activeCount = communities.filter(
-      (community) => community.isActive !== false,
-    ).length;
-
-    const totalMembers = communities.reduce(
-      (sum, community) => sum + (community._count?.members || 0),
-      0,
-    );
-
     return (
       <>
         <div className="admin-content-section">
@@ -3543,9 +3348,6 @@ const loadSection = async (section) => {
               <p>Create, monitor and manage NGO communities and members.</p>
             </div>
 
-            <p>
-              Monitor NGO communities and members.
-            </p>
             <button
               className="admin-primary-button"
               onClick={openCreateCommunity}
@@ -3555,28 +3357,7 @@ const loadSection = async (section) => {
             </button>
           </div>
 
-        <div className="admin-card-grid">
-          {communities.map((community) => (
-            <div
-              className="admin-management-card"
-              key={community.id}
-            >
-              <div className="admin-management-card-top">
-                <span
-                  className={
-                    community.isActive
-                      ? "admin-status admin-status-active"
-                      : "admin-status admin-status-inactive"
-                  }
-                >
-                  {community.isActive
-                    ? "ACTIVE"
-                    : "INACTIVE"}
-                </span>
-
-                <span>
-                  #{community.id}
-                </span>
+          {/* COMMUNITY STATISTICS */}
           <div className="admin-stat-grid">
             <div className="admin-stat-card">
               <div className="admin-stat-icon">
@@ -3623,6 +3404,7 @@ const loadSection = async (section) => {
             </div>
           </div>
 
+          {/* SEARCH / FILTERS */}
           <div className="admin-panel">
             <div className="admin-toolbar-actions">
               <input
@@ -3655,6 +3437,7 @@ const loadSection = async (section) => {
             </div>
           </div>
 
+          {/* COMMUNITY CARDS */}
           <div className="admin-card-grid">
             {filteredCommunities.map((community) => (
               <div className="admin-management-card" key={community.id}>
@@ -3691,26 +3474,8 @@ const loadSection = async (section) => {
                 </div>
 
                 <div className="admin-management-meta">
-                  <span>
-                    By: {community.createdBy?.name || "Unknown"}
-                  </span>
+                  <span>By: {community.createdBy?.name || "Unknown"}</span>
 
-              <p>
-                {community.description ||
-                  "No description."}
-              </p>
-
-              <div className="admin-management-meta">
-                <span>
-                  {community.city ||
-                    "No city"}
-                </span>
-
-                <span>
-                  Members:{" "}
-                  {community._count?.members ||
-                    0}
-                </span>
                   <span>{formatDate(community.createdAt)}</span>
                 </div>
 
@@ -3755,6 +3520,7 @@ const loadSection = async (section) => {
             ))}
           </div>
 
+          {/* EMPTY STATE */}
           {!filteredCommunities.length && (
             <div className="admin-empty-card">
               {communities.length
@@ -3764,9 +3530,6 @@ const loadSection = async (section) => {
           )}
         </div>
 
-        {!communities.length && (
-          <div className="admin-empty-card">
-            No communities found.
         {/* COMMUNITY DETAILS MODAL */}
         {selectedCommunity && (
           <div
@@ -3793,6 +3556,7 @@ const loadSection = async (section) => {
                 <div className="admin-detail-grid">
                   <div className="admin-detail-item">
                     <span>Status</span>
+
                     <strong>
                       {selectedCommunity.isActive ? "ACTIVE" : "INACTIVE"}
                     </strong>
@@ -3800,6 +3564,7 @@ const loadSection = async (section) => {
 
                   <div className="admin-detail-item">
                     <span>Visibility</span>
+
                     <strong>
                       {selectedCommunity.isPublic ? "PUBLIC" : "PRIVATE"}
                     </strong>
@@ -3807,6 +3572,7 @@ const loadSection = async (section) => {
 
                   <div className="admin-detail-item">
                     <span>Location</span>
+
                     <strong>
                       {[
                         selectedCommunity.city,
@@ -3820,6 +3586,7 @@ const loadSection = async (section) => {
 
                   <div className="admin-detail-item">
                     <span>Created By</span>
+
                     <strong>
                       {selectedCommunity.createdBy?.name || "Unknown"}
                     </strong>
@@ -3827,11 +3594,13 @@ const loadSection = async (section) => {
 
                   <div className="admin-detail-item">
                     <span>Created</span>
+
                     <strong>{formatDate(selectedCommunity.createdAt)}</strong>
                   </div>
 
                   <div className="admin-detail-item">
                     <span>Members</span>
+
                     <strong>
                       {selectedCommunity._count?.members ??
                         selectedCommunity.members?.length ??
@@ -4166,6 +3935,7 @@ const loadSection = async (section) => {
                   disabled={savingCommunity}
                 >
                   <CheckCircle size={17} />
+
                   {savingCommunity
                     ? "Saving..."
                     : communityModal.mode === "create"
@@ -4179,7 +3949,332 @@ const loadSection = async (section) => {
       </>
     );
   };
+  /* =====================================================
+   RENDER EXPENSES
+===================================================== */
+  const renderExpenses = () => {
+    return (
+      <div className="admin-content-section">
+        <div className="admin-section-toolbar">
+          <div>
+            <h2>Expenses</h2>
+            <p>
+              Record and manage how Hanumant Seva funds are used across
+              campaigns.
+            </p>
+          </div>
 
+          <button
+            className="admin-primary-button"
+            onClick={openCreateExpenseModal}
+          >
+            <Plus size={17} />
+            Add Expense
+          </button>
+        </div>
+
+        <div className="admin-panel">
+          <div className="admin-table-wrapper">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Campaign</th>
+                  <th>Expense</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Receipt</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {expenses.length ? (
+                  expenses.map((expense) => (
+                    <tr key={expense.id}>
+                      <td>
+                        <strong>{expense.campaign?.title || "—"}</strong>
+                      </td>
+
+                      <td>
+                        <div>
+                          <strong>{expense.title}</strong>
+
+                          {expense.description && (
+                            <div
+                              style={{
+                                fontSize: "0.82rem",
+                                marginTop: "4px",
+                                opacity: 0.7,
+                              }}
+                            >
+                              {expense.description}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+
+                      <td>
+                        <span className="admin-action-badge">
+                          {expense.category}
+                        </span>
+                      </td>
+
+                      <td>
+                        <strong>{formatCurrency(expense.amount)}</strong>
+                      </td>
+
+                      <td>{formatDate(expense.expenseDate)}</td>
+
+                      <td>
+                        {expense.receiptUrl ? (
+                          <a
+                            href={expense.receiptUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="admin-view-site"
+                          >
+                            <Eye size={15} />
+                            View
+                          </a>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+
+                      <td>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "8px",
+                            alignItems: "center",
+                          }}
+                        >
+                          <button
+                            type="button"
+                            className="admin-icon-button"
+                            onClick={() => openEditExpenseModal(expense)}
+                            title="Edit Expense"
+                          >
+                            <Pencil size={16} />
+                          </button>
+
+                          <button
+                            type="button"
+                            className="admin-icon-button admin-danger-icon"
+                            onClick={() => handleDeleteExpense(expense)}
+                            title="Delete Expense"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="admin-empty">
+                      No expenses have been recorded yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* =====================================================
+          EXPENSE CREATE / EDIT MODAL
+      ===================================================== */}
+        {showExpenseModal && (
+          <div
+            className="admin-modal-backdrop"
+            onClick={() => {
+              if (!expenseSaving) {
+                setShowExpenseModal(false);
+                setEditingExpense(null);
+              }
+            }}
+          >
+            <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="admin-modal-header">
+                <div>
+                  <h2>{editingExpense ? "Edit Expense" : "Add Expense"}</h2>
+
+                  <p>
+                    {editingExpense
+                      ? "Update the expense details."
+                      : "Record how funds were used for a campaign."}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="admin-modal-close"
+                  onClick={() => {
+                    if (!expenseSaving) {
+                      setShowExpenseModal(false);
+                      setEditingExpense(null);
+                    }
+                  }}
+                  disabled={expenseSaving}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <form className="admin-modal-body" onSubmit={handleSaveExpense}>
+                <div className="admin-detail-grid">
+                  {/* CAMPAIGN */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-campaign">Campaign *</label>
+
+                    <select
+                      id="expense-campaign"
+                      name="campaignId"
+                      value={expenseForm.campaignId}
+                      onChange={handleExpenseFormChange}
+                      disabled={expenseSaving}
+                      required
+                    >
+                      <option value="">Select Campaign</option>
+
+                      {campaigns.map((campaign) => (
+                        <option key={campaign.id} value={campaign.id}>
+                          {campaign.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* TITLE */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-title">Expense Title *</label>
+
+                    <input
+                      id="expense-title"
+                      type="text"
+                      name="title"
+                      value={expenseForm.title}
+                      onChange={handleExpenseFormChange}
+                      placeholder="e.g. Food distribution supplies"
+                      disabled={expenseSaving}
+                      required
+                    />
+                  </div>
+
+                  {/* CATEGORY */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-category">Category *</label>
+
+                    <input
+                      id="expense-category"
+                      type="text"
+                      name="category"
+                      value={expenseForm.category}
+                      onChange={handleExpenseFormChange}
+                      placeholder="e.g. Food, Transport, Supplies"
+                      disabled={expenseSaving}
+                      required
+                    />
+                  </div>
+
+                  {/* AMOUNT */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-amount">Amount (₹) *</label>
+
+                    <input
+                      id="expense-amount"
+                      type="number"
+                      name="amount"
+                      value={expenseForm.amount}
+                      onChange={handleExpenseFormChange}
+                      placeholder="Enter expense amount"
+                      min="1"
+                      step="0.01"
+                      disabled={expenseSaving}
+                      required
+                    />
+                  </div>
+
+                  {/* DATE */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-date">Expense Date *</label>
+
+                    <input
+                      id="expense-date"
+                      type="datetime-local"
+                      name="expenseDate"
+                      value={expenseForm.expenseDate}
+                      onChange={handleExpenseFormChange}
+                      disabled={expenseSaving}
+                      required
+                    />
+                  </div>
+
+                  {/* RECEIPT URL */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-receipt">Receipt URL</label>
+
+                    <input
+                      id="expense-receipt"
+                      type="url"
+                      name="receiptUrl"
+                      value={expenseForm.receiptUrl}
+                      onChange={handleExpenseFormChange}
+                      placeholder="https://..."
+                      disabled={expenseSaving}
+                    />
+                  </div>
+                </div>
+
+                {/* DESCRIPTION */}
+                <div className="admin-form-group">
+                  <label htmlFor="expense-description">Description</label>
+
+                  <textarea
+                    id="expense-description"
+                    name="description"
+                    value={expenseForm.description}
+                    onChange={handleExpenseFormChange}
+                    placeholder="Describe how this expense was used..."
+                    rows="4"
+                    disabled={expenseSaving}
+                  />
+                </div>
+
+                <div className="admin-modal-actions">
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    onClick={() => {
+                      setShowExpenseModal(false);
+                      setEditingExpense(null);
+                    }}
+                    disabled={expenseSaving}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="admin-primary-button"
+                    disabled={expenseSaving}
+                  >
+                    {expenseSaving
+                      ? "Saving..."
+                      : editingExpense
+                        ? "Update Expense"
+                        : "Create Expense"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
   /* =====================================================
      RENDER AUDIT LOGS
   ===================================================== */
@@ -4191,10 +4286,7 @@ const loadSection = async (section) => {
           <div>
             <h2>Audit Logs</h2>
 
-            <p>
-              Security history of administrative
-              actions.
-            </p>
+            <p>Security history of administrative actions.</p>
           </div>
         </div>
 
@@ -4215,38 +4307,22 @@ const loadSection = async (section) => {
                 {auditLogs.length ? (
                   auditLogs.map((log) => (
                     <tr key={log.id}>
-                      <td>
-                        {log.user?.name ||
-                          "System"}
-                      </td>
+                      <td>{log.user?.name || "System"}</td>
 
                       <td>
-                        <span className="admin-action-badge">
-                          {log.action}
-                        </span>
+                        <span className="admin-action-badge">{log.action}</span>
                       </td>
 
-                      <td>
-                        {log.entity || "—"}
-                      </td>
+                      <td>{log.entity || "—"}</td>
 
-                      <td>
-                        {log.details || "—"}
-                      </td>
+                      <td>{log.details || "—"}</td>
 
-                      <td>
-                        {formatDate(
-                          log.createdAt,
-                        )}
-                      </td>
+                      <td>{formatDate(log.createdAt)}</td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="5"
-                      className="admin-empty"
-                    >
+                    <td colSpan="5" className="admin-empty">
                       No audit logs found.
                     </td>
                   </tr>
@@ -4269,9 +4345,7 @@ const loadSection = async (section) => {
         <div className="admin-loading">
           <div className="admin-spinner" />
 
-          <p>
-            Loading admin data...
-          </p>
+          <p>Loading admin data...</p>
         </div>
       );
     }
@@ -4288,6 +4362,9 @@ const loadSection = async (section) => {
 
       case "donations":
         return renderDonations();
+
+      case "expenses":
+        return renderExpenses();
 
       case "campaigns":
         return renderCampaigns();
@@ -4321,9 +4398,7 @@ const loadSection = async (section) => {
       {sidebarOpen && (
         <div
           className="admin-sidebar-overlay"
-          onClick={() =>
-            setSidebarOpen(false)
-          }
+          onClick={() => setSidebarOpen(false)}
         />
       )}
 
@@ -4343,16 +4418,12 @@ const loadSection = async (section) => {
           <div className="admin-brand-text">
             <strong>Hanumant Seva</strong>
 
-            <span>
-              Admin Panel
-            </span>
+            <span>Admin Panel</span>
           </div>
 
           <button
             className="admin-mobile-close"
-            onClick={() =>
-              setSidebarOpen(false)
-            }
+            onClick={() => setSidebarOpen(false)}
           >
             <X size={21} />
           </button>
@@ -4361,9 +4432,7 @@ const loadSection = async (section) => {
         {/* NAVIGATION */}
 
         <nav className="admin-navigation">
-          <span className="admin-navigation-title">
-            MANAGEMENT
-          </span>
+          <span className="admin-navigation-title">MANAGEMENT</span>
 
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -4372,9 +4441,7 @@ const loadSection = async (section) => {
               <button
                 key={item.id}
                 className={`admin-nav-item ${
-                  activeSection === item.id
-                    ? "admin-nav-item-active"
-                    : ""
+                  activeSection === item.id ? "admin-nav-item-active" : ""
                 }`}
                 onClick={() => navigateSection(item.id)}
                 onMouseEnter={(e) => showNavTip(e, item.label)}
@@ -4385,20 +4452,12 @@ const loadSection = async (section) => {
               >
                 <Icon size={19} />
 
-                <span>
-                  {item.label}
-                </span>
+                <span>{item.label}</span>
 
-                {item.id ===
-                  "volunteers" &&
-                  dashboard?.stats
-                    ?.pendingVolunteerApplications >
-                    0 && (
+                {item.id === "volunteers" &&
+                  dashboard?.stats?.pendingVolunteerApplications > 0 && (
                     <b className="admin-nav-count">
-                      {
-                        dashboard.stats
-                          .pendingVolunteerApplications
-                      }
+                      {dashboard.stats.pendingVolunteerApplications}
                     </b>
                   )}
               </button>
@@ -4411,32 +4470,22 @@ const loadSection = async (section) => {
         <div className="admin-sidebar-footer">
           <button
             className="admin-back-website-button"
-            onClick={
-              handleBackToWebsite
-            }
+            onClick={handleBackToWebsite}
           >
             <Home size={18} />
 
-            <span>
-              Back to Home
-            </span>
+            <span>Back to Home</span>
           </button>
 
           <div className="admin-admin-profile">
             <div className="admin-avatar">
-              {user?.name
-                ?.charAt(0)
-                ?.toUpperCase()}
+              {user?.name?.charAt(0)?.toUpperCase()}
             </div>
 
             <div>
-              <strong>
-                {user?.name}
-              </strong>
+              <strong>{user?.name}</strong>
 
-              <span>
-                Administrator
-              </span>
+              <span>Administrator</span>
             </div>
           </div>
 
@@ -4488,24 +4537,16 @@ const loadSection = async (section) => {
         <header className="admin-topbar">
           <button
             className="admin-mobile-menu"
-            onClick={() =>
-              setSidebarOpen(true)
-            }
+            onClick={() => setSidebarOpen(true)}
           >
             <Menu size={22} />
           </button>
 
           <div className="admin-page-heading">
-            <span>
-              ADMINISTRATION
-            </span>
+            <span>ADMINISTRATION</span>
 
             <h1>
-              {menuItems.find(
-                (item) =>
-                  item.id ===
-                  activeSection,
-              )?.label ||
+              {menuItems.find((item) => item.id === activeSection)?.label ||
                 "Dashboard"}
             </h1>
           </div>
@@ -4513,39 +4554,22 @@ const loadSection = async (section) => {
           <div className="admin-topbar-actions">
             <button
               className="admin-refresh-button"
-              onClick={
-                handleRefresh
-              }
-              disabled={
-                refreshing
-              }
+              onClick={handleRefresh}
+              disabled={refreshing}
               title="Refresh"
             >
-              <RefreshCw
-                size={18}
-                className={
-                  refreshing
-                    ? "admin-spin"
-                    : ""
-                }
-              />
+              <RefreshCw size={18} className={refreshing ? "admin-spin" : ""} />
             </button>
 
             <div className="admin-topbar-user">
               <div className="admin-avatar">
-                {user?.name
-                  ?.charAt(0)
-                  ?.toUpperCase()}
+                {user?.name?.charAt(0)?.toUpperCase()}
               </div>
 
               <div>
-                <strong>
-                  {user?.name}
-                </strong>
+                <strong>{user?.name}</strong>
 
-                <span>
-                  ADMIN
-                </span>
+                <span>ADMIN</span>
               </div>
             </div>
           </div>
@@ -4553,9 +4577,7 @@ const loadSection = async (section) => {
 
         {/* PAGE CONTENT */}
 
-        <section className="admin-page-content">
-          {renderContent()}
-        </section>
+        <section className="admin-page-content">{renderContent()}</section>
       </main>
 
       {/* VOLUNTEER APPLICATION MODAL */}
@@ -4574,39 +4596,19 @@ const loadSection = async (section) => {
       {selectedApplication && (
         <div
           className="admin-modal-backdrop"
-          onClick={() =>
-            setSelectedApplication(
-              null,
-            )
-          }
+          onClick={() => setSelectedApplication(null)}
         >
-          <div
-            className="admin-modal"
-            onClick={(e) =>
-              e.stopPropagation()
-            }
-          >
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
               <div>
-                <span>
-                  VOLUNTEER APPLICATION
-                </span>
+                <span>VOLUNTEER APPLICATION</span>
 
-                <h2>
-                  {
-                    selectedApplication
-                      .user.name
-                  }
-                </h2>
+                <h2>{selectedApplication.user.name}</h2>
               </div>
 
               <button
                 className="admin-modal-close"
-                onClick={() =>
-                  setSelectedApplication(
-                    null,
-                  )
-                }
+                onClick={() => setSelectedApplication(null)}
               >
                 <X size={20} />
               </button>
@@ -4617,115 +4619,76 @@ const loadSection = async (section) => {
                 <div className="admin-detail-item">
                   <span>Name</span>
 
-                  <strong>
-                    {
-                      selectedApplication
-                        .user.name
-                    }
-                  </strong>
+                  <strong>{selectedApplication.user.name}</strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Email</span>
 
-                  <strong>
-                    {
-                      selectedApplication
-                        .user.email
-                    }
-                  </strong>
+                  <strong>{selectedApplication.user.email}</strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Phone</span>
 
                   <strong>
-                    {selectedApplication
-                      .user.phone ||
-                      "Not provided"}
+                    {selectedApplication.user.phone || "Not provided"}
                   </strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Applied</span>
 
-                  <strong>
-                    {formatDate(
-                      selectedApplication.createdAt,
-                    )}
-                  </strong>
+                  <strong>{formatDate(selectedApplication.createdAt)}</strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Skills</span>
 
                   <strong>
-                    {selectedApplication
-                      .skills ||
-                      "Not provided"}
+                    {selectedApplication.skills || "Not provided"}
                   </strong>
                 </div>
 
                 <div className="admin-detail-item">
-                  <span>
-                    Preferred Area
-                  </span>
+                  <span>Preferred Area</span>
 
                   <strong>
-                    {selectedApplication
-                      .preferredArea ||
-                      "Not provided"}
+                    {selectedApplication.preferredArea || "Not provided"}
                   </strong>
                 </div>
 
                 <div className="admin-detail-item">
-                  <span>
-                    Availability
-                  </span>
+                  <span>Availability</span>
 
                   <strong>
-                    {selectedApplication
-                      .availability ||
-                      "Not provided"}
+                    {selectedApplication.availability || "Not provided"}
                   </strong>
                 </div>
 
                 <div className="admin-detail-item">
-                  <span>
-                    Experience
-                  </span>
+                  <span>Experience</span>
 
                   <strong>
-                    {selectedApplication
-                      .experience ||
-                      "Not provided"}
+                    {selectedApplication.experience || "Not provided"}
                   </strong>
                 </div>
               </div>
 
               <div className="admin-detail-long">
-                <span>
-                  Motivation
-                </span>
+                <span>Motivation</span>
 
                 <p>
-                  {selectedApplication
-                    .motivation ||
-                    "No motivation provided."}
+                  {selectedApplication.motivation || "No motivation provided."}
                 </p>
               </div>
             </div>
 
-            {selectedApplication.status ===
-              "PENDING" && (
+            {selectedApplication.status === "PENDING" && (
               <div className="admin-modal-actions">
                 <button
                   className="admin-danger-button"
-                  onClick={() =>
-                    rejectApplication(
-                      selectedApplication,
-                    )
-                  }
+                  onClick={() => rejectApplication(selectedApplication)}
                 >
                   <XCircle size={17} />
                   Reject
@@ -4733,11 +4696,7 @@ const loadSection = async (section) => {
 
                 <button
                   className="admin-success-button"
-                  onClick={() =>
-                    approveApplication(
-                      selectedApplication,
-                    )
-                  }
+                  onClick={() => approveApplication(selectedApplication)}
                 >
                   <CheckCircle size={17} />
                   Approve Volunteer
@@ -4752,13 +4711,3 @@ const loadSection = async (section) => {
 }
 
 export default Admin;
-
-
-
-
-
-
-
-
-
-  

@@ -131,6 +131,8 @@ model User {
 
   communityMemberships CommunityMember[]
 
+  communityInvitationsSent CommunityInvitation[] @relation("CommunityInvitationsSent")
+
   createdCommunities Community[] @relation("CommunityCreator")
 
   organizedEvents VolunteerEvent[] @relation("EventOrganizer")
@@ -322,6 +324,8 @@ model Community {
 
   members CommunityMember[]
 
+  invitations CommunityInvitation[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -335,17 +339,21 @@ model Community {
  * COMMUNITY MEMBER
  * =====================================================
  */
-
 model CommunityMember {
   id Int @id @default(autoincrement())
 
   communityId Int
+  userId      Int
 
-  userId Int
+  referredById Int?
 
   community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  referredBy CommunityMember? @relation("CommunityMemberReferral", fields: [referredById], references: [id], onDelete: SetNull)
+
+  referrals CommunityMember[] @relation("CommunityMemberReferral")
 
   role CommunityMemberRole @default(MEMBER)
 
@@ -358,6 +366,7 @@ model CommunityMember {
   @@unique([communityId, userId])
   @@index([communityId])
   @@index([userId])
+  @@index([referredById])
 }
 
 /**
@@ -389,7 +398,8 @@ model Campaign {
 
   createdAt DateTime @default(now())
 
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime  @updatedAt
+  expenses  Expense[]
 
   @@index([status])
   @@index([startDate])
@@ -827,4 +837,40 @@ model ContactMessage {
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+}
+
+model Expense {
+  id String @id @default(cuid())
+
+  campaignId Int
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  title       String
+  category    String
+  amount      Decimal
+  description String?
+  expenseDate DateTime
+
+  receiptUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CommunityInvitation {
+  id Int @id @default(autoincrement())
+
+  token String @unique
+
+  inviterId Int
+  inviter   User @relation("CommunityInvitationsSent", fields: [inviterId], references: [id], onDelete: Cascade)
+
+  communityId Int?
+  community   Community? @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  status String @default("PENDING")
+
+  expiresAt DateTime?
+
+  createdAt DateTime @default(now())
 }

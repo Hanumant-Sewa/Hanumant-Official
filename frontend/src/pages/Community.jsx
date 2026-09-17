@@ -274,7 +274,6 @@ function Community() {
                     <div className="tree-node-icon">
                       <Heart size={20} />
                     </div>
-
                     <strong>Member</strong>
 
                     <span>Participating</span>

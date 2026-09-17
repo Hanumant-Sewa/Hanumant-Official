@@ -115,7 +115,11 @@ function Programs() {
             </h3>
           </div>
 
-          <ProtectedButton to="/community" className="programs-cta-btn">
+          <ProtectedButton
+            to="/community"
+            allowedRoles={["USER", "VOLUNTEER"]}
+            className="programs-cta-btn"
+          >
             Join Our Community
             <ArrowRight size={18} />
           </ProtectedButton>

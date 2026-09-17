@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import ProtectedLink from "../components/ProtectedLink";
 function Events() {
   return (
     <section className="events section">
@@ -21,10 +21,13 @@ function Events() {
             <p>
               Food distribution for underprivileged families across the city.
             </p>
-
-            <a href="#volunteer" className="btn btn-primary">
+            <ProtectedLink
+              to="/dashboard"
+              allowedRoles={["USER", "VOLUNTEER"]}
+              className="btn btn-primary"
+            >
               Join Event
-            </a>
+            </ProtectedLink>
           </div>
 
           <div className="event-card">
@@ -35,10 +38,13 @@ function Events() {
             <p>
               Volunteers prepare and distribute fresh meals for people in need.
             </p>
-
-            <a href="#volunteer" className="btn btn-primary">
+            <ProtectedLink
+              to="/dashboard"
+              allowedRoles={["USER", "VOLUNTEER"]}
+              className="btn btn-primary"
+            >
               Join Event
-            </a>
+            </ProtectedLink>
           </div>
 
           <div className="event-card">
@@ -50,10 +56,13 @@ function Events() {
               Donate groceries and essential food items for our monthly hunger
               relief campaign.
             </p>
-
-            <a href="#volunteer" className="btn btn-primary">
+            <ProtectedLink
+              to="/dashboard"
+              allowedRoles={["USER", "VOLUNTEER"]}
+              className="btn btn-primary"
+            >
               Join Event
-            </a>
+            </ProtectedLink>
           </div>
         </div>
       </div>

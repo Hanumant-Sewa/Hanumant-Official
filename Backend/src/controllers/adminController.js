@@ -434,6 +434,16 @@ export const getVolunteerApplications = async (req, res) => {
           createdAt: "desc",
         },
 
+<<<<<<< HEAD
+        volunteerProfile: {
+          select: {
+            id: true,
+            userId: true,
+            age: true,
+            joinedAt: true,
+            createdAt: true,
+            updatedAt: true,
+=======
         include: {
           user: {
             select: {
@@ -461,6 +471,7 @@ export const getVolunteerApplications = async (req, res) => {
               createdAt: true,
               updatedAt: true,
             },
+>>>>>>> 7b729f937eb7af0ba9bcc088fce5030f717a18fa
           },
         },
       });
@@ -582,6 +593,12 @@ export const approveVolunteerApplication = async (req, res) => {
                 id: existingProfile.id,
               },
 
+<<<<<<< HEAD
+            availability: application.availability || null,
+            city: null,
+            state: null,
+            country: null,
+=======
               data: {
                 isVerified: true,
 
@@ -601,6 +618,7 @@ export const approveVolunteerApplication = async (req, res) => {
             await tx.volunteerProfile.create({
               data: {
                 userId: application.userId,
+>>>>>>> 7b729f937eb7af0ba9bcc088fce5030f717a18fa
 
                 skills: application.skills || null,
 
