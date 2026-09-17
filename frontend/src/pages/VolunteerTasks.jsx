@@ -1,382 +1,575 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
+  ClipboardList,
   Clock3,
+  CheckCircle2,
   Circle,
   CalendarDays,
   MapPin,
-  ClipboardList,
-  Trophy,
 } from "lucide-react";
 
-import "../css/Volunteer.css";
+import "../css/VolunteerTasks.css";
 
 const VolunteerTasks = () => {
-  const navigate = useNavigate();
+  const [activeFilter, setActiveFilter] = useState("ALL");
 
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Prepare Food Packages",
-      description:
-        "Help organize and pack food packages for community distribution.",
-      event: "Community Food Distribution",
-      date: "22 August 2026",
-      location: "Solapur Community Center",
-      status: "pending",
-      image: "/images/volunteer-task-donation.jpeg",
-    },
-    {
-      id: 2,
-      title: "Organize Donation Materials",
-      description:
-        "Sort and organize the donated materials before distribution.",
-      event: "Donation Collection Drive",
-      date: "20 September 2026",
-      location: "Central Collection Point",
-      status: "progress",
-      image: "/images/documentation.jpeg",
-    },
-    {
-      id: 3,
-      title: "Community Outreach Support",
-      description:
-        "Assist the outreach team during community interaction activities.",
-      event: "Community Outreach",
-      date: "27 September 2026",
-      location: "Solapur Community Area",
-      status: "completed",
-      image: "/images/volunteer-event-food.jpeg",
-    },
-    {
-      id: 4,
-      title: "Food Distribution Assistance",
-      description: "Assist the team at the food distribution counter.",
-      event: "Food Rescue Drive",
-      date: "28 August 2026",
-      location: "Hanumat Seva Center",
-      status: "pending",
-      image: "/images/food-rescue.png",
-    },
-  ]);
+  // =====================================================
+  // TASK STATE
+  // =====================================================
 
-  const updateTaskStatus = (id) => {
-    setTasks((previousTasks) =>
-      previousTasks.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              status: task.status === "pending" ? "progress" : "completed",
-            }
-          : task,
-      ),
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // =====================================================
+  // LOAD TASKS FROM BACKEND
+  // =====================================================
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/volunteer-tasks`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Failed to load volunteer tasks."
+          );
+        }
+
+        setTasks(data.tasks || []);
+      } catch (error) {
+        console.error("Load tasks error:", error);
+
+        setError(
+          error.message || "Unable to load tasks. Please try again."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTasks();
+  }, []);
+
+  // =====================================================
+  // TASK COUNTS
+  // =====================================================
+
+  const totalTasks = tasks.length;
+
+  const pendingTasks = tasks.filter(
+    (task) => task.status === "TODO"
+  );
+
+  const inProgressTasks = tasks.filter(
+    (task) => task.status === "IN_PROGRESS"
+  );
+
+  const completedTasks = tasks.filter(
+    (task) => task.status === "COMPLETED"
+  );
+
+  // =====================================================
+  // FILTER TASKS
+  // =====================================================
+
+  const filteredTasks = useMemo(() => {
+    if (activeFilter === "ALL") {
+      return tasks;
+    }
+
+    return tasks.filter(
+      (task) => task.status === activeFilter
     );
+  }, [tasks, activeFilter]);
+
+  // =====================================================
+  // STATUS TEXT
+  // =====================================================
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case "TODO":
+        return "Pending";
+
+      case "IN_PROGRESS":
+        return "In Progress";
+
+      case "COMPLETED":
+        return "Completed";
+
+      case "CANCELLED":
+        return "Cancelled";
+
+      default:
+        return status;
+    }
   };
 
-  const pendingTasks = tasks.filter((task) => task.status === "pending");
+  // =====================================================
+  // STATUS CLASS
+  // =====================================================
 
-  const progressTasks = tasks.filter((task) => task.status === "progress");
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "TODO":
+        return "task-status-pending";
 
-  const completedTasks = tasks.filter((task) => task.status === "completed");
+      case "IN_PROGRESS":
+        return "task-status-progress";
 
-  const renderTaskCard = (task) => (
-    <article className="volunteer-task-card" key={task.id}>
-      <div className="task-card-image">
-        <img src={task.image} alt={task.title} />
+      case "COMPLETED":
+        return "task-status-completed";
 
-        <span className={`task-status-badge ${task.status}`}>
-          {task.status === "pending" && "Pending"}
+      case "CANCELLED":
+        return "task-status-cancelled";
 
-          {task.status === "progress" && "In Progress"}
+      default:
+        return "";
+    }
+  };
 
-          {task.status === "completed" && "Completed"}
-        </span>
-      </div>
+  // =====================================================
+  // STATUS ICON
+  // =====================================================
 
-      <div className="task-card-content">
-        <span className="task-event-name">{task.event}</span>
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case "TODO":
+        return <Circle size={16} />;
 
-        <h3>{task.title}</h3>
+      case "IN_PROGRESS":
+        return <Clock3 size={16} />;
 
-        <p>{task.description}</p>
+      case "COMPLETED":
+        return <CheckCircle2 size={16} />;
 
-        <div className="task-meta">
-          <div>
-            <CalendarDays size={14} />
-            <span>{task.date}</span>
-          </div>
+      case "CANCELLED":
+        return <Circle size={16} />;
 
-          <div>
-            <MapPin size={14} />
-            <span>{task.location}</span>
-          </div>
+      default:
+        return <Circle size={16} />;
+    }
+  };
+
+  // =====================================================
+  // FORMAT DATE
+  // =====================================================
+
+  const formatDate = (date) => {
+    if (!date) {
+      return "Not specified";
+    }
+
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return date;
+    }
+
+    return parsedDate.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  // =====================================================
+  // GET LOCATION
+  // =====================================================
+
+  const getLocation = (task) => {
+    if (task.event) {
+      const locationParts = [
+        task.event.location,
+        task.event.city,
+        task.event.state,
+      ].filter(Boolean);
+
+      if (locationParts.length > 0) {
+        return locationParts.join(", ");
+      }
+    }
+
+    return "Location not specified";
+  };
+
+  // =====================================================
+  // GET EVENT NAME
+  // =====================================================
+
+  const getEventName = (task) => {
+    if (task.event?.title) {
+      return task.event.title;
+    }
+
+    return "General Volunteer Task";
+  };
+
+  // =====================================================
+  // LOADING
+  // =====================================================
+
+  if (loading) {
+    return (
+      <div className="volunteer-tasks-page">
+        <div className="tasks-empty">
+          <ClipboardList size={48} />
+
+          <h3>Loading tasks...</h3>
+
+          <p>
+            Please wait while we load your volunteer tasks.
+          </p>
         </div>
-
-        {task.status !== "completed" ? (
-          <button
-            type="button"
-            className="task-action-button"
-            onClick={() => updateTaskStatus(task.id)}
-          >
-            {task.status === "pending" ? (
-              <>
-                <Clock3 size={16} />
-                Start Task
-              </>
-            ) : (
-              <>
-                <CheckCircle2 size={16} />
-                Mark Completed
-              </>
-            )}
-
-            <ArrowRight size={15} />
-          </button>
-        ) : (
-          <div className="task-completed-message">
-            <CheckCircle2 size={16} />
-            Task Completed
-          </div>
-        )}
       </div>
-    </article>
-  );
+    );
+  }
+
+  // =====================================================
+  // PAGE
+  // =====================================================
 
   return (
     <div className="volunteer-tasks-page">
-      {/* =========================================
-          HERO
-      ========================================== */}
 
-      <section className="tasks-page-hero">
-        <div className="tasks-hero-content">
-          <button
-            type="button"
-            className="back-button"
-            onClick={() => navigate("/volunteer/dashboard")}
-          >
-            <ArrowLeft size={17} />
-            Back to Dashboard
-          </button>
+      {/* =================================================
+          PAGE HEADER
+      ================================================= */}
 
-          <span className="application-label">VOLUNTEER WORK</span>
+      <div className="volunteer-tasks-header">
 
-          <h1>
-            My
-            <span> Tasks</span>
-          </h1>
+        <div>
+          <div className="tasks-title-row">
 
-          <p>
-            Keep track of your assigned work, ongoing activities and completed
-            volunteer tasks.
-          </p>
-        </div>
-      </section>
-
-      {/* =========================================
-          MAIN
-      ========================================== */}
-
-      <main className="tasks-page-main">
-        {/* =====================================
-            STATISTICS
-        ====================================== */}
-
-        <section className="tasks-stat-grid">
-          <div className="task-stat-card">
-            <div className="task-stat-icon">
-              <ClipboardList size={22} />
+            <div className="tasks-title-icon">
+              <ClipboardList size={28} />
             </div>
 
             <div>
-              <span>TOTAL TASKS</span>
-
-              <strong>{tasks.length}</strong>
-            </div>
-          </div>
-
-          <div className="task-stat-card">
-            <div className="task-stat-icon">
-              <Circle size={22} />
-            </div>
-
-            <div>
-              <span>PENDING</span>
-
-              <strong>{pendingTasks.length}</strong>
-            </div>
-          </div>
-
-          <div className="task-stat-card">
-            <div className="task-stat-icon">
-              <Clock3 size={22} />
-            </div>
-
-            <div>
-              <span>IN PROGRESS</span>
-
-              <strong>{progressTasks.length}</strong>
-            </div>
-          </div>
-
-          <div className="task-stat-card">
-            <div className="task-stat-icon completed-icon">
-              <Trophy size={22} />
-            </div>
-
-            <div>
-              <span>COMPLETED</span>
-
-              <strong>{completedTasks.length}</strong>
-            </div>
-          </div>
-        </section>
-
-        {/* =====================================
-            PENDING TASKS
-        ====================================== */}
-
-        <section className="tasks-section">
-          <div className="tasks-section-heading">
-            <div>
-              <span>TO DO</span>
-
-              <h2>Pending Tasks</h2>
-            </div>
-
-            <div className="task-section-count">{pendingTasks.length}</div>
-          </div>
-
-          {pendingTasks.length > 0 ? (
-            <div className="tasks-grid">{pendingTasks.map(renderTaskCard)}</div>
-          ) : (
-            <div className="empty-task-box">
-              <CheckCircle2 size={28} />
-
-              <h3>No pending tasks</h3>
-
-              <p>Great job! You have completed all your pending tasks.</p>
-            </div>
-          )}
-        </section>
-
-        {/* =====================================
-            IN PROGRESS
-        ====================================== */}
-
-        <section className="tasks-section">
-          <div className="tasks-section-heading">
-            <div>
-              <span>CURRENTLY WORKING</span>
-
-              <h2>In Progress</h2>
-            </div>
-
-            <div className="task-section-count">{progressTasks.length}</div>
-          </div>
-
-          {progressTasks.length > 0 ? (
-            <div className="tasks-grid">
-              {progressTasks.map(renderTaskCard)}
-            </div>
-          ) : (
-            <div className="empty-task-box">
-              <Clock3 size={28} />
-
-              <h3>No tasks in progress</h3>
-
-              <p>Start a pending task to see it here.</p>
-            </div>
-          )}
-        </section>
-
-        {/* =====================================
-            COMPLETED
-        ====================================== */}
-
-        <section className="tasks-section">
-          <div className="tasks-section-heading">
-            <div>
-              <span>YOUR ACHIEVEMENTS</span>
-
-              <h2>Completed Tasks</h2>
-            </div>
-
-            <div className="task-section-count">{completedTasks.length}</div>
-          </div>
-
-          {completedTasks.length > 0 ? (
-            <div className="tasks-grid">
-              {completedTasks.map(renderTaskCard)}
-            </div>
-          ) : (
-            <div className="empty-task-box">
-              <Trophy size={28} />
-
-              <h3>No completed tasks yet</h3>
+              <h1>My Tasks</h1>
 
               <p>
-                Complete your first task and start building your volunteer
-                impact.
+                View and manage your volunteer tasks
               </p>
             </div>
-          )}
-        </section>
 
-        {/* =====================================
-            MOTIVATION
-        ====================================== */}
+          </div>
+        </div>
 
-        <section className="tasks-motivation">
-          <div className="tasks-motivation-image">
-            <img
-              src="/images/volunteer-tasks.jpeg"
-              alt="Volunteer helping community"
-            />
+      </div>
+
+      {/* =================================================
+          ERROR MESSAGE
+      ================================================= */}
+
+      {error && (
+        <div className="tasks-error">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {/* =================================================
+          TASK SUMMARY
+      ================================================= */}
+
+      <div className="task-summary-grid">
+
+        {/* TOTAL */}
+
+        <div className="task-summary-card">
+
+          <div className="task-summary-icon total">
+            <ClipboardList size={22} />
           </div>
 
-          <div className="tasks-motivation-content">
-            <span>EVERY TASK MATTERS</span>
+          <div>
+            <span>Total Tasks</span>
+            <strong>{totalTasks}</strong>
+          </div>
 
-            <h2>
-              Small actions,
-              <strong> big impact.</strong>
-            </h2>
+        </div>
+
+        {/* PENDING */}
+
+        <div className="task-summary-card">
+
+          <div className="task-summary-icon pending">
+            <Circle size={22} />
+          </div>
+
+          <div>
+            <span>Pending</span>
+            <strong>{pendingTasks.length}</strong>
+          </div>
+
+        </div>
+
+        {/* IN PROGRESS */}
+
+        <div className="task-summary-card">
+
+          <div className="task-summary-icon progress">
+            <Clock3 size={22} />
+          </div>
+
+          <div>
+            <span>In Progress</span>
+            <strong>{inProgressTasks.length}</strong>
+          </div>
+
+        </div>
+
+        {/* COMPLETED */}
+
+        <div className="task-summary-card">
+
+          <div className="task-summary-icon completed">
+            <CheckCircle2 size={22} />
+          </div>
+
+          <div>
+            <span>Completed</span>
+            <strong>{completedTasks.length}</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* =================================================
+          FILTERS
+      ================================================= */}
+
+      <div className="task-filter-section">
+
+        <button
+          type="button"
+          className={
+            activeFilter === "ALL"
+              ? "task-filter active"
+              : "task-filter"
+          }
+          onClick={() => setActiveFilter("ALL")}
+        >
+          All Tasks
+        </button>
+
+        <button
+          type="button"
+          className={
+            activeFilter === "TODO"
+              ? "task-filter active"
+              : "task-filter"
+          }
+          onClick={() => setActiveFilter("TODO")}
+        >
+          Pending
+        </button>
+
+        <button
+          type="button"
+          className={
+            activeFilter === "IN_PROGRESS"
+              ? "task-filter active"
+              : "task-filter"
+          }
+          onClick={() =>
+            setActiveFilter("IN_PROGRESS")
+          }
+        >
+          In Progress
+        </button>
+
+        <button
+          type="button"
+          className={
+            activeFilter === "COMPLETED"
+              ? "task-filter active"
+              : "task-filter"
+          }
+          onClick={() =>
+            setActiveFilter("COMPLETED")
+          }
+        >
+          Completed
+        </button>
+
+      </div>
+
+      {/* =================================================
+          TASK LIST
+      ================================================= */}
+
+      <div className="tasks-list">
+
+        {filteredTasks.length === 0 ? (
+
+          <div className="tasks-empty">
+
+            <ClipboardList size={48} />
+
+            <h3>No tasks found</h3>
 
             <p>
-              Every completed task contributes to a stronger and more caring
-              community.
+              There are no tasks in this category.
             </p>
 
-            <button
-              type="button"
-              className="orange-button"
-              onClick={() => navigate("/volunteer/events")}
-            >
-              Explore More Events
-              <ArrowRight size={17} />
-            </button>
           </div>
-        </section>
 
-        {/* =====================================
-            BOTTOM
-        ====================================== */}
+        ) : (
 
-        <div className="tasks-bottom-action">
-          <button
-            type="button"
-            className="outline-button"
-            onClick={() => navigate("/volunteer/dashboard")}
-          >
-            <ArrowLeft size={17} />
-            Back to Dashboard
-          </button>
-        </div>
-      </main>
+          filteredTasks.map((task) => (
+
+            <div
+              className="task-card"
+              key={task.id}
+            >
+
+              {/* =================================================
+                  TASK ICON
+              ================================================= */}
+
+              <div className="task-card-icon">
+                <ClipboardList size={24} />
+              </div>
+
+              {/* =================================================
+                  TASK CONTENT
+              ================================================= */}
+
+              <div className="task-card-content">
+
+                <div className="task-card-top">
+
+                  <h3>
+                    {task.title}
+                  </h3>
+
+                  <span
+                    className={`task-status ${getStatusClass(
+                      task.status
+                    )}`}
+                  >
+                    {getStatusIcon(task.status)}
+
+                    {getStatusText(task.status)}
+                  </span>
+
+                </div>
+
+                {/* DESCRIPTION */}
+
+                <p className="task-description">
+                  {task.description ||
+                    "No description provided."}
+                </p>
+
+                {/* META */}
+
+                <div className="task-meta">
+
+                  {/* DUE DATE */}
+
+                  <div className="task-meta-item">
+
+                    <CalendarDays size={16} />
+
+                    <span>
+                      Due: {formatDate(task.dueDate)}
+                    </span>
+
+                  </div>
+
+                  {/* LOCATION */}
+
+                  <div className="task-meta-item">
+
+                    <MapPin size={16} />
+
+                    <span>
+                      {getLocation(task)}
+                    </span>
+
+                  </div>
+
+                  {/* EVENT */}
+
+                  <div className="task-meta-item">
+
+                    <ClipboardList size={16} />
+
+                    <span>
+                      {getEventName(task)}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* =================================================
+                  TASK ACTION
+              ================================================= */}
+
+              <div className="task-card-action">
+
+                {task.status === "TODO" && (
+
+                  <button
+                    type="button"
+                    className="task-action-button start"
+                  >
+                    Start Task
+                  </button>
+
+                )}
+
+                {task.status === "IN_PROGRESS" && (
+
+                  <button
+                    type="button"
+                    className="task-action-button complete"
+                  >
+                    Mark Complete
+                  </button>
+
+                )}
+
+                {task.status === "COMPLETED" && (
+
+                  <div className="task-completed-label">
+
+                    <CheckCircle2 size={18} />
+
+                    Completed
+
+                  </div>
+
+                )}
+
+              </div>
+
+            </div>
+
+          ))
+
+        )}
+
+      </div>
+
     </div>
   );
 };

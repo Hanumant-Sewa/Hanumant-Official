@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+
 import {
   LayoutDashboard,
   Users,
@@ -88,6 +89,7 @@ function Admin() {
   const [donations, setDonations] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
   const [events, setEvents] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
 
@@ -165,6 +167,23 @@ function Admin() {
   });
 
   /* =====================================================
+     TASK STATE
+  ===================================================== */
+
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+  const [taskSaving, setTaskSaving] = useState(false);
+
+  const [taskForm, setTaskForm] = useState({
+    title: "",
+    description: "",
+
+    eventId: "",
+    dueDate: "",
+    status: "TODO",
+  });
+
+  /* =====================================================
      APPLICATION / UI STATE
   ===================================================== */
 
@@ -234,6 +253,7 @@ function Admin() {
 
   const loadDashboard = async () => {
     const data = await apiRequest("/dashboard");
+
     setDashboard(data);
   };
 
@@ -570,11 +590,8 @@ function Admin() {
         description: campaignForm.description.trim() || null,
         image: campaignForm.image.trim() || null,
         targetAmount,
-
         startDate: startDate ? startDate.toISOString() : null,
-
         endDate: endDate ? endDate.toISOString() : null,
-
         status: campaignForm.status,
       };
 
@@ -752,11 +769,8 @@ function Admin() {
       location: event.location || "",
       city: event.city || "",
       state: event.state || "",
-
       startDate: toDateTimeLocalValue(event.startDate),
-
       endDate: toDateTimeLocalValue(event.endDate),
-
       capacity: event.capacity ?? "",
     });
 
@@ -826,21 +840,13 @@ function Admin() {
 
       const payload = {
         title: eventForm.title.trim(),
-
         description: eventForm.description.trim() || null,
-
         image: eventForm.image.trim() || null,
-
         location: eventForm.location.trim() || null,
-
         city: eventForm.city.trim() || null,
-
         state: eventForm.state.trim() || null,
-
         startDate: startDate.toISOString(),
-
         endDate: endDate.toISOString(),
-
         capacity: eventForm.capacity === "" ? null : Number(eventForm.capacity),
       };
 
@@ -915,7 +921,7 @@ function Admin() {
         confirmButtonColor: "#D97706",
       });
     } catch (error) {
-      console.error("Delete/cancel event error:", error);
+      console.error("Cancel event error:", error);
 
       Swal.fire({
         icon: "error",
@@ -971,6 +977,166 @@ function Admin() {
   };
 
   /* =====================================================
+     TASKS
+  ===================================================== */
+
+  const loadTasks = async () => {
+    const data = await apiRequest("/tasks");
+
+    setTasks(data.tasks || []);
+  };
+
+  /* =====================================================
+     CREATE TASK MODAL
+  ===================================================== */
+
+  const openCreateTaskModal = () => {
+    setEditingTask(null);
+
+    setTaskForm({
+      title: "",
+      description: "",
+
+      eventId: "",
+      dueDate: "",
+      status: "TODO",
+    });
+
+    setShowTaskModal(true);
+  };
+
+  /* =====================================================
+     TASK FORM CHANGE
+  ===================================================== */
+
+  const handleTaskFormChange = (e) => {
+    const { name, value } = e.target;
+
+    setTaskForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  /* =====================================================
+   SAVE TASK
+===================================================== */
+
+  const handleSaveTask = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (!taskForm.title.trim()) {
+        throw new Error("Task title is required.");
+      }
+
+      setTaskSaving(true);
+
+      const payload = {
+        title: taskForm.title.trim(),
+
+        description: taskForm.description.trim() || null,
+
+        eventId: taskForm.eventId === "" ? null : Number(taskForm.eventId),
+
+        dueDate: taskForm.dueDate
+          ? new Date(taskForm.dueDate).toISOString()
+          : null,
+
+        status: taskForm.status,
+      };
+
+      const endpoint = editingTask ? `/tasks/${editingTask.id}` : "/tasks";
+
+      const method = editingTask ? "PATCH" : "POST";
+
+      const data = await apiRequest(endpoint, {
+        method,
+        body: JSON.stringify(payload),
+      });
+
+      await loadTasks();
+
+      setShowTaskModal(false);
+      setEditingTask(null);
+
+      setTaskForm({
+        title: "",
+        description: "",
+        eventId: "",
+        dueDate: "",
+        status: "TODO",
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: editingTask ? "Task Updated" : "Task Created",
+        text:
+          data.message ||
+          (editingTask
+            ? "Task updated successfully."
+            : "Task created successfully."),
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Save task error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Unable to save task",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
+      });
+    } finally {
+      setTaskSaving(false);
+    }
+  };
+
+  /* =====================================================
+     DELETE TASK
+  ===================================================== */
+
+  const handleDeleteTask = async (task) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Delete this task?",
+      text: `"${task.title}" will be permanently deleted.`,
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      const data = await apiRequest(`/tasks/${task.id}`, {
+        method: "DELETE",
+      });
+
+      await loadTasks();
+
+      Swal.fire({
+        icon: "success",
+        title: "Task Deleted",
+        text: data.message || "Task deleted successfully.",
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Delete task error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Cannot delete task",
+        text: error.message || "Unable to delete this task.",
+        confirmButtonColor: "#D97706",
+      });
+    }
+  };
+
+  /* =====================================================
      COMMUNITIES
   ===================================================== */
 
@@ -1002,10 +1168,10 @@ function Admin() {
      LOAD SECTION
   ===================================================== */
 
-  const loadSection = async (section = activeSection) => {
-    try {
-      setLoading(true);
+  const loadSection = async (section) => {
+    setLoading(true);
 
+    try {
       switch (section) {
         case "dashboard":
           await loadDashboard();
@@ -1035,6 +1201,10 @@ function Admin() {
           await loadEvents();
           break;
 
+        case "tasks":
+          await Promise.all([loadTasks(), loadUsers(), loadEvents()]);
+          break;
+
         case "communities":
           await loadCommunities();
           break;
@@ -1047,13 +1217,13 @@ function Admin() {
           break;
       }
     } catch (error) {
-      console.error(error);
+      console.error(`Failed to load ${section}:`, error);
 
       Swal.fire({
-        title: "Unable to Load",
-        text: error.message || "Something went wrong.",
         icon: "error",
-        confirmButtonColor: "#e87524",
+        title: "Unable to load data",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
       });
     } finally {
       setLoading(false);
@@ -1644,9 +1814,6 @@ function Admin() {
 
   /* =====================================================
      EVENT STATUS
-     
-     Status is derived from actual date/time.
-     CANCELLED always has priority.
   ===================================================== */
 
   const getEventStatus = (event, now = new Date()) => {
@@ -1683,9 +1850,6 @@ function Admin() {
 
   /* =====================================================
      CAMPAIGN STATUS
-     
-     DRAFT/CANCELLED/COMPLETED are respected.
-     ACTIVE is calculated against dates.
   ===================================================== */
 
   const getCampaignStatus = (campaign, now = new Date()) => {
@@ -1761,6 +1925,12 @@ function Admin() {
       id: "events",
       label: "Events",
       icon: CalendarDays,
+    },
+
+    {
+      id: "tasks",
+      label: "Tasks",
+      icon: ClipboardList,
     },
 
     {
@@ -1866,9 +2036,7 @@ function Admin() {
         </div>
 
         <div className="admin-dashboard-grid">
-          {/* =========================
-              RECENT APPLICATIONS
-          ========================= */}
+          {/* RECENT APPLICATIONS */}
 
           <div className="admin-panel">
             <div className="admin-panel-header">
@@ -1891,11 +2059,8 @@ function Admin() {
                 <thead>
                   <tr>
                     <th>Applicant</th>
-
                     <th>Email</th>
-
                     <th>Status</th>
-
                     <th>Date</th>
                   </tr>
                 </thead>
@@ -1937,9 +2102,7 @@ function Admin() {
             </div>
           </div>
 
-          {/* =========================
-              RECENT DONATIONS
-          ========================= */}
+          {/* RECENT DONATIONS */}
 
           <div className="admin-panel">
             <div className="admin-panel-header">
@@ -1962,11 +2125,8 @@ function Admin() {
                 <thead>
                   <tr>
                     <th>Donor</th>
-
                     <th>Amount</th>
-
                     <th>Status</th>
-
                     <th>Date</th>
                   </tr>
                 </thead>
@@ -2011,6 +2171,7 @@ function Admin() {
       </div>
     );
   };
+
   /* =====================================================
      RENDER VOLUNTEERS
   ===================================================== */
@@ -2021,6 +2182,7 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Volunteer Applications</h2>
+
             <p>Review and manage volunteer requests.</p>
           </div>
 
@@ -2120,6 +2282,7 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Users</h2>
+
             <p>Manage registered users and account status.</p>
           </div>
         </div>
@@ -2210,6 +2373,7 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Donations</h2>
+
             <p>Monitor donation and payment activity.</p>
           </div>
         </div>
@@ -2283,7 +2447,6 @@ function Admin() {
 
     return (
       <div className="admin-content-section">
-        {/* HEADER */}
         <div className="admin-section-toolbar">
           <div>
             <h2>Campaigns</h2>
@@ -2301,7 +2464,6 @@ function Admin() {
           </button>
         </div>
 
-        {/* CAMPAIGN CARDS */}
         <div className="admin-card-grid">
           {campaigns.map((campaign) => {
             const displayStatus = getCampaignStatus(campaign, now);
@@ -2320,7 +2482,6 @@ function Admin() {
                 className="admin-management-card admin-campaign-card"
                 key={campaign.id}
               >
-                {/* IMAGE */}
                 {campaign.image && (
                   <div className="admin-campaign-image">
                     <img
@@ -2333,7 +2494,6 @@ function Admin() {
                   </div>
                 )}
 
-                {/* TOP */}
                 <div className="admin-management-card-top">
                   <span
                     className={`admin-status admin-status-${displayStatus.toLowerCase()}`}
@@ -2344,20 +2504,16 @@ function Admin() {
                   <span>#{campaign.id}</span>
                 </div>
 
-                {/* TITLE */}
                 <h3>{campaign.title}</h3>
 
-                {/* DESCRIPTION */}
                 <p>{campaign.description || "No campaign description."}</p>
 
-                {/* RAISED */}
                 <div className="admin-progress-info">
                   <span>Raised</span>
 
                   <strong>{formatCurrency(raised)}</strong>
                 </div>
 
-                {/* PROGRESS */}
                 <div className="admin-progress-track">
                   <div
                     className="admin-progress-bar"
@@ -2371,14 +2527,12 @@ function Admin() {
                   {progress.toFixed(0)}% of target
                 </div>
 
-                {/* META */}
                 <div className="admin-management-meta">
                   <span>Target: {formatCurrency(target)}</span>
 
                   <span>Donations: {campaign._count?.donations || 0}</span>
                 </div>
 
-                {/* DATES */}
                 {(campaign.startDate || campaign.endDate) && (
                   <div className="admin-campaign-dates">
                     {campaign.startDate && (
@@ -2391,7 +2545,6 @@ function Admin() {
                   </div>
                 )}
 
-                {/* ACTIONS */}
                 <div className="admin-campaign-actions">
                   <button
                     type="button"
@@ -2432,7 +2585,6 @@ function Admin() {
           <div className="admin-empty-card">No campaigns found.</div>
         )}
 
-        {/* CAMPAIGN MODAL */}
         {showCampaignModal && (
           <div className="admin-modal-backdrop">
             <div className="admin-modal admin-campaign-modal">
@@ -2457,7 +2609,6 @@ function Admin() {
                 className="admin-campaign-form"
                 onSubmit={handleSaveCampaign}
               >
-                {/* TITLE */}
                 <div className="admin-form-group">
                   <label>Campaign Title *</label>
 
@@ -2471,7 +2622,6 @@ function Admin() {
                   />
                 </div>
 
-                {/* DESCRIPTION */}
                 <div className="admin-form-group">
                   <label>Description</label>
 
@@ -2484,7 +2634,6 @@ function Admin() {
                   />
                 </div>
 
-                {/* IMAGE */}
                 <div className="admin-form-group">
                   <label>Campaign Image URL</label>
 
@@ -2497,7 +2646,6 @@ function Admin() {
                   />
                 </div>
 
-                {/* TARGET */}
                 <div className="admin-form-group">
                   <label>Target Amount *</label>
 
@@ -2513,7 +2661,6 @@ function Admin() {
                   />
                 </div>
 
-                {/* DATES */}
                 <div className="admin-form-row">
                   <div className="admin-form-group">
                     <label>Start Date & Time</label>
@@ -2538,7 +2685,6 @@ function Admin() {
                   </div>
                 </div>
 
-                {/* STATUS */}
                 <div className="admin-form-group">
                   <label>Status</label>
 
@@ -2560,7 +2706,6 @@ function Admin() {
                   </small>
                 </div>
 
-                {/* FOOTER */}
                 <div className="admin-modal-footer">
                   <button
                     type="button"
@@ -2600,7 +2745,6 @@ function Admin() {
 
     return (
       <div className="admin-content-section">
-        {/* HEADER */}
         <div className="admin-section-toolbar">
           <div>
             <h2>Events</h2>
@@ -2618,7 +2762,6 @@ function Admin() {
           </button>
         </div>
 
-        {/* EVENT TABLE */}
         <div className="admin-panel">
           <div className="admin-table-wrapper">
             <table className="admin-table">
@@ -2650,7 +2793,6 @@ function Admin() {
 
                     return (
                       <tr key={event.id}>
-                        {/* EVENT */}
                         <td>
                           <strong>{event.title}</strong>
 
@@ -2661,7 +2803,6 @@ function Admin() {
                           )}
                         </td>
 
-                        {/* LOCATION */}
                         <td>
                           {event.location || event.city || "—"}
 
@@ -2674,7 +2815,6 @@ function Admin() {
                           )}
                         </td>
 
-                        {/* SCHEDULE */}
                         <td>
                           <div className="admin-event-schedule">
                             <strong>{formatDateTime(event.startDate)}</strong>
@@ -2685,10 +2825,8 @@ function Admin() {
                           </div>
                         </td>
 
-                        {/* CAPACITY */}
                         <td>{hasCapacity ? event.capacity : "Unlimited"}</td>
 
-                        {/* REGISTRATIONS */}
                         <td>
                           <strong>{registrationCount}</strong>
 
@@ -2699,7 +2837,6 @@ function Admin() {
                           )}
                         </td>
 
-                        {/* STATUS */}
                         <td>
                           <span
                             className={`admin-status admin-status-${displayStatus.toLowerCase()}`}
@@ -2708,7 +2845,6 @@ function Admin() {
                           </span>
                         </td>
 
-                        {/* ACTIONS */}
                         <td>
                           <div className="admin-event-actions">
                             <button
@@ -2757,7 +2893,6 @@ function Admin() {
           </div>
         </div>
 
-        {/* EVENT MODAL */}
         {showEventModal && (
           <div className="admin-modal-backdrop">
             <div className="admin-modal admin-event-modal">
@@ -2785,7 +2920,6 @@ function Admin() {
               </div>
 
               <form className="admin-event-form" onSubmit={handleSaveEvent}>
-                {/* TITLE */}
                 <div className="admin-form-group">
                   <label>Event Title *</label>
 
@@ -2799,7 +2933,6 @@ function Admin() {
                   />
                 </div>
 
-                {/* DESCRIPTION */}
                 <div className="admin-form-group">
                   <label>Description</label>
 
@@ -2812,7 +2945,6 @@ function Admin() {
                   />
                 </div>
 
-                {/* IMAGE */}
                 <div className="admin-form-group">
                   <label>Event Image URL</label>
 
@@ -2825,7 +2957,6 @@ function Admin() {
                   />
                 </div>
 
-                {/* LOCATION + CITY */}
                 <div className="admin-form-row">
                   <div className="admin-form-group">
                     <label>Location</label>
@@ -2852,7 +2983,6 @@ function Admin() {
                   </div>
                 </div>
 
-                {/* STATE + CAPACITY */}
                 <div className="admin-form-row">
                   <div className="admin-form-group">
                     <label>State</label>
@@ -2881,7 +3011,6 @@ function Admin() {
                   </div>
                 </div>
 
-                {/* DATES */}
                 <div className="admin-form-row">
                   <div className="admin-form-group">
                     <label>Start Date & Time *</label>
@@ -2912,7 +3041,6 @@ function Admin() {
                   </div>
                 </div>
 
-                {/* AUTOMATIC STATUS INFO */}
                 <div className="admin-event-status-info">
                   <span>Automatic Status</span>
 
@@ -2926,7 +3054,6 @@ function Admin() {
                   </p>
                 </div>
 
-                {/* FOOTER */}
                 <div className="admin-modal-footer">
                   <button
                     type="button"
@@ -2958,56 +3085,259 @@ function Admin() {
   };
 
   /* =====================================================
+     RENDER TASKS
+  ===================================================== */
+
+  const renderTasks = () => {
+    return (
+      <div className="admin-content-section">
+        <div className="admin-section-toolbar">
+          <div>
+            <h2>Tasks</h2>
+
+            <p>Create and manage tasks for volunteers.</p>
+          </div>
+
+          <button
+            type="button"
+            className="admin-primary-button"
+            onClick={openCreateTaskModal}
+          >
+            <Plus size={18} />
+            Add Task
+          </button>
+        </div>
+
+        <div className="admin-panel">
+          <div className="admin-table-wrapper">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Event</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {tasks.length ? (
+                  tasks.map((task) => (
+                    <tr key={task.id}>
+                      {/* TASK */}
+
+                      <td>
+                        <strong>{task.title}</strong>
+
+                        {task.description && <small>{task.description}</small>}
+                      </td>
+
+                      {/* EVENT */}
+
+                      <td>{task.event?.title || "No event"}</td>
+
+                      {/* DUE DATE */}
+
+                      <td>
+                        {task.dueDate
+                          ? formatDateTime(task.dueDate)
+                          : "No due date"}
+                      </td>
+
+                      {/* STATUS */}
+
+                      <td>
+                        <span
+                          className={`admin-status admin-status-${task.status.toLowerCase()}`}
+                        >
+                          {task.status}
+                        </span>
+                      </td>
+
+                      {/* ACTIONS */}
+
+                      <td>
+                        <div className="admin-event-actions">
+                          <button
+                            type="button"
+                            className="admin-icon-button"
+                            title="Edit task"
+                            onClick={() => openEditTaskModal(task)}
+                          >
+                            <Edit size={16} />
+                          </button>
+
+                          <button
+                            type="button"
+                            className="admin-icon-button admin-danger-button"
+                            title="Delete task"
+                            onClick={() => handleDeleteTask(task)}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="admin-empty">
+                      No tasks found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* TASK MODAL */}
+
+        {showTaskModal && (
+          <div className="admin-modal-backdrop">
+            <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+              {/* MODAL HEADER */}
+
+              <div className="admin-modal-header">
+                <div>
+                  <span>TASK MANAGEMENT</span>
+
+                  <h2>{editingTask ? "Edit Task" : "Create Task"}</h2>
+
+                  <p>Create a task for volunteers.</p>
+                </div>
+
+                <button
+                  type="button"
+                  className="admin-modal-close"
+                  onClick={() => setShowTaskModal(false)}
+                  disabled={taskSaving}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* TASK FORM */}
+
+              <form className="admin-event-form" onSubmit={handleSaveTask}>
+                {/* TITLE */}
+
+                <div className="admin-form-group">
+                  <label>Task Title *</label>
+
+                  <input
+                    type="text"
+                    name="title"
+                    value={taskForm.title}
+                    onChange={handleTaskFormChange}
+                    placeholder="e.g. Food Distribution Support"
+                    required
+                  />
+                </div>
+
+                {/* DESCRIPTION */}
+
+                <div className="admin-form-group">
+                  <label>Description</label>
+
+                  <textarea
+                    name="description"
+                    value={taskForm.description}
+                    onChange={handleTaskFormChange}
+                    placeholder="Describe the task..."
+                    rows="4"
+                  />
+                </div>
+
+                {/* EVENT */}
+
+                <div className="admin-form-group">
+                  <label>Event</label>
+
+                  <select
+                    name="eventId"
+                    value={taskForm.eventId}
+                    onChange={handleTaskFormChange}
+                  >
+                    <option value="">No Event</option>
+
+                    {events.map((event) => (
+                      <option key={event.id} value={event.id}>
+                        {event.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* DUE DATE */}
+
+                <div className="admin-form-group">
+                  <label>Due Date & Time</label>
+
+                  <input
+                    type="datetime-local"
+                    name="dueDate"
+                    value={taskForm.dueDate}
+                    onChange={handleTaskFormChange}
+                  />
+                </div>
+
+                {/* STATUS */}
+
+                <div className="admin-form-group">
+                  <label>Status</label>
+
+                  <select
+                    name="status"
+                    value={taskForm.status}
+                    onChange={handleTaskFormChange}
+                  >
+                    <option value="TODO">Pending</option>
+
+                    <option value="IN_PROGRESS">In Progress</option>
+
+                    <option value="COMPLETED">Completed</option>
+                  </select>
+                </div>
+
+                {/* FOOTER */}
+
+                <div className="admin-modal-footer">
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    onClick={() => setShowTaskModal(false)}
+                    disabled={taskSaving}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="admin-primary-button"
+                    disabled={taskSaving}
+                  >
+                    {taskSaving
+                      ? "Saving..."
+                      : editingTask
+                        ? "Update Task"
+                        : "Create Task"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  /* =====================================================
      RENDER COMMUNITIES
   ===================================================== */
 
   const renderCommunities = () => {
-    const search = communitySearch.trim().toLowerCase();
-
-    const filteredCommunities = communities.filter((community) => {
-      if (communityStatusFilter === "ACTIVE" && community.isActive === false) {
-        return false;
-      }
-
-      if (
-        communityStatusFilter === "INACTIVE" &&
-        community.isActive !== false
-      ) {
-        return false;
-      }
-
-      if (
-        communityVisibilityFilter === "PUBLIC" &&
-        community.isPublic === false
-      ) {
-        return false;
-      }
-
-      if (
-        communityVisibilityFilter === "PRIVATE" &&
-        community.isPublic !== false
-      ) {
-        return false;
-      }
-
-      if (!search) {
-        return true;
-      }
-
-      return [community.name, community.description, community.city]
-        .filter(Boolean)
-        .some((value) => value.toLowerCase().includes(search));
-    });
-
-    const activeCount = communities.filter(
-      (community) => community.isActive !== false,
-    ).length;
-
-    const totalMembers = communities.reduce(
-      (sum, community) => sum + (community._count?.members || 0),
-      0,
-    );
-
     return (
       <>
         <div className="admin-content-section">
@@ -3027,6 +3357,7 @@ function Admin() {
             </button>
           </div>
 
+          {/* COMMUNITY STATISTICS */}
           <div className="admin-stat-grid">
             <div className="admin-stat-card">
               <div className="admin-stat-icon">
@@ -3073,6 +3404,7 @@ function Admin() {
             </div>
           </div>
 
+          {/* SEARCH / FILTERS */}
           <div className="admin-panel">
             <div className="admin-toolbar-actions">
               <input
@@ -3105,6 +3437,7 @@ function Admin() {
             </div>
           </div>
 
+          {/* COMMUNITY CARDS */}
           <div className="admin-card-grid">
             {filteredCommunities.map((community) => (
               <div className="admin-management-card" key={community.id}>
@@ -3187,6 +3520,7 @@ function Admin() {
             ))}
           </div>
 
+          {/* EMPTY STATE */}
           {!filteredCommunities.length && (
             <div className="admin-empty-card">
               {communities.length
@@ -3222,6 +3556,7 @@ function Admin() {
                 <div className="admin-detail-grid">
                   <div className="admin-detail-item">
                     <span>Status</span>
+
                     <strong>
                       {selectedCommunity.isActive ? "ACTIVE" : "INACTIVE"}
                     </strong>
@@ -3229,6 +3564,7 @@ function Admin() {
 
                   <div className="admin-detail-item">
                     <span>Visibility</span>
+
                     <strong>
                       {selectedCommunity.isPublic ? "PUBLIC" : "PRIVATE"}
                     </strong>
@@ -3236,6 +3572,7 @@ function Admin() {
 
                   <div className="admin-detail-item">
                     <span>Location</span>
+
                     <strong>
                       {[
                         selectedCommunity.city,
@@ -3249,6 +3586,7 @@ function Admin() {
 
                   <div className="admin-detail-item">
                     <span>Created By</span>
+
                     <strong>
                       {selectedCommunity.createdBy?.name || "Unknown"}
                     </strong>
@@ -3256,11 +3594,13 @@ function Admin() {
 
                   <div className="admin-detail-item">
                     <span>Created</span>
+
                     <strong>{formatDate(selectedCommunity.createdAt)}</strong>
                   </div>
 
                   <div className="admin-detail-item">
                     <span>Members</span>
+
                     <strong>
                       {selectedCommunity._count?.members ??
                         selectedCommunity.members?.length ??
@@ -3595,6 +3935,7 @@ function Admin() {
                   disabled={savingCommunity}
                 >
                   <CheckCircle size={17} />
+
                   {savingCommunity
                     ? "Saving..."
                     : communityModal.mode === "create"
@@ -4031,6 +4372,9 @@ function Admin() {
       case "events":
         return renderEvents();
 
+      case "tasks":
+        return renderTasks();
+
       case "communities":
         return renderCommunities();
 
@@ -4058,15 +4402,14 @@ function Admin() {
         />
       )}
 
-      {/* =================================================
-         SIDEBAR
-      ================================================= */}
+      {/* SIDEBAR */}
 
       <aside
         className={`admin-sidebar ${sidebarOpen ? "admin-sidebar-open" : ""}`}
         aria-label="Admin navigation"
       >
         {/* BRAND */}
+
         <div className="admin-brand">
           <div className="admin-brand-icon">
             <ShieldCheck size={22} />
@@ -4087,6 +4430,7 @@ function Admin() {
         </div>
 
         {/* NAVIGATION */}
+
         <nav className="admin-navigation">
           <span className="admin-navigation-title">MANAGEMENT</span>
 
@@ -4122,8 +4466,17 @@ function Admin() {
         </nav>
 
         {/* SIDEBAR FOOTER */}
+
         <div className="admin-sidebar-footer">
-          {/* ADMIN PROFILE */}
+          <button
+            className="admin-back-website-button"
+            onClick={handleBackToWebsite}
+          >
+            <Home size={18} />
+
+            <span>Back to Home</span>
+          </button>
+
           <div className="admin-admin-profile">
             <div className="admin-avatar">
               {user?.name?.charAt(0)?.toUpperCase()}
@@ -4180,6 +4533,7 @@ function Admin() {
       {/* MAIN */}
       <main className="admin-main">
         {/* TOPBAR */}
+
         <header className="admin-topbar">
           <button
             className="admin-mobile-menu"
@@ -4222,9 +4576,11 @@ function Admin() {
         </header>
 
         {/* PAGE CONTENT */}
+
         <section className="admin-page-content">{renderContent()}</section>
       </main>
 
+      {/* VOLUNTEER APPLICATION MODAL */}
       {/* ICON-RAIL TOOLTIP (collapsed sidebar only) */}
       {sidebarCollapsed && navTip && (
         <div className="admin-nav-tooltip" style={{ top: navTip.top }}>
@@ -4328,7 +4684,6 @@ function Admin() {
               </div>
             </div>
 
-            {/* APPLICATION ACTIONS */}
             {selectedApplication.status === "PENDING" && (
               <div className="admin-modal-actions">
                 <button

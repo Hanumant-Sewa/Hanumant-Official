@@ -16,11 +16,11 @@ import volunteerDashboardRoutes from "./src/routes/volunteerDashboardRoutes.js";
 import volunteerEventRoutes from "./src/routes/volunteerEventRoutes.js";
 import volunteerImpactRoutes from "./src/routes/volunteerImpactRoutes.js";
 import volunteerTaskRoutes from "./src/routes/volunteerTaskRoutes.js";
-import volunteerCertificateRoutes from "./src/routes/volunteerCertificateRoutes.js";
 
 import adminRoutes from "./src/routes/adminRoutes.js";
 
 import contactRoutes from "./src/routes/contactRoutes.js";
+import certificateRoutes from "./src/routes/certificateRoutes.js";
 
 import adminExpenseRoutes from "./src/routes/adminExpenseRoutes.js";
 
@@ -125,6 +125,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/admin/expenses", adminExpenseRoutes);
 
 app.use("/api/communities", communityRoutes);
+app.use("/api/certificates", certificateRoutes);
 
 // ===============================
 // SERVER

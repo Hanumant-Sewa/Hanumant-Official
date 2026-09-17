@@ -32,6 +32,12 @@ import {
   cancelEvent,
   deleteEvent,
 
+  // Tasks
+  getAllTasks,
+  createTask,
+  updateTask,
+  deleteTask,
+
   // Communities
   getAllCommunities,
   createCommunity,
@@ -84,14 +90,20 @@ router.patch("/users/:id/status", updateUserStatus);
    VOLUNTEER APPLICATIONS
 ===================================================== */
 
-router.get("/volunteer-applications", getVolunteerApplications);
+router.get(
+  "/volunteer-applications",
+  getVolunteerApplications
+);
 
 router.patch(
   "/volunteer-applications/:id/approve",
-  approveVolunteerApplication,
+  approveVolunteerApplication
 );
 
-router.patch("/volunteer-applications/:id/reject", rejectVolunteerApplication);
+router.patch(
+  "/volunteer-applications/:id/reject",
+  rejectVolunteerApplication
+);
 
 /* =====================================================
    DONATIONS
@@ -109,9 +121,15 @@ router.post("/campaigns", createCampaign);
 
 router.patch("/campaigns/:id", updateCampaign);
 
-router.patch("/campaigns/:id/cancel", cancelCampaign);
+router.patch(
+  "/campaigns/:id/cancel",
+  cancelCampaign
+);
 
-router.delete("/campaigns/:id", deleteCampaign);
+router.delete(
+  "/campaigns/:id",
+  deleteCampaign
+);
 
 /* =====================================================
    EVENTS
@@ -123,9 +141,27 @@ router.post("/events", createEvent);
 
 router.patch("/events/:id", updateEvent);
 
-router.patch("/events/:id/cancel", cancelEvent);
+router.patch(
+  "/events/:id/cancel",
+  cancelEvent
+);
 
-router.delete("/events/:id", deleteEvent);
+router.delete(
+  "/events/:id",
+  deleteEvent
+);
+
+/* =====================================================
+   TASKS
+===================================================== */
+
+router.get("/tasks", getAllTasks);
+
+router.post("/tasks", createTask);
+
+router.patch("/tasks/:id", updateTask);
+
+router.delete("/tasks/:id", deleteTask);
 
 /* =====================================================
    COMMUNITIES

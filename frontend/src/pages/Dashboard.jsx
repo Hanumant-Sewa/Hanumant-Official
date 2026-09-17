@@ -25,6 +25,8 @@ import {
   ExternalLink,
   WalletCards,
   Building2,
+  Target,
+  Bell,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import Swal from "sweetalert2";
@@ -50,7 +52,9 @@ function Dashboard() {
   const [donationsLoading, setDonationsLoading] = useState(false);
   const [donationsError, setDonationsError] = useState("");
 
-  // Transparecy states
+  // =========================================================
+  // TRANSPARENCY STATE
+  // =========================================================
 
   const [transparency, setTransparency] = useState(null);
   const [transparencyLoading, setTransparencyLoading] = useState(false);
@@ -170,20 +174,6 @@ function Dashboard() {
           throw new Error(data.message || "Failed to load your donations.");
         }
 
-        /*
-          Supports either:
-
-          {
-            donations: [...]
-          }
-
-          OR
-
-          {
-            data: [...]
-          }
-        */
-
         const donationList = data.donations || data.data || [];
 
         setDonations(Array.isArray(donationList) ? donationList : []);
@@ -198,7 +188,10 @@ function Dashboard() {
 
     fetchMyDonations();
   }, [navigate]);
-  // transparency
+
+  // =========================================================
+  // FETCH TRANSPARENCY
+  // =========================================================
 
   useEffect(() => {
     const fetchTransparency = async () => {
@@ -232,6 +225,7 @@ function Dashboard() {
 
     fetchTransparency();
   }, []);
+
   // =========================================================
   // FETCH MY COMMUNITY
   // =========================================================
@@ -251,7 +245,7 @@ function Dashboard() {
         );
 
         /*
-          404 simply means the user has not joined
+          404 means the user has not joined
           a community yet.
         */
 
@@ -278,7 +272,7 @@ function Dashboard() {
         });
 
         // =====================================================
-        // FETCH ACTUAL COMMUNITY TREE
+        // FETCH COMMUNITY TREE
         // =====================================================
 
         const communityId = data.community?.id;
@@ -387,11 +381,6 @@ function Dashboard() {
 
       setCopied(true);
 
-      /*
-        Behaves like modern apps:
-        show copied state briefly, then close modal.
-      */
-
       setTimeout(() => {
         setCopied(false);
         setShowInviteModal(false);
@@ -430,10 +419,6 @@ function Dashboard() {
       if (navigator.share) {
         await navigator.share(shareData);
 
-        /*
-          Close after successful native sharing.
-        */
-
         setShowInviteModal(false);
       } else {
         await navigator.clipboard.writeText(invitation.url);
@@ -446,11 +431,6 @@ function Dashboard() {
         }, 900);
       }
     } catch (error) {
-      /*
-        User cancelling the native share dialog
-        is not an error.
-      */
-
       if (error?.name !== "AbortError") {
         console.error("Share Error:", error);
 
@@ -473,11 +453,6 @@ function Dashboard() {
 
   const handleOpenInvite = async () => {
     setShowInviteModal(true);
-
-    /*
-      Create invitation only when the user actually
-      opens Invite Friends.
-    */
 
     if (!invitation) {
       await handleCreateInvitation();
@@ -639,6 +614,8 @@ function Dashboard() {
 
   const isUser = user?.role === "USER";
 
+  const volunteerProfile = volunteerDashboard?.volunteerProfile || {};
+
   const application = volunteerDashboard?.application || {};
 
   const volunteerStats = volunteerDashboard?.statistics || {};
@@ -671,6 +648,7 @@ function Dashboard() {
     (total, donation) => total + Number(getDonationAmount(donation)),
     0,
   );
+
   const transparencySummary = transparency?.summary || {};
 
   const recentExpenses = transparency?.recentExpenses || [];
@@ -689,9 +667,9 @@ function Dashboard() {
 
   return (
     <div className="dashboard-page">
-      {/* =====================================================
+      {/* ===================================================
           HERO
-      ===================================================== */}
+      =================================================== */}
 
       <section className="dashboard-hero">
         <div className="dashboard-container">
@@ -721,18 +699,16 @@ function Dashboard() {
         </div>
       </section>
 
-      {/* =====================================================
+      {/* ===================================================
           MAIN CONTAINER
-      ===================================================== */}
+      =================================================== */}
 
       <main className="dashboard-container">
-        {/* ===================================================
-            ESSENTIAL STATS
-        =================================================== */}
+        {/* =================================================
+            STATS
+        ================================================= */}
 
         <section className="dashboard-stats">
-          {/* Donations */}
-
           <div className="dashboard-stat-card">
             <div className="stat-icon">
               <Heart size={22} />
@@ -744,8 +720,6 @@ function Dashboard() {
               <strong>{stats.donations || 0}</strong>
             </div>
           </div>
-
-          {/* Volunteer Applications */}
 
           <div className="dashboard-stat-card">
             <div className="stat-icon">
@@ -759,8 +733,6 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Communities */}
-
           <div className="dashboard-stat-card">
             <div className="stat-icon">
               <Users size={22} />
@@ -773,8 +745,6 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Events */}
-
           <div className="dashboard-stat-card">
             <div className="stat-icon">
               <CalendarDays size={22} />
@@ -786,8 +756,6 @@ function Dashboard() {
               <strong>{stats.events || 0}</strong>
             </div>
           </div>
-
-          {/* Volunteer Tasks */}
 
           {isVolunteer && (
             <div className="dashboard-stat-card">
@@ -806,9 +774,9 @@ function Dashboard() {
           )}
         </section>
 
-        {/* ===================================================
+        {/* =================================================
             PROFILE + QUICK ACTIONS
-        =================================================== */}
+        ================================================= */}
 
         <div className="dashboard-main-grid">
           {/* ================= PROFILE ================= */}
@@ -874,7 +842,7 @@ function Dashboard() {
               </div>
             </div>
 
-            <Link to="/profile" className="dashboard-outline-button">
+            <Link to="/volunteer/profile" className="dashboard-outline-button">
               View Profile
               <ArrowRight size={17} />
             </Link>
@@ -894,8 +862,6 @@ function Dashboard() {
             </div>
 
             <div className="quick-actions">
-              {/* Become Volunteer */}
-
               {isUser && (
                 <Link to="/volunteer" className="quick-action">
                   <div className="quick-action-icon">
@@ -912,8 +878,6 @@ function Dashboard() {
                 </Link>
               )}
 
-              {/* Donate */}
-
               <Link to="/donate" className="quick-action">
                 <div className="quick-action-icon">
                   <Heart size={21} />
@@ -928,23 +892,19 @@ function Dashboard() {
                 <ArrowRight size={17} />
               </Link>
 
-              {/* Community Information */}
-
               <Link to="/community" className="quick-action">
                 <div className="quick-action-icon">
                   <Users size={21} />
                 </div>
 
                 <div>
-                  <strong>Community</strong>
+                  <strong>Join Community</strong>
 
-                  <span>Learn about Hanumant Seva</span>
+                  <span>Connect with others</span>
                 </div>
 
                 <ArrowRight size={17} />
               </Link>
-
-              {/* Invite Friends */}
 
               <button
                 type="button"
@@ -967,9 +927,9 @@ function Dashboard() {
           </section>
         </div>
 
-        {/* ===================================================
+        {/* =================================================
             MY DONATIONS
-        =================================================== */}
+        ================================================= */}
 
         <section className="dashboard-card dashboard-full-card">
           <div className="dashboard-card-header">
@@ -1024,8 +984,6 @@ function Dashboard() {
             </div>
           ) : (
             <>
-              {/* ================= DONATION SUMMARY ================= */}
-
               <div className="activity-grid">
                 <div className="activity-item">
                   <div className="activity-icon">
@@ -1052,8 +1010,6 @@ function Dashboard() {
                 </div>
               </div>
 
-              {/* ================= DONATION LIST ================= */}
-
               <div className="dashboard-events">
                 {donations.slice(0, 5).map((donation) => {
                   const status = getDonationStatus(donation);
@@ -1078,11 +1034,13 @@ function Dashboard() {
                         <div className="dashboard-event-meta">
                           <span>
                             <WalletCards size={15} />
+
                             {formatAmount(getDonationAmount(donation))}
                           </span>
 
                           <span>
                             <CalendarDays size={15} />
+
                             {formatDate(
                               donation.createdAt ||
                                 donation.donatedAt ||
@@ -1092,12 +1050,17 @@ function Dashboard() {
 
                           <span>
                             <CheckCircle2 size={15} />
+
                             {status || "PENDING"}
                           </span>
                         </div>
 
                         {status === "SUCCESS" && (
-                          <div style={{ marginTop: "12px" }}>
+                          <div
+                            style={{
+                              marginTop: "12px",
+                            }}
+                          >
                             <button
                               type="button"
                               className="dashboard-outline-button"
@@ -1124,9 +1087,9 @@ function Dashboard() {
           )}
         </section>
 
-        {/* ===================================================
+        {/* =================================================
             MY COMMUNITY
-        =================================================== */}
+        ================================================= */}
 
         <section className="dashboard-card dashboard-full-card">
           <div className="dashboard-card-header">
@@ -1173,8 +1136,6 @@ function Dashboard() {
             </div>
           ) : (
             <>
-              {/* ================= COMMUNITY INFO ================= */}
-
               <div className="profile-details">
                 <div className="profile-detail-item">
                   <div className="profile-detail-icon">
@@ -1215,8 +1176,6 @@ function Dashboard() {
                 </div>
               </div>
 
-              {/* ================= TREE ================= */}
-
               <div
                 style={{
                   marginTop: "24px",
@@ -1251,9 +1210,10 @@ function Dashboard() {
             </>
           )}
         </section>
-        {/* ==========================================
-    TRANSPARENCY
-========================================== */}
+
+        {/* =================================================
+            TRANSPARENCY
+        ================================================= */}
 
         <section
           className="dashboard-card dashboard-full-card"
@@ -1269,7 +1229,11 @@ function Dashboard() {
             <WalletCards size={22} />
           </div>
 
-          <p style={{ marginBottom: "24px" }}>
+          <p
+            style={{
+              marginBottom: "24px",
+            }}
+          >
             Donations are pooled to support Hanumant Seva's programs. Expenses
             recorded by the organization are shown below for transparency.
           </p>
@@ -1330,72 +1294,79 @@ function Dashboard() {
               </div>
 
               {recentExpenses.length > 0 ? (
-                <>
-                  <div
-                    className="dashboard-events"
-                    style={{ marginTop: "24px" }}
-                  >
-                    {recentExpenses.slice(0, 5).map((expense) => (
-                      <div className="dashboard-event" key={expense.id}>
-                        <div className="dashboard-event-icon">
-                          <WalletCards size={20} />
-                        </div>
+                <div
+                  className="dashboard-events"
+                  style={{
+                    marginTop: "24px",
+                  }}
+                >
+                  {recentExpenses.slice(0, 5).map((expense) => (
+                    <div className="dashboard-event" key={expense.id}>
+                      <div className="dashboard-event-icon">
+                        <WalletCards size={20} />
+                      </div>
 
-                        <div className="dashboard-event-content">
-                          <h3>{expense.title}</h3>
+                      <div className="dashboard-event-content">
+                        <h3>{expense.title}</h3>
 
-                          <p>
-                            {expense.description ||
-                              "Campaign expense recorded by Hanumant Seva."}
-                          </p>
+                        <p>
+                          {expense.description ||
+                            "Campaign expense recorded by Hanumant Seva."}
+                        </p>
 
-                          <div className="dashboard-event-meta">
+                        <div className="dashboard-event-meta">
+                          <span>
+                            <WalletCards size={15} />
+
+                            {formatAmount(expense.amount)}
+                          </span>
+
+                          <span>
+                            <CalendarDays size={15} />
+
+                            {formatDate(expense.expenseDate)}
+                          </span>
+
+                          {expense.category && (
                             <span>
-                              <WalletCards size={15} />
-                              {formatAmount(expense.amount)}
+                              <ClipboardList size={15} />
+
+                              {expense.category}
                             </span>
-
-                            <span>
-                              <CalendarDays size={15} />
-                              {formatDate(expense.expenseDate)}
-                            </span>
-
-                            {expense.category && (
-                              <span>
-                                <ClipboardList size={15} />
-                                {expense.category}
-                              </span>
-                            )}
-                          </div>
-
-                          <div
-                            style={{
-                              marginTop: "8px",
-                              fontSize: "14px",
-                            }}
-                          >
-                            <strong>Campaign:</strong>{" "}
-                            {expense.campaign?.title || "Campaign"}
-                          </div>
-
-                          {expense.receiptUrl && (
-                            <div style={{ marginTop: "12px" }}>
-                              <a
-                                href={expense.receiptUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="dashboard-outline-button"
-                              >
-                                View Receipt
-                                <ExternalLink size={16} />
-                              </a>
-                            </div>
                           )}
                         </div>
+
+                        <div
+                          style={{
+                            marginTop: "8px",
+                            fontSize: "14px",
+                          }}
+                        >
+                          <strong>Campaign:</strong>{" "}
+                          {expense.campaign?.title || "Campaign"}
+                        </div>
+
+                        {expense.receiptUrl && (
+                          <div
+                            style={{
+                              marginTop: "12px",
+                            }}
+                          >
+                            <a
+                              href={expense.receiptUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="dashboard-outline-button"
+                            >
+                              View Receipt
+                              <ExternalLink size={16} />
+                            </a>
+                          </div>
+                        )}
                       </div>
-                    ))}
-                  </div>
-                </>
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <div className="dashboard-empty-state">
                   <WalletCards size={35} />
@@ -1410,9 +1381,10 @@ function Dashboard() {
             </>
           )}
         </section>
-        {/* ===================================================
+
+        {/* =================================================
             VOLUNTEER APPLICATION
-        =================================================== */}
+        ================================================= */}
 
         {application?.status && (
           <section className="dashboard-card dashboard-full-card">
@@ -1452,9 +1424,9 @@ function Dashboard() {
           </section>
         )}
 
-        {/* ===================================================
+        {/* =================================================
             UPCOMING EVENTS
-        =================================================== */}
+        ================================================= */}
 
         {isVolunteer && (
           <section className="dashboard-card dashboard-full-card">
@@ -1485,7 +1457,6 @@ function Dashboard() {
                         {event.location && (
                           <span>
                             <MapPin size={15} />
-
                             {event.location}
                           </span>
                         )}
@@ -1520,9 +1491,9 @@ function Dashboard() {
           </section>
         )}
 
-        {/* ===================================================
+        {/* =================================================
             CURRENT TASKS
-        =================================================== */}
+        ================================================= */}
 
         {isVolunteer && (
           <section className="dashboard-card dashboard-full-card">
@@ -1580,9 +1551,9 @@ function Dashboard() {
           </section>
         )}
 
-        {/* ===================================================
+        {/* =================================================
             VOLUNTEER RESOURCES
-        =================================================== */}
+        ================================================= */}
 
         {isVolunteer && (
           <section className="dashboard-card dashboard-full-card">
@@ -1597,8 +1568,6 @@ function Dashboard() {
             </div>
 
             <div className="quick-actions">
-              {/* Events */}
-
               <Link to="/volunteer/events" className="quick-action">
                 <div className="quick-action-icon">
                   <CalendarDays size={21} />
@@ -1613,8 +1582,6 @@ function Dashboard() {
                 <ArrowRight size={17} />
               </Link>
 
-              {/* Tasks */}
-
               <Link to="/volunteer/tasks" className="quick-action">
                 <div className="quick-action-icon">
                   <ClipboardList size={21} />
@@ -1628,8 +1595,6 @@ function Dashboard() {
 
                 <ArrowRight size={17} />
               </Link>
-
-              {/* Certificates */}
 
               <Link to="/volunteer/certificates" className="quick-action">
                 <div className="quick-action-icon">
@@ -1647,6 +1612,184 @@ function Dashboard() {
             </div>
           </section>
         )}
+
+        {/* =================================================
+            YOUR IMPACT
+        ================================================= */}
+
+        <section className="dashboard-card dashboard-full-card">
+          <div className="dashboard-card-header">
+            <div>
+              <span className="card-eyebrow">Your Contribution</span>
+
+              <h2>Your Impact</h2>
+            </div>
+
+            <Target size={22} />
+          </div>
+
+          <div className="activity-grid">
+            <div className="activity-item">
+              <div className="activity-icon">
+                <Clock size={20} />
+              </div>
+
+              <div>
+                <span>Volunteer Hours</span>
+
+                <strong>{volunteerProfile.totalHours || 0}</strong>
+              </div>
+            </div>
+
+            <div className="activity-item">
+              <div className="activity-icon">
+                <CalendarDays size={20} />
+              </div>
+
+              <div>
+                <span>Events Participated</span>
+
+                <strong>{volunteerProfile.totalEvents || 0}</strong>
+              </div>
+            </div>
+
+            <div className="activity-item">
+              <div className="activity-icon">
+                <Award size={20} />
+              </div>
+
+              <div>
+                <span>Certificates</span>
+
+                <strong>{stats.certificates || 0}</strong>
+              </div>
+            </div>
+
+            <div className="activity-item">
+              <div className="activity-icon">
+                <Heart size={20} />
+              </div>
+
+              <div>
+                <span>Impact</span>
+
+                <strong>{volunteerStats.impact || 0}</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================
+            EXPLORE
+        ================================================= */}
+
+        <section className="dashboard-card dashboard-full-card">
+          <div className="dashboard-card-header">
+            <div>
+              <span className="card-eyebrow">Discover</span>
+
+              <h2>Explore Hanumant Seva</h2>
+            </div>
+
+            <Heart size={22} />
+          </div>
+
+          <div className="quick-actions">
+            <Link to="/volunteer/certificates" className="quick-action">
+              <div className="quick-action-icon">
+                <Award size={21} />
+              </div>
+
+              <div>
+                <strong>My Certificates</strong>
+
+                <span>View your achievements</span>
+              </div>
+
+              <ArrowRight size={17} />
+            </Link>
+
+            <Link to="/volunteer/tasks" className="quick-action">
+              <div className="quick-action-icon">
+                <ClipboardList size={21} />
+              </div>
+
+              <div>
+                <strong>My Tasks</strong>
+
+                <span>Manage your volunteer work</span>
+              </div>
+
+              <ArrowRight size={17} />
+            </Link>
+          </div>
+        </section>
+
+        {/* =================================================
+            ACCOUNT OVERVIEW
+        ================================================= */}
+
+        <section className="dashboard-card dashboard-full-card">
+          <div className="dashboard-card-header">
+            <div>
+              <span className="card-eyebrow">Overview</span>
+
+              <h2>Account Overview</h2>
+            </div>
+
+            <User size={22} />
+          </div>
+
+          <div className="activity-grid">
+            <div className="activity-item">
+              <div className="activity-icon">
+                <ClipboardList size={20} />
+              </div>
+
+              <div>
+                <span>Tasks</span>
+
+                <strong>{stats.tasks || 0}</strong>
+              </div>
+            </div>
+
+            <div className="activity-item">
+              <div className="activity-icon">
+                <Award size={20} />
+              </div>
+
+              <div>
+                <span>Certificates</span>
+
+                <strong>{stats.certificates || 0}</strong>
+              </div>
+            </div>
+
+            <div className="activity-item">
+              <div className="activity-icon">
+                <Bell size={20} />
+              </div>
+
+              <div>
+                <span>Notifications</span>
+
+                <strong>{stats.notifications || 0}</strong>
+              </div>
+            </div>
+
+            <div className="activity-item">
+              <div className="activity-icon">
+                <CalendarDays size={20} />
+              </div>
+
+              <div>
+                <span>Events</span>
+
+                <strong>{stats.events || 0}</strong>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* =====================================================
@@ -1680,8 +1823,6 @@ function Dashboard() {
             }}
             onClick={(event) => event.stopPropagation()}
           >
-            {/* Close */}
-
             <button
               type="button"
               aria-label="Close invitation"
@@ -1749,8 +1890,6 @@ function Dashboard() {
                   </p>
                 </div>
 
-                {/* Link */}
-
                 <div className="profile-details">
                   <div className="profile-detail-item">
                     <div className="profile-detail-icon">
@@ -1770,8 +1909,6 @@ function Dashboard() {
                     </div>
                   </div>
                 </div>
-
-                {/* Actions */}
 
                 <div className="quick-actions">
                   <button
