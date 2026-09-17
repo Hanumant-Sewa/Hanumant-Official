@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import {
@@ -17,10 +18,16 @@ import {
   CheckCircle,
   XCircle,
   Eye,
-  Home,
-  Edit,
-  Trash2,
+  Ban,
+  UserCheck,
+  Activity,
   Plus,
+  Pencil,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  Globe,
+  LogOut,
 } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
@@ -33,6 +40,42 @@ function Admin() {
 
   const [activeSection, setActiveSection] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem("hs-admin-sidebar") === "collapsed";
+    } catch {
+      return false;
+    }
+  });
+
+  const [navTip, setNavTip] = useState(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "hs-admin-sidebar",
+        sidebarCollapsed ? "collapsed" : "expanded",
+      );
+    } catch {
+      // Storage unavailable — collapse still works for this session.
+    }
+  }, [sidebarCollapsed]);
+
+  const showNavTip = (event, label) => {
+    if (!sidebarCollapsed) {
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    setNavTip({ label, top: rect.top + rect.height / 2 });
+  };
+
+  const hideNavTip = () => {
+    setNavTip(null);
+  };
+
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(null);
 
@@ -62,6 +105,24 @@ function Admin() {
     endDate: "",
     status: "DRAFT",
   });
+
+  const [communitySearch, setCommunitySearch] = useState("");
+  const [communityStatusFilter, setCommunityStatusFilter] = useState("ALL");
+  const [communityVisibilityFilter, setCommunityVisibilityFilter] =
+    useState("ALL");
+  const [selectedCommunity, setSelectedCommunity] = useState(null);
+  const [communityModal, setCommunityModal] = useState(null);
+  const [communityForm, setCommunityForm] = useState({
+    name: "",
+    description: "",
+    image: "",
+    city: "",
+    state: "",
+    country: "",
+    isPublic: true,
+    isActive: true,
+  });
+  const [savingCommunity, setSavingCommunity] = useState(false);
 
   /* =====================================================
      EVENT STATE
@@ -858,6 +919,14 @@ const handleSaveTask = async (e) => {
     setCommunities(data.communities || []);
   };
 
+  const loadCommunityDetails = async (id) => {
+    const data = await apiRequest(`/communities/${id}`);
+
+    setSelectedCommunity(data.community || null);
+
+    return data.community;
+  };
+
   /* =====================================================
      AUDIT LOGS
   ===================================================== */
@@ -1126,6 +1195,308 @@ const loadSection = async (section) => {
     } catch (error) {
       Swal.fire({
         title: "Update Failed",
+        text: error.message,
+        icon: "error",
+        confirmButtonColor: "#e87524",
+      });
+    }
+  };
+
+  /* =====================================================
+     COMMUNITIES — CREATE / EDIT MODAL
+  ===================================================== */
+
+  const openCreateCommunity = () => {
+    setCommunityForm({
+      name: "",
+      description: "",
+      image: "",
+      city: "",
+      state: "",
+      country: "",
+      isPublic: true,
+      isActive: true,
+    });
+
+    setCommunityModal({ mode: "create" });
+  };
+
+  const openEditCommunity = (community) => {
+    setCommunityForm({
+      name: community.name || "",
+      description: community.description || "",
+      image: community.image || "",
+      city: community.city || "",
+      state: community.state || "",
+      country: community.country || "",
+      isPublic: community.isPublic !== false,
+      isActive: community.isActive !== false,
+    });
+
+    setCommunityModal({ mode: "edit", id: community.id });
+  };
+
+  const saveCommunity = async () => {
+    if (!communityForm.name.trim()) {
+      Swal.fire({
+        title: "Name Required",
+        text: "Please enter a community name.",
+        icon: "warning",
+        confirmButtonColor: "#e87524",
+      });
+
+      return;
+    }
+
+    try {
+      setSavingCommunity(true);
+
+      if (communityModal.mode === "create") {
+        await apiRequest("/communities", {
+          method: "POST",
+          body: JSON.stringify(communityForm),
+        });
+
+        Swal.fire({
+          title: "Community Created",
+          icon: "success",
+          confirmButtonColor: "#e87524",
+        });
+      } else {
+        await apiRequest(`/communities/${communityModal.id}`, {
+          method: "PATCH",
+          body: JSON.stringify(communityForm),
+        });
+
+        Swal.fire({
+          title: "Community Updated",
+          icon: "success",
+          confirmButtonColor: "#e87524",
+        });
+      }
+
+      setCommunityModal(null);
+
+      await loadCommunities();
+      await loadDashboard();
+
+      if (selectedCommunity && communityModal.mode === "edit") {
+        await loadCommunityDetails(communityModal.id);
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Save Failed",
+        text: error.message,
+        icon: "error",
+        confirmButtonColor: "#e87524",
+      });
+    } finally {
+      setSavingCommunity(false);
+    }
+  };
+
+  /* =====================================================
+     COMMUNITIES — VIEW DETAILS
+  ===================================================== */
+
+  const viewCommunity = async (community) => {
+    try {
+      await loadCommunityDetails(community.id);
+    } catch (error) {
+      Swal.fire({
+        title: "Unable to Load",
+        text: error.message,
+        icon: "error",
+        confirmButtonColor: "#e87524",
+      });
+    }
+  };
+
+  /* =====================================================
+     COMMUNITIES — ACTIVATE / DEACTIVATE
+  ===================================================== */
+
+  const toggleCommunityStatus = async (community) => {
+    const result = await Swal.fire({
+      title: community.isActive ? "Deactivate Community?" : "Activate Community?",
+      text: community.isActive
+        ? `"${community.name}" will be hidden from new members.`
+        : `"${community.name}" will become active again.`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: community.isActive ? "Yes, Deactivate" : "Yes, Activate",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: community.isActive ? "#dc2626" : "#16a34a",
+      cancelButtonColor: "#6b7280",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      await apiRequest(`/communities/${community.id}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ isActive: !community.isActive }),
+      });
+
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: community.isActive ? "Community deactivated" : "Community activated",
+        showConfirmButton: false,
+        timer: 1600,
+      });
+
+      await loadCommunities();
+
+      if (selectedCommunity?.id === community.id) {
+        await loadCommunityDetails(community.id);
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Update Failed",
+        text: error.message,
+        icon: "error",
+        confirmButtonColor: "#e87524",
+      });
+    }
+  };
+
+  /* =====================================================
+     COMMUNITIES — DELETE
+  ===================================================== */
+
+  const deleteCommunity = async (community) => {
+    const result = await Swal.fire({
+      title: "Delete Community?",
+      text: `"${community.name}" and all its memberships will be permanently removed.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      await apiRequest(`/communities/${community.id}`, {
+        method: "DELETE",
+      });
+
+      Swal.fire({
+        title: "Deleted",
+        text: "Community removed successfully.",
+        icon: "success",
+        confirmButtonColor: "#e87524",
+      });
+
+      if (selectedCommunity?.id === community.id) {
+        setSelectedCommunity(null);
+      }
+
+      await loadCommunities();
+      await loadDashboard();
+    } catch (error) {
+      Swal.fire({
+        title: "Delete Failed",
+        text: error.message,
+        icon: "error",
+        confirmButtonColor: "#e87524",
+      });
+    }
+  };
+
+  /* =====================================================
+     COMMUNITIES — MEMBER ROLE / STATUS
+  ===================================================== */
+
+  const changeMemberField = async (member, field, value) => {
+    if (!selectedCommunity) {
+      return;
+    }
+
+    try {
+      await apiRequest(
+        `/communities/${selectedCommunity.id}/members/${member.id}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ [field]: value }),
+        },
+      );
+
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Member updated",
+        showConfirmButton: false,
+        timer: 1400,
+      });
+
+      await loadCommunityDetails(selectedCommunity.id);
+      await loadCommunities();
+    } catch (error) {
+      Swal.fire({
+        title: "Update Failed",
+        text: error.message,
+        icon: "error",
+        confirmButtonColor: "#e87524",
+      });
+    }
+  };
+
+  /* =====================================================
+     COMMUNITIES — REMOVE MEMBER
+  ===================================================== */
+
+  const removeMember = async (member) => {
+    if (!selectedCommunity) {
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Remove Member?",
+      text: `${member.user?.name || member.user?.email} will be removed from this community.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Remove",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      await apiRequest(
+        `/communities/${selectedCommunity.id}/members/${member.id}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Member removed",
+        showConfirmButton: false,
+        timer: 1400,
+      });
+
+      await loadCommunityDetails(selectedCommunity.id);
+      await loadCommunities();
+    } catch (error) {
+      Swal.fire({
+        title: "Remove Failed",
         text: error.message,
         icon: "error",
         confirmButtonColor: "#e87524",
@@ -3113,17 +3484,76 @@ const loadSection = async (section) => {
   ===================================================== */
 
   const renderCommunities = () => {
+    const search = communitySearch.trim().toLowerCase();
+
+    const filteredCommunities = communities.filter((community) => {
+      if (
+        communityStatusFilter === "ACTIVE" &&
+        community.isActive === false
+      ) {
+        return false;
+      }
+
+      if (
+        communityStatusFilter === "INACTIVE" &&
+        community.isActive !== false
+      ) {
+        return false;
+      }
+
+      if (
+        communityVisibilityFilter === "PUBLIC" &&
+        community.isPublic === false
+      ) {
+        return false;
+      }
+
+      if (
+        communityVisibilityFilter === "PRIVATE" &&
+        community.isPublic !== false
+      ) {
+        return false;
+      }
+
+      if (!search) {
+        return true;
+      }
+
+      return [community.name, community.description, community.city]
+        .filter(Boolean)
+        .some((value) => value.toLowerCase().includes(search));
+    });
+
+    const activeCount = communities.filter(
+      (community) => community.isActive !== false,
+    ).length;
+
+    const totalMembers = communities.reduce(
+      (sum, community) => sum + (community._count?.members || 0),
+      0,
+    );
+
     return (
-      <div className="admin-content-section">
-        <div className="admin-section-toolbar">
-          <div>
-            <h2>Communities</h2>
+      <>
+        <div className="admin-content-section">
+          <div className="admin-section-toolbar">
+            <div>
+              <h2>Communities</h2>
+
+              <p>Create, monitor and manage NGO communities and members.</p>
+            </div>
 
             <p>
               Monitor NGO communities and members.
             </p>
+            <button
+              className="admin-primary-button"
+              onClick={openCreateCommunity}
+            >
+              <Plus size={17} />
+              New Community
+            </button>
           </div>
-        </div>
 
         <div className="admin-card-grid">
           {communities.map((community) => (
@@ -3147,9 +3577,123 @@ const loadSection = async (section) => {
                 <span>
                   #{community.id}
                 </span>
+          <div className="admin-stat-grid">
+            <div className="admin-stat-card">
+              <div className="admin-stat-icon">
+                <UsersRound size={22} />
               </div>
 
-              <h3>{community.name}</h3>
+              <div>
+                <span>Total Communities</span>
+                <strong>{communities.length}</strong>
+              </div>
+            </div>
+
+            <div className="admin-stat-card">
+              <div className="admin-stat-icon">
+                <CheckCircle size={22} />
+              </div>
+
+              <div>
+                <span>Active</span>
+                <strong>{activeCount}</strong>
+              </div>
+            </div>
+
+            <div className="admin-stat-card admin-stat-warning">
+              <div className="admin-stat-icon">
+                <Ban size={22} />
+              </div>
+
+              <div>
+                <span>Inactive</span>
+                <strong>{communities.length - activeCount}</strong>
+              </div>
+            </div>
+
+            <div className="admin-stat-card">
+              <div className="admin-stat-icon">
+                <Users size={22} />
+              </div>
+
+              <div>
+                <span>Total Members</span>
+                <strong>{totalMembers}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="admin-panel">
+            <div className="admin-toolbar-actions">
+              <input
+                className="admin-search"
+                type="text"
+                placeholder="Search by name, description or city..."
+                value={communitySearch}
+                onChange={(e) => setCommunitySearch(e.target.value)}
+              />
+
+              <select
+                className="admin-filter"
+                value={communityStatusFilter}
+                onChange={(e) => setCommunityStatusFilter(e.target.value)}
+              >
+                <option value="ALL">All Statuses</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+              </select>
+
+              <select
+                className="admin-filter"
+                value={communityVisibilityFilter}
+                onChange={(e) => setCommunityVisibilityFilter(e.target.value)}
+              >
+                <option value="ALL">Public + Private</option>
+                <option value="PUBLIC">Public</option>
+                <option value="PRIVATE">Private</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="admin-card-grid">
+            {filteredCommunities.map((community) => (
+              <div className="admin-management-card" key={community.id}>
+                <div className="admin-management-card-top">
+                  <span
+                    className={
+                      community.isActive
+                        ? "admin-status admin-status-active"
+                        : "admin-status admin-status-inactive"
+                    }
+                  >
+                    {community.isActive ? "ACTIVE" : "INACTIVE"}
+                  </span>
+
+                  <span className="admin-role">
+                    {community.isPublic ? "PUBLIC" : "PRIVATE"}
+                  </span>
+
+                  <span>#{community.id}</span>
+                </div>
+
+                <h3>{community.name}</h3>
+
+                <p>{community.description || "No description."}</p>
+
+                <div className="admin-management-meta">
+                  <span>
+                    {[community.city, community.state, community.country]
+                      .filter(Boolean)
+                      .join(", ") || "No location"}
+                  </span>
+
+                  <span>Members: {community._count?.members || 0}</span>
+                </div>
+
+                <div className="admin-management-meta">
+                  <span>
+                    By: {community.createdBy?.name || "Unknown"}
+                  </span>
 
               <p>
                 {community.description ||
@@ -3167,17 +3711,472 @@ const loadSection = async (section) => {
                   {community._count?.members ||
                     0}
                 </span>
+                  <span>{formatDate(community.createdAt)}</span>
+                </div>
+
+                <div className="admin-management-actions">
+                  <button
+                    className="admin-icon-button"
+                    title="View details and members"
+                    onClick={() => viewCommunity(community)}
+                  >
+                    <Eye size={17} />
+                  </button>
+
+                  <button
+                    className="admin-icon-button"
+                    title="Edit community"
+                    onClick={() => openEditCommunity(community)}
+                  >
+                    <Pencil size={17} />
+                  </button>
+
+                  <button
+                    className="admin-icon-button"
+                    title={community.isActive ? "Deactivate" : "Activate"}
+                    onClick={() => toggleCommunityStatus(community)}
+                  >
+                    {community.isActive ? (
+                      <Ban size={17} />
+                    ) : (
+                      <UserCheck size={17} />
+                    )}
+                  </button>
+
+                  <button
+                    className="admin-icon-button admin-icon-danger"
+                    title="Delete community"
+                    onClick={() => deleteCommunity(community)}
+                  >
+                    <Trash2 size={17} />
+                  </button>
+                </div>
               </div>
+            ))}
+          </div>
+
+          {!filteredCommunities.length && (
+            <div className="admin-empty-card">
+              {communities.length
+                ? "No communities match your search."
+                : "No communities found. Create the first one."}
             </div>
-          ))}
+          )}
         </div>
 
         {!communities.length && (
           <div className="admin-empty-card">
             No communities found.
+        {/* COMMUNITY DETAILS MODAL */}
+        {selectedCommunity && (
+          <div
+            className="admin-modal-backdrop"
+            onClick={() => setSelectedCommunity(null)}
+          >
+            <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="admin-modal-header">
+                <div>
+                  <span>COMMUNITY DETAILS</span>
+
+                  <h2>{selectedCommunity.name}</h2>
+                </div>
+
+                <button
+                  className="admin-modal-close"
+                  onClick={() => setSelectedCommunity(null)}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="admin-modal-body">
+                <div className="admin-detail-grid">
+                  <div className="admin-detail-item">
+                    <span>Status</span>
+                    <strong>
+                      {selectedCommunity.isActive ? "ACTIVE" : "INACTIVE"}
+                    </strong>
+                  </div>
+
+                  <div className="admin-detail-item">
+                    <span>Visibility</span>
+                    <strong>
+                      {selectedCommunity.isPublic ? "PUBLIC" : "PRIVATE"}
+                    </strong>
+                  </div>
+
+                  <div className="admin-detail-item">
+                    <span>Location</span>
+                    <strong>
+                      {[
+                        selectedCommunity.city,
+                        selectedCommunity.state,
+                        selectedCommunity.country,
+                      ]
+                        .filter(Boolean)
+                        .join(", ") || "Not specified"}
+                    </strong>
+                  </div>
+
+                  <div className="admin-detail-item">
+                    <span>Created By</span>
+                    <strong>
+                      {selectedCommunity.createdBy?.name || "Unknown"}
+                    </strong>
+                  </div>
+
+                  <div className="admin-detail-item">
+                    <span>Created</span>
+                    <strong>{formatDate(selectedCommunity.createdAt)}</strong>
+                  </div>
+
+                  <div className="admin-detail-item">
+                    <span>Members</span>
+                    <strong>
+                      {selectedCommunity._count?.members ??
+                        selectedCommunity.members?.length ??
+                        0}
+                    </strong>
+                  </div>
+                </div>
+
+                {selectedCommunity.description && (
+                  <div className="admin-detail-long">
+                    <span>Description</span>
+
+                    <p>{selectedCommunity.description}</p>
+                  </div>
+                )}
+
+                <div className="admin-panel" style={{ marginTop: "16px" }}>
+                  <div className="admin-panel-header">
+                    <div>
+                      <h3>
+                        Members ({selectedCommunity.members?.length || 0})
+                      </h3>
+
+                      <p>Manage roles, status or remove members.</p>
+                    </div>
+                  </div>
+
+                  <div className="admin-table-wrapper">
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Member</th>
+                          <th>Role</th>
+                          <th>Status</th>
+                          <th>Joined</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {selectedCommunity.members?.length ? (
+                          selectedCommunity.members.map((member) => (
+                            <tr key={member.id}>
+                              <td>
+                                <div className="admin-user-cell">
+                                  <strong>
+                                    {member.user?.name || "Unknown"}
+                                  </strong>
+
+                                  <small>{member.user?.email}</small>
+                                </div>
+                              </td>
+
+                              <td>
+                                <select
+                                  className="admin-small-select"
+                                  value={member.role}
+                                  onChange={(e) =>
+                                    changeMemberField(
+                                      member,
+                                      "role",
+                                      e.target.value,
+                                    )
+                                  }
+                                >
+                                  <option value="MEMBER">Member</option>
+                                  <option value="MODERATOR">Moderator</option>
+                                  <option value="ADMIN">Admin</option>
+                                </select>
+                              </td>
+
+                              <td>
+                                <select
+                                  className="admin-small-select"
+                                  value={member.status}
+                                  onChange={(e) =>
+                                    changeMemberField(
+                                      member,
+                                      "status",
+                                      e.target.value,
+                                    )
+                                  }
+                                >
+                                  <option value="ACTIVE">Active</option>
+                                  <option value="INACTIVE">Inactive</option>
+                                  <option value="BANNED">Banned</option>
+                                </select>
+                              </td>
+
+                              <td>{formatDate(member.joinedAt)}</td>
+
+                              <td>
+                                <button
+                                  className="admin-icon-button admin-icon-danger"
+                                  title="Remove member"
+                                  onClick={() => removeMember(member)}
+                                >
+                                  <Trash2 size={17} />
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="5" className="admin-empty">
+                              No members yet.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div className="admin-modal-actions">
+                <button
+                  className="admin-danger-button"
+                  onClick={() => toggleCommunityStatus(selectedCommunity)}
+                >
+                  {selectedCommunity.isActive ? (
+                    <>
+                      <Ban size={17} />
+                      Deactivate
+                    </>
+                  ) : (
+                    <>
+                      <UserCheck size={17} />
+                      Activate
+                    </>
+                  )}
+                </button>
+
+                <button
+                  className="admin-success-button"
+                  onClick={() => {
+                    setSelectedCommunity(null);
+                    openEditCommunity(selectedCommunity);
+                  }}
+                >
+                  <Pencil size={17} />
+                  Edit Community
+                </button>
+              </div>
+            </div>
           </div>
         )}
-      </div>
+
+        {/* COMMUNITY CREATE / EDIT MODAL */}
+        {communityModal && (
+          <div
+            className="admin-modal-backdrop"
+            onClick={() => setCommunityModal(null)}
+          >
+            <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="admin-modal-header">
+                <div>
+                  <span>
+                    {communityModal.mode === "create"
+                      ? "NEW COMMUNITY"
+                      : "EDIT COMMUNITY"}
+                  </span>
+
+                  <h2>
+                    {communityModal.mode === "create"
+                      ? "Create Community"
+                      : "Update Community"}
+                  </h2>
+                </div>
+
+                <button
+                  className="admin-modal-close"
+                  onClick={() => setCommunityModal(null)}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="admin-modal-body">
+                <div className="admin-form-grid">
+                  <div className="admin-form-group admin-form-full">
+                    <label htmlFor="community-name">Name *</label>
+
+                    <input
+                      id="community-name"
+                      type="text"
+                      placeholder="e.g. Mumbai Food Seva Circle"
+                      value={communityForm.name}
+                      onChange={(e) =>
+                        setCommunityForm({
+                          ...communityForm,
+                          name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="admin-form-group admin-form-full">
+                    <label htmlFor="community-description">Description</label>
+
+                    <textarea
+                      id="community-description"
+                      rows="3"
+                      placeholder="What is this community about?"
+                      value={communityForm.description}
+                      onChange={(e) =>
+                        setCommunityForm({
+                          ...communityForm,
+                          description: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label htmlFor="community-city">City</label>
+
+                    <input
+                      id="community-city"
+                      type="text"
+                      placeholder="City"
+                      value={communityForm.city}
+                      onChange={(e) =>
+                        setCommunityForm({
+                          ...communityForm,
+                          city: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label htmlFor="community-state">State</label>
+
+                    <input
+                      id="community-state"
+                      type="text"
+                      placeholder="State"
+                      value={communityForm.state}
+                      onChange={(e) =>
+                        setCommunityForm({
+                          ...communityForm,
+                          state: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label htmlFor="community-country">Country</label>
+
+                    <input
+                      id="community-country"
+                      type="text"
+                      placeholder="Country"
+                      value={communityForm.country}
+                      onChange={(e) =>
+                        setCommunityForm({
+                          ...communityForm,
+                          country: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label htmlFor="community-image">Image URL</label>
+
+                    <input
+                      id="community-image"
+                      type="text"
+                      placeholder="https://..."
+                      value={communityForm.image}
+                      onChange={(e) =>
+                        setCommunityForm({
+                          ...communityForm,
+                          image: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="admin-form-group admin-checkbox-row">
+                    <input
+                      id="community-public"
+                      type="checkbox"
+                      checked={communityForm.isPublic}
+                      onChange={(e) =>
+                        setCommunityForm({
+                          ...communityForm,
+                          isPublic: e.target.checked,
+                        })
+                      }
+                    />
+
+                    <label htmlFor="community-public">
+                      Public (anyone can discover)
+                    </label>
+                  </div>
+
+                  <div className="admin-form-group admin-checkbox-row">
+                    <input
+                      id="community-active"
+                      type="checkbox"
+                      checked={communityForm.isActive}
+                      onChange={(e) =>
+                        setCommunityForm({
+                          ...communityForm,
+                          isActive: e.target.checked,
+                        })
+                      }
+                    />
+
+                    <label htmlFor="community-active">
+                      Active (visible to members)
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="admin-modal-actions">
+                <button
+                  className="admin-text-button"
+                  onClick={() => setCommunityModal(null)}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="admin-success-button"
+                  onClick={saveCommunity}
+                  disabled={savingCommunity}
+                >
+                  <CheckCircle size={17} />
+                  {savingCommunity
+                    ? "Saving..."
+                    : communityModal.mode === "create"
+                      ? "Create Community"
+                      : "Save Changes"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     );
   };
 
@@ -3315,9 +4314,10 @@ const loadSection = async (section) => {
   ===================================================== */
 
   return (
-    <div className="admin-dashboard">
+    <div
+      className={`admin-dashboard ${sidebarCollapsed ? "admin-collapsed" : ""}`}
+    >
       {/* MOBILE OVERLAY */}
-
       {sidebarOpen && (
         <div
           className="admin-sidebar-overlay"
@@ -3330,11 +4330,8 @@ const loadSection = async (section) => {
       {/* SIDEBAR */}
 
       <aside
-        className={`admin-sidebar ${
-          sidebarOpen
-            ? "admin-sidebar-open"
-            : ""
-        }`}
+        className={`admin-sidebar ${sidebarOpen ? "admin-sidebar-open" : ""}`}
+        aria-label="Admin navigation"
       >
         {/* BRAND */}
 
@@ -3343,10 +4340,8 @@ const loadSection = async (section) => {
             <ShieldCheck size={22} />
           </div>
 
-          <div>
-            <strong>
-              Hanumant Seva
-            </strong>
+          <div className="admin-brand-text">
+            <strong>Hanumant Seva</strong>
 
             <span>
               Admin Panel
@@ -3381,11 +4376,12 @@ const loadSection = async (section) => {
                     ? "admin-nav-item-active"
                     : ""
                 }`}
-                onClick={() =>
-                  navigateSection(
-                    item.id,
-                  )
-                }
+                onClick={() => navigateSection(item.id)}
+                onMouseEnter={(e) => showNavTip(e, item.label)}
+                onMouseLeave={hideNavTip}
+                onFocus={(e) => showNavTip(e, item.label)}
+                onBlur={hideNavTip}
+                aria-current={activeSection === item.id ? "page" : undefined}
               >
                 <Icon size={19} />
 
@@ -3446,17 +4442,46 @@ const loadSection = async (section) => {
 
           <button
             className="admin-logout-button"
-            onClick={
-              handleLogout
-            }
+            onClick={handleLogout}
+            onMouseEnter={(e) => showNavTip(e, "Logout")}
+            onMouseLeave={hideNavTip}
+            onFocus={(e) => showNavTip(e, "Logout")}
+            onBlur={hideNavTip}
           >
-            Logout
+            <LogOut size={17} />
+            <span>Logout</span>
           </button>
+
+          <Link
+            className="admin-view-site"
+            to="/"
+            onMouseEnter={(e) => showNavTip(e, "View Website")}
+            onMouseLeave={hideNavTip}
+            onFocus={(e) => showNavTip(e, "View Website")}
+            onBlur={hideNavTip}
+          >
+            <Globe size={16} />
+            <span>View Website</span>
+          </Link>
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
+      {/* EDGE TOGGLE — the single collapse control, glides with the sidebar */}
+      <button
+        className="admin-edge-toggle"
+        onClick={() => setSidebarCollapsed((prev) => !prev)}
+        aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-expanded={!sidebarCollapsed}
+        title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+      >
+        {sidebarCollapsed ? (
+          <ChevronRight size={14} />
+        ) : (
+          <ChevronLeft size={14} />
+        )}
+      </button>
 
+      {/* MAIN */}
       <main className="admin-main">
         {/* TOPBAR */}
 
@@ -3534,6 +4559,17 @@ const loadSection = async (section) => {
       </main>
 
       {/* VOLUNTEER APPLICATION MODAL */}
+      {/* ICON-RAIL TOOLTIP (collapsed sidebar only) */}
+      {sidebarCollapsed && navTip && (
+        <div className="admin-nav-tooltip" style={{ top: navTip.top }}>
+          {navTip.label}
+        </div>
+      )}
+
+      {/* APPLICATION MODAL */}
+      {/* =================================================
+         VOLUNTEER APPLICATION MODAL
+      ================================================= */}
 
       {selectedApplication && (
         <div

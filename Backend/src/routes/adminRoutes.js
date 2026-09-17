@@ -40,6 +40,13 @@ import {
 
   // Communities
   getAllCommunities,
+  createCommunity,
+  getCommunityById,
+  updateCommunity,
+  updateCommunityStatus,
+  deleteCommunity,
+  updateCommunityMember,
+  removeCommunityMember,
 
   // Audit Logs
   getAuditLogs,
@@ -161,6 +168,13 @@ router.delete("/tasks/:id", deleteTask);
 ===================================================== */
 
 router.get("/communities", getAllCommunities);
+router.post("/communities", createCommunity);
+router.get("/communities/:id", getCommunityById);
+router.patch("/communities/:id", updateCommunity);
+router.patch("/communities/:id/status", updateCommunityStatus);
+router.delete("/communities/:id", deleteCommunity);
+router.patch("/communities/:id/members/:memberId", updateCommunityMember);
+router.delete("/communities/:id/members/:memberId", removeCommunityMember);
 
 /* =====================================================
    AUDIT LOGS

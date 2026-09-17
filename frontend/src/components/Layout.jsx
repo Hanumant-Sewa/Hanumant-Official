@@ -6,7 +6,9 @@ function Layout() {
 
   const hideNavbarRoutes = ["/login", "/register", "/forgot-password"];
 
-  const hideNavbar = hideNavbarRoutes.includes(location.pathname);
+  const hideNavbar =
+    hideNavbarRoutes.includes(location.pathname) ||
+    location.pathname.startsWith("/admin");
 
   return (
     <>
