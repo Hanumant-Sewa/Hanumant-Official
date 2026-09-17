@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+
 import {
   LayoutDashboard,
   Users,
@@ -40,6 +41,7 @@ function Admin() {
   const [donations, setDonations] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
   const [events, setEvents] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
 
@@ -79,6 +81,23 @@ function Admin() {
     startDate: "",
     endDate: "",
     capacity: "",
+  });
+
+  /* =====================================================
+     TASK STATE
+  ===================================================== */
+
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+  const [taskSaving, setTaskSaving] = useState(false);
+
+  const [taskForm, setTaskForm] = useState({
+    title: "",
+    description: "",
+    
+    eventId: "",
+    dueDate: "",
+    status: "TODO",
   });
 
   /* =====================================================
@@ -124,6 +143,7 @@ function Admin() {
 
   const loadDashboard = async () => {
     const data = await apiRequest("/dashboard");
+
     setDashboard(data);
   };
 
@@ -273,11 +293,8 @@ function Admin() {
         description: campaignForm.description.trim() || null,
         image: campaignForm.image.trim() || null,
         targetAmount,
-
         startDate: startDate ? startDate.toISOString() : null,
-
         endDate: endDate ? endDate.toISOString() : null,
-
         status: campaignForm.status,
       };
 
@@ -455,11 +472,8 @@ function Admin() {
       location: event.location || "",
       city: event.city || "",
       state: event.state || "",
-
       startDate: toDateTimeLocalValue(event.startDate),
-
       endDate: toDateTimeLocalValue(event.endDate),
-
       capacity: event.capacity ?? "",
     });
 
@@ -529,22 +543,15 @@ function Admin() {
 
       const payload = {
         title: eventForm.title.trim(),
-
         description: eventForm.description.trim() || null,
-
         image: eventForm.image.trim() || null,
-
         location: eventForm.location.trim() || null,
-
         city: eventForm.city.trim() || null,
-
         state: eventForm.state.trim() || null,
-
         startDate: startDate.toISOString(),
-
         endDate: endDate.toISOString(),
-
-        capacity: eventForm.capacity === "" ? null : Number(eventForm.capacity),
+        capacity:
+          eventForm.capacity === "" ? null : Number(eventForm.capacity),
       };
 
       const endpoint = editingEvent ? `/events/${editingEvent.id}` : "/events";
@@ -618,7 +625,7 @@ function Admin() {
         confirmButtonColor: "#D97706",
       });
     } catch (error) {
-      console.error("Delete/cancel event error:", error);
+      console.error("Cancel event error:", error);
 
       Swal.fire({
         icon: "error",
@@ -674,6 +681,174 @@ function Admin() {
   };
 
   /* =====================================================
+     TASKS
+  ===================================================== */
+
+  const loadTasks = async () => {
+    const data = await apiRequest("/tasks");
+
+    setTasks(data.tasks || []);
+  };
+
+  /* =====================================================
+     CREATE TASK MODAL
+  ===================================================== */
+
+  const openCreateTaskModal = () => {
+    setEditingTask(null);
+
+    setTaskForm({
+      title: "",
+      description: "",
+      
+      eventId: "",
+      dueDate: "",
+      status: "TODO",
+    });
+
+    setShowTaskModal(true);
+  };
+
+
+  /* =====================================================
+     TASK FORM CHANGE
+  ===================================================== */
+
+  const handleTaskFormChange = (e) => {
+    const { name, value } = e.target;
+
+    setTaskForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  /* =====================================================
+   SAVE TASK
+===================================================== */
+
+const handleSaveTask = async (e) => {
+  e.preventDefault();
+
+  try {
+    if (!taskForm.title.trim()) {
+      throw new Error("Task title is required.");
+    }
+
+    setTaskSaving(true);
+
+    const payload = {
+      title: taskForm.title.trim(),
+
+      description: taskForm.description.trim() || null,
+
+      eventId:
+        taskForm.eventId === ""
+          ? null
+          : Number(taskForm.eventId),
+
+      dueDate: taskForm.dueDate
+        ? new Date(taskForm.dueDate).toISOString()
+        : null,
+
+      status: taskForm.status,
+    };
+
+    const endpoint = editingTask
+      ? `/tasks/${editingTask.id}`
+      : "/tasks";
+
+    const method = editingTask ? "PATCH" : "POST";
+
+    const data = await apiRequest(endpoint, {
+      method,
+      body: JSON.stringify(payload),
+    });
+
+    await loadTasks();
+
+    setShowTaskModal(false);
+    setEditingTask(null);
+
+    setTaskForm({
+      title: "",
+      description: "",
+      eventId: "",
+      dueDate: "",
+      status: "TODO",
+    });
+
+    Swal.fire({
+      icon: "success",
+      title: editingTask ? "Task Updated" : "Task Created",
+      text:
+        data.message ||
+        (editingTask
+          ? "Task updated successfully."
+          : "Task created successfully."),
+      confirmButtonColor: "#D97706",
+    });
+
+  } catch (error) {
+    console.error("Save task error:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Unable to save task",
+      text: error.message || "Something went wrong.",
+      confirmButtonColor: "#D97706",
+    });
+
+  } finally {
+    setTaskSaving(false);
+  }
+};
+
+  /* =====================================================
+     DELETE TASK
+  ===================================================== */
+
+  const handleDeleteTask = async (task) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Delete this task?",
+      text: `"${task.title}" will be permanently deleted.`,
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      const data = await apiRequest(`/tasks/${task.id}`, {
+        method: "DELETE",
+      });
+
+      await loadTasks();
+
+      Swal.fire({
+        icon: "success",
+        title: "Task Deleted",
+        text: data.message || "Task deleted successfully.",
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Delete task error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Cannot delete task",
+        text: error.message || "Unable to delete this task.",
+        confirmButtonColor: "#D97706",
+      });
+    }
+  };
+
+  /* =====================================================
      COMMUNITIES
   ===================================================== */
 
@@ -697,59 +872,67 @@ function Admin() {
      LOAD SECTION
   ===================================================== */
 
-  const loadSection = async (section = activeSection) => {
-    try {
-      setLoading(true);
+const loadSection = async (section) => {
+  setLoading(true);
 
-      switch (section) {
-        case "dashboard":
-          await loadDashboard();
-          break;
+  try {
+    switch (section) {
+      case "dashboard":
+        await loadDashboard();
+        break;
 
-        case "users":
-          await loadUsers();
-          break;
+      case "users":
+        await loadUsers();
+        break;
 
-        case "volunteers":
-          await loadApplications();
-          break;
+      case "volunteers":
+        await loadApplications();
+        break;
 
-        case "donations":
-          await loadDonations();
-          break;
+      case "donations":
+        await loadDonations();
+        break;
 
-        case "campaigns":
-          await loadCampaigns();
-          break;
+      case "campaigns":
+        await loadCampaigns();
+        break;
 
-        case "events":
-          await loadEvents();
-          break;
+      case "events":
+        await loadEvents();
+        break;
 
-        case "communities":
-          await loadCommunities();
-          break;
+      case "tasks":
+        await Promise.all([
+          loadTasks(),
+          loadUsers(),
+          loadEvents(),
+        ]);
+        break;
 
-        case "audit":
-          await loadAuditLogs();
-          break;
+      case "communities":
+        await loadCommunities();
+        break;
 
-        default:
-          break;
-      }
-    } catch (error) {
-      console.error(error);
+      case "audit":
+        await loadAuditLogs();
+        break;
 
-      Swal.fire({
-        title: "Unable to Load",
-        text: error.message || "Something went wrong.",
-        icon: "error",
-        confirmButtonColor: "#e87524",
-      });
-    } finally {
-      setLoading(false);
+      default:
+        break;
     }
-  };
+  } catch (error) {
+    console.error(`Failed to load ${section}:`, error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Unable to load data",
+      text: error.message || "Something went wrong.",
+      confirmButtonColor: "#D97706",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   /* =====================================================
      INITIAL LOAD
@@ -811,16 +994,22 @@ function Admin() {
     }
 
     try {
-      await apiRequest(`/volunteer-applications/${application.id}/approve`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          adminRemarks: "Approved by administrator.",
-        }),
-      });
+      await apiRequest(
+        `/volunteer-applications/${application.id}/approve`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            adminRemarks: "Approved by administrator.",
+          }),
+        },
+      );
 
       setSelectedApplication(null);
 
-      await Promise.all([loadApplications(), loadDashboard()]);
+      await Promise.all([
+        loadApplications(),
+        loadDashboard(),
+      ]);
 
       await Swal.fire({
         title: "Approved",
@@ -833,7 +1022,9 @@ function Admin() {
 
       await Swal.fire({
         title: "Approval Failed",
-        text: error.message || "Unable to approve this application.",
+        text:
+          error.message ||
+          "Unable to approve this application.",
         icon: "error",
         confirmButtonColor: "#e87524",
       });
@@ -872,16 +1063,22 @@ function Admin() {
     }
 
     try {
-      await apiRequest(`/volunteer-applications/${application.id}/reject`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          adminRemarks: remarks.trim(),
-        }),
-      });
+      await apiRequest(
+        `/volunteer-applications/${application.id}/reject`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            adminRemarks: remarks.trim(),
+          }),
+        },
+      );
 
       setSelectedApplication(null);
 
-      await Promise.all([loadApplications(), loadDashboard()]);
+      await Promise.all([
+        loadApplications(),
+        loadDashboard(),
+      ]);
 
       await Swal.fire({
         title: "Application Rejected",
@@ -894,7 +1091,9 @@ function Admin() {
 
       await Swal.fire({
         title: "Rejection Failed",
-        text: error.message || "Unable to reject this application.",
+        text:
+          error.message ||
+          "Unable to reject this application.",
         icon: "error",
         confirmButtonColor: "#e87524",
       });
@@ -1027,9 +1226,6 @@ function Admin() {
 
   /* =====================================================
      EVENT STATUS
-     
-     Status is derived from actual date/time.
-     CANCELLED always has priority.
   ===================================================== */
 
   const getEventStatus = (event, now = new Date()) => {
@@ -1066,9 +1262,6 @@ function Admin() {
 
   /* =====================================================
      CAMPAIGN STATUS
-     
-     DRAFT/CANCELLED/COMPLETED are respected.
-     ACTIVE is calculated against dates.
   ===================================================== */
 
   const getCampaignStatus = (campaign, now = new Date()) => {
@@ -1084,15 +1277,27 @@ function Admin() {
       return "COMPLETED";
     }
 
-    const start = campaign.startDate ? new Date(campaign.startDate) : null;
+    const start = campaign.startDate
+      ? new Date(campaign.startDate)
+      : null;
 
-    const end = campaign.endDate ? new Date(campaign.endDate) : null;
+    const end = campaign.endDate
+      ? new Date(campaign.endDate)
+      : null;
 
-    if (start && !Number.isNaN(start.getTime()) && now < start) {
+    if (
+      start &&
+      !Number.isNaN(start.getTime()) &&
+      now < start
+    ) {
       return "SCHEDULED";
     }
 
-    if (end && !Number.isNaN(end.getTime()) && now >= end) {
+    if (
+      end &&
+      !Number.isNaN(end.getTime()) &&
+      now >= end
+    ) {
       return "COMPLETED";
     }
 
@@ -1138,6 +1343,12 @@ function Admin() {
       id: "events",
       label: "Events",
       icon: CalendarDays,
+    },
+
+    {
+      id: "tasks",
+      label: "Tasks",
+      icon: ClipboardList,
     },
 
     {
@@ -1197,7 +1408,9 @@ function Admin() {
             <div>
               <span>Pending Applications</span>
 
-              <strong>{stats.pendingVolunteerApplications}</strong>
+              <strong>
+                {stats.pendingVolunteerApplications}
+              </strong>
             </div>
           </div>
 
@@ -1211,7 +1424,8 @@ function Admin() {
 
               <strong>
                 {formatCurrency(
-                  stats.totalDonationAmount ?? stats.donationAmount,
+                  stats.totalDonationAmount ??
+                    stats.donationAmount,
                 )}
               </strong>
             </div>
@@ -1243,21 +1457,23 @@ function Admin() {
         </div>
 
         <div className="admin-dashboard-grid">
-          {/* =========================
-              RECENT APPLICATIONS
-          ========================= */}
+          {/* RECENT APPLICATIONS */}
 
           <div className="admin-panel">
             <div className="admin-panel-header">
               <div>
                 <h3>Recent Volunteer Applications</h3>
 
-                <p>Latest requests waiting for review.</p>
+                <p>
+                  Latest requests waiting for review.
+                </p>
               </div>
 
               <button
                 className="admin-text-button"
-                onClick={() => navigateSection("volunteers")}
+                onClick={() =>
+                  navigateSection("volunteers")
+                }
               >
                 View All
               </button>
@@ -1268,11 +1484,8 @@ function Admin() {
                 <thead>
                   <tr>
                     <th>Applicant</th>
-
                     <th>Email</th>
-
                     <th>Status</th>
-
                     <th>Date</th>
                   </tr>
                 </thead>
@@ -1287,9 +1500,13 @@ function Admin() {
                       dashboard.recentVolunteerApplications
                     ).map((application) => (
                       <tr key={application.id}>
-                        <td>{application.user.name}</td>
+                        <td>
+                          {application.user.name}
+                        </td>
 
-                        <td>{application.user.email}</td>
+                        <td>
+                          {application.user.email}
+                        </td>
 
                         <td>
                           <span
@@ -1299,12 +1516,19 @@ function Admin() {
                           </span>
                         </td>
 
-                        <td>{formatDate(application.createdAt)}</td>
+                        <td>
+                          {formatDate(
+                            application.createdAt,
+                          )}
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="admin-empty">
+                      <td
+                        colSpan="4"
+                        className="admin-empty"
+                      >
                         No applications found.
                       </td>
                     </tr>
@@ -1314,21 +1538,23 @@ function Admin() {
             </div>
           </div>
 
-          {/* =========================
-              RECENT DONATIONS
-          ========================= */}
+          {/* RECENT DONATIONS */}
 
           <div className="admin-panel">
             <div className="admin-panel-header">
               <div>
                 <h3>Recent Donations</h3>
 
-                <p>Latest donation activity.</p>
+                <p>
+                  Latest donation activity.
+                </p>
               </div>
 
               <button
                 className="admin-text-button"
-                onClick={() => navigateSection("donations")}
+                onClick={() =>
+                  navigateSection("donations")
+                }
               >
                 View All
               </button>
@@ -1339,43 +1565,53 @@ function Admin() {
                 <thead>
                   <tr>
                     <th>Donor</th>
-
                     <th>Amount</th>
-
                     <th>Status</th>
-
                     <th>Date</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {dashboard.recentDonations?.length ? (
-                    dashboard.recentDonations.map((donation) => (
-                      <tr key={donation.id}>
-                        <td>
-                          {donation.isAnonymous
-                            ? "Anonymous"
-                            : donation.donorName ||
-                              donation.user?.name ||
-                              "Unknown"}
-                        </td>
+                    dashboard.recentDonations.map(
+                      (donation) => (
+                        <tr key={donation.id}>
+                          <td>
+                            {donation.isAnonymous
+                              ? "Anonymous"
+                              : donation.donorName ||
+                                donation.user?.name ||
+                                "Unknown"}
+                          </td>
 
-                        <td>{formatCurrency(donation.amount)}</td>
+                          <td>
+                            {formatCurrency(
+                              donation.amount,
+                            )}
+                          </td>
 
-                        <td>
-                          <span
-                            className={`admin-status admin-status-${donation.status.toLowerCase()}`}
-                          >
-                            {donation.status}
-                          </span>
-                        </td>
+                          <td>
+                            <span
+                              className={`admin-status admin-status-${donation.status.toLowerCase()}`}
+                            >
+                              {donation.status}
+                            </span>
+                          </td>
 
-                        <td>{formatDate(donation.donatedAt)}</td>
-                      </tr>
-                    ))
+                          <td>
+                            {formatDate(
+                              donation.donatedAt,
+                            )}
+                          </td>
+                        </tr>
+                      ),
+                    )
                   ) : (
                     <tr>
-                      <td colSpan="4" className="admin-empty">
+                      <td
+                        colSpan="4"
+                        className="admin-empty"
+                      >
                         No donations found.
                       </td>
                     </tr>
@@ -1388,6 +1624,7 @@ function Admin() {
       </div>
     );
   };
+
   /* =====================================================
      RENDER VOLUNTEERS
   ===================================================== */
@@ -1398,13 +1635,18 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Volunteer Applications</h2>
-            <p>Review and manage volunteer requests.</p>
+
+            <p>
+              Review and manage volunteer requests.
+            </p>
           </div>
 
           <select
             className="admin-filter"
             value={applicationFilter}
-            onChange={(e) => setApplicationFilter(e.target.value)}
+            onChange={(e) =>
+              setApplicationFilter(e.target.value)
+            }
           >
             <option value="PENDING">Pending</option>
             <option value="APPROVED">Approved</option>
@@ -1435,21 +1677,36 @@ function Admin() {
                     <tr key={application.id}>
                       <td>
                         <div className="admin-user-cell">
-                          <strong>{application.user.name}</strong>
+                          <strong>
+                            {application.user.name}
+                          </strong>
 
-                          <small>#{application.id}</small>
+                          <small>
+                            #{application.id}
+                          </small>
                         </div>
                       </td>
 
                       <td>
-                        <div>{application.user.email}</div>
+                        <div>
+                          {application.user.email}
+                        </div>
 
-                        <small>{application.user.phone || "No phone"}</small>
+                        <small>
+                          {application.user.phone ||
+                            "No phone"}
+                        </small>
                       </td>
 
-                      <td>{application.skills || "Not specified"}</td>
+                      <td>
+                        {application.skills ||
+                          "Not specified"}
+                      </td>
 
-                      <td>{application.preferredArea || "Not specified"}</td>
+                      <td>
+                        {application.preferredArea ||
+                          "Not specified"}
+                      </td>
 
                       <td>
                         <span
@@ -1459,13 +1716,21 @@ function Admin() {
                         </span>
                       </td>
 
-                      <td>{formatDate(application.createdAt)}</td>
+                      <td>
+                        {formatDate(
+                          application.createdAt,
+                        )}
+                      </td>
 
                       <td>
                         <button
                           className="admin-icon-button"
                           title="View application"
-                          onClick={() => setSelectedApplication(application)}
+                          onClick={() =>
+                            setSelectedApplication(
+                              application,
+                            )
+                          }
                         >
                           <Eye size={17} />
                         </button>
@@ -1474,7 +1739,10 @@ function Admin() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="admin-empty">
+                    <td
+                      colSpan="7"
+                      className="admin-empty"
+                    >
                       No applications found.
                     </td>
                   </tr>
@@ -1497,7 +1765,10 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Users</h2>
-            <p>Manage registered users and account status.</p>
+
+            <p>
+              Manage registered users and account status.
+            </p>
           </div>
         </div>
 
@@ -1530,7 +1801,9 @@ function Admin() {
                       <td>{item.phone || "—"}</td>
 
                       <td>
-                        <span className="admin-role">{item.role}</span>
+                        <span className="admin-role">
+                          {item.role}
+                        </span>
                       </td>
 
                       <td>
@@ -1541,7 +1814,9 @@ function Admin() {
                         </span>
                       </td>
 
-                      <td>{formatDate(item.createdAt)}</td>
+                      <td>
+                        {formatDate(item.createdAt)}
+                      </td>
 
                       <td>
                         {item.id !== user?.id && (
@@ -1549,14 +1824,23 @@ function Admin() {
                             className="admin-small-select"
                             value={item.status}
                             onChange={(e) =>
-                              changeUserStatus(item, e.target.value)
+                              changeUserStatus(
+                                item,
+                                e.target.value,
+                              )
                             }
                           >
-                            <option value="ACTIVE">Active</option>
+                            <option value="ACTIVE">
+                              Active
+                            </option>
 
-                            <option value="INACTIVE">Inactive</option>
+                            <option value="INACTIVE">
+                              Inactive
+                            </option>
 
-                            <option value="SUSPENDED">Suspended</option>
+                            <option value="SUSPENDED">
+                              Suspended
+                            </option>
                           </select>
                         )}
                       </td>
@@ -1564,7 +1848,10 @@ function Admin() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="admin-empty">
+                    <td
+                      colSpan="6"
+                      className="admin-empty"
+                    >
                       No users found.
                     </td>
                   </tr>
@@ -1577,6 +1864,10 @@ function Admin() {
     );
   };
 
+
+
+
+
   /* =====================================================
      RENDER DONATIONS
   ===================================================== */
@@ -1587,7 +1878,10 @@ function Admin() {
         <div className="admin-section-toolbar">
           <div>
             <h2>Donations</h2>
-            <p>Monitor donation and payment activity.</p>
+
+            <p>
+              Monitor donation and payment activity.
+            </p>
           </div>
         </div>
 
@@ -1618,12 +1912,21 @@ function Admin() {
                       </td>
 
                       <td>
-                        <strong>{formatCurrency(donation.amount)}</strong>
+                        <strong>
+                          {formatCurrency(
+                            donation.amount,
+                          )}
+                        </strong>
                       </td>
 
-                      <td>{donation.paymentMethod || "—"}</td>
+                      <td>
+                        {donation.paymentMethod || "—"}
+                      </td>
 
-                      <td>{donation.campaign?.title || "General Donation"}</td>
+                      <td>
+                        {donation.campaign?.title ||
+                          "General Donation"}
+                      </td>
 
                       <td>
                         <span
@@ -1633,12 +1936,19 @@ function Admin() {
                         </span>
                       </td>
 
-                      <td>{formatDate(donation.donatedAt)}</td>
+                      <td>
+                        {formatDate(
+                          donation.donatedAt,
+                        )}
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="admin-empty">
+                    <td
+                      colSpan="6"
+                      className="admin-empty"
+                    >
                       No donations found.
                     </td>
                   </tr>
@@ -1660,12 +1970,13 @@ function Admin() {
 
     return (
       <div className="admin-content-section">
-        {/* HEADER */}
         <div className="admin-section-toolbar">
           <div>
             <h2>Campaigns</h2>
 
-            <p>Create and manage fundraising campaigns.</p>
+            <p>
+              Create and manage fundraising campaigns.
+            </p>
           </div>
 
           <button
@@ -1678,18 +1989,28 @@ function Admin() {
           </button>
         </div>
 
-        {/* CAMPAIGN CARDS */}
         <div className="admin-card-grid">
           {campaigns.map((campaign) => {
-            const displayStatus = getCampaignStatus(campaign, now);
+            const displayStatus =
+              getCampaignStatus(campaign, now);
 
-            const target = Number(campaign.targetAmount || 0);
+            const target = Number(
+              campaign.targetAmount || 0,
+            );
 
-            const raised = Number(campaign.raisedAmount || 0);
+            const raised = Number(
+              campaign.raisedAmount || 0,
+            );
 
             const progress =
               target > 0
-                ? Math.min(100, Math.max(0, (raised / target) * 100))
+                ? Math.min(
+                    100,
+                    Math.max(
+                      0,
+                      (raised / target) * 100,
+                    ),
+                  )
                 : 0;
 
             return (
@@ -1697,20 +2018,19 @@ function Admin() {
                 className="admin-management-card admin-campaign-card"
                 key={campaign.id}
               >
-                {/* IMAGE */}
                 {campaign.image && (
                   <div className="admin-campaign-image">
                     <img
                       src={campaign.image}
                       alt={campaign.title}
                       onError={(e) => {
-                        e.currentTarget.style.display = "none";
+                        e.currentTarget.style.display =
+                          "none";
                       }}
                     />
                   </div>
                 )}
 
-                {/* TOP */}
                 <div className="admin-management-card-top">
                   <span
                     className={`admin-status admin-status-${displayStatus.toLowerCase()}`}
@@ -1721,20 +2041,21 @@ function Admin() {
                   <span>#{campaign.id}</span>
                 </div>
 
-                {/* TITLE */}
                 <h3>{campaign.title}</h3>
 
-                {/* DESCRIPTION */}
-                <p>{campaign.description || "No campaign description."}</p>
+                <p>
+                  {campaign.description ||
+                    "No campaign description."}
+                </p>
 
-                {/* RAISED */}
                 <div className="admin-progress-info">
                   <span>Raised</span>
 
-                  <strong>{formatCurrency(raised)}</strong>
+                  <strong>
+                    {formatCurrency(raised)}
+                  </strong>
                 </div>
 
-                {/* PROGRESS */}
                 <div className="admin-progress-track">
                   <div
                     className="admin-progress-bar"
@@ -1748,32 +2069,49 @@ function Admin() {
                   {progress.toFixed(0)}% of target
                 </div>
 
-                {/* META */}
                 <div className="admin-management-meta">
-                  <span>Target: {formatCurrency(target)}</span>
+                  <span>
+                    Target: {formatCurrency(target)}
+                  </span>
 
-                  <span>Donations: {campaign._count?.donations || 0}</span>
+                  <span>
+                    Donations:{" "}
+                    {campaign._count?.donations || 0}
+                  </span>
                 </div>
 
-                {/* DATES */}
-                {(campaign.startDate || campaign.endDate) && (
+                {(campaign.startDate ||
+                  campaign.endDate) && (
                   <div className="admin-campaign-dates">
                     {campaign.startDate && (
-                      <span>Start: {formatDateTime(campaign.startDate)}</span>
+                      <span>
+                        Start:{" "}
+                        {formatDateTime(
+                          campaign.startDate,
+                        )}
+                      </span>
                     )}
 
                     {campaign.endDate && (
-                      <span>End: {formatDateTime(campaign.endDate)}</span>
+                      <span>
+                        End:{" "}
+                        {formatDateTime(
+                          campaign.endDate,
+                        )}
+                      </span>
                     )}
                   </div>
                 )}
 
-                {/* ACTIONS */}
                 <div className="admin-campaign-actions">
                   <button
                     type="button"
                     className="admin-secondary-button"
-                    onClick={() => openEditCampaignModal(campaign)}
+                    onClick={() =>
+                      openEditCampaignModal(
+                        campaign,
+                      )
+                    }
                   >
                     <Edit size={15} />
                     Edit
@@ -1785,7 +2123,11 @@ function Admin() {
                         type="button"
                         className="admin-icon-button admin-danger-button"
                         title="Cancel campaign"
-                        onClick={() => handleCancelCampaign(campaign)}
+                        onClick={() =>
+                          handleCancelCampaign(
+                            campaign,
+                          )
+                        }
                       >
                         <XCircle size={16} />
                       </button>
@@ -1795,7 +2137,11 @@ function Admin() {
                     type="button"
                     className="admin-icon-button admin-danger-button"
                     title="Delete campaign"
-                    onClick={() => handleDeleteCampaign(campaign)}
+                    onClick={() =>
+                      handleDeleteCampaign(
+                        campaign,
+                      )
+                    }
                   >
                     <Trash2 size={16} />
                   </button>
@@ -1806,24 +2152,33 @@ function Admin() {
         </div>
 
         {!campaigns.length && (
-          <div className="admin-empty-card">No campaigns found.</div>
+          <div className="admin-empty-card">
+            No campaigns found.
+          </div>
         )}
 
-        {/* CAMPAIGN MODAL */}
         {showCampaignModal && (
           <div className="admin-modal-backdrop">
             <div className="admin-modal admin-campaign-modal">
               <div className="admin-modal-header">
                 <div>
-                  <span>CAMPAIGN MANAGEMENT</span>
+                  <span>
+                    CAMPAIGN MANAGEMENT
+                  </span>
 
-                  <h2>{editingCampaign ? "Edit Campaign" : "Add Campaign"}</h2>
+                  <h2>
+                    {editingCampaign
+                      ? "Edit Campaign"
+                      : "Add Campaign"}
+                  </h2>
                 </div>
 
                 <button
                   type="button"
                   className="admin-modal-close"
-                  onClick={() => setShowCampaignModal(false)}
+                  onClick={() =>
+                    setShowCampaignModal(false)
+                  }
                   disabled={campaignSaving}
                 >
                   <X size={20} />
@@ -1834,7 +2189,6 @@ function Admin() {
                 className="admin-campaign-form"
                 onSubmit={handleSaveCampaign}
               >
-                {/* TITLE */}
                 <div className="admin-form-group">
                   <label>Campaign Title *</label>
 
@@ -1842,26 +2196,30 @@ function Admin() {
                     type="text"
                     name="title"
                     value={campaignForm.title}
-                    onChange={handleCampaignFormChange}
+                    onChange={
+                      handleCampaignFormChange
+                    }
                     placeholder="e.g. Diwali Food Support 2026"
                     required
                   />
                 </div>
 
-                {/* DESCRIPTION */}
                 <div className="admin-form-group">
                   <label>Description</label>
 
                   <textarea
                     name="description"
-                    value={campaignForm.description}
-                    onChange={handleCampaignFormChange}
+                    value={
+                      campaignForm.description
+                    }
+                    onChange={
+                      handleCampaignFormChange
+                    }
                     placeholder="Describe the purpose of this campaign..."
                     rows="4"
                   />
                 </div>
 
-                {/* IMAGE */}
                 <div className="admin-form-group">
                   <label>Campaign Image URL</label>
 
@@ -1869,20 +2227,25 @@ function Admin() {
                     type="url"
                     name="image"
                     value={campaignForm.image}
-                    onChange={handleCampaignFormChange}
+                    onChange={
+                      handleCampaignFormChange
+                    }
                     placeholder="https://example.com/campaign-image.jpg"
                   />
                 </div>
 
-                {/* TARGET */}
                 <div className="admin-form-group">
                   <label>Target Amount *</label>
 
                   <input
                     type="number"
                     name="targetAmount"
-                    value={campaignForm.targetAmount}
-                    onChange={handleCampaignFormChange}
+                    value={
+                      campaignForm.targetAmount
+                    }
+                    onChange={
+                      handleCampaignFormChange
+                    }
                     min="1"
                     step="0.01"
                     placeholder="e.g. 200000"
@@ -1890,59 +2253,79 @@ function Admin() {
                   />
                 </div>
 
-                {/* DATES */}
                 <div className="admin-form-row">
                   <div className="admin-form-group">
-                    <label>Start Date & Time</label>
+                    <label>
+                      Start Date & Time
+                    </label>
 
                     <input
                       type="datetime-local"
                       name="startDate"
-                      value={campaignForm.startDate}
-                      onChange={handleCampaignFormChange}
+                      value={
+                        campaignForm.startDate
+                      }
+                      onChange={
+                        handleCampaignFormChange
+                      }
                     />
                   </div>
 
                   <div className="admin-form-group">
-                    <label>End Date & Time</label>
+                    <label>
+                      End Date & Time
+                    </label>
 
                     <input
                       type="datetime-local"
                       name="endDate"
-                      value={campaignForm.endDate}
-                      onChange={handleCampaignFormChange}
+                      value={
+                        campaignForm.endDate
+                      }
+                      onChange={
+                        handleCampaignFormChange
+                      }
                     />
                   </div>
                 </div>
 
-                {/* STATUS */}
                 <div className="admin-form-group">
                   <label>Status</label>
 
                   <select
                     name="status"
                     value={campaignForm.status}
-                    onChange={handleCampaignFormChange}
+                    onChange={
+                      handleCampaignFormChange
+                    }
                   >
-                    <option value="DRAFT">Draft</option>
+                    <option value="DRAFT">
+                      Draft
+                    </option>
 
-                    <option value="ACTIVE">Active / Published</option>
+                    <option value="ACTIVE">
+                      Active / Published
+                    </option>
 
-                    <option value="CANCELLED">Cancelled</option>
+                    <option value="CANCELLED">
+                      Cancelled
+                    </option>
                   </select>
 
                   <small className="admin-form-help">
-                    Scheduled and completed states are determined automatically
+                    Scheduled and completed states
+                    are determined automatically
                     from the campaign dates.
                   </small>
                 </div>
 
-                {/* FOOTER */}
                 <div className="admin-modal-footer">
                   <button
                     type="button"
                     className="admin-secondary-button"
-                    onClick={() => setShowCampaignModal(false)}
+                    onClick={() =>
+                      setShowCampaignModal(false)
+                    }
                     disabled={campaignSaving}
                   >
                     Cancel
@@ -1977,12 +2360,14 @@ function Admin() {
 
     return (
       <div className="admin-content-section">
-        {/* HEADER */}
         <div className="admin-section-toolbar">
           <div>
             <h2>Events</h2>
 
-            <p>Create and manage events visible to users and volunteers.</p>
+            <p>
+              Create and manage events visible to
+              users and volunteers.
+            </p>
           </div>
 
           <button
@@ -1995,7 +2380,6 @@ function Admin() {
           </button>
         </div>
 
-        {/* EVENT TABLE */}
         <div className="admin-panel">
           <div className="admin-table-wrapper">
             <table className="admin-table">
@@ -2014,22 +2398,27 @@ function Admin() {
               <tbody>
                 {events.length ? (
                   events.map((event) => {
-                    const displayStatus = getEventStatus(event, now);
+                    const displayStatus =
+                      getEventStatus(event, now);
 
-                    const registrationCount = event._count?.registrations || 0;
+                    const registrationCount =
+                      event._count?.registrations || 0;
 
                     const hasCapacity =
-                      event.capacity !== null && event.capacity !== undefined;
+                      event.capacity !== null &&
+                      event.capacity !== undefined;
 
                     const isFull =
                       hasCapacity &&
-                      registrationCount >= Number(event.capacity);
+                      registrationCount >=
+                        Number(event.capacity);
 
                     return (
                       <tr key={event.id}>
-                        {/* EVENT */}
                         <td>
-                          <strong>{event.title}</strong>
+                          <strong>
+                            {event.title}
+                          </strong>
 
                           {event.description && (
                             <div className="admin-event-description">
@@ -2038,45 +2427,68 @@ function Admin() {
                           )}
                         </td>
 
-                        {/* LOCATION */}
                         <td>
-                          {event.location || event.city || "—"}
+                          {event.location ||
+                            event.city ||
+                            "—"}
 
-                          {(event.city || event.state) && (
+                          {(event.city ||
+                            event.state) && (
                             <small>
                               {event.city || ""}
-                              {event.city && event.state ? ", " : ""}
+                              {event.city &&
+                              event.state
+                                ? ", "
+                                : ""}
                               {event.state || ""}
                             </small>
                           )}
                         </td>
 
-                        {/* SCHEDULE */}
                         <td>
                           <div className="admin-event-schedule">
-                            <strong>{formatDateTime(event.startDate)}</strong>
+                            <strong>
+                              {formatDateTime(
+                                event.startDate,
+                              )}
+                            </strong>
 
                             {event.endDate && (
-                              <small>to {formatDateTime(event.endDate)}</small>
+                              <small>
+                                to{" "}
+                                {formatDateTime(
+                                  event.endDate,
+                                )}
+                              </small>
                             )}
                           </div>
                         </td>
 
-                        {/* CAPACITY */}
-                        <td>{hasCapacity ? event.capacity : "Unlimited"}</td>
-
-                        {/* REGISTRATIONS */}
                         <td>
-                          <strong>{registrationCount}</strong>
+                          {hasCapacity
+                            ? event.capacity
+                            : "Unlimited"}
+                        </td>
 
-                          {hasCapacity && <small> / {event.capacity}</small>}
+                        <td>
+                          <strong>
+                            {registrationCount}
+                          </strong>
+
+                          {hasCapacity && (
+                            <small>
+                              {" "}
+                              / {event.capacity}
+                            </small>
+                          )}
 
                           {isFull && (
-                            <span className="admin-event-full">Full</span>
+                            <span className="admin-event-full">
+                              Full
+                            </span>
                           )}
                         </td>
 
-                        {/* STATUS */}
                         <td>
                           <span
                             className={`admin-status admin-status-${displayStatus.toLowerCase()}`}
@@ -2085,25 +2497,34 @@ function Admin() {
                           </span>
                         </td>
 
-                        {/* ACTIONS */}
                         <td>
                           <div className="admin-event-actions">
                             <button
                               type="button"
                               className="admin-icon-button"
                               title="Edit event"
-                              onClick={() => openEditEventModal(event)}
+                              onClick={() =>
+                                openEditEventModal(
+                                  event,
+                                )
+                              }
                             >
                               <Edit size={16} />
                             </button>
 
-                            {displayStatus !== "COMPLETED" &&
-                              displayStatus !== "CANCELLED" && (
+                            {displayStatus !==
+                              "COMPLETED" &&
+                              displayStatus !==
+                                "CANCELLED" && (
                                 <button
                                   type="button"
                                   className="admin-icon-button admin-danger-button"
                                   title="Cancel event"
-                                  onClick={() => handleCancelEvent(event)}
+                                  onClick={() =>
+                                    handleCancelEvent(
+                                      event,
+                                    )
+                                  }
                                 >
                                   <XCircle size={16} />
                                 </button>
@@ -2113,7 +2534,11 @@ function Admin() {
                               type="button"
                               className="admin-icon-button admin-danger-button"
                               title="Delete event"
-                              onClick={() => handleDeleteEvent(event)}
+                              onClick={() =>
+                                handleDeleteEvent(
+                                  event,
+                                )
+                              }
                             >
                               <Trash2 size={16} />
                             </button>
@@ -2124,7 +2549,10 @@ function Admin() {
                   })
                 ) : (
                   <tr>
-                    <td colSpan="7" className="admin-empty">
+                    <td
+                      colSpan="7"
+                      className="admin-empty"
+                    >
                       No events found.
                     </td>
                   </tr>
@@ -2134,7 +2562,6 @@ function Admin() {
           </div>
         </div>
 
-        {/* EVENT MODAL */}
         {showEventModal && (
           <div className="admin-modal-backdrop">
             <div className="admin-modal admin-event-modal">
@@ -2142,7 +2569,11 @@ function Admin() {
                 <div>
                   <span>EVENT MANAGEMENT</span>
 
-                  <h2>{editingEvent ? "Edit Event" : "Add Event"}</h2>
+                  <h2>
+                    {editingEvent
+                      ? "Edit Event"
+                      : "Add Event"}
+                  </h2>
 
                   <p>
                     {editingEvent
@@ -2154,15 +2585,19 @@ function Admin() {
                 <button
                   type="button"
                   className="admin-modal-close"
-                  onClick={() => setShowEventModal(false)}
+                  onClick={() =>
+                    setShowEventModal(false)
+                  }
                   disabled={eventSaving}
                 >
                   <X size={20} />
                 </button>
               </div>
 
-              <form className="admin-event-form" onSubmit={handleSaveEvent}>
-                {/* TITLE */}
+              <form
+                className="admin-event-form"
+                onSubmit={handleSaveEvent}
+              >
                 <div className="admin-form-group">
                   <label>Event Title *</label>
 
@@ -2176,20 +2611,20 @@ function Admin() {
                   />
                 </div>
 
-                {/* DESCRIPTION */}
                 <div className="admin-form-group">
                   <label>Description</label>
 
                   <textarea
                     name="description"
-                    value={eventForm.description}
+                    value={
+                      eventForm.description
+                    }
                     onChange={handleEventFormChange}
                     placeholder="Describe the event..."
                     rows="4"
                   />
                 </div>
 
-                {/* IMAGE */}
                 <div className="admin-form-group">
                   <label>Event Image URL</label>
 
@@ -2202,7 +2637,6 @@ function Admin() {
                   />
                 </div>
 
-                {/* LOCATION + CITY */}
                 <div className="admin-form-row">
                   <div className="admin-form-group">
                     <label>Location</label>
@@ -2229,7 +2663,6 @@ function Admin() {
                   </div>
                 </div>
 
-                {/* STATE + CAPACITY */}
                 <div className="admin-form-row">
                   <div className="admin-form-group">
                     <label>State</label>
@@ -2258,22 +2691,27 @@ function Admin() {
                   </div>
                 </div>
 
-                {/* DATES */}
                 <div className="admin-form-row">
                   <div className="admin-form-group">
-                    <label>Start Date & Time *</label>
+                    <label>
+                      Start Date & Time *
+                    </label>
 
                     <input
                       type="datetime-local"
                       name="startDate"
-                      value={eventForm.startDate}
+                      value={
+                        eventForm.startDate
+                      }
                       onChange={handleEventFormChange}
                       required
                     />
                   </div>
 
                   <div className="admin-form-group">
-                    <label>End Date & Time *</label>
+                    <label>
+                      End Date & Time *
+                    </label>
 
                     <input
                       type="datetime-local"
@@ -2284,31 +2722,37 @@ function Admin() {
                     />
 
                     <small className="admin-form-help">
-                      The event automatically becomes COMPLETED after this time.
+                      The event automatically becomes
+                      COMPLETED after this time.
                     </small>
                   </div>
                 </div>
 
-                {/* AUTOMATIC STATUS INFO */}
                 <div className="admin-event-status-info">
                   <span>Automatic Status</span>
 
                   <strong>
-                    {editingEvent ? getEventStatus(editingEvent) : "UPCOMING"}
+                    {editingEvent
+                      ? getEventStatus(editingEvent)
+                      : "UPCOMING"}
                   </strong>
 
                   <p>
-                    Event status is determined automatically from its start and
-                    end date/time. Only cancellation is manually controlled.
+                    Event status is determined
+                    automatically from its start
+                    and end date/time. Only
+                    cancellation is manually
+                    controlled.
                   </p>
                 </div>
 
-                {/* FOOTER */}
                 <div className="admin-modal-footer">
                   <button
                     type="button"
                     className="admin-secondary-button"
-                    onClick={() => setShowEventModal(false)}
+                    onClick={() =>
+                      setShowEventModal(false)
+                    }
                     disabled={eventSaving}
                   >
                     Cancel
@@ -2335,6 +2779,336 @@ function Admin() {
   };
 
   /* =====================================================
+     RENDER TASKS
+  ===================================================== */
+
+  const renderTasks = () => {
+    return (
+      <div className="admin-content-section">
+        <div className="admin-section-toolbar">
+          <div>
+            <h2>Tasks</h2>
+
+            <p>
+              Create and manage tasks for volunteers.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="admin-primary-button"
+            onClick={openCreateTaskModal}
+          >
+            <Plus size={18} />
+            Add Task
+          </button>
+        </div>
+
+        <div className="admin-panel">
+          <div className="admin-table-wrapper">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Event</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {tasks.length ? (
+                  tasks.map((task) => (
+                    <tr key={task.id}>
+                      {/* TASK */}
+
+                      <td>
+                        <strong>
+                          {task.title}
+                        </strong>
+
+                        {task.description && (
+                          <small>
+                            {task.description}
+                          </small>
+                        )}
+                      </td>
+
+                      {/* EVENT */}
+
+                      <td>
+                        {task.event?.title ||
+                          "No event"}
+                      </td>
+
+                      {/* DUE DATE */}
+
+                      <td>
+                        {task.dueDate
+                          ? formatDateTime(
+                              task.dueDate,
+                            )
+                          : "No due date"}
+                      </td>
+
+                      {/* STATUS */}
+
+                      <td>
+                        <span
+                          className={`admin-status admin-status-${task.status.toLowerCase()}`}
+                        >
+                          {task.status}
+                        </span>
+                      </td>
+
+                      {/* ACTIONS */}
+
+                      <td>
+                        <div className="admin-event-actions">
+                          <button
+                            type="button"
+                            className="admin-icon-button"
+                            title="Edit task"
+                            onClick={() =>
+                              openEditTaskModal(
+                                task,
+                              )
+                            }
+                          >
+                            <Edit size={16} />
+                          </button>
+
+                          <button
+                            type="button"
+                            className="admin-icon-button admin-danger-button"
+                            title="Delete task"
+                            onClick={() =>
+                              handleDeleteTask(task)
+                            }
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="admin-empty"
+                    >
+                      No tasks found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* TASK MODAL */}
+
+        {showTaskModal && (
+          <div className="admin-modal-backdrop">
+            <div
+              className="admin-modal"
+              onClick={(e) =>
+                e.stopPropagation()
+              }
+            >
+              {/* MODAL HEADER */}
+
+              <div className="admin-modal-header">
+                <div>
+                  <span>
+                    TASK MANAGEMENT
+                  </span>
+
+                  <h2>
+                    {editingTask
+                      ? "Edit Task"
+                      : "Create Task"}
+                  </h2>
+
+                  <p>
+                    Create a task for volunteers.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="admin-modal-close"
+                  onClick={() =>
+                    setShowTaskModal(false)
+                  }
+                  disabled={taskSaving}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* TASK FORM */}
+
+              <form
+                className="admin-event-form"
+                onSubmit={handleSaveTask}
+              >
+                {/* TITLE */}
+
+                <div className="admin-form-group">
+                  <label>
+                    Task Title *
+                  </label>
+
+                  <input
+                    type="text"
+                    name="title"
+                    value={taskForm.title}
+                    onChange={
+                      handleTaskFormChange
+                    }
+                    placeholder="e.g. Food Distribution Support"
+                    required
+                  />
+                </div>
+
+                {/* DESCRIPTION */}
+
+                <div className="admin-form-group">
+                  <label>
+                    Description
+                  </label>
+
+                  <textarea
+                    name="description"
+                    value={
+                      taskForm.description
+                    }
+                    onChange={
+                      handleTaskFormChange
+                    }
+                    placeholder="Describe the task..."
+                    rows="4"
+                  />
+                </div>
+
+                {/* EVENT */}
+
+                <div className="admin-form-group">
+                  <label>
+                    Event
+                  </label>
+
+                  <select
+                    name="eventId"
+                    value={
+                      taskForm.eventId
+                    }
+                    onChange={
+                      handleTaskFormChange
+                    }
+                  >
+                    <option value="">
+                      No Event
+                    </option>
+
+                    {events.map((event) => (
+                      <option
+                        key={event.id}
+                        value={event.id}
+                      >
+                        {event.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* DUE DATE */}
+
+                <div className="admin-form-group">
+                  <label>
+                    Due Date & Time
+                  </label>
+
+                  <input
+                    type="datetime-local"
+                    name="dueDate"
+                    value={
+                      taskForm.dueDate
+                    }
+                    onChange={
+                      handleTaskFormChange
+                    }
+                  />
+                </div>
+
+                {/* STATUS */}
+
+                <div className="admin-form-group">
+                  <label>
+                    Status
+                  </label>
+
+                  <select
+                    name="status"
+                    value={
+                      taskForm.status
+                    }
+                    onChange={
+                      handleTaskFormChange
+                    }
+                  >
+                    <option value="TODO">
+                      Pending
+                    </option>
+
+                    <option value="IN_PROGRESS">
+                      In Progress
+                    </option>
+
+                    <option value="COMPLETED">
+                      Completed
+                    </option>
+                  </select>
+                </div>
+
+                {/* FOOTER */}
+
+                <div className="admin-modal-footer">
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    onClick={() =>
+                      setShowTaskModal(false)
+                    }
+                    disabled={taskSaving}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="admin-primary-button"
+                    disabled={taskSaving}
+                  >
+                    {taskSaving
+                      ? "Saving..."
+                      : editingTask
+                        ? "Update Task"
+                        : "Create Task"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  /* =====================================================
      RENDER COMMUNITIES
   ===================================================== */
 
@@ -2345,13 +3119,18 @@ function Admin() {
           <div>
             <h2>Communities</h2>
 
-            <p>Monitor NGO communities and members.</p>
+            <p>
+              Monitor NGO communities and members.
+            </p>
           </div>
         </div>
 
         <div className="admin-card-grid">
           {communities.map((community) => (
-            <div className="admin-management-card" key={community.id}>
+            <div
+              className="admin-management-card"
+              key={community.id}
+            >
               <div className="admin-management-card-top">
                 <span
                   className={
@@ -2360,27 +3139,43 @@ function Admin() {
                       : "admin-status admin-status-inactive"
                   }
                 >
-                  {community.isActive ? "ACTIVE" : "INACTIVE"}
+                  {community.isActive
+                    ? "ACTIVE"
+                    : "INACTIVE"}
                 </span>
 
-                <span>#{community.id}</span>
+                <span>
+                  #{community.id}
+                </span>
               </div>
 
               <h3>{community.name}</h3>
 
-              <p>{community.description || "No description."}</p>
+              <p>
+                {community.description ||
+                  "No description."}
+              </p>
 
               <div className="admin-management-meta">
-                <span>{community.city || "No city"}</span>
+                <span>
+                  {community.city ||
+                    "No city"}
+                </span>
 
-                <span>Members: {community._count?.members || 0}</span>
+                <span>
+                  Members:{" "}
+                  {community._count?.members ||
+                    0}
+                </span>
               </div>
             </div>
           ))}
         </div>
 
         {!communities.length && (
-          <div className="admin-empty-card">No communities found.</div>
+          <div className="admin-empty-card">
+            No communities found.
+          </div>
         )}
       </div>
     );
@@ -2397,7 +3192,10 @@ function Admin() {
           <div>
             <h2>Audit Logs</h2>
 
-            <p>Security history of administrative actions.</p>
+            <p>
+              Security history of administrative
+              actions.
+            </p>
           </div>
         </div>
 
@@ -2418,22 +3216,38 @@ function Admin() {
                 {auditLogs.length ? (
                   auditLogs.map((log) => (
                     <tr key={log.id}>
-                      <td>{log.user?.name || "System"}</td>
-
                       <td>
-                        <span className="admin-action-badge">{log.action}</span>
+                        {log.user?.name ||
+                          "System"}
                       </td>
 
-                      <td>{log.entity || "—"}</td>
+                      <td>
+                        <span className="admin-action-badge">
+                          {log.action}
+                        </span>
+                      </td>
 
-                      <td>{log.details || "—"}</td>
+                      <td>
+                        {log.entity || "—"}
+                      </td>
 
-                      <td>{formatDate(log.createdAt)}</td>
+                      <td>
+                        {log.details || "—"}
+                      </td>
+
+                      <td>
+                        {formatDate(
+                          log.createdAt,
+                        )}
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="admin-empty">
+                    <td
+                      colSpan="5"
+                      className="admin-empty"
+                    >
                       No audit logs found.
                     </td>
                   </tr>
@@ -2456,7 +3270,9 @@ function Admin() {
         <div className="admin-loading">
           <div className="admin-spinner" />
 
-          <p>Loading admin data...</p>
+          <p>
+            Loading admin data...
+          </p>
         </div>
       );
     }
@@ -2480,6 +3296,9 @@ function Admin() {
       case "events":
         return renderEvents();
 
+      case "tasks":
+        return renderTasks();
+
       case "communities":
         return renderCommunities();
 
@@ -2497,47 +3316,59 @@ function Admin() {
 
   return (
     <div className="admin-dashboard">
-      {/* =================================================
-         MOBILE OVERLAY
-      ================================================= */}
+      {/* MOBILE OVERLAY */}
 
       {sidebarOpen && (
         <div
           className="admin-sidebar-overlay"
-          onClick={() => setSidebarOpen(false)}
+          onClick={() =>
+            setSidebarOpen(false)
+          }
         />
       )}
 
-      {/* =================================================
-         SIDEBAR
-      ================================================= */}
+      {/* SIDEBAR */}
 
       <aside
-        className={`admin-sidebar ${sidebarOpen ? "admin-sidebar-open" : ""}`}
+        className={`admin-sidebar ${
+          sidebarOpen
+            ? "admin-sidebar-open"
+            : ""
+        }`}
       >
         {/* BRAND */}
+
         <div className="admin-brand">
           <div className="admin-brand-icon">
             <ShieldCheck size={22} />
           </div>
 
           <div>
-            <strong>Hanumant Seva</strong>
+            <strong>
+              Hanumant Seva
+            </strong>
 
-            <span>Admin Panel</span>
+            <span>
+              Admin Panel
+            </span>
           </div>
 
           <button
             className="admin-mobile-close"
-            onClick={() => setSidebarOpen(false)}
+            onClick={() =>
+              setSidebarOpen(false)
+            }
           >
             <X size={21} />
           </button>
         </div>
 
         {/* NAVIGATION */}
+
         <nav className="admin-navigation">
-          <span className="admin-navigation-title">MANAGEMENT</span>
+          <span className="admin-navigation-title">
+            MANAGEMENT
+          </span>
 
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -2546,18 +3377,32 @@ function Admin() {
               <button
                 key={item.id}
                 className={`admin-nav-item ${
-                  activeSection === item.id ? "admin-nav-item-active" : ""
+                  activeSection === item.id
+                    ? "admin-nav-item-active"
+                    : ""
                 }`}
-                onClick={() => navigateSection(item.id)}
+                onClick={() =>
+                  navigateSection(
+                    item.id,
+                  )
+                }
               >
                 <Icon size={19} />
 
-                <span>{item.label}</span>
+                <span>
+                  {item.label}
+                </span>
 
-                {item.id === "volunteers" &&
-                  dashboard?.stats?.pendingVolunteerApplications > 0 && (
+                {item.id ===
+                  "volunteers" &&
+                  dashboard?.stats
+                    ?.pendingVolunteerApplications >
+                    0 && (
                     <b className="admin-nav-count">
-                      {dashboard.stats.pendingVolunteerApplications}
+                      {
+                        dashboard.stats
+                          .pendingVolunteerApplications
+                      }
                     </b>
                   )}
               </button>
@@ -2566,55 +3411,76 @@ function Admin() {
         </nav>
 
         {/* SIDEBAR FOOTER */}
+
         <div className="admin-sidebar-footer">
           <button
             className="admin-back-website-button"
-            onClick={handleBackToWebsite}
+            onClick={
+              handleBackToWebsite
+            }
           >
             <Home size={18} />
 
-            <span>Back to Home</span>
+            <span>
+              Back to Home
+            </span>
           </button>
 
-          {/* ADMIN PROFILE */}
           <div className="admin-admin-profile">
             <div className="admin-avatar">
-              {user?.name?.charAt(0)?.toUpperCase()}
+              {user?.name
+                ?.charAt(0)
+                ?.toUpperCase()}
             </div>
 
             <div>
-              <strong>{user?.name}</strong>
+              <strong>
+                {user?.name}
+              </strong>
 
-              <span>Administrator</span>
+              <span>
+                Administrator
+              </span>
             </div>
           </div>
 
-          {/* LOGOUT */}
-          <button className="admin-logout-button" onClick={handleLogout}>
+          <button
+            className="admin-logout-button"
+            onClick={
+              handleLogout
+            }
+          >
             Logout
           </button>
         </div>
       </aside>
 
-      {/* =================================================
-         MAIN CONTENT
-      ================================================= */}
+      {/* MAIN CONTENT */}
 
       <main className="admin-main">
         {/* TOPBAR */}
+
         <header className="admin-topbar">
           <button
             className="admin-mobile-menu"
-            onClick={() => setSidebarOpen(true)}
+            onClick={() =>
+              setSidebarOpen(true)
+            }
           >
             <Menu size={22} />
           </button>
 
           <div className="admin-page-heading">
-            <span>ADMINISTRATION</span>
+            <span>
+              ADMINISTRATION
+            </span>
 
             <h1>
-              {menuItems.find((item) => item.id === activeSection)?.label ||
+              {menuItems.find(
+                (item) =>
+                  item.id ===
+                  activeSection,
+              )?.label ||
                 "Dashboard"}
             </h1>
           </div>
@@ -2622,51 +3488,89 @@ function Admin() {
           <div className="admin-topbar-actions">
             <button
               className="admin-refresh-button"
-              onClick={handleRefresh}
-              disabled={refreshing}
+              onClick={
+                handleRefresh
+              }
+              disabled={
+                refreshing
+              }
               title="Refresh"
             >
-              <RefreshCw size={18} className={refreshing ? "admin-spin" : ""} />
+              <RefreshCw
+                size={18}
+                className={
+                  refreshing
+                    ? "admin-spin"
+                    : ""
+                }
+              />
             </button>
 
             <div className="admin-topbar-user">
               <div className="admin-avatar">
-                {user?.name?.charAt(0)?.toUpperCase()}
+                {user?.name
+                  ?.charAt(0)
+                  ?.toUpperCase()}
               </div>
 
               <div>
-                <strong>{user?.name}</strong>
+                <strong>
+                  {user?.name}
+                </strong>
 
-                <span>ADMIN</span>
+                <span>
+                  ADMIN
+                </span>
               </div>
             </div>
           </div>
         </header>
 
         {/* PAGE CONTENT */}
-        <section className="admin-page-content">{renderContent()}</section>
+
+        <section className="admin-page-content">
+          {renderContent()}
+        </section>
       </main>
 
-      {/* =================================================
-         VOLUNTEER APPLICATION MODAL
-      ================================================= */}
+      {/* VOLUNTEER APPLICATION MODAL */}
 
       {selectedApplication && (
         <div
           className="admin-modal-backdrop"
-          onClick={() => setSelectedApplication(null)}
+          onClick={() =>
+            setSelectedApplication(
+              null,
+            )
+          }
         >
-          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="admin-modal"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
             <div className="admin-modal-header">
               <div>
-                <span>VOLUNTEER APPLICATION</span>
+                <span>
+                  VOLUNTEER APPLICATION
+                </span>
 
-                <h2>{selectedApplication.user.name}</h2>
+                <h2>
+                  {
+                    selectedApplication
+                      .user.name
+                  }
+                </h2>
               </div>
 
               <button
                 className="admin-modal-close"
-                onClick={() => setSelectedApplication(null)}
+                onClick={() =>
+                  setSelectedApplication(
+                    null,
+                  )
+                }
               >
                 <X size={20} />
               </button>
@@ -2677,77 +3581,115 @@ function Admin() {
                 <div className="admin-detail-item">
                   <span>Name</span>
 
-                  <strong>{selectedApplication.user.name}</strong>
+                  <strong>
+                    {
+                      selectedApplication
+                        .user.name
+                    }
+                  </strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Email</span>
 
-                  <strong>{selectedApplication.user.email}</strong>
+                  <strong>
+                    {
+                      selectedApplication
+                        .user.email
+                    }
+                  </strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Phone</span>
 
                   <strong>
-                    {selectedApplication.user.phone || "Not provided"}
+                    {selectedApplication
+                      .user.phone ||
+                      "Not provided"}
                   </strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Applied</span>
 
-                  <strong>{formatDate(selectedApplication.createdAt)}</strong>
+                  <strong>
+                    {formatDate(
+                      selectedApplication.createdAt,
+                    )}
+                  </strong>
                 </div>
 
                 <div className="admin-detail-item">
                   <span>Skills</span>
 
                   <strong>
-                    {selectedApplication.skills || "Not provided"}
+                    {selectedApplication
+                      .skills ||
+                      "Not provided"}
                   </strong>
                 </div>
 
                 <div className="admin-detail-item">
-                  <span>Preferred Area</span>
+                  <span>
+                    Preferred Area
+                  </span>
 
                   <strong>
-                    {selectedApplication.preferredArea || "Not provided"}
+                    {selectedApplication
+                      .preferredArea ||
+                      "Not provided"}
                   </strong>
                 </div>
 
                 <div className="admin-detail-item">
-                  <span>Availability</span>
+                  <span>
+                    Availability
+                  </span>
 
                   <strong>
-                    {selectedApplication.availability || "Not provided"}
+                    {selectedApplication
+                      .availability ||
+                      "Not provided"}
                   </strong>
                 </div>
 
                 <div className="admin-detail-item">
-                  <span>Experience</span>
+                  <span>
+                    Experience
+                  </span>
 
                   <strong>
-                    {selectedApplication.experience || "Not provided"}
+                    {selectedApplication
+                      .experience ||
+                      "Not provided"}
                   </strong>
                 </div>
               </div>
 
               <div className="admin-detail-long">
-                <span>Motivation</span>
+                <span>
+                  Motivation
+                </span>
 
                 <p>
-                  {selectedApplication.motivation || "No motivation provided."}
+                  {selectedApplication
+                    .motivation ||
+                    "No motivation provided."}
                 </p>
               </div>
             </div>
 
-            {/* APPLICATION ACTIONS */}
-            {selectedApplication.status === "PENDING" && (
+            {selectedApplication.status ===
+              "PENDING" && (
               <div className="admin-modal-actions">
                 <button
                   className="admin-danger-button"
-                  onClick={() => rejectApplication(selectedApplication)}
+                  onClick={() =>
+                    rejectApplication(
+                      selectedApplication,
+                    )
+                  }
                 >
                   <XCircle size={17} />
                   Reject
@@ -2755,7 +3697,11 @@ function Admin() {
 
                 <button
                   className="admin-success-button"
-                  onClick={() => approveApplication(selectedApplication)}
+                  onClick={() =>
+                    approveApplication(
+                      selectedApplication,
+                    )
+                  }
                 >
                   <CheckCircle size={17} />
                   Approve Volunteer
@@ -2770,3 +3716,13 @@ function Admin() {
 }
 
 export default Admin;
+
+
+
+
+
+
+
+
+
+  

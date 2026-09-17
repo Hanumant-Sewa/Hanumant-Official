@@ -1,281 +1,356 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Award, CalendarDays, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Award,
-  CalendarDays,
-  Download,
-  Eye,
-  Medal,
-  Trophy,
-  Star,
-  CheckCircle2,
-} from "lucide-react";
+import Certificate from "../components/Certificate";
 
-import "../css/Volunteer.css";
+const VolunteerCertificates = () => {
+  const [selectedCertificate, setSelectedCertificate] = useState(null);
+  const [certificates, setCertificates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-function VolunteerCertificates() {
   const navigate = useNavigate();
 
-  const certificates = [
-    {
-      id: 1,
-      title: "Community Service Certificate",
-      event: "Community Food Distribution",
-      date: "22 August 2026",
-      type: "Service Certificate",
-      image: "/images/certificate-community.jpg",
-    },
-    {
-      id: 2,
-      title: "Volunteer Appreciation Certificate",
-      event: "Donation Collection Drive",
-      date: "20 September 2026",
-      type: "Appreciation Certificate",
-      image: "/images/certificate-appreciation.jpg",
-    },
-    {
-      id: 3,
-      title: "Community Outreach Certificate",
-      event: "Community Outreach Program",
-      date: "27 September 2026",
-      type: "Participation Certificate",
-      image: "/images/certificate-outreach.jpg",
-    },
-  ];
+  /* =========================================
+     FETCH CERTIFICATES FROM BACKEND
+  ========================================= */
 
-  const handleViewCertificate = (certificate) => {
-    alert(`Viewing: ${certificate.title}`);
-  };
+  useEffect(() => {
+    const fetchCertificates = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-  const handleDownloadCertificate = (certificate) => {
-    alert(`Certificate download started for ${certificate.title}`);
-  };
+        const response = await fetch(
+          "http://localhost:5000/api/certificates",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
-  return (
-    <div className="volunteer-certificates-page">
-      {/* =====================================================
-          HERO SECTION
-      ====================================================== */}
+        const data = await response.json();
 
-      <section className="certificates-page-hero">
-        <div className="certificates-hero-content">
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Failed to fetch certificates"
+          );
+        }
+
+        setCertificates(data.certificates || []);
+      } catch (error) {
+        console.error("Certificate Fetch Error:", error);
+
+        setError(
+          error.message || "Something went wrong while loading certificates."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCertificates();
+  }, []);
+
+  /* =========================================
+     LOADING
+  ========================================= */
+
+  if (loading) {
+    return (
+      <div className="volunteer-certificates-page">
+
+        <button
+          type="button"
+          className="certificate-back-button"
+          onClick={() => navigate("/dashboard")}
+        >
+          ← Back to Dashboard
+        </button>
+
+        <div className="certificates-empty">
+
+          <Award size={50} />
+
+          <h2>
+            Loading Certificates...
+          </h2>
+
+          <p>
+            Please wait while we load your certificates.
+          </p>
+
+        </div>
+
+      </div>
+    );
+  }
+
+  /* =========================================
+     ERROR
+  ========================================= */
+
+  if (error) {
+    return (
+      <div className="volunteer-certificates-page">
+
+        <button
+          type="button"
+          className="certificate-back-button"
+          onClick={() => navigate("/dashboard")}
+        >
+          ← Back to Dashboard
+        </button>
+
+        <div className="certificates-empty">
+
+          <Award size={50} />
+
+          <h2>
+            Unable to Load Certificates
+          </h2>
+
+          <p>
+            {error}
+          </p>
+
+        </div>
+
+      </div>
+    );
+  }
+
+  /* =========================================
+     OPEN FULL CERTIFICATE
+  ========================================= */
+
+  if (selectedCertificate) {
+    return (
+      <div className="volunteer-certificates-page">
+
+        <div className="certificate-page-header">
+
           <button
             type="button"
-            className="back-button"
-            onClick={() => navigate("/volunteer/dashboard")}
+            className="certificate-back-button"
+            onClick={() => setSelectedCertificate(null)}
           >
-            <ArrowLeft size={17} />
-            Back to Dashboard
+            ← Back to My Certificates
           </button>
 
-          <span className="application-label">VOLUNTEER ACHIEVEMENTS</span>
-
           <h1>
-            My
-            <span> Certificates</span>
+            My Certificate
           </h1>
 
           <p>
-            Your service, dedication and contribution are recognized through
-            certificates and appreciation awards.
+            View and download your certificate.
           </p>
+
         </div>
-      </section>
 
-      {/* =====================================================
-          MAIN CONTENT
-      ====================================================== */}
+        <Certificate
+          volunteerName={selectedCertificate.volunteerName}
+          certificateType={selectedCertificate.certificateType}
+          issueDate={new Date(
+            selectedCertificate.issueDate
+          ).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
+          certificateNumber={selectedCertificate.certificateNumber}
+        />
 
-      <main className="certificates-page-main">
-        {/* =================================================
-            STATISTICS
-        ================================================== */}
+      </div>
+    );
+  }
 
-        <section className="certificate-stat-grid">
-          <div className="certificate-stat-card">
-            <div className="certificate-stat-icon">
-              <Award size={23} />
-            </div>
+  /* =========================================
+     CERTIFICATE LIST
+  ========================================= */
 
-            <div>
-              <span>TOTAL CERTIFICATES</span>
-              <strong>{certificates.length}</strong>
-            </div>
-          </div>
+  return (
+    <div className="volunteer-certificates-page">
 
-          <div className="certificate-stat-card">
-            <div className="certificate-stat-icon">
-              <Trophy size={23} />
-            </div>
+      {/* Back to Dashboard */}
 
-            <div>
-              <span>ACHIEVEMENTS</span>
-              <strong>{certificates.length}</strong>
-            </div>
-          </div>
+      <button
+        type="button"
+        className="certificate-back-button"
+        onClick={() => navigate("/dashboard")}
+      >
+        ← Back to Dashboard
+      </button>
 
-          <div className="certificate-stat-card">
-            <div className="certificate-stat-icon">
-              <Star size={23} />
-            </div>
+      <div className="certificates-page-header">
 
-            <div>
-              <span>VOLUNTEER STATUS</span>
-              <strong>Active</strong>
-            </div>
-          </div>
-        </section>
+        <div>
 
-        {/* =================================================
-            PAGE INTRO
-        ================================================== */}
+          <span className="card-eyebrow">
+            My Achievements
+          </span>
 
-        <section className="certificates-intro">
-          <div className="certificates-intro-icon">
-            <Medal size={30} />
-          </div>
+          <h1>
+            My Certificates
+          </h1>
+
+          <p>
+            View certificates you have earned through your volunteer work.
+          </p>
+
+        </div>
+
+        <div className="certificates-count">
+
+          <Award size={24} />
 
           <div>
-            <span>YOUR CONTRIBUTION</span>
 
-            <h2>
-              Every certificate represents
-              <strong> a meaningful contribution.</strong>
-            </h2>
+            <strong>
+              {certificates.length}
+            </strong>
 
-            <p>
-              Keep your certificates as a record of the time, effort and service
-              you have contributed to the community.
-            </p>
+            <span>
+              Certificates
+            </span>
+
           </div>
-        </section>
 
-        {/* =================================================
-            CERTIFICATES
-        ================================================== */}
+        </div>
 
-        <section className="certificates-section">
-          <div className="certificates-section-heading">
-            <div>
-              <span>YOUR RECORD</span>
+      </div>
 
-              <h2>Earned Certificates</h2>
+      {/* =========================================
+          NO CERTIFICATES
+      ========================================= */}
+
+      {certificates.length === 0 ? (
+
+        <div className="certificates-empty">
+
+          <Award size={50} />
+
+          <h2>
+            No Certificates Yet
+          </h2>
+
+          <p>
+            Your certificates will appear here after you complete
+            eligible volunteer activities.
+          </p>
+
+        </div>
+
+      ) : (
+
+        /* =========================================
+           CERTIFICATE CARDS
+        ========================================= */
+
+        <div className="certificates-grid">
+
+          {certificates.map((certificate) => (
+
+            <div
+              className="certificate-card"
+              key={certificate.id}
+              onClick={() =>
+                setSelectedCertificate(certificate)
+              }
+            >
+
+              {/* Small certificate preview */}
+
+              <div className="certificate-card-preview">
+
+                <div className="mini-certificate">
+
+                  <Award size={32} />
+
+                  <h3>
+                    CERTIFICATE
+                  </h3>
+
+                  <span>
+                    OF APPRECIATION
+                  </span>
+
+                  <strong>
+                    {certificate.volunteerName}
+                  </strong>
+
+                </div>
+
+              </div>
+
+              {/* Certificate information */}
+
+              <div className="certificate-card-content">
+
+                <div className="certificate-card-title">
+
+                  <div className="certificate-card-icon">
+                    <Award size={20} />
+                  </div>
+
+                  <div>
+
+                    <h3>
+                      {certificate.certificateType}
+                    </h3>
+
+                    <span>
+                      {certificate.certificateNumber}
+                    </span>
+
+                  </div>
+
+                </div>
+
+                <div className="certificate-card-date">
+
+                  <CalendarDays size={16} />
+
+                  <span>
+                    Issued on{" "}
+                    {new Date(
+                      certificate.issueDate
+                    ).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+
+                </div>
+
+                <button
+                  type="button"
+                  className="certificate-view-button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setSelectedCertificate(certificate);
+                  }}
+                >
+
+                  <Eye size={17} />
+
+                  View Certificate
+
+                </button>
+
+              </div>
+
             </div>
 
-            <div className="certificate-count">{certificates.length}</div>
-          </div>
+          ))}
 
-          <div className="certificates-grid">
-            {certificates.map((certificate) => (
-              <article className="certificate-card" key={certificate.id}>
-                {/* Certificate Image */}
-
-                <div className="certificate-image">
-                  <img src={certificate.image} alt={certificate.title} />
-
-                  <div className="certificate-image-overlay">
-                    <Award size={30} />
-                  </div>
-                </div>
-
-                {/* Certificate Content */}
-
-                <div className="certificate-content">
-                  <span className="certificate-type">{certificate.type}</span>
-
-                  <h3>{certificate.title}</h3>
-
-                  <div className="certificate-event">
-                    <CheckCircle2 size={15} />
-
-                    <span>{certificate.event}</span>
-                  </div>
-
-                  <div className="certificate-date">
-                    <CalendarDays size={15} />
-
-                    <span>{certificate.date}</span>
-                  </div>
-
-                  {/* Buttons */}
-
-                  <div className="certificate-actions">
-                    <button
-                      type="button"
-                      className="certificate-view-button"
-                      onClick={() => handleViewCertificate(certificate)}
-                    >
-                      <Eye size={16} />
-                      View
-                    </button>
-
-                    <button
-                      type="button"
-                      className="certificate-download-button"
-                      onClick={() => handleDownloadCertificate(certificate)}
-                    >
-                      <Download size={16} />
-                      Download
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        {/* =================================================
-            MOTIVATION SECTION
-        ================================================== */}
-
-        <section className="certificates-motivation">
-          <div className="certificates-motivation-image">
-            <img src="/images/volunteer-certificate.jpeg" />
-          </div>
-
-          <div className="certificates-motivation-content">
-            <span>KEEP SERVING</span>
-
-            <h2>
-              Your service
-              <strong> inspires others.</strong>
-            </h2>
-
-            <p>
-              Continue participating in volunteer activities and create a
-              positive impact in the community.
-            </p>
-
-            <button
-              type="button"
-              className="orange-button"
-              onClick={() => navigate("/volunteer/events")}
-            >
-              Explore Events
-              <ArrowRight size={17} />
-            </button>
-          </div>
-        </section>
-
-        {/* =================================================
-            BOTTOM BUTTON
-        ================================================== */}
-
-        <div className="certificates-bottom-action">
-          <button
-            type="button"
-            className="outline-button"
-            onClick={() => navigate("/volunteer/dashboard")}
-          >
-            <ArrowLeft size={17} />
-            Back to Dashboard
-          </button>
         </div>
-      </main>
+
+      )}
+
     </div>
   );
-}
+};
 
 export default VolunteerCertificates;

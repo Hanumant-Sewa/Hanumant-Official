@@ -96,6 +96,12 @@ enum CertificateType {
   SPECIAL_RECOGNITION
 }
 
+enum ContactStatus {
+  UNREAD
+  READ
+  REPLIED
+}
+
 /**
  * =====================================================
  * USER
@@ -159,7 +165,11 @@ model VolunteerProfile {
 
   userId Int @unique
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
 
   /**
    * =================================================
@@ -221,13 +231,39 @@ model VolunteerProfile {
 model VolunteerApplication {
   id Int @id @default(autoincrement())
 
+  /**
+   * =================================================
+   * USER WHO APPLIED
+   * =================================================
+   */
+
   userId Int
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  /**
+   * =================================================
+   * OPTIONAL VOLUNTEER PROFILE
+   * =================================================
+   */
 
   volunteerProfileId Int?
 
-  volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
+  volunteerProfile VolunteerProfile? @relation(
+    fields: [volunteerProfileId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  /**
+   * =================================================
+   * APPLICATION INFORMATION
+   * =================================================
+   */
 
   motivation String
 
@@ -239,6 +275,12 @@ model VolunteerApplication {
 
   availability String?
 
+  /**
+   * =================================================
+   * APPLICATION STATUS
+   * =================================================
+   */
+
   status VolunteerApplicationStatus @default(PENDING)
 
   adminRemarks String?
@@ -247,11 +289,18 @@ model VolunteerApplication {
 
   reviewedBy Int?
 
+  /**
+   * =================================================
+   * TIMESTAMPS
+   * =================================================
+   */
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+
   @@index([status])
 }
 
@@ -282,7 +331,12 @@ model Community {
 
   createdById Int
 
-  createdBy User @relation("CommunityCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  createdBy User @relation(
+    "CommunityCreator",
+    fields: [createdById],
+    references: [id],
+    onDelete: Restrict
+  )
 
   members CommunityMember[]
 
@@ -291,6 +345,7 @@ model Community {
   updatedAt DateTime @updatedAt
 
   @@index([createdById])
+
   @@index([city])
 }
 
@@ -307,9 +362,17 @@ model CommunityMember {
 
   userId Int
 
-  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  community Community @relation(
+    fields: [communityId],
+    references: [id],
+    onDelete: Cascade
+  )
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
 
   role CommunityMemberRole @default(MEMBER)
 
@@ -320,7 +383,9 @@ model CommunityMember {
   updatedAt DateTime @updatedAt
 
   @@unique([communityId, userId])
+
   @@index([communityId])
+
   @@index([userId])
 }
 
@@ -356,7 +421,9 @@ model Campaign {
   updatedAt DateTime @updatedAt
 
   @@index([status])
+
   @@index([startDate])
+
   @@index([endDate])
 }
 
@@ -377,7 +444,11 @@ model Donation {
 
   userId Int?
 
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   /**
    * =================================================
@@ -387,7 +458,11 @@ model Donation {
 
   campaignId Int?
 
-  campaign Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  campaign Campaign? @relation(
+    fields: [campaignId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   /**
    * =================================================
@@ -452,10 +527,15 @@ model Donation {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+
   @@index([campaignId])
+
   @@index([status])
+
   @@index([transactionId])
+
   @@index([paymentId])
+
   @@index([donatedAt])
 }
 
@@ -490,7 +570,12 @@ model VolunteerEvent {
 
   organizerId Int?
 
-  organizer User? @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: SetNull)
+  organizer User? @relation(
+    "EventOrganizer",
+    fields: [organizerId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   registrations EventRegistration[]
 
@@ -503,7 +588,9 @@ model VolunteerEvent {
   updatedAt DateTime @updatedAt
 
   @@index([startDate])
+
   @@index([status])
+
   @@index([city])
 }
 
@@ -522,11 +609,23 @@ model EventRegistration {
 
   volunteerProfileId Int?
 
-  event VolunteerEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event VolunteerEvent @relation(
+    fields: [eventId],
+    references: [id],
+    onDelete: Cascade
+  )
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
 
-  volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
+  volunteerProfile VolunteerProfile? @relation(
+    fields: [volunteerProfileId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   status EventRegistrationStatus @default(REGISTERED)
 
@@ -539,8 +638,11 @@ model EventRegistration {
   feedback String?
 
   @@unique([eventId, userId])
+
   @@index([eventId])
+
   @@index([userId])
+
   @@index([status])
 }
 
@@ -565,7 +667,11 @@ model VolunteerTask {
 
   eventId Int?
 
-  event VolunteerEvent? @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  event VolunteerEvent? @relation(
+    fields: [eventId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   /**
    * =================================================
@@ -575,7 +681,12 @@ model VolunteerTask {
 
   assignedToId Int?
 
-  assignedTo User? @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedTo User? @relation(
+    "TaskAssignee",
+    fields: [assignedToId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   /**
    * =================================================
@@ -585,7 +696,11 @@ model VolunteerTask {
 
   volunteerProfileId Int?
 
-  volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
+  volunteerProfile VolunteerProfile? @relation(
+    fields: [volunteerProfileId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   /**
    * =================================================
@@ -595,7 +710,12 @@ model VolunteerTask {
 
   createdById Int?
 
-  createdBy User? @relation("TaskCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy User? @relation(
+    "TaskCreator",
+    fields: [createdById],
+    references: [id],
+    onDelete: SetNull
+  )
 
   status TaskStatus @default(TODO)
 
@@ -608,8 +728,11 @@ model VolunteerTask {
   updatedAt DateTime @updatedAt
 
   @@index([eventId])
+
   @@index([assignedToId])
+
   @@index([status])
+
   @@index([dueDate])
 }
 
@@ -624,11 +747,19 @@ model VolunteerImpact {
 
   volunteerProfileId Int
 
-  volunteerProfile VolunteerProfile @relation(fields: [volunteerProfileId], references: [id], onDelete: Cascade)
+  volunteerProfile VolunteerProfile @relation(
+    fields: [volunteerProfileId],
+    references: [id],
+    onDelete: Cascade
+  )
 
   eventId Int?
 
-  event VolunteerEvent? @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  event VolunteerEvent? @relation(
+    fields: [eventId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   hours Decimal @db.Decimal(6, 2)
 
@@ -645,6 +776,7 @@ model VolunteerImpact {
   createdAt DateTime @default(now())
 
   @@index([volunteerProfileId])
+
   @@index([eventId])
 }
 
@@ -659,11 +791,19 @@ model Certificate {
 
   userId Int
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
 
   volunteerProfileId Int?
 
-  volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
+  volunteerProfile VolunteerProfile? @relation(
+    fields: [volunteerProfileId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   title String
 
@@ -682,7 +822,9 @@ model Certificate {
   createdAt DateTime @default(now())
 
   @@index([userId])
+
   @@index([type])
+
   @@index([issueDate])
 }
 
@@ -697,7 +839,11 @@ model Notification {
 
   userId Int
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
 
   title String
 
@@ -710,8 +856,8 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@index([userId])
+
   @@index([isRead])
-  @@index([createdAt])
 }
 
 /**
@@ -725,7 +871,11 @@ model PasswordResetToken {
 
   userId Int
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
 
   token String @unique
 
@@ -736,6 +886,7 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 
   @@index([userId])
+
   @@index([expiresAt])
 }
 
@@ -750,7 +901,11 @@ model AuditLog {
 
   userId Int?
 
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: SetNull
+  )
 
   action String
 
@@ -765,24 +920,34 @@ model AuditLog {
   createdAt DateTime @default(now())
 
   @@index([userId])
+
   @@index([action])
+
   @@index([entity])
+
   @@index([createdAt])
 }
-enum ContactStatus {
-  UNREAD
-  READ
-  REPLIED
-}
+
+/**
+ * =====================================================
+ * CONTACT MESSAGE
+ * =====================================================
+ */
 
 model ContactMessage {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  subject   String
-  message   String
-  status    ContactStatus @default(UNREAD)
+  id Int @id @default(autoincrement())
+
+  name String
+
+  email String
+
+  subject String
+
+  message String
+
+  status ContactStatus @default(UNREAD)
+
   createdAt DateTime @default(now())
+
   updatedAt DateTime @updatedAt
 }
-
