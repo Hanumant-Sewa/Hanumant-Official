@@ -3,7 +3,7 @@ import "./index.css";
 import "./css/responsive.css";
 import "./css/Volunteer.css";
 import "./css/Dashboard.css";
-
+import GoogleTranslate from "./components/GoogleTranslate";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -30,7 +30,7 @@ import Gallery from "./components/Gallery";
 import Events from "./components/Events";
 import Testimonials from "./components/Testimonials";
 import DonateSection from "./components/DonateSection";
-import Volunteers from "./components/Volunteers";
+
 import FAQ from "./components/FAQ";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
@@ -76,6 +76,7 @@ import VolunteerCertificates from "./pages/VolunteerCertificates";
 
 import Community from "./pages/Community";
 import JoinCommunity from "./pages/JoinCommunity";
+import CommunityInvitation from "./pages/CommunityInvitation";
 
 // =====================================================
 // TRANSPARENCY
@@ -95,6 +96,7 @@ import Dashboard from "./pages/Dashboard";
 
 import Admin from "./pages/Admin/Admin";
 
+import ScrollToTop from "./components/ScrollToTop";
 // =====================================================
 // APP
 // =====================================================
@@ -103,6 +105,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* =================================================
               PUBLIC PAGES WITH NAVBAR
@@ -127,7 +130,6 @@ function App() {
                   <Events />
                   <Testimonials />
                   <DonateSection />
-                  <Volunteers />
                   <FAQ />
                   <Contact />
                   <Footer />
@@ -142,6 +144,11 @@ function App() {
             <Route path="/community" element={<Community />} />
 
             <Route path="/transparency" element={<Transparency />} />
+
+            <Route
+              path="/community/invite/:token"
+              element={<CommunityInvitation />}
+            />
 
             {/* =================================================
                 COMMUNITY JOIN

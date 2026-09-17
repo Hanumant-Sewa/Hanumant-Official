@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -13,15 +13,64 @@ import "../css/JoinCommunity.css";
 function JoinCommunity() {
   const navigate = useNavigate();
 
+  // Change this if your actual community ID is different
+  const COMMUNITY_ID = 1;
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     interest: "",
     message: "",
+    referredById: "",
   });
 
+  const [referrers, setReferrers] = useState([]);
+  const [loadingReferrers, setLoadingReferrers] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
   const [submitted, setSubmitted] = useState(false);
+
+  /* =====================================================
+     LOAD COMMUNITY MEMBERS FOR REFERRER DROPDOWN
+  ===================================================== */
+
+  useEffect(() => {
+    const loadReferrers = async () => {
+      try {
+        setLoadingReferrers(true);
+        setError("");
+
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/communities/${COMMUNITY_ID}/referrers`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load community members.");
+        }
+
+        setReferrers(data.members || []);
+      } catch (error) {
+        console.error("Load referrers error:", error);
+        setError(error.message);
+      } finally {
+        setLoadingReferrers(false);
+      }
+    };
+
+    loadReferrers();
+  }, []);
+
+  /* =====================================================
+     HANDLE INPUT CHANGE
+  ===================================================== */
 
   const handleChange = (e) => {
     setFormData({
@@ -30,13 +79,49 @@ function JoinCommunity() {
     });
   };
 
-  const handleSubmit = (e) => {
+  /* =====================================================
+     HANDLE FORM SUBMIT
+  ===================================================== */
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Temporary frontend behaviour.
-    // Later this can be replaced with an API call.
-    setSubmitted(true);
+    try {
+      setSubmitting(true);
+      setError("");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/communities/${COMMUNITY_ID}/join`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            referredById: formData.referredById || null,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to join community.");
+      }
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Join community error:", error);
+      setError(error.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  /* =====================================================
+     SUCCESS SCREEN
+  ===================================================== */
 
   if (submitted) {
     return (
@@ -73,6 +158,10 @@ function JoinCommunity() {
       </main>
     );
   }
+
+  /* =====================================================
+     MAIN PAGE
+  ===================================================== */
 
   return (
     <main className="join-community-page">
@@ -159,6 +248,19 @@ function JoinCommunity() {
               involved.
             </p>
 
+            {/* ================= ERROR MESSAGE ================= */}
+
+            {error && (
+              <p
+                style={{
+                  color: "#c0392b",
+                  marginBottom: "15px",
+                }}
+              >
+                {error}
+              </p>
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="join-form-group">
                 <label htmlFor="name">Full Name</label>
@@ -229,6 +331,32 @@ function JoinCommunity() {
                 </select>
               </div>
 
+              {/* ================= REFERRER ================= */}
+
+              <div className="join-form-group">
+                <label htmlFor="referredById">Who referred you?</label>
+
+                <select
+                  id="referredById"
+                  name="referredById"
+                  value={formData.referredById}
+                  onChange={handleChange}
+                  disabled={loadingReferrers}
+                >
+                  <option value="">
+                    {loadingReferrers
+                      ? "Loading community members..."
+                      : "Select a member (Optional)"}
+                  </option>
+
+                  {referrers.map((member) => (
+                    <option key={member.id} value={member.id}>
+                      {member.user.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="join-form-group">
                 <label htmlFor="message">
                   Message <span>(Optional)</span>
@@ -244,9 +372,14 @@ function JoinCommunity() {
                 />
               </div>
 
-              <button type="submit" className="join-submit-btn">
-                Join Our Community
-                <ArrowRight size={18} />
+              <button
+                type="submit"
+                className="join-submit-btn"
+                disabled={submitting}
+              >
+                {submitting ? "Joining..." : "Join Our Community"}
+
+                {!submitting && <ArrowRight size={18} />}
               </button>
             </form>
 

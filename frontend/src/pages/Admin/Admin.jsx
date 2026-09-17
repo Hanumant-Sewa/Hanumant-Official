@@ -22,17 +22,22 @@ import {
   Activity,
   Plus,
   Pencil,
+  Edit,
   Trash2,
   ChevronLeft,
   ChevronRight,
   Globe,
   LogOut,
+  Home,
+  WalletCards,
 } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
 import "../../css/Admin.css";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/admin`;
+
+const EXPENSE_API_URL = `${import.meta.env.VITE_API_URL}/api/admin/expenses`;
 
 function Admin() {
   const { user, logout } = useAuth();
@@ -85,6 +90,23 @@ function Admin() {
   const [events, setEvents] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
+
+  //expenses
+  const [expenses, setExpenses] = useState([]);
+
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [editingExpense, setEditingExpense] = useState(null);
+  const [expenseSaving, setExpenseSaving] = useState(false);
+
+  const [expenseForm, setExpenseForm] = useState({
+    campaignId: "",
+    title: "",
+    category: "",
+    amount: "",
+    description: "",
+    expenseDate: "",
+    receiptUrl: "",
+  });
 
   /* =====================================================
      CAMPAIGN STATE
@@ -178,7 +200,34 @@ function Admin() {
 
     return data;
   };
+  /* =====================================================
+   EXPENSE API HELPER
+===================================================== */
 
+  const expenseRequest = async (endpoint = "", options = {}) => {
+    const response = await fetch(`${EXPENSE_API_URL}${endpoint}`, {
+      ...options,
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+    });
+
+    let data = {};
+
+    try {
+      data = await response.json();
+    } catch {
+      data = {};
+    }
+
+    if (!response.ok) {
+      throw new Error(data.message || "Something went wrong.");
+    }
+
+    return data;
+  };
   /* =====================================================
      DASHBOARD
   ===================================================== */
@@ -222,7 +271,194 @@ function Admin() {
 
     setDonations(data.donations || []);
   };
+  /* =====================================================
+   EXPENSES
+===================================================== */
 
+  const loadExpenses = async () => {
+    const data = await expenseRequest();
+
+    setExpenses(data.expenses || []);
+  };
+
+  /* =====================================================
+   CREATE / EDIT EXPENSE
+===================================================== */
+
+  const openCreateExpenseModal = () => {
+    setEditingExpense(null);
+
+    setExpenseForm({
+      campaignId: "",
+      title: "",
+      category: "",
+      amount: "",
+      description: "",
+      expenseDate: "",
+      receiptUrl: "",
+    });
+
+    setShowExpenseModal(true);
+  };
+
+  const openEditExpenseModal = (expense) => {
+    setEditingExpense(expense);
+
+    setExpenseForm({
+      campaignId: expense.campaignId ?? expense.campaign?.id ?? "",
+      title: expense.title || "",
+      category: expense.category || "",
+      amount: expense.amount ?? "",
+      description: expense.description || "",
+      expenseDate: toDateTimeLocalValue(expense.expenseDate),
+      receiptUrl: expense.receiptUrl || "",
+    });
+
+    setShowExpenseModal(true);
+  };
+
+  /* =====================================================
+   EXPENSE FORM CHANGE
+===================================================== */
+
+  const handleExpenseFormChange = (e) => {
+    const { name, value } = e.target;
+
+    setExpenseForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  /* =====================================================
+   SAVE EXPENSE
+===================================================== */
+
+  const handleSaveExpense = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (!expenseForm.campaignId) {
+        throw new Error("Please select a campaign.");
+      }
+
+      if (!expenseForm.title.trim()) {
+        throw new Error("Expense title is required.");
+      }
+
+      if (!expenseForm.category.trim()) {
+        throw new Error("Expense category is required.");
+      }
+
+      const amount = Number(expenseForm.amount);
+
+      if (!Number.isFinite(amount) || amount <= 0) {
+        throw new Error("Expense amount must be greater than zero.");
+      }
+
+      if (!expenseForm.expenseDate) {
+        throw new Error("Expense date is required.");
+      }
+
+      const expenseDate = new Date(expenseForm.expenseDate);
+
+      if (Number.isNaN(expenseDate.getTime())) {
+        throw new Error("Please enter a valid expense date.");
+      }
+
+      setExpenseSaving(true);
+
+      const payload = {
+        campaignId: Number(expenseForm.campaignId),
+        title: expenseForm.title.trim(),
+        category: expenseForm.category.trim(),
+        amount,
+        description: expenseForm.description.trim() || null,
+        expenseDate: expenseDate.toISOString(),
+        receiptUrl: expenseForm.receiptUrl.trim() || null,
+      };
+
+      const endpoint = editingExpense ? `/${editingExpense.id}` : "";
+
+      const method = editingExpense ? "PATCH" : "POST";
+
+      const data = await expenseRequest(endpoint, {
+        method,
+        body: JSON.stringify(payload),
+      });
+
+      await loadExpenses();
+
+      setShowExpenseModal(false);
+      setEditingExpense(null);
+
+      Swal.fire({
+        icon: "success",
+        title: editingExpense ? "Expense Updated" : "Expense Created",
+        text:
+          data.message ||
+          (editingExpense
+            ? "Expense updated successfully."
+            : "Expense created successfully."),
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Save expense error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Unable to save expense",
+        text: error.message || "Something went wrong.",
+        confirmButtonColor: "#D97706",
+      });
+    } finally {
+      setExpenseSaving(false);
+    }
+  };
+
+  /* =====================================================
+   DELETE EXPENSE
+===================================================== */
+
+  const handleDeleteExpense = async (expense) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Delete this expense?",
+      text: `"${expense.title}" will be permanently deleted.`,
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      const data = await expenseRequest(`/${expense.id}`, {
+        method: "DELETE",
+      });
+
+      await loadExpenses();
+
+      Swal.fire({
+        icon: "success",
+        title: "Expense Deleted",
+        text: data.message || "Expense deleted successfully.",
+        confirmButtonColor: "#D97706",
+      });
+    } catch (error) {
+      console.error("Delete expense error:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Cannot delete expense",
+        text: error.message || "Unable to delete this expense.",
+        confirmButtonColor: "#D97706",
+      });
+    }
+  };
   /* =====================================================
      CAMPAIGNS
   ===================================================== */
@@ -787,6 +1023,10 @@ function Admin() {
           await loadDonations();
           break;
 
+        case "expenses":
+          await Promise.all([loadExpenses(), loadCampaigns()]);
+          break;
+
         case "campaigns":
           await loadCampaigns();
           break;
@@ -1119,13 +1359,17 @@ function Admin() {
 
   const toggleCommunityStatus = async (community) => {
     const result = await Swal.fire({
-      title: community.isActive ? "Deactivate Community?" : "Activate Community?",
+      title: community.isActive
+        ? "Deactivate Community?"
+        : "Activate Community?",
       text: community.isActive
         ? `"${community.name}" will be hidden from new members.`
         : `"${community.name}" will become active again.`,
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: community.isActive ? "Yes, Deactivate" : "Yes, Activate",
+      confirmButtonText: community.isActive
+        ? "Yes, Deactivate"
+        : "Yes, Activate",
       cancelButtonText: "Cancel",
       confirmButtonColor: community.isActive ? "#dc2626" : "#16a34a",
       cancelButtonColor: "#6b7280",
@@ -1145,7 +1389,9 @@ function Admin() {
         toast: true,
         position: "top-end",
         icon: "success",
-        title: community.isActive ? "Community deactivated" : "Community activated",
+        title: community.isActive
+          ? "Community deactivated"
+          : "Community activated",
         showConfirmButton: false,
         timer: 1600,
       });
@@ -1497,6 +1743,12 @@ function Admin() {
       id: "donations",
       label: "Donations",
       icon: IndianRupee,
+    },
+
+    {
+      id: "expenses",
+      label: "Expenses",
+      icon: WalletCards,
     },
 
     {
@@ -2713,10 +2965,7 @@ function Admin() {
     const search = communitySearch.trim().toLowerCase();
 
     const filteredCommunities = communities.filter((community) => {
-      if (
-        communityStatusFilter === "ACTIVE" &&
-        community.isActive === false
-      ) {
+      if (communityStatusFilter === "ACTIVE" && community.isActive === false) {
         return false;
       }
 
@@ -2892,9 +3141,7 @@ function Admin() {
                 </div>
 
                 <div className="admin-management-meta">
-                  <span>
-                    By: {community.createdBy?.name || "Unknown"}
-                  </span>
+                  <span>By: {community.createdBy?.name || "Unknown"}</span>
 
                   <span>{formatDate(community.createdAt)}</span>
                 </div>
@@ -3361,7 +3608,332 @@ function Admin() {
       </>
     );
   };
+  /* =====================================================
+   RENDER EXPENSES
+===================================================== */
+  const renderExpenses = () => {
+    return (
+      <div className="admin-content-section">
+        <div className="admin-section-toolbar">
+          <div>
+            <h2>Expenses</h2>
+            <p>
+              Record and manage how Hanumant Seva funds are used across
+              campaigns.
+            </p>
+          </div>
 
+          <button
+            className="admin-primary-button"
+            onClick={openCreateExpenseModal}
+          >
+            <Plus size={17} />
+            Add Expense
+          </button>
+        </div>
+
+        <div className="admin-panel">
+          <div className="admin-table-wrapper">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Campaign</th>
+                  <th>Expense</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Receipt</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {expenses.length ? (
+                  expenses.map((expense) => (
+                    <tr key={expense.id}>
+                      <td>
+                        <strong>{expense.campaign?.title || "—"}</strong>
+                      </td>
+
+                      <td>
+                        <div>
+                          <strong>{expense.title}</strong>
+
+                          {expense.description && (
+                            <div
+                              style={{
+                                fontSize: "0.82rem",
+                                marginTop: "4px",
+                                opacity: 0.7,
+                              }}
+                            >
+                              {expense.description}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+
+                      <td>
+                        <span className="admin-action-badge">
+                          {expense.category}
+                        </span>
+                      </td>
+
+                      <td>
+                        <strong>{formatCurrency(expense.amount)}</strong>
+                      </td>
+
+                      <td>{formatDate(expense.expenseDate)}</td>
+
+                      <td>
+                        {expense.receiptUrl ? (
+                          <a
+                            href={expense.receiptUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="admin-view-site"
+                          >
+                            <Eye size={15} />
+                            View
+                          </a>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+
+                      <td>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "8px",
+                            alignItems: "center",
+                          }}
+                        >
+                          <button
+                            type="button"
+                            className="admin-icon-button"
+                            onClick={() => openEditExpenseModal(expense)}
+                            title="Edit Expense"
+                          >
+                            <Pencil size={16} />
+                          </button>
+
+                          <button
+                            type="button"
+                            className="admin-icon-button admin-danger-icon"
+                            onClick={() => handleDeleteExpense(expense)}
+                            title="Delete Expense"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="admin-empty">
+                      No expenses have been recorded yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* =====================================================
+          EXPENSE CREATE / EDIT MODAL
+      ===================================================== */}
+        {showExpenseModal && (
+          <div
+            className="admin-modal-backdrop"
+            onClick={() => {
+              if (!expenseSaving) {
+                setShowExpenseModal(false);
+                setEditingExpense(null);
+              }
+            }}
+          >
+            <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="admin-modal-header">
+                <div>
+                  <h2>{editingExpense ? "Edit Expense" : "Add Expense"}</h2>
+
+                  <p>
+                    {editingExpense
+                      ? "Update the expense details."
+                      : "Record how funds were used for a campaign."}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="admin-modal-close"
+                  onClick={() => {
+                    if (!expenseSaving) {
+                      setShowExpenseModal(false);
+                      setEditingExpense(null);
+                    }
+                  }}
+                  disabled={expenseSaving}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <form className="admin-modal-body" onSubmit={handleSaveExpense}>
+                <div className="admin-detail-grid">
+                  {/* CAMPAIGN */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-campaign">Campaign *</label>
+
+                    <select
+                      id="expense-campaign"
+                      name="campaignId"
+                      value={expenseForm.campaignId}
+                      onChange={handleExpenseFormChange}
+                      disabled={expenseSaving}
+                      required
+                    >
+                      <option value="">Select Campaign</option>
+
+                      {campaigns.map((campaign) => (
+                        <option key={campaign.id} value={campaign.id}>
+                          {campaign.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* TITLE */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-title">Expense Title *</label>
+
+                    <input
+                      id="expense-title"
+                      type="text"
+                      name="title"
+                      value={expenseForm.title}
+                      onChange={handleExpenseFormChange}
+                      placeholder="e.g. Food distribution supplies"
+                      disabled={expenseSaving}
+                      required
+                    />
+                  </div>
+
+                  {/* CATEGORY */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-category">Category *</label>
+
+                    <input
+                      id="expense-category"
+                      type="text"
+                      name="category"
+                      value={expenseForm.category}
+                      onChange={handleExpenseFormChange}
+                      placeholder="e.g. Food, Transport, Supplies"
+                      disabled={expenseSaving}
+                      required
+                    />
+                  </div>
+
+                  {/* AMOUNT */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-amount">Amount (₹) *</label>
+
+                    <input
+                      id="expense-amount"
+                      type="number"
+                      name="amount"
+                      value={expenseForm.amount}
+                      onChange={handleExpenseFormChange}
+                      placeholder="Enter expense amount"
+                      min="1"
+                      step="0.01"
+                      disabled={expenseSaving}
+                      required
+                    />
+                  </div>
+
+                  {/* DATE */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-date">Expense Date *</label>
+
+                    <input
+                      id="expense-date"
+                      type="datetime-local"
+                      name="expenseDate"
+                      value={expenseForm.expenseDate}
+                      onChange={handleExpenseFormChange}
+                      disabled={expenseSaving}
+                      required
+                    />
+                  </div>
+
+                  {/* RECEIPT URL */}
+                  <div className="admin-form-group">
+                    <label htmlFor="expense-receipt">Receipt URL</label>
+
+                    <input
+                      id="expense-receipt"
+                      type="url"
+                      name="receiptUrl"
+                      value={expenseForm.receiptUrl}
+                      onChange={handleExpenseFormChange}
+                      placeholder="https://..."
+                      disabled={expenseSaving}
+                    />
+                  </div>
+                </div>
+
+                {/* DESCRIPTION */}
+                <div className="admin-form-group">
+                  <label htmlFor="expense-description">Description</label>
+
+                  <textarea
+                    id="expense-description"
+                    name="description"
+                    value={expenseForm.description}
+                    onChange={handleExpenseFormChange}
+                    placeholder="Describe how this expense was used..."
+                    rows="4"
+                    disabled={expenseSaving}
+                  />
+                </div>
+
+                <div className="admin-modal-actions">
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    onClick={() => {
+                      setShowExpenseModal(false);
+                      setEditingExpense(null);
+                    }}
+                    disabled={expenseSaving}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="admin-primary-button"
+                    disabled={expenseSaving}
+                  >
+                    {expenseSaving
+                      ? "Saving..."
+                      : editingExpense
+                        ? "Update Expense"
+                        : "Create Expense"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
   /* =====================================================
      RENDER AUDIT LOGS
   ===================================================== */
@@ -3449,6 +4021,9 @@ function Admin() {
 
       case "donations":
         return renderDonations();
+
+      case "expenses":
+        return renderExpenses();
 
       case "campaigns":
         return renderCampaigns();
@@ -3548,15 +4123,6 @@ function Admin() {
 
         {/* SIDEBAR FOOTER */}
         <div className="admin-sidebar-footer">
-          <button
-            className="admin-back-website-button"
-            onClick={handleBackToWebsite}
-          >
-            <Home size={18} />
-
-            <span>Back to Home</span>
-          </button>
-
           {/* ADMIN PROFILE */}
           <div className="admin-admin-profile">
             <div className="admin-avatar">

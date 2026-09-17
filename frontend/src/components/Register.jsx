@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { User, Mail, Phone, Lock, Heart } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function Register() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -146,6 +147,9 @@ function Register() {
 
       navigate("/login", {
         replace: true,
+        state: {
+          from: location.state?.from,
+        },
       });
     } catch (error) {
       console.error("Registration Error:", error);
@@ -326,7 +330,15 @@ function Register() {
           {/* ================= LOGIN ================= */}
 
           <p className="register-text">
-            Already have an account? <Link to="/login">Login</Link>
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              state={{
+                from: location.state?.from,
+              }}
+            >
+              Login
+            </Link>
           </p>
         </div>
       </div>

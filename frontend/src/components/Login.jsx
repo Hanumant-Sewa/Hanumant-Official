@@ -358,7 +358,14 @@ function Login() {
 
               <p className="register-text">
                 Don't have an account?{" "}
-                <Link to="/register">Create Account</Link>
+                <Link
+                  to="/register"
+                  state={{
+                    from: location.state?.from,
+                  }}
+                >
+                  Create Account
+                </Link>
               </p>
             </>
           )}

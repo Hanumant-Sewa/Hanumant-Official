@@ -22,6 +22,14 @@ import adminRoutes from "./src/routes/adminRoutes.js";
 
 import contactRoutes from "./src/routes/contactRoutes.js";
 
+import adminExpenseRoutes from "./src/routes/adminExpenseRoutes.js";
+
+import communityRoutes from "./src/routes/communityRoutes.js";
+
+import communityInvitationRoutes from "./src/routes/communityInvitationRoutes.js";
+
+import transparencyRoute from "./src/routes/transparencyRoute.js";
+
 const app = express();
 
 // Log which database is in use (password masked) — catches wrong-DATABASE_URL issues at boot
@@ -90,6 +98,10 @@ app.use("/api/volunteer-tasks", volunteerTaskRoutes);
 
 app.use("/api/volunteer-certificates", volunteerCertificateRoutes);
 
+app.use("/api/community-invitations", communityInvitationRoutes);
+
+app.use("/api/transparency", transparencyRoute);
+
 // ===============================
 // ADMIN ROUTES
 // ===============================
@@ -109,6 +121,10 @@ app.use("/api/volunteer-certificates", volunteerCertificateRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.use("/api/contact", contactRoutes);
+
+app.use("/api/admin/expenses", adminExpenseRoutes);
+
+app.use("/api/communities", communityRoutes);
 
 // ===============================
 // SERVER

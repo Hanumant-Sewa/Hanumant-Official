@@ -217,7 +217,7 @@ function Campaigns() {
                     {/* PROTECTED LINK */}
 
                     <ProtectedLink
-                      to={item.link}
+                      to="/dashboard"
                       allowedRoles={["USER", "VOLUNTEER"]}
                       className="community-journey-explore"
                     >

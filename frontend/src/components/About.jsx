@@ -236,7 +236,7 @@ const About = () => {
           <div className="founder-profile">
             <div className="founder-photo">
               <img
-                src="/images/founder.jpeg"
+                src="/images/founder.png"
                 alt="Manisha Nigam, Founder of Hanumat Seva Foundation"
               />
               <div className="founder-photo-badge">
