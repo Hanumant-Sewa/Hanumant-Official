@@ -96,6 +96,12 @@ enum CertificateType {
   SPECIAL_RECOGNITION
 }
 
+enum ContactStatus {
+  UNREAD
+  READ
+  REPLIED
+}
+
 /**
  * =====================================================
  * USER
@@ -221,13 +227,31 @@ model VolunteerProfile {
 model VolunteerApplication {
   id Int @id @default(autoincrement())
 
+  /**
+   * =================================================
+   * USER WHO APPLIED
+   * =================================================
+   */
+
   userId Int
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  /**
+   * =================================================
+   * OPTIONAL VOLUNTEER PROFILE
+   * =================================================
+   */
+
   volunteerProfileId Int?
 
   volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
+
+  /**
+   * =================================================
+   * APPLICATION INFORMATION
+   * =================================================
+   */
 
   motivation String
 
@@ -239,6 +263,12 @@ model VolunteerApplication {
 
   availability String?
 
+  /**
+   * =================================================
+   * APPLICATION STATUS
+   * =================================================
+   */
+
   status VolunteerApplicationStatus @default(PENDING)
 
   adminRemarks String?
@@ -246,6 +276,12 @@ model VolunteerApplication {
   reviewedAt DateTime?
 
   reviewedBy Int?
+
+  /**
+   * =================================================
+   * TIMESTAMPS
+   * =================================================
+   */
 
   createdAt DateTime @default(now())
 
@@ -711,7 +747,6 @@ model Notification {
 
   @@index([userId])
   @@index([isRead])
-  @@index([createdAt])
 }
 
 /**
@@ -770,19 +805,26 @@ model AuditLog {
   @@index([createdAt])
 }
 
-enum ContactStatus {
-  UNREAD
-  READ
-  REPLIED
-}
+/**
+ * =====================================================
+ * CONTACT MESSAGE
+ * =====================================================
+ */
 
 model ContactMessage {
-  id        Int           @id @default(autoincrement())
-  name      String
-  email     String
-  subject   String
-  message   String
-  status    ContactStatus @default(UNREAD)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id Int @id @default(autoincrement())
+
+  name String
+
+  email String
+
+  subject String
+
+  message String
+
+  status ContactStatus @default(UNREAD)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
 }

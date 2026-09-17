@@ -16,11 +16,12 @@ import volunteerDashboardRoutes from "./src/routes/volunteerDashboardRoutes.js";
 import volunteerEventRoutes from "./src/routes/volunteerEventRoutes.js";
 import volunteerImpactRoutes from "./src/routes/volunteerImpactRoutes.js";
 import volunteerTaskRoutes from "./src/routes/volunteerTaskRoutes.js";
-import volunteerCertificateRoutes from "./src/routes/volunteerCertificateRoutes.js";
 
 import adminRoutes from "./src/routes/adminRoutes.js";
 
 import contactRoutes from "./src/routes/contactRoutes.js";
+import certificateRoutes from "./src/routes/certificateRoutes.js";
+
 
 const app = express();
 
@@ -32,7 +33,7 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-  }),
+  })
 );
 
 app.use(express.json());
@@ -69,11 +70,11 @@ app.use("/api/volunteer-impact", volunteerImpactRoutes);
 
 app.use("/api/volunteer-tasks", volunteerTaskRoutes);
 
-app.use("/api/volunteer-certificates", volunteerCertificateRoutes);
-
 app.use("/api/admin", adminRoutes);
 
 app.use("/api/contact", contactRoutes);
+
+app.use("/api/certificates", certificateRoutes);
 
 // ===============================
 // SERVER

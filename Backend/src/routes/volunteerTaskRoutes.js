@@ -1,20 +1,22 @@
 import express from "express";
 
 import {
-  getVolunteerTasks,
-  updateVolunteerTaskStatus,
+  getMyTasks,
+  startTask,
+  completeTask,
 } from "../controllers/volunteerTaskController.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", authMiddleware, getVolunteerTasks);
+// Get logged-in volunteer's tasks
+router.get("/", authMiddleware, getMyTasks);
 
-router.patch(
-  "/:id/status",
-  authMiddleware,
-  updateVolunteerTaskStatus
-);
+// Start a task
+router.put("/:id/start", authMiddleware, startTask);
+
+// Complete a task
+router.put("/:id/complete", authMiddleware, completeTask);
 
 export default router;

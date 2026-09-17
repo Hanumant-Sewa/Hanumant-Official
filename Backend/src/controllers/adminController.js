@@ -446,17 +446,6 @@ export const getVolunteerApplications = async (req, res) => {
             },
           },
 
-          /*
-            IMPORTANT:
-            These are the CURRENT fields from
-            VolunteerProfile in schema.prisma.
-
-            Removed old fields:
-            bio
-            interests
-            state
-            country
-          */
           volunteerProfile: {
             select: {
               id: true,
@@ -557,11 +546,6 @@ export const approveVolunteerApplication = async (req, res) => {
 
       let volunteerProfile;
 
-      /*
-        CASE 1:
-        Application already has a volunteer profile.
-      */
-
       if (application.volunteerProfileId) {
         volunteerProfile =
           await tx.volunteerProfile.update({
@@ -584,14 +568,6 @@ export const approveVolunteerApplication = async (req, res) => {
             },
           });
       } else {
-        /*
-          CASE 2:
-          Application doesn't have a profile.
-
-          First check whether the user already has
-          a VolunteerProfile.
-        */
-
         const existingProfile =
           await tx.volunteerProfile.findUnique({
             where: {
@@ -600,11 +576,6 @@ export const approveVolunteerApplication = async (req, res) => {
           });
 
         if (existingProfile) {
-          /*
-            User already has profile.
-            Update it.
-          */
-
           volunteerProfile =
             await tx.volunteerProfile.update({
               where: {
@@ -626,11 +597,6 @@ export const approveVolunteerApplication = async (req, res) => {
               },
             });
         } else {
-          /*
-            User doesn't have profile.
-            Create a new one.
-          */
-
           volunteerProfile =
             await tx.volunteerProfile.create({
               data: {
@@ -1852,11 +1818,6 @@ export const updateEvent = async (req, res) => {
       });
     }
 
-    /*
-      If the existing event is cancelled and the request
-      does not explicitly change that status, keep it cancelled.
-    */
-
     let newStatus;
 
     if (status === "CANCELLED") {
@@ -2264,6 +2225,585 @@ export const getAuditLogs = async (
       success: false,
       message:
         "Failed to load audit logs.",
+    });
+  }
+};
+
+/* =====================================================
+   VOLUNTEER TASKS
+===================================================== */
+
+/* =====================================================
+   GET ALL TASKS
+===================================================== */
+
+export const getAllTasks = async (req, res) => {
+  try {
+    const tasks = await prisma.volunteerTask.findMany({
+      orderBy: [
+        {
+          dueDate: "asc",
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
+
+      include: {
+        assignedTo: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+          },
+        },
+
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+
+        volunteerProfile: {
+          select: {
+            id: true,
+            userId: true,
+            age: true,
+            city: true,
+            skills: true,
+            totalHours: true,
+            totalEvents: true,
+          },
+        },
+
+        event: {
+          select: {
+            id: true,
+            title: true,
+            location: true,
+            city: true,
+            state: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: tasks.length,
+      tasks,
+    });
+  } catch (error) {
+    console.error("Get all tasks error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to load tasks.",
+    });
+  }
+};
+
+/* =====================================================
+   CREATE TASK
+   No volunteer selection required
+===================================================== */
+
+export const createTask = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      eventId,
+      dueDate,
+      status = "TODO",
+    } = req.body || {};
+
+    /* -----------------------------------------------
+       Validate title
+    ------------------------------------------------ */
+
+    if (!title || !title.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Task title is required.",
+      });
+    }
+
+    /* -----------------------------------------------
+       Event
+    ------------------------------------------------ */
+
+    let parsedEventId = null;
+
+    if (
+      eventId !== undefined &&
+      eventId !== null &&
+      eventId !== ""
+    ) {
+      parsedEventId = Number(eventId);
+
+      if (!Number.isInteger(parsedEventId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid event ID.",
+        });
+      }
+
+      const event =
+        await prisma.volunteerEvent.findUnique({
+          where: {
+            id: parsedEventId,
+          },
+        });
+
+      if (!event) {
+        return res.status(404).json({
+          success: false,
+          message: "Event not found.",
+        });
+      }
+    }
+
+    /* -----------------------------------------------
+       Status
+    ------------------------------------------------ */
+
+    const allowedStatuses = [
+      "TODO",
+      "IN_PROGRESS",
+      "COMPLETED",
+    ];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task status.",
+      });
+    }
+
+    /* -----------------------------------------------
+       Due Date
+    ------------------------------------------------ */
+
+    let parsedDueDate = null;
+
+    if (dueDate) {
+      parsedDueDate = new Date(dueDate);
+
+      if (
+        Number.isNaN(parsedDueDate.getTime())
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid task due date.",
+        });
+      }
+    }
+
+    /* -----------------------------------------------
+       Create Global / Unassigned Task
+    ------------------------------------------------ */
+
+    const task = await prisma.volunteerTask.create({
+      data: {
+        title: title.trim(),
+
+        description:
+          description?.trim() || null,
+
+        /*
+          No volunteer is selected while creating
+          the task.
+        */
+        assignedToId: null,
+
+        createdById: req.user.userId,
+
+        volunteerProfileId: null,
+
+        eventId: parsedEventId,
+
+        dueDate: parsedDueDate,
+
+        status,
+
+        completedAt:
+          status === "COMPLETED"
+            ? new Date()
+            : null,
+      },
+
+      include: {
+        assignedTo: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+          },
+        },
+
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+
+        event: {
+          select: {
+            id: true,
+            title: true,
+            location: true,
+            city: true,
+            state: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
+      },
+    });
+
+    /* -----------------------------------------------
+       Audit Log
+    ------------------------------------------------ */
+
+    await createAuditLog({
+      userId: req.user.userId,
+
+      action: "CREATE_VOLUNTEER_TASK",
+
+      entity: "VolunteerTask",
+
+      entityId: task.id,
+
+      details:
+        `Created general task "${task.title}"`,
+
+      ipAddress: req.ip,
+    });
+
+    return res.status(201).json({
+      success: true,
+
+      message:
+        "Task created successfully.",
+
+      task,
+    });
+  } catch (error) {
+    console.error("Create task error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create task.",
+    });
+  }
+};
+
+/* =====================================================
+   UPDATE TASK
+===================================================== */
+
+export const updateTask = async (req, res) => {
+  try {
+    const taskId =
+      Number(req.params.id);
+
+    if (!Number.isInteger(taskId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task ID.",
+      });
+    }
+
+    const existingTask =
+      await prisma.volunteerTask.findUnique({
+        where: {
+          id: taskId,
+        },
+      });
+
+    if (!existingTask) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found.",
+      });
+    }
+
+    const {
+      title,
+      description,
+      eventId,
+      dueDate,
+      status,
+    } = req.body || {};
+
+    /* -----------------------------------------------
+       Validate title
+    ------------------------------------------------ */
+
+    if (!title || !title.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Task title is required.",
+      });
+    }
+
+    /* -----------------------------------------------
+       Event
+    ------------------------------------------------ */
+
+    let parsedEventId = null;
+
+    if (
+      eventId !== undefined &&
+      eventId !== null &&
+      eventId !== ""
+    ) {
+      parsedEventId = Number(eventId);
+
+      if (!Number.isInteger(parsedEventId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid event ID.",
+        });
+      }
+
+      const event =
+        await prisma.volunteerEvent.findUnique({
+          where: {
+            id: parsedEventId,
+          },
+        });
+
+      if (!event) {
+        return res.status(404).json({
+          success: false,
+          message: "Event not found.",
+        });
+      }
+    }
+
+    /* -----------------------------------------------
+       Status
+    ------------------------------------------------ */
+
+    const allowedStatuses = [
+      "TODO",
+      "IN_PROGRESS",
+      "COMPLETED",
+    ];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task status.",
+      });
+    }
+
+    /* -----------------------------------------------
+       Due Date
+    ------------------------------------------------ */
+
+    let parsedDueDate = null;
+
+    if (dueDate) {
+      parsedDueDate =
+        new Date(dueDate);
+
+      if (
+        Number.isNaN(
+          parsedDueDate.getTime()
+        )
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid task due date.",
+        });
+      }
+    }
+
+    /* -----------------------------------------------
+       Update Task
+    ------------------------------------------------ */
+
+    const updatedTask =
+      await prisma.volunteerTask.update({
+        where: {
+          id: taskId,
+        },
+
+        data: {
+          title: title.trim(),
+
+          description:
+            description?.trim() || null,
+
+          /*
+            Keep the current assignment.
+            New tasks are unassigned.
+          */
+          assignedToId:
+            existingTask.assignedToId,
+
+          volunteerProfileId:
+            existingTask.volunteerProfileId,
+
+          eventId:
+            parsedEventId,
+
+          dueDate:
+            parsedDueDate,
+
+          status,
+
+          completedAt:
+            status === "COMPLETED"
+              ? existingTask.completedAt ||
+                new Date()
+              : null,
+        },
+
+        include: {
+          assignedTo: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+            },
+          },
+
+          createdBy: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+
+          event: {
+            select: {
+              id: true,
+              title: true,
+              location: true,
+              city: true,
+              state: true,
+              startDate: true,
+              endDate: true,
+            },
+          },
+        },
+      });
+
+    /* -----------------------------------------------
+       Audit Log
+    ------------------------------------------------ */
+
+    await createAuditLog({
+      userId: req.user.userId,
+
+      action: "UPDATE_VOLUNTEER_TASK",
+
+      entity: "VolunteerTask",
+
+      entityId: taskId,
+
+      details:
+        `Updated task "${updatedTask.title}"`,
+
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+
+      message:
+        "Task updated successfully.",
+
+      task: updatedTask,
+    });
+  } catch (error) {
+    console.error("Update task error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update task.",
+    });
+  }
+};
+
+/* =====================================================
+   DELETE TASK
+===================================================== */
+
+export const deleteTask = async (req, res) => {
+  try {
+    const taskId =
+      Number(req.params.id);
+
+    if (!Number.isInteger(taskId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task ID.",
+      });
+    }
+
+    const task =
+      await prisma.volunteerTask.findUnique({
+        where: {
+          id: taskId,
+        },
+      });
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found.",
+      });
+    }
+
+    await prisma.volunteerTask.delete({
+      where: {
+        id: taskId,
+      },
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+
+      action: "DELETE_VOLUNTEER_TASK",
+
+      entity: "VolunteerTask",
+
+      entityId: taskId,
+
+      details:
+        `Deleted task "${task.title}"`,
+
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+
+      message:
+        "Task deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Delete task error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Failed to delete task.",
     });
   }
 };

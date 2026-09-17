@@ -1,161 +1,249 @@
 import prisma from "../config/prisma.js";
 
-// Get tasks assigned to the logged-in volunteer
-export const getVolunteerTasks = async (req, res) => {
+// ==========================================
+// GET MY + AVAILABLE TASKS
+// ==========================================
+export const getMyTasks = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    const volunteerProfile = await prisma.volunteerProfile.findUnique({
-      where: {
-        userId: userId,
-      },
-    });
-
-    if (!volunteerProfile) {
-      return res.status(404).json({
-        success: false,
-        message: "Volunteer profile not found",
-      });
-    }
-
     const tasks = await prisma.volunteerTask.findMany({
       where: {
-        volunteerProfileId: volunteerProfile.id,
+        OR: [
+          // Tasks created by Admin and not assigned yet
+          {
+            assignedToId: null,
+          },
+
+          // Tasks assigned to logged-in volunteer
+          {
+            assignedToId: userId,
+          },
+        ],
       },
+
       include: {
         event: {
           select: {
             id: true,
             title: true,
-            startDate: true,
+            description: true,
             location: true,
+            city: true,
+            state: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
+
+        assignedTo: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+
+        volunteerProfile: {
+          select: {
+            id: true,
+            userId: true,
+            age: true,
+            city: true,
+            skills: true,
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+
+      orderBy: [
+        {
+          dueDate: "asc",
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
     });
 
     return res.status(200).json({
       success: true,
+      count: tasks.length,
       tasks,
     });
   } catch (error) {
-    console.error("Get Volunteer Tasks Error:", error);
+    console.error("Get My Tasks Error:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch volunteer tasks",
-      error: error.message,
+      message: "Failed to fetch tasks",
     });
   }
 };
 
-
-// Update task status
-export const updateVolunteerTaskStatus = async (req, res) => {
+// ==========================================
+// START / CLAIM TASK
+// ==========================================
+export const startTask = async (req, res) => {
   try {
     const userId = req.user.userId;
     const taskId = Number(req.params.id);
 
-    // Get status from request body
-    let { status } = req.body;
-
-    // Debug information
-    console.log("REQUEST BODY:", req.body);
-    console.log("STATUS RECEIVED:", status);
-
-    // Check task ID
-    if (isNaN(taskId)) {
+    if (!Number.isInteger(taskId)) {
       return res.status(400).json({
         success: false,
         message: "Invalid task ID",
       });
     }
 
-    // Check whether status was provided
-    if (!status) {
-      return res.status(400).json({
-        success: false,
-        message: "Status is required",
-      });
-    }
-
-    // Convert status to uppercase
-    status = status.toString().trim().toUpperCase();
-
-    // Allow only these statuses
-    const allowedStatuses = [
-      "TODO",
-      "IN_PROGRESS",
-      "COMPLETED",
-      "CANCELLED",
-    ];
-
-    // Check status
-    if (!allowedStatuses.includes(status)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid task status",
-        allowedStatuses: allowedStatuses,
-      });
-    }
-
-    // Find volunteer profile
-    const volunteerProfile = await prisma.volunteerProfile.findUnique({
-      where: {
-        userId: userId,
-      },
-    });
-
-    if (!volunteerProfile) {
-      return res.status(404).json({
-        success: false,
-        message: "Volunteer profile not found",
-      });
-    }
-
-    // Check whether task belongs to this volunteer
+    // Task can be:
+    // 1. Unassigned
+    // 2. Already assigned to this volunteer
     const task = await prisma.volunteerTask.findFirst({
       where: {
         id: taskId,
-        volunteerProfileId: volunteerProfile.id,
+        OR: [
+          {
+            assignedToId: null,
+          },
+          {
+            assignedToId: userId,
+          },
+        ],
       },
     });
 
     if (!task) {
       return res.status(404).json({
         success: false,
-        message: "Task not found",
+        message:
+          "Task not found or already assigned to another volunteer",
       });
     }
 
-    // Update task
+    // Find volunteer profile
+    const volunteerProfile =
+      await prisma.volunteerProfile.findUnique({
+        where: {
+          userId: userId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+    // Assign task to volunteer and start it
     const updatedTask = await prisma.volunteerTask.update({
       where: {
         id: taskId,
       },
+
       data: {
-        status: status,
-        completedAt:
-          status === "COMPLETED" ? new Date() : null,
+        assignedToId: userId,
+
+        volunteerProfileId:
+          volunteerProfile?.id || null,
+
+        status: "IN_PROGRESS",
+      },
+
+      include: {
+        event: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            location: true,
+            city: true,
+            state: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
       },
     });
 
     return res.status(200).json({
       success: true,
-      message: "Task status updated successfully",
+      message: "Task started successfully",
       task: updatedTask,
     });
-
   } catch (error) {
-    console.error("Update Volunteer Task Error:", error);
+    console.error("Start Task Error:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Failed to update task status",
-      error: error.message,
+      message: "Failed to start task",
+    });
+  }
+};
+
+// ==========================================
+// COMPLETE TASK
+// ==========================================
+export const completeTask = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const taskId = Number(req.params.id);
+
+    if (!Number.isInteger(taskId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid task ID",
+      });
+    }
+
+    // Only assigned volunteer can complete the task
+    const task = await prisma.volunteerTask.findFirst({
+      where: {
+        id: taskId,
+        assignedToId: userId,
+      },
+    });
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found or not assigned to you",
+      });
+    }
+
+    const updatedTask = await prisma.volunteerTask.update({
+      where: {
+        id: taskId,
+      },
+
+      data: {
+        status: "COMPLETED",
+        completedAt: new Date(),
+      },
+
+      include: {
+        event: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            location: true,
+            city: true,
+            state: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Task completed successfully",
+      task: updatedTask,
+    });
+  } catch (error) {
+    console.error("Complete Task Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to complete task",
     });
   }
 };
