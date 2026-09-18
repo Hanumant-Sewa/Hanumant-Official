@@ -653,6 +653,66 @@ export const approveVolunteerApplication = async (req, res) => {
         });
 
       /* -----------------------------------------------
+         AUTOMATIC CERTIFICATE CREATION
+      ------------------------------------------------ */
+
+      // Check if this volunteer already has
+      // a volunteer appreciation certificate.
+      const existingCertificate =
+        await tx.certificate.findFirst({
+          where: {
+            userId: application.userId,
+            type: "VOLUNTEER",
+          },
+        });
+
+      let certificate;
+
+      if (!existingCertificate) {
+        // Count existing volunteer certificates
+        const certificateCount =
+          await tx.certificate.count({
+            where: {
+              type: "VOLUNTEER",
+            },
+          });
+
+        // Current year
+        const year = new Date().getFullYear();
+
+        // Generate certificate number
+        const certificateNumber =
+          `HSF-VA-${year}-${String(
+            certificateCount + 1
+          ).padStart(3, "0")}`;
+
+        // Create certificate
+        certificate =
+          await tx.certificate.create({
+            data: {
+              userId: application.userId,
+
+              volunteerProfileId:
+                volunteerProfile.id,
+
+              title:
+                "Volunteer Appreciation",
+
+              description:
+                "This certificate is awarded in recognition of valuable volunteer service and contribution to Hanumant Seva Foundation.",
+
+              type: "VOLUNTEER",
+
+              certificateNumber,
+            },
+          });
+      } else {
+        // Certificate already exists,
+        // so don't create another one.
+        certificate = existingCertificate;
+      }
+
+      /* -----------------------------------------------
          Notification
       ------------------------------------------------ */
 
@@ -660,12 +720,14 @@ export const approveVolunteerApplication = async (req, res) => {
         data: {
           userId: application.userId,
 
-          title: "Volunteer Application Approved",
+          title:
+            "Volunteer Application Approved",
 
           message:
-            "Congratulations! Your volunteer application has been approved.",
+            "Congratulations! Your volunteer application has been approved and your volunteer certificate has been generated.",
 
-          type: "VOLUNTEER_APPLICATION",
+          type:
+            "VOLUNTEER_APPLICATION",
         },
       });
 
@@ -673,6 +735,7 @@ export const approveVolunteerApplication = async (req, res) => {
         user,
         volunteerProfile,
         application: updatedApplication,
+        certificate,
       };
     });
 
@@ -683,9 +746,11 @@ export const approveVolunteerApplication = async (req, res) => {
     await createAuditLog({
       userId: req.user.userId,
 
-      action: "APPROVE_VOLUNTEER_APPLICATION",
+      action:
+        "APPROVE_VOLUNTEER_APPLICATION",
 
-      entity: "VolunteerApplication",
+      entity:
+        "VolunteerApplication",
 
       entityId: applicationId,
 
@@ -699,15 +764,19 @@ export const approveVolunteerApplication = async (req, res) => {
       success: true,
 
       message:
-        "Volunteer application approved successfully.",
+        "Volunteer application approved and certificate generated successfully.",
 
       ...result,
     });
   } catch (error) {
-    console.error("Approve volunteer error:", error);
+    console.error(
+      "Approve volunteer error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
+
       message:
         "Failed to approve volunteer application.",
     });
@@ -806,7 +875,8 @@ export const rejectVolunteerApplication = async (
             message:
               `Your volunteer application was not approved at this time. Reason: ${adminRemarks.trim()}`,
 
-            type: "VOLUNTEER_APPLICATION",
+            type:
+              "VOLUNTEER_APPLICATION",
           },
         });
 
@@ -816,9 +886,11 @@ export const rejectVolunteerApplication = async (
     await createAuditLog({
       userId: req.user.userId,
 
-      action: "REJECT_VOLUNTEER_APPLICATION",
+      action:
+        "REJECT_VOLUNTEER_APPLICATION",
 
-      entity: "VolunteerApplication",
+      entity:
+        "VolunteerApplication",
 
       entityId: applicationId,
 
@@ -831,12 +903,16 @@ export const rejectVolunteerApplication = async (
     return res.status(200).json({
       success: true,
 
-      message: "Volunteer application rejected.",
+      message:
+        "Volunteer application rejected.",
 
       application: updatedApplication,
     });
   } catch (error) {
-    console.error("Reject volunteer error:", error);
+    console.error(
+      "Reject volunteer error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -881,7 +957,10 @@ export const getAllDonations = async (req, res) => {
       donations,
     });
   } catch (error) {
-    console.error("Get donations error:", error);
+    console.error(
+      "Get donations error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -920,7 +999,10 @@ export const getAllCampaigns = async (req, res) => {
       campaigns,
     });
   } catch (error) {
-    console.error("Get campaigns error:", error);
+    console.error(
+      "Get campaigns error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -1017,14 +1099,16 @@ export const createCampaign = async (req, res) => {
     if (startDate && !parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message: "Invalid campaign start date.",
+        message:
+          "Invalid campaign start date.",
       });
     }
 
     if (endDate && !parsedEndDate) {
       return res.status(400).json({
         success: false,
-        message: "Invalid campaign end date.",
+        message:
+          "Invalid campaign end date.",
       });
     }
 
@@ -1099,7 +1183,10 @@ export const createCampaign = async (req, res) => {
       campaign,
     });
   } catch (error) {
-    console.error("Create campaign error:", error);
+    console.error(
+      "Create campaign error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -1215,14 +1302,16 @@ export const updateCampaign = async (req, res) => {
     if (startDate && !parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message: "Invalid campaign start date.",
+        message:
+          "Invalid campaign start date.",
       });
     }
 
     if (endDate && !parsedEndDate) {
       return res.status(400).json({
         success: false,
-        message: "Invalid campaign end date.",
+        message:
+          "Invalid campaign end date.",
       });
     }
 
@@ -1301,7 +1390,10 @@ export const updateCampaign = async (req, res) => {
       campaign: updatedCampaign,
     });
   } catch (error) {
-    console.error("Update campaign error:", error);
+    console.error(
+      "Update campaign error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -1399,7 +1491,10 @@ export const cancelCampaign = async (req, res) => {
       campaign: updatedCampaign,
     });
   } catch (error) {
-    console.error("Cancel campaign error:", error);
+    console.error(
+      "Cancel campaign error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -1482,7 +1577,10 @@ export const deleteCampaign = async (req, res) => {
         "Campaign deleted successfully.",
     });
   } catch (error) {
-    console.error("Delete campaign error:", error);
+    console.error(
+      "Delete campaign error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -1527,7 +1625,10 @@ export const getAllEvents = async (req, res) => {
       events: formattedEvents,
     });
   } catch (error) {
-    console.error("Get events error:", error);
+    console.error(
+      "Get events error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -1716,7 +1817,10 @@ export const createEvent = async (req, res) => {
       event: formatEvent(event),
     });
   } catch (error) {
-    console.error("Create event error:", error);
+    console.error(
+      "Create event error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -1929,7 +2033,10 @@ export const updateEvent = async (req, res) => {
         formatEvent(updatedEvent),
     });
   } catch (error) {
-    console.error("Update event error:", error);
+    console.error(
+      "Update event error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -2033,7 +2140,10 @@ export const cancelEvent = async (req, res) => {
         formatEvent(updatedEvent),
     });
   } catch (error) {
-    console.error("Cancel event error:", error);
+    console.error(
+      "Cancel event error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -2123,7 +2233,10 @@ export const deleteEvent = async (req, res) => {
         "Event deleted successfully.",
     });
   } catch (error) {
-    console.error("Delete event error:", error);
+    console.error(
+      "Delete event error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -2799,7 +2912,10 @@ export const getAllTasks = async (req, res) => {
       tasks,
     });
   } catch (error) {
-    console.error("Get all tasks error:", error);
+    console.error(
+      "Get all tasks error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -2998,7 +3114,10 @@ export const createTask = async (req, res) => {
       task,
     });
   } catch (error) {
-    console.error("Create task error:", error);
+    console.error(
+      "Create task error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -3210,9 +3329,11 @@ export const updateTask = async (req, res) => {
     await createAuditLog({
       userId: req.user.userId,
 
-      action: "UPDATE_VOLUNTEER_TASK",
+      action:
+        "UPDATE_VOLUNTEER_TASK",
 
-      entity: "VolunteerTask",
+      entity:
+        "VolunteerTask",
 
       entityId: taskId,
 
@@ -3231,7 +3352,10 @@ export const updateTask = async (req, res) => {
       task: updatedTask,
     });
   } catch (error) {
-    console.error("Update task error:", error);
+    console.error(
+      "Update task error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -3279,9 +3403,11 @@ export const deleteTask = async (req, res) => {
     await createAuditLog({
       userId: req.user.userId,
 
-      action: "DELETE_VOLUNTEER_TASK",
+      action:
+        "DELETE_VOLUNTEER_TASK",
 
-      entity: "VolunteerTask",
+      entity:
+        "VolunteerTask",
 
       entityId: taskId,
 
@@ -3293,12 +3419,14 @@ export const deleteTask = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-
       message:
         "Task deleted successfully.",
     });
   } catch (error) {
-    console.error("Delete task error:", error);
+    console.error(
+      "Delete task error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
