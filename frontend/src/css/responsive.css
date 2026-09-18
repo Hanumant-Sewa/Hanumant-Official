@@ -1,0 +1,4225 @@
+@media (max-width: 1200px) {
+
+    .navbar-container {
+        width: 94%;
+    }
+
+    .nav-links {
+        gap: 18px;
+        margin-right: 22px;
+    }
+
+    .nav-links a {
+        font-size: 0.95rem;
+    }
+
+    .navbar-actions {
+        gap: 8px;
+    }
+
+    .navbar-community {
+        padding: 9px 11px;
+        font-size: 0.9rem;
+    }
+
+    .navbar-donate {
+        width: 145px;
+        height: 46px;
+        font-size: 0.9rem;
+    }
+
+    /* HERO — still desktop */
+    .hero-container {
+        width: 96%;
+        grid-template-columns: 46% 54%;
+    }
+
+    .hero h1 {
+        font-size: clamp(3rem, 5.1vw, 5rem);
+    }
+
+    .hero-art {
+        width: 57%;
+    }
+
+    .stats-card {
+        left: 5%;
+        right: 5%;
+    }
+
+    /* Main landing grids */
+    .programs-grid {
+        gap: 20px;
+    }
+
+    .campaigns-grid {
+        gap: 20px;
+    }
+
+    .impact-grid {
+        gap: 20px;
+    }
+
+    .gallery-grid {
+        gap: 16px;
+    }
+
+    .events-grid,
+    .testimonial-grid {
+        gap: 20px;
+    }
+
+    .donation-container {
+        column-gap: 6%;
+    }
+
+    /* Auth */
+    .auth-container {
+        gap: 35px;
+    }
+
+    /* Volunteer home */
+    .volunteer-container {
+        gap: 32px;
+    }
+
+    /* Volunteer feature pages */
+    .volunteer-intro {
+        gap: 40px;
+    }
+
+    .benefits-grid,
+    .activities-grid {
+        gap: 20px;
+    }
+
+    .application-layout {
+        gap: 32px;
+    }
+
+    .impact-intro {
+        gap: 40px;
+    }
+
+    /* User dashboard */
+    .dashboard-container {
+        width: 94%;
+    }
+
+    .dashboard-stats {
+        gap: 16px;
+    }
+
+    .dashboard-grid {
+        gap: 20px;
+    }
+}
+
+
+/* =========================================================
+   2. TABLET LANDSCAPE
+   1024px and below
+
+   HERO:
+   - no separate giant image block
+   - image fills the hero as a visual layer
+   - content sits above it
+   - image is never constrained to a 55% width
+========================================================= */
+
+@media (max-width: 1024px) {
+
+    /* ---------- NAVBAR ---------- */
+
+    .navbar-container {
+        width: 94%;
+    }
+
+    .navbar-logo-image {
+        width: 150px;
+    }
+
+    .nav-links {
+        gap: 13px;
+        margin-right: 10px;
+    }
+
+    .nav-links a {
+        font-size: 0.84rem;
+    }
+
+    .navbar-actions {
+        gap: 5px;
+    }
+
+    .navbar-community {
+        padding: 8px 9px;
+        font-size: 0.78rem;
+    }
+
+    .navbar-donate {
+        width: 120px;
+        height: 42px;
+        font-size: 0.8rem;
+    }
+/* =====================================================
+   HERO — TABLET
+===================================================== */
+.hero {
+        width: 100%;
+        min-height: auto;
+        padding-bottom: 90px;
+        margin: 0;
+    }
+.hero-container {
+        position: relative;
+        isolation: isolate;
+        width: 100%;
+        max-width: none;
+        min-height: 540px;
+        margin: 0;
+        padding: 35px 20px 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: 0;
+        box-sizing: border-box;
+    }
+    .hero-content {
+    position: relative;
+    z-index: 5;
+    width: 90%;
+    max-width: 760px;
+    padding: 20px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+ }
+
+.hero-badge {
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    max-width: 700px;
+
+    font-size: clamp(2.6rem, 5.5vw, 4rem);
+    line-height: 1.05;
+}
+
+.hero-divider {
+    width: min(85%, 450px);
+    margin: 15px auto;
+}
+
+.hero-theme {
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+}
+
+.hero-content > p {
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-buttons {
+    width: min(100%, 610px);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.hero-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    white-space: nowrap;
+}
+     /* Full visual layer.
+       It is NOT a 50%/55% column anymore. */
+     .hero-art {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        z-index: -2;
+        overflow: hidden;
+        background: #f6eee5;
+    }
+
+    .hero-art img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        max-height: none;
+        object-fit: contain;
+        object-position: center center;
+        opacity: 1;
+    }
+
+    /* Existing ::before becomes the readability layer */
+    .hero-art::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255, 250, 243, 0.96) 0%,
+                rgba(255, 250, 243, 0.84) 34%,
+                rgba(255, 250, 243, 0.52) 67%,
+                rgba(255, 250, 243, 0.28) 100%
+            );
+
+        pointer-events: none;
+    }
+
+    /* Second subtle layer makes the lower part readable */
+    .hero-art::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255, 250, 243, 0.08) 0%,
+                rgba(255, 250, 243, 0) 45%,
+                rgba(255, 250, 243, 0.30) 100%
+            );
+
+        pointer-events: none;
+    }
+
+    .hero-founder {
+        text-align: center;
+    }
+
+    /* Three trust items */
+    .hero-features {
+        width: min(100%, 680px);
+
+        justify-content: center;
+
+        gap: 0;
+    }
+
+    .hero-feature {
+        flex: 1;
+        justify-content: center;
+    }
+
+    /* Stats stay attached to the hero, but don't cover content */
+    .stats-card {
+        left: 5%;
+        right: 5%;
+        bottom: 0;
+        transform: translateY(42%);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        min-height: 100px;
+    }
+
+    .stat {
+        min-width: 0;
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .stat strong {
+        font-size: clamp(1.15rem, 2vw, 1.7rem);
+    }
+
+    .stat span {
+        font-size: 0.72rem;
+    }
+
+
+    /* ---------- COMMON SECTION WIDTH ---------- */
+
+    .section-title {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    /* ---------- ABOUT ---------- */
+
+    .about-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .about-image-wrapper img {
+        height: 390px;
+    }
+
+    .about-content h2 {
+        font-size: clamp(2rem, 4vw, 2.9rem);
+    }
+
+    .about-highlights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+
+    /* ---------- TRANSPARENCY ---------- */
+
+    .transparency-card {
+        padding: 28px;
+    }
+
+    .transparency-flow {
+        gap: 10px;
+    }
+
+    .transparency-step {
+        min-width: 0;
+    }
+
+    .flow-line {
+        flex-basis: 22px;
+    }
+
+
+    /* ---------- PROGRAMS ---------- */
+
+    .programs-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    /* ---------- CAMPAIGNS ---------- */
+
+    .campaigns-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .community-journey-header {
+        gap: 25px;
+    }
+
+    .community-journey-flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .campaigns-cta {
+        gap: 20px;
+    }
+
+
+    /* ---------- IMPACT ---------- */
+
+    .impact-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    /* ---------- GALLERY ---------- */
+
+    .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    /* ---------- EVENTS / TESTIMONIALS ---------- */
+
+    .events-grid,
+    .testimonial-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    /* ---------- CONTACT ---------- */
+
+    .contact-wrapper {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+
+    /* ---------- FOOTER ---------- */
+
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 30px;
+    }
+
+
+    /* ---------- AUTH ---------- */
+
+    .auth-container {
+        grid-template-columns: 1fr;
+        width: min(92%, 720px);
+        gap: 28px;
+    }
+
+    .auth-info {
+        text-align: center;
+        padding: 10px;
+    }
+
+    .auth-info > p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .auth-heart {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .auth-back {
+        margin-bottom: 25px;
+    }
+
+    .auth-card {
+        width: 100%;
+    }
+
+
+    /* ---------- DONATION ---------- */
+
+    .donation-container {
+        width: 92%;
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .donation-summary {
+        position: static;
+        order: 1;
+        width: 100%;
+    }
+
+    .donation-left {
+        order: 2;
+        width: 100%;
+    }
+
+    .donation-options {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .payment-methods {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+
+    /* ---------- RECEIPT ---------- */
+
+    .receipt-card {
+        width: min(94%, 750px);
+        padding: 38px;
+    }
+
+
+
+
+    /* =====================================================
+       VOLUNTEER FEATURE PAGES
+       These rules centralize the media queries that are
+       currently inside Volunteer.css.
+    ===================================================== */
+
+    .volunteer-hero {
+        min-height: 570px;
+        padding-left: 5%;
+        padding-right: 5%;
+        background-position: center right;
+    }
+
+    .hero-text {
+        width: 58%;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(40px, 6vw, 58px);
+    }
+
+    .hero-stats {
+        width: 92%;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .volunteer-intro {
+        width: 92%;
+        gap: 32px;
+    }
+
+    .benefits-grid,
+    .activities-grid {
+        width: 92%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .volunteer-cta {
+        width: 92%;
+    }
+
+    .application-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .application-info {
+        position: static;
+    }
+
+    .impact-intro {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .impact-intro-image,
+    .impact-intro-content {
+        width: 100%;
+        max-width: 750px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .impact-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .impact-progress-section {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .impact-achievements-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .impact-motivation {
+        grid-template-columns: 1fr;
+    }
+
+    .impact-motivation-image {
+        height: 330px;
+        min-height: 330px;
+    }
+
+    .tasks-grid,
+    .certificates-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tasks-stat-grid,
+    .certificate-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .events-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    /* ---------- VOLUNTEER / DASHBOARD INTERNAL ---------- */
+
+    .dashboard-header {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .dashboard-main {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-right {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .dashboard-motivation {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Dashboard.css version */
+    .dashboard-container {
+        width: 92%;
+    }
+
+    .dashboard-hero .dashboard-container {
+        gap: 1.25rem;
+    }
+
+    .activity-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    /*founder section*/
+     .founder-section {
+        padding: 48px 0;
+    }
+    .founder-profile {
+        max-width: 900px;
+        gap: 36px;
+    }
+    .founder-photo {
+        height: 280px;
+    }
+    .founder-profile-content p {
+        font-size: .92rem;
+    }
+    .founder-vision {
+        max-width: 900px;
+    }
+    .founder-promise {
+        max-width: 900px;
+    }
+}
+
+/* =========================================================
+   3. TABLET
+   900px and below
+========================================================= */
+
+@media (max-width: 900px) {
+
+    /* ---------- NAVBAR ----------
+       Navigation will switch to hamburger at 768px.
+       Until then, make it fit without crushing buttons.
+    */
+
+    .navbar-logo-image {
+        width: 145px;
+    }
+
+    .nav-links {
+        gap: 10px;
+        margin-right: 6px;
+    }
+
+    .nav-links a {
+        font-size: 0.78rem;
+    }
+
+    .navbar-community {
+        font-size: 0.72rem;
+        padding: 7px 8px;
+    }
+
+    .navbar-donate {
+        width: 105px;
+        height: 40px;
+        font-size: 0.72rem;
+    }
+
+
+    /* =====================================================
+       HERO
+       Image is a complete background visual.
+       Content is centered above it.
+    ===================================================== */
+
+    .hero {
+        padding-bottom: 96px;
+    }
+
+    .hero-container {
+        width: 100%;
+        min-height: 560px;
+
+        padding: 48px 18px 65px;
+
+        border-radius: 0;
+    }
+
+    .hero-art img {
+        object-position: center;
+        opacity: 3;
+    }
+
+    .hero-art::before {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255, 250, 243, 0.97) 0%,
+                rgba(255, 250, 243, 0.84) 38%,
+                rgba(255, 250, 243, 0.48) 72%,
+                rgba(255, 250, 243, 0.22) 100%
+            );
+    }
+
+    .hero-content {
+        width: min(100%, 690px);
+        padding: 24px 18px;
+    }
+
+    .hero-badge {
+        font-size: 0.9rem;
+        padding: 8px 18px;
+    }
+
+    .hero h1 {
+        font-size: clamp(2.65rem, 7vw, 4rem);
+    }
+
+    .hero-theme {
+        font-size: clamp(0.95rem, 2vw, 1.15rem);
+    }
+
+    .hero-content > p {
+        max-width: 600px;
+        font-size: 0.94rem;
+    }
+
+    .hero-buttons {
+        gap: 10px;
+        width: min(100%, 600px);
+    }
+
+    .hero-btn {
+        min-height: 50px;
+        padding-left: 12px;
+        padding-right: 12px;
+        font-size: 0.84rem;
+    }
+
+    .hero-features {
+        width: min(100%, 620px);
+    }
+
+    .hero-feature + .hero-feature {
+        padding-left: 18px;
+    }
+
+    .hero-feature strong {
+        font-size: 1.25rem;
+    }
+
+    .hero-feature span {
+        font-size: 0.72rem;
+    }
+
+    .stats-card {
+        left: 4%;
+        right: 4%;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        transform: translateY(43%);
+        border-radius: 18px;
+    }
+
+    .stat {
+        padding: 8px 7px;
+        gap: 7px;
+    }
+
+    .stat svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .stat strong {
+        font-size: 1.2rem;
+    }
+
+    .stat span {
+        font-size: 0.65rem;
+    }
+
+
+    /* ---------- MAIN SECTION SPACING ---------- */
+
+    .section {
+        padding-top: clamp(55px, 7vw, 80px);
+        padding-bottom: clamp(55px, 7vw, 80px);
+    }
+
+    .section-title {
+        margin-bottom: 34px;
+    }
+
+    .section-title h2 {
+        font-size: clamp(2rem, 5vw, 2.8rem);
+    }
+
+    .section-title p {
+        max-width: 680px;
+        font-size: 0.92rem;
+    }
+
+
+    /* ---------- ABOUT ---------- */
+
+    .about-container {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .about-image-wrapper {
+        width: min(100%, 720px);
+        margin: 0 auto;
+    }
+
+    .about-image-wrapper img {
+        height: clamp(300px, 46vw, 420px);
+    }
+
+    .about-content {
+        width: min(100%, 720px);
+        margin: 0 auto;
+    }
+
+    .about-content h2 {
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .about-highlights {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+
+    /* ---------- TRANSPARENCY ---------- */
+
+    .transparency-card {
+        padding: 25px;
+    }
+
+    .transparency-header {
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .transparency-flow {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px 18px;
+    }
+
+    .transparency-step {
+        width: 100%;
+    }
+
+    .flow-line {
+        display: none;
+    }
+
+    .transparency-footer {
+        align-items: flex-start;
+    }
+
+
+    /* ---------- PROGRAMS ---------- */
+
+    .programs-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .program-card {
+        padding: 25px 20px;
+    }
+
+    .programs-cta {
+        gap: 20px;
+    }
+
+
+    /* ---------- CAMPAIGNS ---------- */
+
+    .campaigns-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .community-journey-header {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-bottom: 30px;
+    }
+
+    .community-journey-flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .community-journey-item {
+        padding: 19px;
+    }
+
+    .campaigns-cta {
+        align-items: flex-start;
+    }
+
+
+    /* ---------- IMPACT ---------- */
+
+    .impact-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .impact-card {
+        padding: 28px 15px;
+    }
+
+    .impact-card h3 {
+        font-size: clamp(2rem, 5vw, 2.8rem);
+    }
+
+
+    /* ---------- GALLERY ---------- */
+
+    .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: 200px;
+        gap: 12px;
+    }
+
+
+    /* ---------- EVENTS / TESTIMONIALS ---------- */
+
+    .events-grid,
+    .testimonial-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+
+    /* ---------- CONTACT ---------- */
+
+    .contact-wrapper {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .contact-info,
+    .contact-form {
+        width: min(100%, 720px);
+        margin: 0 auto;
+    }
+
+
+    /* ---------- FOOTER ---------- */
+
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+    }
+
+
+    /* ---------- FOUNDER ---------- */
+
+    .founder-card-top {
+        grid-template-columns: auto 1fr;
+    }
+
+    .founder-year {
+        grid-column: 2;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .founder-footer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    /* ---------- FAQ ---------- */
+
+    .faq-container {
+        width: min(100%, 760px);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    /* ---------- AUTH ---------- */
+
+    .auth-page {
+        padding: 45px 18px;
+    }
+
+    .auth-container {
+        width: min(100%, 700px);
+    }
+
+    .auth-info h1 {
+        font-size: clamp(2.2rem, 6vw, 3.2rem);
+    }
+
+    .auth-card {
+        padding: 32px 28px;
+    }
+
+
+    /* ---------- DONATION ---------- */
+
+    .donation-container {
+        width: min(94%, 900px);
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .donation-summary {
+        position: static;
+        top: auto;
+    }
+
+    .donation-left {
+        padding: 22px;
+    }
+
+    .donation-options {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .payment-methods {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+
+    /* ---------- RECEIPT ---------- */
+
+    .receipt-card {
+        width: min(94%, 750px);
+        padding: 34px 28px;
+    }
+
+
+
+    .volunteer-form {
+        width: min(100%, 760px);
+        margin: 0 auto;
+    }
+
+
+    /* =====================================================
+       VOLUNTEER FEATURE PAGES
+    ===================================================== */
+
+    .volunteer-hero {
+        min-height: 570px;
+        padding: 55px 5%;
+        background-position: center;
+    }
+
+    .hero-text {
+        width: 62%;
+        max-width: 600px;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(40px, 6.5vw, 58px);
+    }
+
+    .hero-text p {
+        max-width: 520px;
+    }
+
+    .hero-stats {
+        width: 92%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        bottom: -55px;
+    }
+
+    .stat-box {
+        min-width: 0;
+        min-height: 90px;
+    }
+
+    .stat-box:nth-child(2) {
+        border-right: none;
+    }
+
+    .stat-box:nth-child(3),
+    .stat-box:nth-child(4) {
+        border-top: 1px solid var(--border);
+    }
+
+    .volunteer-intro {
+        width: 92%;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        margin-top: 90px;
+    }
+
+    .section-image {
+        width: min(100%, 720px);
+        margin: 0 auto;
+    }
+
+    .section-image img {
+        height: clamp(280px, 45vw, 360px);
+    }
+
+    .section-content {
+        width: min(100%, 720px);
+        margin: 0 auto;
+    }
+
+    .benefits-grid,
+    .activities-grid {
+        width: 92%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .volunteer-cta {
+        width: 92%;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cta-image {
+        min-height: 300px;
+    }
+
+
+    /* ---------- APPLICATION ---------- */
+
+    .application-hero {
+        min-height: 500px;
+        padding: 50px 5%;
+    }
+
+    .application-hero-content {
+        width: min(100%, 760px);
+    }
+
+    .application-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .application-info {
+        position: static;
+    }
+
+    .application-section {
+        width: 92%;
+    }
+
+
+    /* ---------- STATUS ---------- */
+
+    .status-container {
+        width: 92%;
+    }
+
+    .status-card {
+        padding: 30px 25px;
+    }
+
+
+    /* ---------- IMPACT INTERNAL ---------- */
+
+    .impact-page-hero {
+        min-height: 480px;
+        padding: 50px 5%;
+    }
+
+    .impact-hero-content {
+        width: min(100%, 760px);
+    }
+
+    .impact-hero-content h1 {
+        font-size: clamp(38px, 6vw, 52px);
+    }
+
+    .impact-page-main {
+        width: 92%;
+    }
+
+    .impact-intro {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .impact-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .impact-progress-section {
+        grid-template-columns: 1fr;
+    }
+
+    .impact-achievements-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .impact-motivation {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* ---------- EVENTS INTERNAL ---------- */
+
+    .events-page-main,
+    .tasks-page-main,
+    .certificates-page-main {
+        width: 92%;
+    }
+
+    .events-page-hero,
+    .tasks-page-hero,
+    .certificates-page-hero {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .events-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tasks-grid,
+    .certificates-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tasks-stat-grid,
+    .certificate-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    /* =====================================================
+       VOLUNTEER DASHBOARD
+    ===================================================== */
+
+    .dashboard-header {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .dashboard-main {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .dashboard-header-content {
+        gap: 20px;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-right {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .dashboard-motivation {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Dashboard.css */
+    .dashboard-hero .dashboard-container {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .activity-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================================
+   4. MOBILE
+   768px and below
+========================================================= */
+
+@media (max-width: 768px) {
+    .navbar {
+        height: 64px;
+    }
+    .navbar-container {
+        position: relative;
+        width: 94%;
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .nav-links,
+    .navbar-actions {
+        display: none !important;
+    }
+    .mobile-menu-button {
+        display: flex !important;
+        width: 42px;
+        height: 42px;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        padding: 6px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--bg);
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        z-index: 1200;
+    }
+    .mobile-menu-button:hover {
+        color: var(--primary);
+        border-color: var(--primary);
+        background: var(--primary-light);
+    }
+    .mobile-menu-button svg {
+        width: 21px;
+        height: 21px;
+    }
+    .mobile-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        width: min(300px, calc(100vw - 24px));
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 10px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        z-index: 2000;
+    }
+    .mobile-menu a,
+    .mobile-menu > button {
+        width: 100%;
+        min-height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 5px;
+        padding: 10px 13px;
+        border: 1px solid transparent;
+        border-radius: 9px;
+        background: transparent;
+        color: var(--text);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.2;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .mobile-menu a:hover {
+        color: var(--primary);
+        background: var(--primary-light);
+    }
+    .mobile-menu .mobile-community {
+        justify-content: center;
+        margin-top: 3px;
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+    .mobile-menu .mobile-community:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+    .mobile-menu .mobile-donate {
+        justify-content: center;
+        margin-top: 2px;
+        border-color: var(--primary);
+        background: var(--primary);
+        color: #fff;
+    }
+    .mobile-menu .mobile-donate:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+    }
+    .mobile-menu .mobile-logout {
+        justify-content: center;
+        margin-top: 3px;
+        border-color: var(--border);
+        color: var(--text);
+    }
+    .mobile-menu .mobile-logout:hover {
+        border-color: #dc2626;
+        background: rgba(220, 38, 38, 0.08);
+        color: #dc2626;
+    }
+    .hero {
+        padding-bottom: 78px;
+    }
+    .hero-container {
+        width: 100%;
+        min-height: 570px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 34px 8px 48px;
+        overflow: hidden;
+        border-radius: 0;
+    }
+    .hero-art {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        z-index: -2;
+        overflow: hidden;
+    }
+    .hero-art img {
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        display: block;
+        object-fit: fill;
+        object-position: center;
+        opacity: 5;
+        transform: none;
+    }
+    .hero-art::before {
+        /* background: linear-gradient(
+            180deg,
+            rgba(255, 250, 243, 0.82) 0%,
+            rgba(255, 250, 243, 0.58) 34%,
+            rgba(255, 250, 243, 0.58) 68%,
+            rgba(255, 250, 243, 0.86) 100%
+        ); */
+    }
+    .hero-art::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background: radial-gradient(
+            ellipse at center,
+            rgba(255, 250, 243, 0.08) 0%,
+            rgba(255, 250, 243, 0.28) 100%
+        );
+        pointer-events: none;
+    }
+    .hero-content {
+        width: min(100%, 680px);
+        padding: 22px 10px;
+        text-align: center;
+        align-items: center;
+    }
+    .hero-badge {
+        font-size: 0.76rem;
+        padding: 7px 13px;
+        margin-bottom: 12px;
+    }
+    .hero h1 {
+        width: 100%;
+        max-width: 600px;
+        font-size: clamp(2.35rem, 9vw, 3.35rem);
+        line-height: 1.06;
+        letter-spacing: -1px;
+    }
+    .hero-divider {
+        width: min(88%, 370px);
+        margin: 14px auto;
+    }
+    .hero-theme {
+        font-size: clamp(0.88rem, 3.2vw, 1.05rem);
+        margin: 0 0 11px;
+    }
+    .hero-content > p {
+        width: min(100%, 600px);
+        font-size: 0.86rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+    .hero-buttons {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: stretch;
+        gap: 8px;
+        margin: 16px auto 18px;
+    }
+    .hero-btn {
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        min-height: 47px;
+        padding: 0 8px;
+        border-radius: 11px;
+        font-size: clamp(0.68rem, 2.3vw, 0.84rem);
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+    .hero-btn svg {
+        width: 19px;
+        height: 19px;
+        flex-shrink: 0;
+    }
+    .hero-founder {
+        font-size: 0.8rem;
+        text-align: center;
+        margin: 0 auto;
+    }
+    .hero-features {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        margin-top: 9px;
+    }
+    .hero-feature {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 5px 4px;
+        text-align: center;
+    }
+    .hero-feature + .hero-feature {
+        border-left: 1px solid var(--primary-light);
+        border-top: none;
+        padding: 5px 4px;
+    }
+    .hero-feature svg {
+        width: 29px;
+        height: 29px;
+    }
+    .hero-feature strong {
+        font-size: 1rem;
+    }
+    .hero-feature span {
+        margin-top: 2px;
+        font-size: 0.58rem;
+        line-height: 1.25;
+    }
+    .stats-card {
+        width: 92%;
+        left: 4%;
+        right: 4%;
+        bottom: 0;
+        transform: translateY(50%);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        min-height: auto;
+        padding: 5px;
+        border-radius: 16px;
+    }
+    .stat {
+        min-width: 0;
+        min-height: 68px;
+        padding: 7px 6px;
+        gap: 7px;
+    }
+    .stat:nth-child(3),
+    .stat:nth-child(4) {
+        border-top: 1px solid #eadfd5;
+    }
+    .stat:nth-child(3) {
+        border-left: none;
+    }
+    .stat svg {
+        width: 26px;
+        height: 26px;
+    }
+    .stat strong {
+        font-size: 1.1rem;
+    }
+    .stat span {
+        font-size: 0.63rem;
+        line-height: 1.2;
+    }
+    .section-title {
+        margin-bottom: 30px;
+        padding: 0 5px;
+    }
+    .section-title h2 {
+        font-size: clamp(1.75rem, 6vw, 2.25rem);
+        line-height: 1.18;
+    }
+    .section-title p {
+        font-size: 0.84rem;
+        line-height: 1.65;
+    }
+    .about-container {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+    .about-image-wrapper {
+        width: 100%;
+    }
+    .about-image-wrapper img {
+        height: clamp(280px, 60vw, 360px);
+    }
+    .about-image-badge {
+        left: 15px;
+        bottom: 15px;
+        padding: 10px 14px;
+        font-size: 0.76rem;
+    }
+    .about-content {
+        width: 100%;
+    }
+    .about-content h2 {
+        font-size: clamp(1.85rem, 7vw, 2.5rem);
+    }
+    .about-intro {
+        font-size: 0.96rem;
+    }
+    .about-highlights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+        margin: 22px 0;
+    }
+    .about-highlight {
+        padding: 13px 8px;
+    }
+    .about-highlight strong {
+        font-size: 1.1rem;
+    }
+    .about-highlight span {
+        font-size: 0.68rem;
+    }
+    .about-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .transparency-card {
+        padding: 20px 15px;
+        border-radius: 20px;
+    }
+    .transparency-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 28px;
+    }
+    .transparency-header h3 {
+        font-size: 1.45rem;
+    }
+    .transparency-flow {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px 10px;
+    }
+    .transparency-step {
+        width: 100%;
+    }
+    .transparency-step-icon {
+        width: 54px;
+        height: 54px;
+        margin-bottom: 10px;
+    }
+    .transparency-step strong {
+        font-size: 0.76rem;
+    }
+    .transparency-step span {
+        font-size: 0.66rem;
+    }
+    .flow-line {
+        display: none;
+    }
+    .transparency-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .transparency-footer a {
+        white-space: normal;
+    }
+    .programs-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .program-card {
+        padding: 24px 20px;
+    }
+    .program-icon {
+        width: 64px;
+        height: 64px;
+    }
+    .program-card h3 {
+        font-size: 19px;
+    }
+    .program-card p {
+        font-size: 13px;
+    }
+    .programs-cta {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 35px;
+        padding: 24px 20px;
+        gap: 18px;
+    }
+    .programs-cta h3 {
+        font-size: 20px;
+    }
+    .programs-cta-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .campaigns-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .campaign-card {
+        padding: 23px 20px;
+    }
+    .community-journey {
+        padding: 22px 15px;
+        border-radius: 20px;
+    }
+    .community-journey-header {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+    .community-journey-flow {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .community-journey-item {
+        padding: 17px;
+    }
+    .campaigns-cta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+    .campaigns-cta-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .impact-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+    .impact-card {
+        padding: 23px 10px;
+        border-radius: 18px;
+    }
+    .impact-card i {
+        font-size: 30px;
+        margin-bottom: 12px;
+    }
+    .impact-card h3 {
+        font-size: clamp(1.8rem, 7vw, 2.25rem);
+    }
+    .impact-card p {
+        font-size: 0.72rem;
+    }
+    .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: 175px;
+        gap: 9px;
+    }
+    .gallery-item.large {
+        grid-row: span 1;
+    }
+    .events-grid,
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .event-card,
+    .testimonial-card {
+        width: 100%;
+    }
+    .contact-wrapper {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+    .contact-box {
+        padding: 17px;
+    }
+    .contact-form input,
+    .contact-form textarea {
+        width: 100%;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 22px 14px;
+    }
+    .footer-col p,
+    .footer-col ul li {
+        font-size: 0.82rem;
+    }
+    .footer-bottom {
+        padding: 0 15px;
+    }
+    .founder-card {
+        padding: 1.4rem;
+    }
+    .founder-card-top {
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+    }
+    .founder-year {
+        grid-column: 2;
+        text-align: left;
+        align-items: flex-start;
+    }
+    .founder-message {
+        padding: 0;
+    }
+    .founder-message p {
+        font-size: 0.9rem;
+        line-height: 1.7;
+    }
+    .founder-footer {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .faq-question {
+        padding: 14px;
+        font-size: 0.86rem;
+    }
+    .faq-answer p {
+        padding: 0 14px 17px;
+        font-size: 0.8rem;
+        line-height: 1.65;
+    }
+    .auth-page {
+        padding: 32px 15px;
+    }
+    .auth-container {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+    .auth-info {
+        padding: 5px;
+        text-align: center;
+    }
+    .auth-back {
+        margin-bottom: 20px;
+    }
+    .auth-heart {
+       display: none;
+    }
+    .auth-info h1 {
+        font-size: clamp(2rem, 8vw, 2.7rem);
+    }
+    .auth-info > p {
+        font-size: 0.9rem;
+    }
+    .auth-quote {
+        margin-top: 22px;
+        padding: 18px;
+    }
+    .auth-points {
+        margin-top: 20px;
+        gap: 10px;
+    }
+    .auth-card {
+        width: 100%;
+        padding: 25px 18px;
+        border-radius: 19px;
+    }
+    .auth-card h2 {
+        font-size: 1.7rem;
+    }
+    .auth-subtitle {
+        margin-bottom: 22px;
+    }
+    .form-group {
+        margin-bottom: 16px;
+    }
+    .input-box {
+        padding: 0 12px;
+    }
+    .input-box input {
+        font-size: 0.9rem;
+    }
+    .auth-submit {
+        height: 52px;
+    }
+    .register-text {
+        font-size: 0.9rem;
+    }
+    .reset-methods {
+        grid-template-columns: 1fr;
+    }
+    .internal-hero {
+        padding: 22px 15px 10px;
+    }
+    .internal-hero h1 {
+        font-size: clamp(1.8rem, 7vw, 2.3rem);
+    }
+    .internal-hero p {
+        font-size: 0.78rem;
+    }
+    .donation-section {
+        padding: 12px 0 35px;
+    }
+    .donation-container {
+        width: 94%;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .donation-summary {
+        position: static;
+        width: 100%;
+        padding: 18px;
+    }
+    .donation-left {
+        width: 100%;
+        padding: 18px 15px;
+    }
+    .donation-header h2 {
+        font-size: 21px;
+    }
+    .contribution-type {
+        width: 100%;
+        max-width: 300px;
+    }
+    .donation-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+    .donation-card {
+        min-height: 76px;
+    }
+    .payment-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 7px;
+    }
+    .payment-methods {
+        grid-template-columns: 1fr;
+    }
+    .card-row {
+        grid-template-columns: 1fr;
+    }
+    .receipt-card {
+        width: 94%;
+        padding: 25px 18px;
+        border-radius: 20px;
+    }
+    .receipt-success {
+        width: 70px;
+        height: 70px;
+    }
+    .receipt-card h1 {
+        font-size: 1.9rem;
+    }
+    .receipt-details {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .receipt-details > div {
+        padding: 16px;
+    }
+    .receipt-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .receipt-actions .btn {
+        width: 100%;
+    }
+    .volunteer-container {
+        width: 94%;
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    .volunteer-info {
+        padding: 5px;
+    }
+    .volunteer-info h2 {
+        font-size: clamp(1.9rem, 7vw, 2.5rem);
+    }
+    .volunteer-image {
+        height: clamp(240px, 58vw, 330px);
+    }
+    .volunteer-form-card {
+        padding: 22px 17px;
+        border-radius: 18px;
+    }
+    .form-heading {
+        gap: 11px;
+    }
+    .form-heading-icon {
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    .volunteer-form-group input,
+    .volunteer-form-group select,
+    .volunteer-form-group textarea {
+        font-size: 14px;
+    }
+    .volunteer-hero {
+        min-height: 600px;
+        padding: 48px 20px 135px;
+        align-items: flex-start;
+        background-position: center;
+    }
+    .hero-text {
+        width: 100%;
+        max-width: 620px;
+    }
+    .hero-text h1 {
+        font-size: clamp(38px, 9vw, 50px);
+    }
+    .hero-text p {
+        font-size: 14px;
+    }
+    .hero-stats {
+        width: calc(100% - 30px);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        bottom: -65px;
+    }
+    .stat-box {
+        min-height: 90px;
+        padding: 12px 8px;
+    }
+    .stat-box:nth-child(2) {
+        border-right: none;
+    }
+    .stat-box:nth-child(3),
+    .stat-box:nth-child(4) {
+        border-top: 1px solid var(--border);
+    }
+    .volunteer-intro {
+        width: calc(100% - 30px);
+        grid-template-columns: 1fr;
+        gap: 28px;
+        margin-top: 105px;
+    }
+    .section-image img {
+        height: clamp(260px, 65vw, 350px);
+    }
+    .section-content h2 {
+        font-size: clamp(1.9rem, 7vw, 2.5rem);
+    }
+    .section-content p {
+        font-size: 14px;
+    }
+    .benefits-grid,
+    .activities-grid {
+        width: calc(100% - 30px);
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .benefit-image,
+    .activity-image {
+        height: 210px;
+    }
+    .benefit-content,
+    .activity-body {
+        padding: 19px;
+    }
+    .why-volunteer {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .volunteer-activities {
+        width: calc(100% - 30px);
+    }
+    .volunteer-cta {
+        width: calc(100% - 30px);
+        grid-template-columns: 1fr;
+    }
+    .cta-image {
+        height: 260px;
+        min-height: 260px;
+    }
+    .cta-content {
+        padding: 30px 22px;
+    }
+    .cta-content h2 {
+        font-size: 30px;
+    }
+    .cta-content .orange-button {
+        width: 100%;
+    }
+    .application-hero {
+        min-height: 500px;
+        padding: 45px 20px;
+    }
+    .application-hero h1 {
+        font-size: clamp(36px, 8vw, 48px);
+    }
+    .application-hero p {
+        font-size: 14px;
+    }
+    .application-section {
+        width: calc(100% - 30px);
+    }
+    .application-form-card {
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+    .input-wrapper input,
+    .input-wrapper select,
+    .input-wrapper textarea {
+        font-size: 14px;
+    }
+    .status-container {
+        width: calc(100% - 30px);
+    }
+    .status-card {
+        padding: 27px 18px;
+        border-radius: 18px;
+    }
+    .application-details-card {
+        padding: 20px;
+    }
+    .impact-page-hero {
+        min-height: 480px;
+        padding: 45px 20px;
+    }
+    .impact-hero-content {
+        width: 100%;
+    }
+    .impact-hero-content h1 {
+        font-size: clamp(36px, 8vw, 48px);
+    }
+    .impact-hero-content p {
+        font-size: 14px;
+    }
+    .impact-page-main {
+        width: calc(100% - 30px);
+        padding: 50px 0;
+    }
+    .impact-intro {
+        gap: 25px;
+        margin-bottom: 55px;
+    }
+    .impact-intro-image {
+        height: clamp(260px, 65vw, 340px);
+    }
+    .impact-intro-content h2 {
+        font-size: clamp(1.9rem, 7vw, 2.5rem);
+    }
+    .impact-intro-content p {
+        font-size: 14px;
+    }
+    .impact-statistics,
+    .impact-activities-section,
+    .impact-achievements-section {
+        margin-bottom: 55px;
+    }
+    .impact-stat-grid {
+        grid-template-columns: 1fr;
+    }
+    .impact-progress-section {
+        grid-template-columns: 1fr;
+        padding: 28px 20px;
+    }
+    .impact-achievements-grid {
+        grid-template-columns: 1fr;
+    }
+    .impact-motivation {
+        grid-template-columns: 1fr;
+    }
+    .impact-motivation-image {
+        min-height: 260px;
+        height: 260px;
+    }
+    .impact-motivation-content {
+        padding: 32px 22px;
+    }
+    .events-page-main,
+    .tasks-page-main,
+    .certificates-page-main {
+        width: calc(100% - 30px);
+    }
+    .events-page-hero,
+    .tasks-page-hero,
+    .certificates-page-hero {
+        padding: 50px 20px 55px;
+    }
+    .events-page-hero h1,
+    .tasks-page-hero h1,
+    .certificates-page-hero h1 {
+        font-size: clamp(2.25rem, 8vw, 3.2rem);
+    }
+    .events-grid,
+    .tasks-grid,
+    .certificates-grid {
+        grid-template-columns: 1fr;
+    }
+    .tasks-stat-grid,
+    .certificate-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .event-card-image {
+        height: 220px;
+    }
+    .dashboard-header {
+        padding: 40px 20px;
+    }
+    .dashboard-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    .dashboard-welcome {
+        width: 100%;
+    }
+    .dashboard-welcome h1 {
+        font-size: clamp(2.1rem, 8vw, 2.8rem);
+    }
+    .dashboard-welcome p {
+        font-size: 14px;
+        line-height: 1.65;
+    }
+    .dashboard-profile-button {
+        width: 100%;
+    }
+    .dashboard-profile-button button {
+        width: 100%;
+        justify-content: center;
+    }
+    .dashboard-main {
+        padding: 35px 20px 55px;
+    }
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+    .dashboard-stat-card {
+        min-height: 100px;
+        padding: 17px;
+    }
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .dashboard-right {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .dashboard-card {
+        padding: 19px;
+    }
+    .dashboard-card-header {
+        gap: 12px;
+    }
+    .dashboard-event {
+        grid-template-columns: 58px minmax(0, 1fr) 36px;
+        gap: 9px;
+    }
+    .task-item {
+        grid-template-columns: 40px minmax(0, 1fr);
+    }
+    .task-status {
+        grid-column: 2;
+        justify-self: start;
+        margin-top: -5px;
+    }
+    .dashboard-certificate-card {
+        grid-template-columns: 45px minmax(0, 1fr) 34px;
+    }
+    .dashboard-motivation {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    .motivation-image {
+        height: 250px;
+        min-height: 250px;
+    }
+    .motivation-content {
+        padding: 32px 22px;
+    }
+    .motivation-content h2 {
+        font-size: 30px;
+    }
+    .dashboard-container {
+        width: 94%;
+    }
+    .dashboard-hero .dashboard-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .activity-grid {
+        grid-template-columns: 1fr;
+    }
+     .founder-section {
+        padding: 42px 0;
+    }
+    .founder-heading {
+        margin-bottom: 30px;
+    }
+    .founder-heading h2 {
+        font-size: clamp(1.9rem, 7vw, 2.6rem);
+    }
+    .founder-heading p {
+        margin-top: 12px;
+        font-size: .88rem;
+        line-height: 1.65;
+    }
+    .founder-profile {
+        grid-template-columns: 1fr;
+        gap: 26px;
+    }
+    .founder-photo {
+        width: min(100%, 500px);
+        height: 400px;
+        margin: 0 auto;
+        border-radius: 20px;
+    }
+    .founder-photo-badge {
+        left: 16px;
+        bottom: 16px;
+    }
+    .founder-profile-content {
+        max-width: none;
+    }
+    .founder-profile-content h3 {
+        margin-bottom: 15px;
+        font-size: clamp(1.65rem, 6vw, 2.15rem);
+    }
+    .founder-profile-content p {
+        margin-bottom: 12px;
+        font-size: .9rem;
+        line-height: 1.7;
+    }
+    .founder-quote {
+        margin: 38px auto;
+        padding: 25px 18px;
+        border-radius: 18px;
+    }
+    .founder-quote-mark {
+        height: 24px;
+        font-size: 3.8rem;
+    }
+    .founder-quote p {
+        margin-top: 8px;
+        font-size: 1.08rem;
+        line-height: 1.5;
+    }
+    .founder-vision {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .founder-vision-content {
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+    .founder-vision-content h3 {
+        margin-bottom: 12px;
+        font-size: 1.8rem;
+    }
+    .founder-vision-content > p {
+        font-size: .88rem;
+        line-height: 1.65;
+    }
+    .founder-vision-points {
+        margin-top: 16px;
+    }
+    .founder-vision-point {
+        grid-template-columns: 32px 1fr;
+        gap: 9px;
+        padding: 11px 0;
+    }
+    .founder-vision-point p {
+        font-size: .84rem;
+        line-height: 1.5;
+    }
+    .founder-journey {
+        padding: 25px 18px;
+        border-radius: 18px;
+    }
+    .founder-journey > span {
+        margin-bottom: 15px;
+    }
+    .founder-promise {
+        margin-top: 38px;
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+    .founder-promise-heading h3 {
+        font-size: 1.8rem;
+    }
+    .founder-promise-list {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+    }
+    .founder-promise-list div {
+        padding: 12px 5px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, .15);
+    }
+    .founder-promise-list div:last-child {
+        border-bottom: none;
+    }
+    .founder-signature {
+        margin-top: 24px;
+    }
+}
+
+/* =========================================================
+   5. LARGE PHONE
+   600px and below
+========================================================= */
+
+@media (max-width: 600px) {
+
+    /* ---------- NAVBAR ---------- */
+
+    .navbar {
+        height: 62px;
+    }
+
+    .navbar-container {
+        min-height: 62px;
+        width: 94%;
+    }
+
+    .navbar-logo-image {
+        width: 138px;
+    }
+
+    .mobile-menu-button {
+        width: 40px;
+        height: 40px;
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+        padding-bottom: 70px;
+    }
+
+    .hero-container {
+        width: 100%;
+
+        min-height: 545px;
+
+        padding: 28px 8px 42px;
+    }
+
+    .hero-art img {
+        opacity: 5;
+        object-position: center center;
+    }
+
+    .hero-art::before {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255, 250, 243, 0.84) 0%,
+                rgba(255, 250, 243, 0.60) 35%,
+                rgba(255, 250, 243, 0.62) 65%,
+                rgba(255, 250, 243, 0.90) 100%
+            );
+    }
+
+    .hero-content {
+        padding: 18px 7px;
+    }
+
+    .hero-badge {
+        font-size: 0.7rem;
+        padding: 6px 11px;
+    }
+
+    .hero h1 {
+        font-size: clamp(2.15rem, 9.5vw, 2.9rem);
+    }
+
+    .hero-divider {
+        width: 88%;
+        margin: 12px auto;
+    }
+
+    .hero-theme {
+        font-size: 0.91rem;
+    }
+
+    .hero-content > p {
+        font-size: 0.82rem;
+        line-height: 1.58;
+    }
+
+    .hero-buttons {
+        gap: 7px;
+        margin-top: 14px;
+    }
+
+    .hero-btn {
+        min-height: 45px;
+        padding: 0 5px;
+        font-size: 0.69rem;
+        gap: 5px;
+        border-radius: 9px;
+    }
+
+    .hero-btn svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .hero-founder {
+        font-size: 0.75rem;
+    }
+
+    .hero-features {
+        margin-top: 7px;
+    }
+
+    .hero-feature {
+        padding: 4px 3px;
+    }
+
+    .hero-feature svg {
+        width: 27px;
+        height: 27px;
+    }
+
+    .hero-feature strong {
+        font-size: 0.95rem;
+    }
+
+    .hero-feature span {
+        font-size: 0.54rem;
+    }
+
+    .stats-card {
+        width: 94%;
+        left: 3%;
+        right: 3%;
+        transform: translateY(50%);
+        border-radius: 14px;
+    }
+
+    .stat {
+        min-height: 63px;
+        padding: 6px 5px;
+        gap: 5px;
+    }
+
+    .stat svg {
+        width: 23px;
+        height: 23px;
+    }
+
+    .stat strong {
+        font-size: 1rem;
+    }
+
+    .stat span {
+        font-size: 0.58rem;
+    }
+
+
+    /* ---------- SECTION TITLES ---------- */
+
+    .section-title h2 {
+        font-size: 26px;
+    }
+
+    .section-title p {
+        font-size: 13px;
+    }
+
+
+    /* ---------- ABOUT ---------- */
+
+    .about-image-wrapper img {
+        height: 285px;
+    }
+
+    .about-content h2 {
+        font-size: 1.85rem;
+    }
+
+    .about-highlights {
+        gap: 7px;
+    }
+
+    .about-highlight {
+        padding: 11px 6px;
+    }
+
+    .about-highlight strong {
+        font-size: 1rem;
+    }
+
+    .about-highlight span {
+        font-size: 0.62rem;
+    }
+
+
+    /* ---------- TRANSPARENCY ---------- */
+
+    .transparency-card {
+        padding: 18px 13px;
+    }
+
+    .transparency-flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 8px;
+    }
+
+    .transparency-step-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .transparency-step strong {
+        font-size: 0.72rem;
+    }
+
+    .transparency-step span {
+        font-size: 0.61rem;
+    }
+
+
+    /* ---------- PROGRAMS ---------- */
+
+    .program-card {
+        padding: 22px 18px;
+    }
+
+    .program-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+
+    /* ---------- IMPACT ---------- */
+
+    .impact-grid {
+        gap: 8px;
+    }
+
+    .impact-card {
+        padding: 20px 7px;
+        border-radius: 16px;
+    }
+
+    .impact-card h3 {
+        font-size: 30px;
+    }
+
+    .impact-card p {
+        font-size: 0.68rem;
+    }
+
+
+    /* ---------- GALLERY ---------- */
+
+    .gallery-grid {
+        grid-auto-rows: 160px;
+        gap: 7px;
+    }
+
+
+    /* ---------- FOOTER ---------- */
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 12px;
+    }
+
+
+    /* ---------- AUTH ---------- */
+
+    .auth-card {
+        padding: 23px 16px;
+    }
+
+
+    /* ---------- DONATION ---------- */
+
+    .donation-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .donation-left {
+        padding: 16px 13px;
+    }
+
+    .donation-summary {
+        padding: 17px;
+    }
+
+
+    /* ---------- RECEIPT ---------- */
+
+    .receipt-card {
+        width: 95%;
+        padding: 23px 15px;
+    }
+
+    .receipt-card h1 {
+        font-size: 1.75rem;
+    }
+
+
+    /* ---------- VOLUNTEER HOME ---------- */
+
+    .volunteer-image {
+        height: 260px;
+    }
+
+    .volunteer-form-card {
+        padding: 20px 15px;
+    }
+
+
+    /* ---------- VOLUNTEER FEATURE PAGES ---------- */
+
+    .volunteer-hero {
+        min-height: 620px;
+        padding: 45px 18px 140px;
+    }
+
+    .hero-text h1 {
+        font-size: 42px;
+    }
+
+    .hero-text h2 {
+        font-size: 18px;
+    }
+
+    .hero-text p {
+        font-size: 13px;
+    }
+
+    .hero-stats {
+        width: calc(100% - 24px);
+        bottom: -75px;
+    }
+
+    .stat-box {
+        min-height: 90px;
+        padding: 10px 6px;
+        gap: 6px;
+    }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .stat-box h3 {
+        font-size: 20px;
+    }
+
+    .stat-box p {
+        font-size: 9px;
+    }
+
+    .volunteer-intro {
+        width: calc(100% - 24px);
+        margin-top: 125px;
+    }
+
+    .section-image img {
+        height: 290px;
+    }
+
+    .benefits-grid,
+    .activities-grid {
+        width: calc(100% - 24px);
+    }
+
+    .benefit-image,
+    .activity-image {
+        height: 200px;
+    }
+
+    .volunteer-cta {
+        width: calc(100% - 24px);
+    }
+
+    .cta-image {
+        height: 230px;
+        min-height: 230px;
+    }
+
+    .cta-content {
+        padding: 28px 20px;
+    }
+
+    .cta-content h2 {
+        font-size: 28px;
+    }
+
+
+    /* ---------- APPLICATION ---------- */
+
+    .application-hero {
+        min-height: 500px;
+        padding: 45px 18px;
+    }
+
+    .application-hero h1 {
+        font-size: 39px;
+    }
+
+    .application-hero p {
+        font-size: 13px;
+    }
+
+    .application-section,
+    .status-container {
+        width: calc(100% - 24px);
+    }
+
+    .application-form-card {
+        padding: 21px 15px;
+    }
+
+
+    /* ---------- IMPACT INTERNAL ---------- */
+
+    .impact-page-hero {
+        min-height: 460px;
+        padding: 45px 18px;
+    }
+
+    .impact-hero-content h1 {
+        font-size: 42px;
+    }
+
+    .impact-page-main {
+        width: calc(100% - 24px);
+        padding: 45px 0;
+    }
+
+    .impact-intro-image {
+        height: 285px;
+    }
+
+    .impact-intro-content h2 {
+        font-size: 32px;
+    }
+
+    .impact-progress-section {
+        padding: 25px 18px;
+    }
+
+    .impact-motivation-image {
+        height: 240px;
+        min-height: 240px;
+    }
+
+
+    /* ---------- EVENTS / TASKS / CERTIFICATES ---------- */
+
+    .events-page-main,
+    .tasks-page-main,
+    .certificates-page-main {
+        width: calc(100% - 24px);
+    }
+
+    .events-page-hero,
+    .tasks-page-hero,
+    .certificates-page-hero {
+        padding: 45px 18px 50px;
+    }
+
+    .tasks-stat-grid,
+    .certificate-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+
+    /* ---------- DASHBOARD ---------- */
+
+    .dashboard-header {
+        padding: 35px 18px;
+    }
+
+    .dashboard-main {
+        padding: 30px 18px 45px;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .dashboard-stat-card {
+        min-height: 100px;
+        padding: 18px;
+    }
+
+    .dashboard-card {
+        padding: 18px;
+    }
+
+    .dashboard-card-header h2,
+    .dashboard-quick-card h2 {
+        font-size: 20px;
+    }
+
+    .dashboard-event {
+        grid-template-columns: 55px minmax(0, 1fr);
+    }
+
+    .event-arrow {
+        display: none;
+    }
+
+    .task-item {
+        grid-template-columns: 40px minmax(0, 1fr);
+    }
+
+    .dashboard-certificate-card {
+        grid-template-columns: 45px minmax(0, 1fr) 34px;
+    }
+
+    .motivation-image {
+        height: 230px;
+        min-height: 230px;
+    }
+
+    .motivation-content {
+        padding: 30px 20px;
+    }
+
+    .motivation-content h2 {
+        font-size: 28px;
+    }
+}
+
+
+/* =========================================================
+   6. SMALL PHONE
+   480px and below
+========================================================= */
+
+@media (max-width: 480px) {
+
+    /* ---------- NAVBAR ---------- */
+
+    .navbar {
+        height: 60px;
+    }
+
+    .navbar-container {
+        min-height: 60px;
+        width: 94%;
+    }
+
+    .navbar-logo-image {
+        width: 130px;
+    }
+
+    .mobile-menu-button {
+        width: 38px;
+        height: 38px;
+        padding: 5px;
+    }
+
+    .mobile-menu {
+        width: min(180px, 86vw);
+        padding: 10px;
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+        padding-bottom: 40px;
+    }
+
+    .hero-container {
+        width: 100%;
+
+        min-height: 525px;
+
+        padding: 24px 7px 35px;
+    }
+
+    .hero-art img {
+        opacity: 5;
+        object-position: center center;
+    }
+
+    .hero-art::before {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255, 250, 243, 0.86) 0%,
+                rgba(255, 250, 243, 0.60) 38%,
+                rgba(255, 250, 243, 0.66) 68%,
+                rgba(255, 250, 243, 0.93) 100%
+            );
+    }
+
+    .hero-content {
+        padding: 14px 4px;
+    }
+
+    .hero-badge {
+        font-size: 0.63rem;
+        padding: 6px 9px;
+        margin-bottom: 10px;
+    }
+
+    .hero h1 {
+        font-size: 2.15rem;
+        line-height: 1.08;
+        letter-spacing: -0.8px;
+    }
+
+    .hero-divider {
+        width: 86%;
+        margin: 11px auto;
+    }
+
+    .hero-theme {
+        font-size: 0.84rem;
+        line-height: 1.35;
+    }
+
+    .hero-content > p {
+        font-size: 0.76rem;
+        line-height: 1.55;
+    }
+
+    .hero-buttons {
+        gap: 6px;
+        margin: 13px auto 15px;
+    }
+
+    .hero-btn {
+        min-height: 43px;
+
+        padding: 0 4px;
+
+        font-size: 0.62rem;
+
+        gap: 4px;
+
+        border-radius: 8px;
+    }
+
+    .hero-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hero-founder {
+        font-size: 0.69rem;
+    }
+
+    .hero-features {
+        margin-top: 5px;
+    }
+
+    .hero-feature {
+        padding: 3px 2px;
+        gap: 3px;
+    }
+
+    .hero-feature + .hero-feature {
+        padding-left: 3px;
+    }
+
+    .hero-feature svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .hero-feature strong {
+        font-size: 0.88rem;
+    }
+
+    .hero-feature span {
+        font-size: 0.50rem;
+        line-height: 1.2;
+    }
+
+    .stats-card {
+        width: 95%;
+        left: 2.5%;
+        right: 2.5%;
+        padding: 4px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+    }
+
+    .stat {
+        min-height: 58px;
+        padding: 4px;
+        gap: 4px;
+    }
+
+    .stat svg {
+        width: 21px;
+        height: 21px;
+    }
+
+    .stat strong {
+        font-size: 0.92rem;
+    }
+
+    .stat span {
+        font-size: 0.54rem;
+    }
+
+
+    /* ---------- COMMON ---------- */
+
+    .section-title {
+        margin-bottom: 25px;
+    }
+
+    .section-title h2 {
+        font-size: 25px;
+    }
+
+    .section-title p {
+        font-size: 12px;
+    }
+
+
+    /* ---------- ABOUT ---------- */
+
+    .about-image-wrapper img {
+        height: 250px;
+    }
+
+    .about-content h2 {
+        font-size: 27px;
+    }
+
+    .about-highlights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .about-highlight {
+        padding: 10px 5px;
+    }
+
+    .about-highlight strong {
+        font-size: 0.95rem;
+    }
+
+    .about-highlight span {
+        font-size: 0.57rem;
+    }
+
+
+    /* ---------- TRANSPARENCY ---------- */
+
+    .transparency-flow {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+
+    /* ---------- PROGRAMS ---------- */
+
+    .program-card {
+        padding: 20px 16px;
+        border-radius: 17px;
+    }
+
+    .program-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .program-card h3 {
+        font-size: 18px;
+    }
+
+    .program-card p {
+        font-size: 12.5px;
+    }
+
+
+    /* ---------- IMPACT ---------- */
+
+    .impact-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .impact-card h3 {
+        font-size: 29px;
+    }
+
+
+    /* ---------- GALLERY ---------- */
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 215px;
+    }
+
+
+    /* ---------- FOOTER ---------- */
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+
+    /* ---------- AUTH ---------- */
+
+    .auth-info h1 {
+        font-size: 2.05rem;
+    }
+
+    .auth-card {
+        padding: 21px 14px;
+    }
+
+    .auth-card h2 {
+        font-size: 1.6rem;
+    }
+
+
+  /* ---------- DONATION ---------- */
+.donation-grid {
+  grid-template-columns: 1fr;
+  gap: 20px;
+  width: 90%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+    .donation-card {
+        min-height: 72px;
+    }
+
+    .donation-left {
+        padding: 15px 12px;
+    }
+
+    .payment-form {
+        padding: 10px;
+    }
+
+
+    /* ---------- RECEIPT ---------- */
+
+    .receipt-card {
+        width: 95%;
+        padding: 21px 13px;
+    }
+
+    .receipt-card h1 {
+        font-size: 1.65rem;
+    }
+
+
+    /* ---------- VOLUNTEER HOME ---------- */
+
+    .volunteer-image {
+        height: 230px;
+    }
+
+    .volunteer-form-card {
+        padding: 18px 13px;
+        border-radius: 16px;
+    }
+
+
+    /* ---------- VOLUNTEER FEATURE PAGES ---------- */
+
+    .volunteer-hero {
+        min-height: 620px;
+        padding: 42px 15px 145px;
+    }
+
+    .hero-text h1 {
+        font-size: 38px;
+    }
+
+    .hero-text h2 {
+        font-size: 17px;
+    }
+
+    .hero-text p {
+        font-size: 12.5px;
+    }
+
+    .hero-stats {
+        width: calc(100% - 18px);
+        bottom: -90px;
+    }
+
+    .stat-box {
+        min-height: 85px;
+        padding: 8px 4px;
+    }
+
+    .stat-icon {
+        width: 33px;
+        height: 33px;
+    }
+
+    .stat-box h3 {
+        font-size: 18px;
+    }
+
+    .stat-box p {
+        font-size: 8px;
+    }
+
+    .volunteer-intro {
+        width: calc(100% - 18px);
+        margin-top: 145px;
+    }
+
+    .section-image img {
+        height: 250px;
+    }
+
+    .section-content h2 {
+        font-size: 28px;
+    }
+
+    .section-content p {
+        font-size: 13px;
+    }
+
+    .benefits-grid,
+    .activities-grid {
+        width: calc(100% - 18px);
+    }
+
+    .benefit-image,
+    .activity-image {
+        height: 180px;
+    }
+
+    .benefit-content,
+    .activity-body {
+        padding: 17px;
+    }
+
+    .volunteer-cta {
+        width: calc(100% - 18px);
+        border-radius: 16px;
+    }
+
+    .cta-image {
+        height: 205px;
+        min-height: 205px;
+    }
+
+    .cta-content {
+        padding: 25px 17px;
+    }
+
+    .cta-content h2 {
+        font-size: 27px;
+    }
+
+
+    /* ---------- APPLICATION ---------- */
+
+    .application-hero {
+        min-height: 470px;
+        padding: 40px 15px;
+    }
+
+    .application-hero h1 {
+        font-size: 36px;
+    }
+
+    .application-hero p {
+        font-size: 12.5px;
+    }
+
+    .application-section,
+    .status-container {
+        width: calc(100% - 18px);
+    }
+
+    .application-form-card {
+        padding: 19px 13px;
+        border-radius: 16px;
+    }
+
+    .input-wrapper input,
+    .input-wrapper select,
+    .input-wrapper textarea {
+        padding: 11px;
+        font-size: 13px;
+    }
+
+    .status-card {
+        padding: 23px 13px;
+        border-radius: 16px;
+    }
+
+    .status-icon {
+        width: 62px;
+        height: 62px;
+    }
+
+    .status-card h2 {
+        font-size: 24px;
+    }
+
+    .status-card p {
+        font-size: 12.5px;
+    }
+
+    .application-details-card {
+        padding: 17px;
+    }
+
+
+    /* ---------- IMPACT INTERNAL ---------- */
+
+    .impact-page-hero {
+        min-height: 450px;
+        padding: 42px 15px;
+    }
+
+    .impact-hero-content h1 {
+        font-size: 39px;
+    }
+
+    .impact-hero-content p {
+        font-size: 13px;
+    }
+
+    .impact-page-main {
+        width: calc(100% - 18px);
+        padding: 42px 0;
+    }
+
+    .impact-intro-image {
+        height: 245px;
+    }
+
+    .impact-intro-content h2 {
+        font-size: 29px;
+    }
+
+    .impact-intro-content p {
+        font-size: 13px;
+    }
+
+    .impact-progress-section {
+        padding: 22px 15px;
+        border-radius: 15px;
+    }
+
+    .impact-progress-content h2 {
+        font-size: 27px;
+    }
+
+    .impact-motivation-image {
+        height: 220px;
+        min-height: 220px;
+    }
+
+    .impact-motivation-content {
+        padding: 27px 17px;
+    }
+
+    .impact-motivation-content h2 {
+        font-size: 27px;
+    }
+
+
+    /* ---------- EVENTS / TASKS / CERTIFICATES ---------- */
+
+    .events-page-main,
+    .tasks-page-main,
+    .certificates-page-main {
+        width: calc(100% - 18px);
+    }
+
+    .events-page-hero,
+    .tasks-page-hero,
+    .certificates-page-hero {
+        padding: 42px 15px 46px;
+    }
+
+    .events-page-hero h1,
+    .tasks-page-hero h1,
+    .certificates-page-hero h1 {
+        font-size: 2.25rem;
+    }
+
+    .tasks-stat-grid,
+    .certificate-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* ---------- DASHBOARD ---------- */
+
+    .dashboard-header {
+        padding: 32px 15px;
+    }
+
+    .dashboard-main {
+        padding: 28px 15px 42px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 34px;
+    }
+
+    .dashboard-stat-card {
+        padding: 17px;
+    }
+
+    .dashboard-card {
+        padding: 17px;
+        border-radius: 15px;
+    }
+
+    .dashboard-card-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .dashboard-event {
+        grid-template-columns: 52px minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    .event-date {
+        width: 50px;
+        height: 58px;
+    }
+
+    .event-date strong {
+        font-size: 20px;
+    }
+
+    .task-item {
+        grid-template-columns: 38px minmax(0, 1fr);
+    }
+
+    .dashboard-certificate-card {
+        grid-template-columns: 42px minmax(0, 1fr);
+    }
+
+    .dashboard-certificate-card button {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+    .motivation-image {
+        height: 210px;
+        min-height: 210px;
+    }
+
+    .motivation-content {
+        padding: 27px 17px;
+    }
+
+    .motivation-content h2 {
+        font-size: 26px;
+    }
+   .popular {
+    top: 10px;
+    right: -16px;
+    padding: 6px 26px;
+    font-size: 9px;
+} .founder-section {
+        padding: 36px 0;
+    }
+    .founder-heading {
+        margin-bottom: 26px;
+    }
+    .founder-heading h2 {
+        font-size: 1.9rem;
+    }
+    .founder-heading p {
+        font-size: .84rem;
+    }
+    .founder-profile {
+        gap: 22px;
+    }
+    .founder-photo {
+        height: 350px;
+        border-radius: 17px;
+    }
+    .founder-photo-badge {
+        left: 12px;
+        bottom: 12px;
+        padding: 9px 11px;
+    }
+    .founder-photo-badge span {
+        font-size: .58rem;
+    }
+    .founder-photo-badge strong {
+        font-size: .7rem;
+    }
+    .founder-profile-content h3 {
+        font-size: 1.6rem;
+    }
+    .founder-profile-content p {
+        font-size: .86rem;
+        line-height: 1.65;
+    }
+    .founder-quote {
+        margin: 32px auto;
+        padding: 22px 15px;
+    }
+    .founder-quote p {
+        font-size: 1rem;
+    }
+    .founder-vision-content {
+        padding: 21px 15px;
+    }
+    .founder-vision-content h3 {
+        font-size: 1.65rem;
+    }
+    .founder-vision-content > p {
+        font-size: .84rem;
+    }
+    .founder-vision-point {
+        grid-template-columns: 28px 1fr;
+        gap: 8px;
+        padding: 10px 0;
+    }
+    .founder-vision-point p {
+        font-size: .8rem;
+    }
+    .founder-journey {
+        padding: 22px 15px;
+    }
+    .founder-journey strong {
+        font-size: 1rem;
+    }
+    .founder-promise {
+        margin-top: 32px;
+        padding: 21px 15px;
+    }
+    .founder-promise-heading h3 {
+        font-size: 1.65rem;
+    }
+    .founder-promise-list div {
+        font-size: .78rem;
+        padding: 11px 4px;
+    }
+}
+
+
+/* =========================================================
+   7. VERY SMALL PHONE
+   360px and below
+
+   Do NOT stack the two Hero buttons.
+   They remain compact equal-width controls.
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .navbar-logo-image {
+        width: 120px;
+    }
+
+    .mobile-menu-button {
+        width: 36px;
+        height: 36px;
+    }
+
+
+    /* ---------- HERO ---------- */
+
+    .hero {
+        padding-bottom: 90px;
+    }
+
+    .hero-container {
+        width: 96%;
+
+        min-height: 500px;
+
+        padding: 21px 5px 30px;
+    }
+
+    .hero-art img {
+        opacity: 4;
+        object-position: center center;
+    }
+
+    .hero-content {
+        padding: 10px 2px;
+    }
+
+    .hero-badge {
+        font-size: 0.56rem;
+        padding: 5px 8px;
+    }
+
+    .hero h1 {
+        font-size: 1.98rem;
+        line-height: 1.08;
+    }
+
+    .hero-theme {
+        font-size: 0.76rem;
+    }
+
+    .hero-content > p {
+        font-size: 0.70rem;
+        line-height: 1.5;
+    }
+
+    .hero-divider {
+        width: 84%;
+        margin: 9px auto;
+    }
+
+    .hero-buttons {
+        gap: 5px;
+    }
+
+    .hero-btn {
+        min-height: 41px;
+
+        padding: 0 2px;
+
+        font-size: 0.55rem;
+
+        gap: 3px;
+
+        border-radius: 7px;
+    }
+
+    .hero-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .hero-founder {
+        font-size: 0.64rem;
+    }
+
+    .hero-feature {
+        padding: 2px 1px;
+    }
+
+    .hero-feature svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .hero-feature strong {
+        font-size: 0.78rem;
+    }
+
+    .hero-feature span {
+        font-size: 0.44rem;
+    }
+
+    .stats-card {
+        width: 96%;
+        left: 2%;
+        right: 2%;
+    }
+
+    .stat {
+        min-height: 55px;
+        padding: 3px;
+        gap: 3px;
+    }
+
+    .stat svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    .stat strong {
+        font-size: 0.84rem;
+    }
+
+    .stat span {
+        font-size: 0.49rem;
+    }
+
+
+    /* ---------- ABOUT ---------- */
+
+    .about-image-wrapper img {
+        height: 220px;
+    }
+
+    .about-content h2 {
+        font-size: 25px;
+    }
+
+    .about-highlight strong {
+        font-size: 0.88rem;
+    }
+
+    .about-highlight span {
+        font-size: 0.52rem;
+    }
+
+
+    /* ---------- TRANSPARENCY ---------- */
+
+    .transparency-card {
+        padding: 16px 10px;
+    }
+
+
+    /* ---------- IMPACT ---------- */
+
+    .impact-card {
+        padding: 18px 5px;
+    }
+
+    .impact-card h3 {
+        font-size: 27px;
+    }
+
+    .impact-card p {
+        font-size: 0.62rem;
+    }
+
+
+    /* ---------- DONATION ---------- */
+ .donation-card {
+    min-height: 0;
+    padding: 10px 8px;
+    gap: 3px;
+}
+.donation-card h3,
+.donation-card h4,
+.donation-card p {
+    margin: 0;
+}
+.donation-card p {
+    font-size: 11px;
+}
+.donation-card .donate-btn {
+    margin-top: 4px;
+    padding: 6px 12px;
+    font-size: 10px;
+}
+    .donation-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .donation-card {
+        min-height: 68px;
+        padding: 6px 3px;
+    }
+
+    .donation-card strong {
+        font-size: 14px;
+    }
+
+    .donation-card span {
+        font-size: 8px;
+    }
+
+
+    /* ---------- RECEIPT ---------- */
+
+    .receipt-card {
+        padding: 19px 11px;
+    }
+
+
+    /* ---------- VOLUNTEER FEATURE PAGES ---------- */
+
+    .volunteer-hero {
+        min-height: 600px;
+        padding: 38px 12px 145px;
+    }
+
+    .hero-text h1 {
+        font-size: 35px;
+    }
+
+    .hero-text p {
+        font-size: 12px;
+    }
+
+    .hero-stats {
+        width: calc(100% - 12px);
+        bottom: -88px;
+    }
+
+    .stat-box {
+        min-height: 78px;
+        padding: 7px 3px;
+        gap: 4px;
+    }
+
+    .stat-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .stat-box h3 {
+        font-size: 17px;
+    }
+
+    .stat-box p {
+        font-size: 7.5px;
+    }
+
+    .volunteer-intro {
+        width: calc(100% - 12px);
+        margin-top: 140px;
+    }
+
+    .section-image img {
+        height: 220px;
+    }
+
+    .section-content h2 {
+        font-size: 26px;
+    }
+
+    .benefits-grid,
+    .activities-grid {
+        width: calc(100% - 12px);
+    }
+
+    .benefit-image,
+    .activity-image {
+        height: 165px;
+    }
+
+    .volunteer-cta {
+        width: calc(100% - 12px);
+    }
+
+    .cta-image {
+        height: 190px;
+        min-height: 190px;
+    }
+
+    .cta-content {
+        padding: 22px 14px;
+    }
+
+    .cta-content h2 {
+        font-size: 25px;
+    }
+
+
+    /* ---------- APPLICATION / STATUS ---------- */
+
+    .application-section,
+    .status-container {
+        width: calc(100% - 12px);
+    }
+
+    .application-form-card {
+        padding: 17px 11px;
+    }
+
+    .status-card {
+        padding: 20px 10px;
+    }
+
+
+    /* ---------- INTERNAL IMPACT ---------- */
+
+    .impact-page-main {
+        width: calc(100% - 12px);
+    }
+
+    .impact-intro-image {
+        height: 215px;
+    }
+
+    .impact-intro-content h2 {
+        font-size: 27px;
+    }
+
+    .impact-progress-section {
+        padding: 19px 12px;
+    }
+
+    .impact-motivation-content {
+        padding: 23px 13px;
+    }
+
+
+    /* ---------- DASHBOARD ---------- */
+
+    .dashboard-header {
+        padding: 28px 12px;
+    }
+
+    .dashboard-main {
+        padding: 25px 12px 38px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 30px;
+    }
+
+    .dashboard-stat-card {
+        padding: 15px;
+    }
+
+    .dashboard-card {
+        padding: 15px;
+    }
+
+    .dashboard-card-header h2,
+    .dashboard-quick-card h2 {
+        font-size: 18px;
+    }
+    .founder-section {
+        padding: 32px 0;
+    }
+    .founder-photo {
+        height: 280px;
+    }
+    .founder-profile-content h3 {
+        font-size: 1.5rem;
+    }
+    .founder-profile-content p {
+        font-size: .82rem;
+    }
+    .founder-quote {
+        padding: 20px 13px;
+    }
+    .founder-quote p {
+        font-size: .94rem;
+    }
+    .founder-vision-content {
+        padding: 19px 13px;
+    }
+    .founder-vision-content h3 {
+        font-size: 1.55rem;
+    }
+    .founder-journey {
+        padding: 20px 12px;
+    }
+    .founder-promise {
+        padding: 19px 13px;
+    }
+}
+
+
+/* =========================================================
+   8. FINAL OVERFLOW / FLEX PROTECTION
+   Applied after all breakpoints.
+
+   These are intentionally conservative. They prevent long
+   labels, email addresses and cards from creating horizontal
+   overflow without changing the desktop design.
+========================================================= */
+
+.navbar-container,
+.hero-container,
+.about-container,
+.transparency-card,
+.programs-grid,
+.campaigns-grid,
+.community-journey,
+.impact-grid,
+.gallery-grid,
+.events-grid,
+.testimonial-grid,
+.contact-wrapper,
+.footer-grid,
+.auth-container,
+.donation-container,
+.volunteer-container,
+.volunteer-intro,
+.benefits-grid,
+.activities-grid,
+.volunteer-cta,
+.application-section,
+.application-layout,
+.status-container,
+.impact-page-main,
+.events-page-main,
+.tasks-page-main,
+.certificates-page-main,
+.dashboard-container,
+.dashboard-grid,
+.dashboard-stats {
+    min-width: 0;
+}
+
+.program-card,
+.campaign-card,
+.impact-card,
+.event-card,
+.testimonial-card,
+.about-highlight,
+.transparency-step,
+.community-journey-item,
+.dashboard-card,
+.dashboard-stat-card,
+.volunteer-form-card,
+.application-form-card,
+.status-card,
+.receipt-card {
+    overflow-wrap: anywhere;
+}
+
+.profile-info,
+.profile-card-info,
+.quick-action > div:nth-child(2),
+.stat div,
+.hero-feature div,
+.event-information,
+.task-information,
+.dashboard-welcome,
+.dashboard-card-header > div {
+    min-width: 0;
+}
+
+button,
+.btn,
+.hero-btn,
+.about-btn,
+.programs-cta-btn,
+.campaigns-cta-btn,
+.orange-button,
+.outline-button,
+.navbar-donate {
+    max-width: 100%;
+}
+
+@media (hover: none) {
+    .program-card:hover,
+    .campaign-card:hover,
+    .impact-card:hover,
+    .event-card:hover,
+    .testimonial-card:hover,
+    .benefit-card:hover,
+    .activity-card:hover,
+    .dashboard-stat-card:hover {
+        transform: none;
+    }
+}

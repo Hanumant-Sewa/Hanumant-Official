@@ -1,0 +1,5717 @@
+/*====================================================
+        HANUMANT SEVA - VOLUNTEER
+====================================================*/
+
+.volunteer-page,
+.volunteer-application-page,
+.application-status-page,
+.volunteer-dashboard-page,
+.volunteer-profile-page,
+.volunteer-events-page,
+.event-details-page,
+.volunteer-tasks-page,
+.volunteer-impact-page,
+.volunteer-certificates-page {
+    width: 100%;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: clip;
+}
+
+.volunteer-page *,
+.volunteer-application-page *,
+.application-status-page *,
+.volunteer-dashboard-page *,
+.volunteer-profile-page *,
+.volunteer-events-page *,
+.event-details-page *,
+.volunteer-tasks-page *,
+.volunteer-impact-page *,
+.volunteer-certificates-page * {
+    box-sizing: border-box;
+}
+
+
+/*====================================================
+                    BUTTONS
+====================================================*/
+
+.volunteer-page .orange-button,
+.volunteer-page .outline-button,
+.volunteer-application-page .orange-button,
+.volunteer-application-page .outline-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 44px;
+    padding: 11px 20px;
+
+    border-radius: 50px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.volunteer-page .orange-button,
+.volunteer-application-page .orange-button {
+    border: 1px solid var(--primary);
+    background: var(--primary);
+    color: #fff;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.volunteer-page .orange-button:hover,
+.volunteer-application-page .orange-button:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.volunteer-page .outline-button,
+.volunteer-application-page .outline-button {
+    border: 1px solid var(--primary);
+    background: transparent;
+    color: var(--primary);
+}
+
+.volunteer-page .outline-button:hover,
+.volunteer-application-page .outline-button:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+
+/*====================================================
+                SECTION HEADING
+====================================================*/
+
+.volunteer-page .section-label,
+.volunteer-application-page .section-label {
+    display: inline-block;
+
+    margin-bottom: 8px;
+
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+.volunteer-page .section-heading {
+    width: min(100%, 720px);
+
+    margin: 0 auto 34px;
+
+    text-align: center;
+}
+
+.volunteer-page .section-heading h2 {
+    margin: 0 0 10px;
+
+    color: var(--text);
+
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(28px, 3.2vw, 40px);
+    line-height: 1.15;
+}
+
+.volunteer-page .section-heading h2 span {
+    color: var(--primary);
+    margin-left: 4px;
+}
+
+.volunteer-page .section-heading p {
+    width: min(100%, 620px);
+
+    margin: 0 auto;
+
+    color: var(--text-light);
+
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+/*====================================================
+                    VOLUNTEER HERO
+====================================================*/
+
+.volunteer-page .volunteer-hero {
+    position: relative;
+
+    /* IMPORTANT:
+       Do not use 70vh / 80vh here.
+       The hero should size according to its content. */
+    min-height: 480px;
+    height: auto;
+
+    display: flex;
+    align-items: center;
+
+    padding: 46px 3% 52px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255, 253, 249, 0.98) 0%,
+            rgba(255, 248, 240, 0.94) 45%,
+            rgba(255, 248, 240, 0.42) 100%
+        ),
+        url("/images/volunteer-hero.png");
+
+    background-size: cover;
+    background-position: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.volunteer-page .hero-overlay {
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 75% 40%,
+            rgba(245, 158, 11, 0.10),
+            transparent 32%
+        );
+
+    pointer-events: none;
+}
+
+.volunteer-page .hero-content {
+    position: relative;
+    z-index: 2;
+
+    width: min(100%, 1180px);
+
+    margin: 0 auto;
+}
+
+.volunteer-page .hero-text {
+    width: min(50%, 570px);
+    max-width: 570px;
+}
+
+.volunteer-page .hero-small-title {
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+.volunteer-page .hero-text h1 {
+    margin: 0;
+
+    color: var(--text);
+
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(40px, 4.5vw, 62px);
+    line-height: 1.06;
+}
+
+.volunteer-page .hero-text h1 span {
+    display: block;
+    color: var(--primary);
+}
+
+.volunteer-page .hero-text h2 {
+    margin: 14px 0 10px;
+
+    color: var(--text);
+
+    font-size: clamp(17px, 1.8vw, 21px);
+    line-height: 1.35;
+}
+
+.volunteer-page .hero-text p {
+    max-width: 500px;
+
+    margin: 0 0 20px;
+
+    color: var(--text-light);
+
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.volunteer-page .hero-button {
+    padding: 11px 22px;
+}
+
+
+/*====================================================
+                    HERO STATS
+====================================================*/
+
+/*
+   IMPORTANT:
+   The old bottom:-80px was creating a large empty
+   area between the hero and the next section.
+
+   The stats now sit at the bottom edge without being
+   pushed 80px outside the hero.
+*/
+
+.volunteer-page .hero-stats {
+    position: absolute;
+    z-index: 5;
+
+    left: 50%;
+    bottom: 0;
+
+    transform: translate(-50%, 50%);
+
+    width: min(90%, 1120px);
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    background: #fff;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow-lg);
+
+    overflow: hidden;
+}
+
+.volunteer-page .stat-box {
+    min-height: 82px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 14px 16px;
+
+    border-right: 1px solid var(--border);
+}
+
+.volunteer-page .stat-box:last-child {
+    border-right: none;
+}
+
+.volunteer-page .stat-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #fff2de;
+    color: var(--primary);
+}
+
+.volunteer-page .stat-box h3 {
+    margin: 0 0 2px;
+
+    color: var(--text);
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    line-height: 1.1;
+}
+
+.volunteer-page .stat-box p {
+    margin: 0;
+
+    color: var(--text-light);
+
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+
+/*====================================================
+                    INTRODUCTION
+====================================================*/
+
+.volunteer-page .volunteer-intro {
+    width: min(90%, 1180px);
+
+    /*
+       The stats overlap only ~41px.
+       So the introduction needs only enough
+       breathing room to clear the card.
+    */
+    margin: 76px auto 0;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: clamp(28px, 3.5vw, 52px);
+
+    align-items: center;
+}
+
+.volunteer-page .section-image {
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+    border: 1px solid var(--border);
+
+    box-shadow: var(--shadow-md);
+}
+
+.volunteer-page .section-image img {
+    width: 100%;
+    height: clamp(280px, 30vw, 390px);
+
+    display: block;
+
+    object-fit: cover;
+
+    transition: var(--transition);
+}
+
+.volunteer-page .section-image:hover img {
+    transform: scale(1.03);
+}
+
+.volunteer-page .section-content h2 {
+    margin: 0 0 12px;
+
+    color: var(--text);
+
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(28px, 3.5vw, 40px);
+    line-height: 1.15;
+}
+
+.volunteer-page .section-content h2 span {
+    color: var(--primary);
+}
+
+.volunteer-page .section-content p {
+    margin: 0 0 12px;
+
+    color: var(--text-light);
+
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.volunteer-page .section-content .outline-button {
+    margin-top: 6px;
+}
+
+
+/*====================================================
+                    WHY VOLUNTEER
+====================================================*/
+
+.volunteer-page .why-volunteer {
+    margin-top: 56px;
+
+    padding: 48px 5%;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fff8f0 0%,
+            #fffdf9 100%
+        );
+
+    border-top: 1px solid #f4e5d5;
+    border-bottom: 1px solid #f4e5d5;
+}
+
+.volunteer-page .benefits-grid {
+    width: min(90%, 1150px);
+
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.volunteer-page .benefit-card {
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow-sm);
+
+    transition: var(--transition);
+}
+
+.volunteer-page .benefit-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.volunteer-page .benefit-image {
+    width: 100%;
+    height: 175px;
+
+    overflow: hidden;
+}
+
+.volunteer-page .benefit-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition: var(--transition);
+}
+
+.volunteer-page .benefit-card:hover .benefit-image img {
+    transform: scale(1.04);
+}
+
+.volunteer-page .benefit-content {
+    padding: 18px;
+}
+
+.volunteer-page .benefit-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border-radius: 12px;
+
+    color: var(--primary);
+    background: #fff2de;
+}
+
+.volunteer-page .benefit-content h3 {
+    margin: 0 0 7px;
+
+    color: var(--text);
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    line-height: 1.25;
+}
+
+.volunteer-page .benefit-content p {
+    margin: 0;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+
+/*====================================================
+                    ACTIVITIES
+====================================================*/
+
+.volunteer-page .volunteer-activities {
+    width: min(90%, 1200px);
+
+    margin: 54px auto;
+}
+
+.volunteer-page .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.volunteer-page .activity-card {
+    overflow: hidden;
+
+    background: #fff;
+
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow-sm);
+
+    transition: var(--transition);
+}
+
+.volunteer-page .activity-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.volunteer-page .activity-image {
+    height: 170px;
+
+    overflow: hidden;
+}
+
+.volunteer-page .activity-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition: var(--transition);
+}
+
+.volunteer-page .activity-card:hover .activity-image img {
+    transform: scale(1.04);
+}
+
+.volunteer-page .activity-body {
+    padding: 18px;
+}
+
+.volunteer-page .activity-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border-radius: 12px;
+
+    background: #fff2de;
+    color: var(--primary);
+}
+
+.volunteer-page .activity-body h3 {
+    margin: 0 0 7px;
+
+    color: var(--text);
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    line-height: 1.25;
+}
+
+.volunteer-page .activity-body p {
+    margin: 0 0 12px;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.volunteer-page .activity-body button {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 5px 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--primary);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.volunteer-page .activity-body button:hover {
+    color: var(--primary-dark);
+}
+
+
+/*====================================================
+                        CTA
+====================================================*/
+
+.volunteer-page .volunteer-cta {
+    width: min(90%, 1180px);
+
+    margin: 0 auto 54px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    overflow: hidden;
+
+    background: #fff2de;
+
+    border: 1px solid #f4c27a;
+    border-radius: 18px;
+
+    box-shadow: var(--shadow-md);
+}
+
+.volunteer-page .cta-image {
+    min-height: 280px;
+}
+
+.volunteer-page .cta-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+.volunteer-page .cta-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 32px;
+}
+
+.volunteer-page .cta-content h2 {
+    margin: 0 0 12px;
+
+    color: var(--text);
+
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(27px, 3.2vw, 38px);
+    line-height: 1.15;
+}
+
+.volunteer-page .cta-content h2 span {
+    display: block;
+    color: var(--primary);
+}
+
+.volunteer-page .cta-content p {
+    max-width: 450px;
+
+    margin: 0 0 18px;
+
+    color: var(--text-light);
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.volunteer-page .cta-content .orange-button {
+    width: fit-content;
+}
+
+
+
+/*====================================================
+                APPLICATION PAGE
+====================================================*/
+.volunteer-application-page .application-hero{
+    position:relative;
+    min-height:0;
+    height:auto;
+    display:flex;
+    align-items:center;
+    padding:34px 0 40px;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,253,249,.98),
+            rgba(255,248,240,.90)
+        ),
+        url("/images/volunteer-hero.png");
+    background-size:cover;
+    background-position:center;
+    border-bottom:1px solid var(--border);
+    overflow:hidden;
+}
+.volunteer-application-page .application-hero-overlay{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(
+        circle at 80% 40%,
+        rgba(245,158,11,.10),
+        transparent 35%
+    );
+    pointer-events:none;
+}
+.volunteer-application-page .application-hero-content{
+    position:relative;
+    z-index:2;
+    width:min(1200px,92%);
+    margin:0 auto;
+}
+.volunteer-application-page .back-button{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin:0 0 18px;
+    padding:8px 14px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    font-size:14px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+    transition:var(--transition);
+}
+.volunteer-application-page .back-button:hover{
+    border-color:var(--primary);
+    color:var(--primary-dark);
+    background:#fffaf5;
+}
+.volunteer-application-page .application-label{
+    display:block;
+    margin:0 0 8px;
+    color:var(--primary);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+}
+.volunteer-application-page .application-hero h1{
+    margin:0;
+    color:var(--text);
+    font-family:'Poppins',sans-serif;
+    font-size:clamp(38px,4.5vw,58px);
+    line-height:1.06;
+}
+.volunteer-application-page .application-hero h1 span{
+    color:var(--primary);
+}
+.volunteer-application-page .application-hero p{
+    max-width:620px;
+    margin:12px 0 0;
+    color:var(--text-light);
+    font-size:15px;
+    line-height:1.6;
+}
+.volunteer-application-page .application-section{
+    width:min(1200px,92%);
+    margin:0 auto;
+    padding:42px 0 50px;
+}
+.volunteer-application-page .application-layout{
+    display:grid;
+    grid-template-columns:340px minmax(0,1fr);
+    gap:30px;
+    align-items:start;
+}
+.volunteer-application-page .application-info{
+    position:sticky;
+    top:24px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px;
+    box-shadow:var(--shadow-sm);
+}
+.volunteer-application-page .status-bottom-actions{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    margin-top:24px;
+}
+.volunteer-application-page .status-bottom-action{
+    margin:0;
+    padding:0;
+}
+.volunteer-application-page .application-image{
+    width:100%;
+    height:190px;
+    margin:0 0 20px;
+    overflow:hidden;
+    border-radius:11px;
+}
+.volunteer-application-page .application-image img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+}
+.volunteer-application-page .section-label{
+    display:inline-block;
+    margin:0 0 8px;
+    color:var(--primary);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+}
+.volunteer-application-page .application-info h2{
+    margin:0 0 11px;
+    color:var(--text);
+    font-family:'Poppins',sans-serif;
+    font-size:27px;
+    line-height:1.2;
+}
+.volunteer-application-page .application-info h2 span{
+    display:block;
+    color:var(--primary);
+}
+.volunteer-application-page .application-info>p{
+    margin:0 0 22px;
+    color:var(--text-light);
+    font-size:14px;
+    line-height:1.6;
+}
+.volunteer-application-page .info-points{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+.volunteer-application-page .info-point{
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+}
+.volunteer-application-page .info-point-icon{
+    width:40px;
+    height:40px;
+    min-width:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#fff2de;
+    color:var(--primary);
+}
+.volunteer-application-page .info-point h3{
+    margin:1px 0 4px;
+    color:var(--text);
+    font-size:14px;
+    line-height:1.3;
+}
+.volunteer-application-page .info-point p{
+    margin:0;
+    color:var(--text-light);
+    font-size:12px;
+    line-height:1.55;
+}
+.volunteer-application-page .application-form-card{
+    width:100%;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:28px;
+    box-shadow:var(--shadow-sm);
+}
+.volunteer-application-page .form-heading{
+    margin-bottom:22px;
+}
+.volunteer-application-page .form-label{
+    display:inline-block;
+    margin:0 0 6px;
+    color:var(--primary);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+}
+.volunteer-application-page .form-heading h2{
+    margin:0 0 7px;
+    color:var(--text);
+    font-family:'Poppins',sans-serif;
+    font-size:27px;
+    line-height:1.2;
+}
+.volunteer-application-page .form-heading p{
+    margin:0;
+    color:var(--text-light);
+    font-size:13px;
+    line-height:1.55;
+}
+.volunteer-application-page .form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-bottom:16px;
+}
+.volunteer-application-page .form-group{
+    width:100%;
+    margin:0 0 16px;
+}
+.volunteer-application-page .form-group label{
+    display:block;
+    margin:0 0 6px;
+    color:var(--text);
+    font-size:13px;
+    font-weight:600;
+}
+.volunteer-application-page .form-group label span{
+    color:var(--primary);
+}
+.volunteer-application-page .input-wrapper{
+    width:100%;
+    min-height:46px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:0 12px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    transition:var(--transition);
+}
+.volunteer-application-page .input-wrapper:hover{
+    border-color:#c9b9a8;
+}
+.volunteer-application-page .input-wrapper:focus-within{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(217,119,6,.08);
+}
+.volunteer-application-page .input-wrapper svg{
+    flex-shrink:0;
+    color:var(--text-light);
+}
+.volunteer-application-page .input-wrapper input,
+.volunteer-application-page .input-wrapper select{
+    width:100%;
+    height:44px;
+    padding:0;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:var(--text);
+    font-family:inherit;
+    font-size:13px;
+}
+.volunteer-application-page .input-wrapper input::placeholder{
+    color:#9aa8b6;
+}
+.volunteer-application-page .input-wrapper select{
+    cursor:pointer;
+}
+.volunteer-application-page .textarea-wrapper{
+    align-items:flex-start;
+    padding-top:11px;
+    padding-bottom:11px;
+}
+.volunteer-application-page .textarea-wrapper svg{
+    margin-top:2px;
+}
+.volunteer-application-page .input-wrapper textarea{
+    width:100%;
+    min-height:82px;
+    padding:0;
+    border:none;
+    outline:none;
+    resize:vertical;
+    background:transparent;
+    color:var(--text);
+    font-family:inherit;
+    font-size:13px;
+    line-height:1.55;
+}
+.volunteer-application-page .input-wrapper textarea::placeholder{
+    color:#9aa8b6;
+}
+.volunteer-application-page .activity-main-label{
+    display:flex !important;
+    align-items:center;
+    gap:7px;
+    margin-bottom:4px !important;
+}
+.volunteer-application-page .activity-main-label svg{
+    color:var(--text-light);
+}
+.volunteer-application-page .activity-help{
+    margin:0 0 8px;
+    color:var(--text-light);
+    font-size:11px;
+}
+.volunteer-application-page .activity-select-container{
+    position:relative;
+    width:100%;
+}
+.volunteer-application-page .activity-select-button{
+    width:100%;
+    height:46px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    font-family:inherit;
+    font-size:13px;
+    cursor:pointer;
+    transition:var(--transition);
+}
+.volunteer-application-page .activity-select-button:hover{
+    border-color:#c9b9a8;
+}
+.volunteer-application-page .activity-select-open{
+    border-color:var(--primary);
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
+    box-shadow:0 0 0 3px rgba(217,119,6,.08);
+}
+.volunteer-application-page .activity-select-left{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    min-width:0;
+}
+.volunteer-application-page .activity-select-left svg{
+    flex-shrink:0;
+    color:var(--text-light);
+}
+.volunteer-application-page .activity-select-left span{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    color:var(--text);
+}
+.volunteer-application-page .activity-chevron{
+    flex-shrink:0;
+    color:var(--text);
+    transition:transform .2s ease;
+}
+.volunteer-application-page .rotate-chevron{
+    transform:rotate(180deg);
+}
+
+/*====================================================
+                    DROPDOWN OPTIONS
+====================================================*/
+.volunteer-application-page .activity-dropdown{
+    position:absolute;
+    top:50px;
+    left:0;
+    right:0;
+    z-index:1000;
+    width:100%;
+    padding:4px 0;
+    background:#fff;
+    border:1px solid var(--primary);
+    border-top:none;
+    border-bottom-left-radius:9px;
+    border-bottom-right-radius:9px;
+    box-shadow:0 8px 18px rgba(23,50,77,.10);
+    box-sizing:border-box;
+}
+.volunteer-application-page .activity-option{
+    position:relative;
+    width:100%;
+    min-height:42px;
+    display:flex!important;
+    align-items:center;
+    gap:10px;
+    padding:8px 14px;
+    margin:0!important;
+    border:none!important;
+    border-radius:0!important;
+    background:#fff!important;
+    color:var(--text)!important;
+    font-family:inherit;
+    font-size:14px!important;
+    font-weight:400!important;
+    cursor:pointer;
+    box-sizing:border-box;
+    transition:background .15s ease;
+}
+.volunteer-application-page .activity-option:hover{
+    background:#FFF8F0!important;
+}
+.volunteer-application-page .activity-option input{
+    position:absolute;
+    width:1px;
+    height:1px;
+    opacity:0;
+    pointer-events:none;
+}
+.volunteer-application-page .activity-checkmark{
+    position:relative;
+    width:18px;
+    height:18px;
+    min-width:18px;
+    border:1.5px solid #aeb9c4;
+    border-radius:4px;
+    background:#fff;
+    box-sizing:border-box;
+    transition:.15s ease;
+}
+.volunteer-application-page .activity-option input:checked+.activity-checkmark{
+    background:var(--primary);
+    border-color:var(--primary);
+}
+.volunteer-application-page .activity-option input:checked+.activity-checkmark::after{
+    content:"";
+    position:absolute;
+    left:5px;
+    top:1px;
+    width:5px;
+    height:10px;
+    border:solid #fff;
+    border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+}
+.volunteer-application-page .activity-option-text{
+    color:var(--text)!important;
+    font-size:14px!important;
+    font-weight:400!important;
+}
+.volunteer-application-page .submit-application-button{
+    width:100%;
+    min-height:48px;
+    margin-top:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    border:1px solid var(--primary);
+    border-radius:9px;
+    background:var(--primary);
+    color:#fff;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.volunteer-application-page .submit-application-button:hover:not(:disabled){
+    background:var(--primary-dark);
+    border-color:var(--primary-dark);
+    transform:translateY(-1px);
+    box-shadow:0 5px 14px rgba(217,119,6,.20);
+}
+.volunteer-application-page .submit-application-button:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+}
+.volunteer-application-page .form-note{
+    margin:10px 0 0;
+    text-align:center;
+    color:var(--text-light);
+    font-size:12px;
+    line-height:1.5;
+}
+/*====================================================
+                OTHER VOLUNTEER PAGES
+====================================================*/
+.application-status-page,
+.volunteer-dashboard-page,
+.volunteer-profile-page,
+.volunteer-events-page,
+.event-details-page,
+.volunteer-tasks-page,
+.volunteer-impact-page,
+.volunteer-certificates-page{
+    padding:35px 0;
+}
+/*====================================================
+                APPLICATION STATUS PAGE
+====================================================*/
+.application-status-page{
+    width:100%;
+    min-height:100dvh;
+    background:var(--bg);
+    color:var(--text);
+    box-sizing:border-box;
+}
+.application-status-page *,
+.application-status-page *::before,
+.application-status-page *::after{
+    box-sizing:border-box;
+}
+/*====================================================
+                    STATUS HERO
+====================================================*/
+.application-status-page .application-hero{
+    position:relative;
+    width:100%;
+    min-height:260px;
+    display:flex;
+    align-items:center;
+    background:
+        linear-gradient(90deg,rgba(255,253,249,.97),rgba(255,248,240,.88)),
+        url("/images/volunteer-hero.png");
+    background-size:cover;
+    background-position:center;
+    overflow:hidden;
+    border-bottom:1px solid var(--border);
+}
+.application-status-page .application-hero-overlay{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 80% 40%,rgba(245,158,11,.10),transparent 35%);
+}
+.application-status-page .application-hero-content{
+    position:relative;
+    z-index:2;
+    width:min(1200px,92%);
+    margin:0 auto;
+    padding:38px 0;
+}
+.application-status-page .back-button{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    margin-bottom:18px;
+    padding:8px 14px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    font-family:inherit;
+    font-size:14px;
+    cursor:pointer;
+    transition:border-color .2s ease,color .2s ease;
+}
+.application-status-page .back-button:hover{
+    border-color:var(--primary);
+    color:var(--primary);
+}
+.application-status-page .application-label{
+    display:block;
+    margin-bottom:8px;
+    color:var(--primary);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.4px;
+}
+.application-status-page .application-hero-content h1{
+    margin:0 0 10px;
+    color:var(--text);
+    font-family:'Poppins',sans-serif;
+    font-size:clamp(34px,5vw,52px);
+    font-weight:700;
+    line-height:1.08;
+}
+.application-status-page .application-hero-content h1 span{
+    color:var(--primary);
+}
+.application-status-page .application-hero-content>p{
+    max-width:650px;
+    margin:0;
+    color:var(--text-light);
+    font-size:15px;
+    line-height:1.6;
+}
+/*====================================================
+                    MAIN SECTION
+====================================================*/
+.application-status-page .application-section{
+    width:100%;
+    padding:38px 20px;
+    background:var(--bg);
+}
+.application-status-page .status-container{
+    width:100%;
+    max-width:1000px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+/*====================================================
+                    STATUS CARD
+====================================================*/
+.application-status-page .status-card{
+    width:100%;
+    padding:32px 38px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 6px 22px rgba(23,50,77,.06);
+    text-align:center;
+}
+.application-status-page .status-icon{
+    width:68px;
+    height:68px;
+    margin:0 auto 16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+}
+.application-status-page .status-icon.pending{
+    background:#FFF3DF;
+    color:var(--primary);
+}
+.application-status-page .status-icon.approved{
+    background:#E9F8EF;
+    color:#2E9B5B;
+}
+.application-status-page .status-icon.rejected{
+    background:#FDECEC;
+    color:#DC4C4C;
+}
+.application-status-page .loading-icon{
+    animation:applicationStatusSpin 1s linear infinite;
+}
+@keyframes applicationStatusSpin{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+.application-status-page .status-label{
+    display:block;
+    margin-bottom:7px;
+    color:var(--primary);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1.3px;
+}
+.application-status-page .status-card h2{
+    margin:0 0 10px;
+    color:var(--text);
+    font-size:28px;
+    font-weight:700;
+    line-height:1.2;
+}
+.application-status-page .status-card h2 span{
+    color:var(--primary);
+}
+.application-status-page .status-card>p{
+    max-width:700px;
+    margin:0 auto 16px;
+    color:var(--text-light);
+    font-size:14px;
+    line-height:1.65;
+}
+.application-status-page .status-badge{
+    width:fit-content;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    margin:3px auto 0;
+    padding:8px 14px;
+    border-radius:30px;
+    font-size:12px;
+    font-weight:600;
+}
+.application-status-page .pending-badge{
+    background:#FFF3DF;
+    color:#D86D16;
+}
+.application-status-page .approved-badge{
+    background:#E9F8EF;
+    color:#27854D;
+}
+.application-status-page .rejected-badge{
+    background:#FDECEC;
+    color:#C63F3F;
+}
+/*====================================================
+                    STATUS BUTTONS
+====================================================*/
+.application-status-page .orange-button{
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:0 18px;
+    border:1px solid var(--primary);
+    border-radius:8px;
+    background:var(--primary);
+    color:#fff;
+    font-family:inherit;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.application-status-page .orange-button:hover{
+    background:var(--primary-dark);
+    border-color:var(--primary-dark);
+    transform:translateY(-1px);
+    box-shadow:0 5px 15px rgba(217,119,6,.18);
+}
+.application-status-page .outline-button{
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:0 18px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    color:var(--text);
+    font-family:inherit;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:border-color .2s ease,color .2s ease;
+}
+.application-status-page .outline-button:hover{
+    border-color:var(--primary);
+    color:var(--primary);
+}
+.application-status-page .status-action{
+    margin-top:18px;
+}
+.application-status-page .status-bottom-actions{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:20px;
+}
+.application-status-page .status-bottom-action{
+    margin:0;
+    padding:0;
+}
+/*====================================================
+                    ADMIN REMARKS
+====================================================*/
+.application-status-page .admin-remarks{
+    max-width:650px;
+    margin:20px auto 0;
+    padding:14px 17px;
+    border-left:3px solid var(--primary);
+    border-radius:7px;
+    background:#FFF8F1;
+    text-align:left;
+}
+.application-status-page .admin-remarks strong{
+    display:block;
+    margin-bottom:5px;
+    color:var(--text);
+    font-size:13px;
+}
+.application-status-page .admin-remarks p{
+    margin:0;
+    color:var(--text-light);
+    font-size:13px;
+    line-height:1.55;
+}
+/*====================================================
+                APPLICATION DETAILS CARD
+====================================================*/
+.application-status-page .application-details-card{
+    width:100%;
+    padding:24px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:0 5px 20px rgba(23,50,77,.045);
+}
+.application-status-page .details-heading{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding-bottom:16px;
+    margin-bottom:16px;
+    border-bottom:1px solid #edf0f2;
+}
+.application-status-page .details-heading-icon{
+    width:40px;
+    height:40px;
+    min-width:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#FFF2DE;
+    color:var(--primary);
+}
+.application-status-page .details-heading span{
+    display:block;
+    margin-bottom:3px;
+    color:var(--primary);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1.1px;
+}
+.application-status-page .details-heading h3{
+    margin:0;
+    color:var(--text);
+    font-size:19px;
+    font-weight:700;
+}
+.application-status-page .details-grid{
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:1px;
+    overflow:hidden;
+    border:1px solid #e8ecef;
+    border-radius:9px;
+    background:#e8ecef;
+}
+.application-status-page .detail-item{
+    min-width:0;
+    padding:15px 17px;
+    background:#fff;
+}
+.application-status-page .detail-item small{
+    display:block;
+    margin-bottom:5px;
+    color:#8493a2;
+    font-size:11px;
+    font-weight:500;
+}
+.application-status-page .detail-item strong{
+    display:block;
+    overflow-wrap:anywhere;
+    color:var(--text);
+    font-size:13px;
+    font-weight:600;
+    line-height:1.45;
+}
+/*====================================================
+                    NEXT JOURNEY
+====================================================*/
+.application-status-page .status-next-card{
+    width:100%;
+    padding:25px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:0 5px 20px rgba(23,50,77,.045);
+}
+.application-status-page .status-next-card .section-label{
+    display:block;
+    margin-bottom:6px;
+    color:var(--primary);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1.2px;
+}
+.application-status-page .status-next-card>h2{
+    margin:0 0 20px;
+    color:var(--text);
+    font-size:23px;
+    font-weight:700;
+}
+.application-status-page .journey-steps{
+    width:100%;
+}
+.application-status-page .journey-step{
+    display:flex;
+    align-items:flex-start;
+    gap:13px;
+    opacity:.48;
+    transition:opacity .2s ease;
+}
+.application-status-page .journey-step.active{
+    opacity:1;
+}
+
+/* =========================================================
+   APPLICATION STATUS PAGE
+   SCOPED RESPONSIVE SYSTEM
+   ========================================================= */
+
+.application-status-page {
+  width: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.application-status-page button:focus-visible,
+.volunteer-certificates-page button:focus-visible,
+.volunteer-tasks-page button:focus-visible,
+.volunteer-certificates-page a:focus-visible,
+.volunteer-tasks-page a:focus-visible {
+  outline: 3px solid rgba(232, 111, 42, 0.35);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .application-status-page *,
+  .volunteer-certificates-page *,
+  .volunteer-tasks-page * {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* =========================================================
+   VOLUNTEER IMPACT PAGE
+========================================================= */
+
+.volunteer-impact-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #fffaf3;
+  color: #24150f;
+}
+
+.impact-page-hero {
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  padding: 70px 7%;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 250, 243, 0.97) 0%,
+      rgba(255, 247, 237, 0.92) 45%,
+      rgba(255, 237, 213, 0.75) 100%
+    ),
+    url("/images/volunteer-service.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid #eadfd4;
+}
+
+.impact-hero-content {
+  position: relative;
+  z-index: 2;
+  width: 650px;
+  max-width: 100%;
+}
+
+.impact-hero-content .back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 35px;
+  border: none;
+  background: transparent;
+  color: #5c4032;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.impact-hero-content .back-button:hover {
+  color: var(--primary);
+}
+
+.impact-hero-content .application-label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.impact-hero-content h1 {
+  margin: 0 0 20px;
+  font-size: clamp(48px, 6vw, 78px);
+  line-height: 0.95;
+  font-weight: 800;
+  color: #24150f;
+}
+
+.impact-hero-content h1 span {
+  color: var(--primary);
+}
+
+.impact-hero-content p {
+  max-width: 650px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #624b3e;
+}
+
+.impact-page-main {
+  width: min(1180px, 90%);
+  margin: 0 auto;
+  padding: 80px 0;
+}
+
+.impact-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 100px;
+}
+
+.impact-intro-image {
+  width: 100%;
+  height: 430px;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.impact-intro-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.impact-intro-content > span {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.impact-intro-content h2 {
+  margin: 0 0 20px;
+  font-size: clamp(34px, 4vw, 50px);
+  line-height: 1.15;
+  color: #24150f;
+}
+
+.impact-intro-content h2 strong {
+  display: block;
+  color: var(--primary);
+}
+
+.impact-intro-content p {
+  margin: 0 0 25px;
+  color: #665248;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.impact-highlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #fff1e6;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.impact-highlight span {
+  color: #4d382d;
+}
+
+.impact-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 35px;
+}
+
+.impact-section-heading span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.impact-section-heading h2 {
+  margin: 0;
+  color: #24150f;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.2;
+}
+
+.impact-statistics {
+  margin-bottom: 100px;
+}
+
+.impact-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.impact-stat-card {
+  padding: 30px 25px;
+  background: #ffffff;
+  border: 1px solid #eadfd4;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(72, 42, 25, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.impact-stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(72, 42, 25, 0.11);
+}
+
+.impact-stat-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border-radius: 14px;
+  background: #fff0e5;
+  color: var(--primary);
+}
+
+.impact-stat-number {
+  margin-bottom: 5px;
+  color: #24150f;
+  font-size: 38px;
+  font-weight: 800;
+}
+
+.impact-stat-card h3 {
+  margin: 0 0 10px;
+  color: #3c291f;
+  font-size: 18px;
+}
+
+.impact-stat-card p {
+  margin: 0;
+  color: #78645a;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.impact-progress-section {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 50px;
+  align-items: center;
+  margin-bottom: 100px;
+  padding: 50px;
+  border-radius: 24px;
+  background: #2b1a12;
+  color: white;
+}
+
+.impact-progress-content > span {
+  display: block;
+  margin-bottom: 10px;
+  color: #fb923c;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.impact-progress-content h2 {
+  margin: 0 0 12px;
+  font-size: 38px;
+  line-height: 1.2;
+}
+
+.impact-progress-content > p {
+  max-width: 650px;
+  margin: 0 0 30px;
+  color: #dfcec2;
+  line-height: 1.7;
+}
+
+.impact-progress-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #f4e7dd;
+}
+
+.impact-progress-info strong {
+  color: #fb923c;
+}
+
+.impact-progress-bar {
+  width: 100%;
+  height: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  background: #4a3327;
+}
+
+.impact-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: #f97316;
+}
+
+.impact-progress-content small {
+  color: #bda99d;
+}
+
+.impact-progress-icon {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #5c4032;
+  border-radius: 20px;
+  color: #fb923c;
+}
+
+.impact-progress-icon strong {
+  font-size: 45px;
+  line-height: 1;
+}
+
+.impact-progress-icon span {
+  color: #d8c4b8;
+  font-size: 14px;
+}
+
+.impact-activities-section {
+  margin-bottom: 100px;
+}
+
+.impact-view-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.impact-view-button:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.impact-activities {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.impact-activity-card {
+  display: grid;
+  grid-template-columns: 55px 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 22px;
+  background: white;
+  border: 1px solid #eadfd4;
+  border-radius: 16px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.impact-activity-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(72, 42, 25, 0.08);
+}
+
+.impact-activity-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #fff0e5;
+  color: var(--primary);
+}
+
+.impact-activity-content h3 {
+  margin: 0 0 6px;
+  color: #2c1b13;
+  font-size: 18px;
+}
+
+.impact-activity-content > p {
+  margin: 0 0 12px;
+  color: #79665b;
+  font-size: 14px;
+}
+
+.impact-activity-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.impact-activity-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #705b4f;
+  font-size: 13px;
+}
+
+.impact-completed {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background: #eaf8ef;
+  color: #27804a;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.impact-achievements-section {
+  margin-bottom: 100px;
+}
+
+.impact-achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.impact-achievement-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 25px;
+  background: white;
+  border: 1px solid #eadfd4;
+  border-radius: 18px;
+  transition: transform 0.25s ease;
+}
+
+.impact-achievement-card:hover {
+  transform: translateY(-5px);
+}
+
+.impact-achievement-icon {
+  min-width: 52px;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #fff0e5;
+  color: var(--primary);
+}
+
+.impact-achievement-card h3 {
+  margin: 2px 0 8px;
+  color: #2c1b13;
+  font-size: 17px;
+}
+
+.impact-achievement-card p {
+  margin: 0;
+  color: #78645a;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.impact-motivation {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: 400px;
+  overflow: hidden;
+  margin-bottom: 60px;
+  border-radius: 24px;
+  background: #fff0e5;
+}
+
+.impact-motivation-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 55px;
+}
+
+.impact-motivation-content > span {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.impact-motivation-content h2 {
+  max-width: 600px;
+  margin: 0 0 18px;
+  color: #2b1a12;
+  font-size: clamp(34px, 4vw, 48px);
+  line-height: 1.15;
+}
+
+.impact-motivation-content h2 strong {
+  display: block;
+  color: var(--primary);
+}
+
+.impact-motivation-content p {
+  max-width: 560px;
+  margin: 0 0 28px;
+  color: #665248;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.impact-motivation-content .orange-button {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.impact-motivation-content .orange-button:hover {
+  background: #c2410c;
+  transform: translateY(-2px);
+}
+
+.impact-motivation-image {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  overflow: hidden;
+}
+
+.impact-motivation-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.impact-bottom-action {
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.impact-bottom-action .outline-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 20px;
+  border: 1px solid #d7c5b8;
+  border-radius: 10px;
+  background: transparent;
+  color: #5b4437;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.impact-bottom-action .outline-button:hover {
+  border-color: var(--primary);
+  background: #fff0e5;
+  color: var(--primary);
+}
+
+/* =====================================================
+   DONATION CHECKOUT
+===================================================== */
+
+.checkout-page {
+  min-height: 100vh;
+  padding: 80px 20px;
+  background: #f8fafc;
+}
+
+.checkout-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.checkout-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.checkout-header h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.checkout-header h1 span {
+  color: #e85d04;
+}
+
+.checkout-header p {
+  color: #666;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.checkout-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 35px;
+}
+
+.checkout-summary-box {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.checkout-summary-box span {
+  display: block;
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 8px;
+}
+
+.checkout-summary-box strong {
+  font-size: 22px;
+  color: #222;
+}
+
+.payment-section {
+  margin-top: 30px;
+}
+
+.payment-section h3 {
+  font-size: 20px;
+  color: #222;
+  margin-bottom: 18px;
+}
+
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.payment-method {
+  border: 2px solid #e5e7eb;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+  transition: 0.3s ease;
+}
+
+.payment-method:hover {
+  border-color: #e85d04;
+  transform: translateY(-2px);
+}
+
+.payment-method.active {
+  border-color: #e85d04;
+  background: #fff4eb;
+  color: #e85d04;
+}
+
+.selected-payment {
+  margin-top: 20px;
+  padding: 15px 18px;
+  border-radius: 10px;
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  color: #555;
+}
+
+.selected-payment strong {
+  color: #222;
+}
+
+.checkout-error {
+  margin-top: 20px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: #fff0f0;
+  color: #d00000;
+  font-size: 14px;
+  text-align: center;
+}
+
+.checkout-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 35px;
+}
+
+.checkout-pay-button {
+  border: none;
+  cursor: pointer;
+  min-width: 250px;
+  padding: 15px 25px;
+  border-radius: 10px;
+  background: #e85d04;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.checkout-pay-button:hover {
+  background: #d94f00;
+  transform: translateY(-2px);
+}
+
+.checkout-pay-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.checkout-heart {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  color: #e85d04;
+}
+
+
+/* =========================================================
+   VOLUNTEER PROFILE PAGE
+========================================================= */
+
+.volunteer-profile-page {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: #fffaf5;
+  color: #19324d;
+  box-sizing: border-box;
+}
+
+.volunteer-profile-page *,
+.volunteer-profile-page *::before,
+.volunteer-profile-page *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PROFILE HERO
+========================================================= */
+
+.volunteer-profile-page .profile-page-hero {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 55px 7% 60px;
+  display: flex;
+  align-items: flex-start;
+  background:
+    linear-gradient(
+      135deg,
+      #fffaf5 0%,
+      #fff8f2 55%,
+      #fff0df 100%
+    );
+  border-bottom: 1px solid #eadfd6;
+}
+
+.volunteer-profile-page .profile-page-hero-content {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+
+/*  HERO BUTTON / LABEL / TITLE */
+
+.volunteer-profile-page .profile-page-hero .back-button {
+  width: fit-content;
+  min-width: 0;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 28px;
+  padding: 0 18px;
+  background: #fff;
+  border: 1px solid #ddd4cc;
+  border-radius: 9px;
+  color: #293746;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.volunteer-profile-page .profile-page-hero .back-button:hover {
+  color: #ea580c;
+  border-color: #ea580c;
+  background: #fff8f2;
+  transform: translateY(-1px);
+}
+
+.volunteer-profile-page .profile-page-hero .application-label {
+  display: block;
+  margin: 0 0 9px;
+  padding: 0;
+  color: #ea580c;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+
+.volunteer-profile-page .profile-page-hero h1 {
+  margin: 0 0 10px;
+  padding: 0;
+  color: #19324d;
+  font-size: 46px;
+  line-height: 1.15;
+  font-weight: 750;
+}
+
+.volunteer-profile-page .profile-page-hero h1 span {
+  color: #ea580c;
+}
+
+.volunteer-profile-page .profile-hero-description {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 0 38px;
+  padding: 0;
+  color: #64717c;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   COMMUNITY CARD
+========================================================= */
+
+.volunteer-profile-page .profile-hero-community {
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e5d9d0;
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(70, 45, 25, 0.08);
+}
+
+.volunteer-profile-page .profile-hero-community-image {
+  width: 260px;
+  height: 280px;
+  flex: 0 0 260px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #f4ece5;
+}
+
+.volunteer-profile-page .profile-hero-community-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.volunteer-profile-page .profile-hero-community-content {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0;
+  padding: 30px 42px;
+}
+
+.volunteer-profile-page .profile-hero-community-content > span {
+  display: block;
+  margin: 0 0 8px;
+  color: #ea580c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+
+.volunteer-profile-page .profile-hero-community-content h2 {
+  margin: 0 0 12px;
+  color: #19324d;
+  font-size: 30px;
+  line-height: 1.25;
+  font-weight: 750;
+}
+
+.volunteer-profile-page .profile-hero-community-content h2 strong {
+  color: #ea580c;
+}
+
+.volunteer-profile-page .profile-hero-community-content p {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 0 20px;
+  color: #63717d;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.volunteer-profile-page .profile-hero-community-content .outline-button {
+  width: fit-content;
+  min-width: 155px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 0;
+  padding: 0 20px;
+  background: #fff;
+  border: 1px solid #e0cfc1;
+  border-radius: 9px;
+  color: #293746;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.volunteer-profile-page .profile-hero-community-content .outline-button:hover {
+  color: #ea580c;
+  border-color: #ea580c;
+  background: #fff8f2;
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   PROFILE MAIN
+========================================================= */
+
+.volunteer-profile-page .profile-page-main {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 55px 35px 70px;
+}
+
+.volunteer-profile-page .profile-page-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  gap: 30px;
+  align-items: start;
+}
+
+.volunteer-profile-page .profile-main-card,
+.volunteer-profile-page .profile-info-card {
+  width: 100%;
+  margin: 0;
+  background: #fff;
+  border: 1px solid #e5d9d0;
+  border-radius: 18px;
+  box-sizing: border-box;
+}
+
+.volunteer-profile-page .profile-main-card {
+  padding: 28px 24px;
+  box-shadow: 0 10px 28px rgba(70, 45, 25, 0.06);
+}
+
+
+/* =========================================================
+   PROFILE CARD CONTENT
+========================================================= */
+
+.volunteer-profile-page .profile-large-avatar {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 16px;
+  background: #fff1e6;
+  border: 1px solid #f2cdb4;
+  border-radius: 50%;
+  color: #ea580c;
+}
+
+.volunteer-profile-page .profile-role {
+  display: block;
+  margin: 0 0 10px;
+  color: #ea580c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.volunteer-profile-page .profile-main-card h2 {
+  margin: 0 0 9px;
+  color: #19324d;
+  font-size: 23px;
+  line-height: 1.35;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.volunteer-profile-page .profile-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: #63717d;
+  font-size: 14px;
+}
+
+.volunteer-profile-page .profile-divider {
+  width: 100%;
+  height: 1px;
+  margin: 20px 0;
+  background: #eee3da;
+}
+
+.volunteer-profile-page .profile-mini-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.volunteer-profile-page .profile-mini-info > div {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #52616f;
+  font-size: 13px;
+}
+
+.volunteer-profile-page .profile-mini-info svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #ea580c;
+}
+
+.volunteer-profile-page .profile-mini-info span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   EDIT / VERIFIED
+========================================================= */
+
+.volunteer-profile-page .profile-edit-button {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 22px 0 20px;
+  padding: 0 15px;
+  background: #ea580c;
+  border: 1px solid #ea580c;
+  border-radius: 9px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.volunteer-profile-page .profile-edit-button:hover {
+  background: #d94f08;
+  transform: translateY(-1px);
+}
+
+.volunteer-profile-page .profile-verified {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0;
+  padding: 13px 0 0;
+  border-top: 1px solid #eee3da;
+  color: #52616f;
+}
+
+.volunteer-profile-page .profile-verified > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #ea580c;
+}
+
+.volunteer-profile-page .profile-verified div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.volunteer-profile-page .profile-verified strong {
+  color: #19324d;
+  font-size: 13px;
+}
+
+.volunteer-profile-page .profile-verified span {
+  color: #75818b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   INFORMATION
+========================================================= */
+
+.volunteer-profile-page .profile-information {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.volunteer-profile-page .profile-info-card {
+  padding: 28px 30px;
+  box-shadow: 0 10px 28px rgba(70, 45, 25, 0.05);
+}
+
+.volunteer-profile-page .profile-info-heading {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 0 0 22px;
+}
+
+.volunteer-profile-page .profile-info-heading > div {
+  min-width: 0;
+}
+
+.volunteer-profile-page .profile-info-heading span {
+  display: block;
+  margin: 0 0 7px;
+  color: #ea580c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.volunteer-profile-page .profile-info-heading h2 {
+  margin: 0;
+  color: #19324d;
+  font-size: 25px;
+  line-height: 1.25;
+  font-weight: 750;
+}
+
+.volunteer-profile-page .profile-info-heading > svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: #ea580c;
+}
+
+
+/* =========================================================
+   DETAILS / PREFERENCES
+========================================================= */
+
+.volunteer-profile-page .profile-detail-grid,
+.volunteer-profile-page .profile-preference-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.volunteer-profile-page .profile-detail {
+  width: 100%;
+  min-width: 0;
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 13px 16px;
+  background: #fffaf7;
+  border: 1px solid #eee1d8;
+  border-radius: 10px;
+}
+
+.volunteer-profile-page .profile-detail small {
+  color: #75818b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.volunteer-profile-page .profile-detail strong {
+  color: #19324d;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.volunteer-profile-page .preference-box {
+  width: 100%;
+  min-width: 0;
+  min-height: 90px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 17px;
+  background: #fffaf7;
+  border: 1px solid #eee1d8;
+  border-radius: 11px;
+  transition: all 0.2s ease;
+}
+
+.volunteer-profile-page .preference-box:hover {
+  border-color: #f0c8ae;
+  box-shadow: 0 6px 18px rgba(70, 45, 25, 0.05);
+}
+
+.volunteer-profile-page .preference-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff0e5;
+  border-radius: 9px;
+  color: #ea580c;
+}
+
+.volunteer-profile-page .preference-box > div:last-child {
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.volunteer-profile-page .preference-box small {
+  display: block;
+  margin: 0 0 5px;
+  color: #75818b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+}
+
+.volunteer-profile-page .preference-box h3 {
+  margin: 0;
+  color: #19324d;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   BOTTOM ACTION
+========================================================= */
+
+.volunteer-profile-page .profile-bottom-action {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 5px 0 0;
+}
+
+.volunteer-profile-page .profile-bottom-action .outline-button {
+  width: auto;
+  min-width: 210px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 22px;
+  background: #fff;
+  border: 1px solid #e0cfc1;
+  border-radius: 9px;
+  color: #293746;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.volunteer-profile-page .profile-bottom-action .outline-button:hover {
+  color: #ea580c;
+  border-color: #ea580c;
+  background: #fff8f2;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+  .hero-content,
+  .application-hero-content {
+    width: 100%;
+  }
+
+  .hero-text {
+    width: 52%;
+  }
+
+  .volunteer-intro {
+    gap: 40px;
+  }
+
+  .benefits-grid,
+  .activities-grid {
+    gap: 20px;
+  }
+
+  .dashboard-grid {
+    gap: 20px;
+  }
+
+  .dashboard-card,
+  .dashboard-profile-card,
+  .dashboard-quick-card,
+  .dashboard-impact-card,
+  .dashboard-certificate-card {
+    min-width: 0;
+  }
+
+  .impact-page-main {
+    width: 92%;
+  }
+
+  .impact-intro {
+    gap: 45px;
+  }
+}
+/* STATUS PAGE — TABLET */
+
+@media (max-width: 1024px) {
+
+  .application-status-page .application-hero {
+    min-height: 300px;
+  }
+
+  .application-status-page .application-hero-content {
+    width: min(90%, 760px);
+  }
+
+  .application-status-page .application-hero-content h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+  }
+
+  .application-status-page .status-card {
+    padding: 32px 26px;
+  }
+
+  .application-status-page .application-details-card,
+  .application-status-page .status-next-card {
+    padding: 24px;
+  }
+
+  .application-status-page .journey-step p {
+    max-width: 100%;
+  }
+
+
+  /* CERTIFICATES */
+
+  .volunteer-certificates-page {
+    min-height: 100dvh;
+  }
+
+  .certificates-page-hero {
+    padding: 70px 6% 60px;
+  }
+
+  .certificates-page-main {
+    width: min(900px, 90%);
+    padding: 55px 0 65px;
+  }
+
+  .certificate-stat-grid {
+    gap: 16px;
+  }
+
+  .certificate-stat-card {
+    padding: 19px;
+  }
+
+  .certificates-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .certificate-image {
+    height: 210px;
+  }
+
+  .certificates-motivation-content {
+    padding: 38px;
+  }
+
+
+  /* TASKS */
+
+  .volunteer-tasks-page {
+    min-height: 100dvh;
+  }
+
+  .tasks-page-hero {
+    padding: 70px 6% 60px;
+  }
+
+  .tasks-page-main {
+    width: min(900px, 90%);
+    padding: 55px 0 65px;
+  }
+
+  .tasks-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 55px;
+  }
+
+  .tasks-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .volunteer-task-card {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .task-card-image {
+    min-height: 100%;
+  }
+
+  .tasks-motivation-content {
+    padding: 38px;
+  }
+}
+/* TABLET / SMALL DESKTOP — 1000px */
+@media (max-width: 1000px) {
+    .application-layout {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .application-info {
+        position: static;
+        max-width: 700px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .application-form-card {
+        max-width: 850px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .application-status-page .status-container {
+        max-width: 850px;
+    }
+
+    .volunteer-hero {
+        min-height: 480px;
+    }
+
+    .hero-text {
+        width: 55%;
+    }
+
+    .hero-stats {
+        bottom: -55px;
+        width: min(92%, 900px);
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-box:nth-child(2) {
+        border-right: none;
+    }
+
+    .stat-box:nth-child(-n + 2) {
+        border-bottom: 1px solid var(--border);
+    }
+
+    .volunteer-intro {
+        margin-top: 75px;
+        gap: 30px;
+        grid-template-columns: 1fr;
+    }
+
+    .benefits-grid,
+    .activities-grid {
+        gap: 16px;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .volunteer-cta {
+        grid-template-columns: 1fr;
+    }
+
+    .volunteer-profile-page .profile-page-hero {
+        padding: 45px 5% 50px;
+    }
+
+    .volunteer-profile-page .profile-page-main {
+        padding: 45px 25px 60px;
+    }
+
+    .volunteer-profile-page .profile-page-grid {
+        grid-template-columns: 250px minmax(0, 1fr);
+        gap: 22px;
+    }
+
+    .volunteer-profile-page .profile-hero-community-image {
+        width: 220px;
+        flex-basis: 220px;
+    }
+
+    .volunteer-profile-page .profile-hero-community-content {
+        padding: 25px 28px;
+    }
+
+    .volunteer-profile-page .profile-hero-community-content h2 {
+        font-size: 26px;
+    }
+}
+@media (max-width: 1100px) {
+    .volunteer-application-page .application-hero {
+        padding: 30px 0 36px;
+    }
+
+    .volunteer-application-page .application-layout {
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 24px;
+    }
+
+    .volunteer-application-page .application-section {
+        width: 92%;
+        padding: 36px 0 42px;
+    }
+
+    .volunteer-application-page .application-form-card {
+        padding: 24px;
+    }
+
+    .volunteer-page .volunteer-hero {
+        min-height: 440px;
+        padding: 40px 4% 48px;
+    }
+
+    .volunteer-page .hero-text {
+        width: 54%;
+    }
+
+    .volunteer-page .hero-text h1 {
+        font-size: clamp(38px, 5vw, 56px);
+    }
+
+    .volunteer-page .hero-stats {
+        width: min(92%, 1000px);
+    }
+
+    .volunteer-page .volunteer-intro {
+        width: 92%;
+        margin-top: 70px;
+        gap: 32px;
+    }
+
+    .volunteer-page .why-volunteer {
+        margin-top: 50px;
+        padding: 42px 4%;
+    }
+
+    .volunteer-page .volunteer-activities {
+        width: 92%;
+        margin: 50px auto;
+    }
+
+    .volunteer-page .volunteer-cta {
+        width: 92%;
+        margin-bottom: 50px;
+    }
+}
+
+/* TABLET -900px*/
+@media (max-width: 900px) {
+    .volunteer-application-page .application-hero {
+        padding: 28px 0 34px;
+    }
+
+    .volunteer-application-page .application-hero-content {
+        width: 92%;
+    }
+
+    .volunteer-application-page .application-hero h1 {
+        font-size: clamp(36px, 6vw, 50px);
+    }
+
+    .volunteer-application-page .application-section {
+        padding: 32px 0 38px;
+    }
+
+    .volunteer-application-page .application-layout {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .volunteer-application-page .application-info {
+        position: relative;
+        top: auto;
+    }
+
+    .volunteer-application-page .application-image {
+        height: 210px;
+    }
+
+    .volunteer-page .volunteer-hero {
+        min-height: 400px;
+        padding: 36px 5% 46px;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255, 253, 249, 0.97),
+                rgba(255, 248, 240, 0.78)
+            ),
+            url("/images/volunteer-hero.png");
+        background-size: cover;
+        background-position: center right;
+    }
+
+    .volunteer-page .hero-text {
+        width: 60%;
+    }
+
+    .volunteer-page .hero-text h1 {
+        font-size: clamp(36px, 5.5vw, 52px);
+    }
+
+    .volunteer-page .hero-text p {
+        max-width: 460px;
+    }
+
+    .volunteer-page .hero-stats {
+        width: 92%;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .volunteer-page .stat-box {
+        min-height: 76px;
+        padding: 12px 10px;
+        gap: 8px;
+    }
+
+    .volunteer-page .stat-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .volunteer-page .stat-box h3 {
+        font-size: 19px;
+    }
+
+    .volunteer-page .stat-box p {
+        font-size: 10px;
+    }
+
+    .volunteer-page .volunteer-intro {
+        width: 92%;
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+    .volunteer-page .section-image {
+        max-width: 700px;
+        width: 100%;
+        margin: auto;
+    }
+
+    .volunteer-page .section-image img {
+        height: 320px;
+    }
+
+    .volunteer-page .section-content {
+        max-width: 700px;
+        margin: auto;
+    }
+
+    .volunteer-page .benefits-grid,
+    .volunteer-page .activities-grid {
+        width: 92%;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .volunteer-page .volunteer-cta {
+        width: 92%;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .volunteer-page .application-section {
+        width: 92%;
+    }
+
+    .volunteer-page .application-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .volunteer-page .application-info {
+        position: static;
+    }
+
+    .impact-page-main {
+        width: 92%;
+    }
+
+    .impact-intro {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+    .impact-intro-image,
+    .impact-intro-content {
+        max-width: 750px;
+        margin: auto;
+    }
+
+    .impact-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .impact-progress-section {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .impact-progress-icon {
+        min-height: 150px;
+    }
+
+    .impact-achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .impact-motivation {
+        grid-template-columns: 1fr;
+    }
+
+    .impact-motivation-image {
+        min-height: 350px;
+        height: 350px;
+    }
+
+    .dashboard-header,
+    .dashboard-main {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-right {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-motivation {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+/* TABLET / MOBILE — MAX 768px */
+@media (max-width: 768px) {
+    .volunteer-application-page .application-hero {
+        padding: 24px 0 30px;
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255,253,249,.96),
+                rgba(255,248,240,.94)
+            ),
+            url("/images/volunteer-hero.png");
+        background-size: cover;
+        background-position: center;
+    }
+
+    .volunteer-application-page .application-hero-content {
+        width: calc(100% - 32px);
+    }
+
+    .volunteer-application-page .back-button {
+        margin-bottom: 15px;
+        padding: 7px 12px;
+        font-size: 13px;
+    }
+
+    .volunteer-application-page .application-label {
+        margin-bottom: 6px;
+        font-size: 11px;
+    }
+
+    .volunteer-application-page .application-hero h1 {
+        font-size: clamp(32px, 8vw, 44px);
+        line-height: 1.08;
+    }
+
+    .volunteer-application-page .application-hero p {
+        margin-top: 10px;
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    .volunteer-application-page .application-section {
+        width: calc(100% - 32px);
+        padding: 28px 0 34px;
+    }
+
+    .volunteer-application-page .application-layout {
+        gap: 18px;
+    }
+
+    .volunteer-application-page .application-info {
+        padding: 20px;
+    }
+
+    .volunteer-application-page .application-image {
+        height: 190px;
+        margin-bottom: 17px;
+    }
+
+    .volunteer-application-page .application-info h2 {
+        font-size: 24px;
+    }
+
+    .volunteer-application-page .info-points {
+        gap: 14px;
+    }
+
+    .volunteer-application-page .application-form-card {
+        padding: 22px 18px;
+    }
+
+    .volunteer-application-page .form-heading {
+        margin-bottom: 20px;
+    }
+
+    .volunteer-application-page .form-heading h2 {
+        font-size: 24px;
+    }
+
+    .volunteer-application-page .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin-bottom: 0;
+    }
+
+    .volunteer-application-page .form-group {
+        margin-bottom: 14px;
+    }
+
+    .volunteer-application-page .status-bottom-actions {
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .volunteer-hero {
+        min-height: 430px;
+        padding: 28px 5%;
+        background:
+            linear-gradient(90deg,rgba(255,253,249,.96),rgba(255,248,240,.82)),
+            url("/images/volunteer-hero.png");
+        background-position: center;
+    }
+
+    .hero-content {
+        width: 100%;
+    }
+
+    .hero-text {
+        width: 100%;
+        max-width: 620px;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(38px, 8vw, 52px);
+    }
+
+    .hero-text p {
+        max-width: 560px;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .hero-stats {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        width: 90%;
+        margin: -30px auto 0;
+        grid-template-columns: repeat(2,1fr);
+        border-radius: 14px;
+    }
+
+    .stat-box {
+        min-height: 78px;
+        padding: 14px 10px;
+    }
+
+    .stat-box:nth-child(2) {
+        border-right: none;
+    }
+
+    .stat-box:nth-child(-n+2) {
+        border-bottom: 1px solid var(--border);
+    }
+
+    .volunteer-intro {
+        width: 90%;
+        margin: 55px auto 0;
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .section-image img {
+        height: 300px;
+    }
+
+    .why-volunteer {
+        margin-top: 50px;
+        padding: 40px 5%;
+    }
+
+    .benefits-grid,
+    .activities-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .benefit-image,
+    .activity-image {
+        height: 170px;
+    }
+
+    .volunteer-activities {
+        margin: 45px auto;
+    }
+
+    .volunteer-cta {
+        grid-template-columns: 1fr;
+        margin-bottom: 50px;
+    }
+
+    .cta-image {
+        min-height: 240px;
+        max-height: 280px;
+    }
+
+    .cta-content {
+        padding: 28px;
+    }
+
+    .application-hero {
+        min-height: 250px;
+    }
+
+    .application-hero-content {
+        width: 90%;
+        padding: 34px 0;
+    }
+
+    .application-section {
+        padding: 38px 15px;
+    }
+
+    .application-form-card {
+        padding: 28px 22px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .application-status-page {
+        padding: 25px 0;
+    }
+
+    .application-status-page .application-hero {
+        min-height: 260px;
+    }
+
+    .application-status-page .application-hero-content {
+        width: min(92%,650px);
+        padding: 38px 0;
+    }
+
+    .application-status-page .application-hero-content h1 {
+        font-size: clamp(2rem,7vw,2.7rem);
+        line-height: 1.12;
+    }
+
+    .application-status-page .application-hero-content > p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .application-status-page .application-section {
+        padding: 38px 16px;
+    }
+
+    .application-status-page .status-card {
+        padding: 28px 20px;
+    }
+
+    .application-status-page .status-card h2 {
+        font-size: 24px;
+    }
+
+    .application-status-page .status-card > p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .application-status-page .status-icon {
+        width: 66px;
+        height: 66px;
+    }
+
+    .application-status-page .application-details-card,
+    .application-status-page .status-next-card {
+        padding: 20px 18px;
+    }
+
+    .application-status-page .details-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .application-status-page .detail-item {
+        padding: 14px;
+    }
+
+    .application-status-page .status-next-card > h2 {
+        font-size: 21px;
+    }
+
+    .application-status-page .journey-step {
+        gap: 11px;
+    }
+
+    .application-status-page .journey-number {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        font-size: 11px;
+    }
+
+    .application-status-page .journey-line {
+        height: 24px;
+        margin-left: 19px;
+    }
+
+    .application-status-page .status-bottom-actions {
+        gap: 10px;
+    }
+
+    .section-heading {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .section-heading h2 {
+        font-size: 32px;
+    }
+
+    .certificates-page-hero {
+        padding: 55px 5% 50px;
+    }
+
+    .certificates-page-hero h1 {
+        font-size: clamp(2.2rem,8vw,3.2rem);
+    }
+
+    .certificates-page-hero p {
+        font-size: 15px;
+        line-height: 1.65;
+    }
+
+    .certificates-page-main {
+        width: 90%;
+        padding: 45px 0 55px;
+    }
+
+    .certificate-stat-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 42px;
+    }
+
+    .certificate-stat-card {
+        padding: 18px;
+    }
+
+    .certificate-stat-icon {
+        width: 46px;
+        height: 46px;
+    }
+
+    .certificate-stat-card strong {
+        font-size: 23px;
+    }
+
+    .certificates-intro {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+        margin-bottom: 45px;
+        padding: 25px;
+    }
+
+    .certificates-intro-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .certificates-section {
+        margin-bottom: 48px;
+    }
+
+    .certificates-section-heading {
+        align-items: flex-start;
+    }
+
+    .certificates-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .certificate-image {
+        height: 230px;
+    }
+
+    .certificate-content {
+        padding: 20px;
+    }
+
+    .certificate-actions {
+        gap: 8px;
+    }
+
+    .certificates-motivation {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .certificates-motivation-image {
+        min-height: 230px;
+        max-height: 280px;
+    }
+
+    .certificates-motivation-content {
+        padding: 35px 25px;
+    }
+
+    .certificates-bottom-action {
+        margin-top: 35px;
+    }
+
+    .tasks-page-hero {
+        padding: 55px 5% 50px;
+    }
+
+    .tasks-page-main {
+        width: 90%;
+        padding: 45px 0 55px;
+    }
+
+    .tasks-stat-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 45px;
+    }
+
+    .task-stat-card {
+        padding: 18px;
+    }
+
+    .task-stat-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    .task-stat-card strong {
+        font-size: 23px;
+    }
+
+    .tasks-section {
+        margin-bottom: 45px;
+    }
+
+    .tasks-section-heading {
+        align-items: flex-start;
+    }
+
+    .tasks-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .volunteer-task-card {
+        grid-template-columns: 1fr;
+    }
+
+    .task-card-image {
+        height: 220px;
+        min-height: 220px;
+    }
+
+    .task-card-content {
+        padding: 20px;
+    }
+
+    .task-card-content h3 {
+        font-size: 18px;
+    }
+
+    .task-card-content > p {
+        margin-bottom: 15px;
+    }
+
+    .tasks-motivation {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .tasks-motivation-image {
+        min-height: 220px;
+        max-height: 280px;
+    }
+
+    .tasks-motivation-content {
+        padding: 35px 25px;
+    }
+
+    .tasks-bottom-action {
+        margin-top: 35px;
+    }
+
+    .status-container {
+        width: calc(100% - 30px);
+    }
+
+    .status-card {
+        padding: 30px 20px;
+    }
+
+    .application-details-card {
+        padding: 22px;
+    }
+
+    .impact-page-hero {
+        min-height: 520px;
+        padding: 55px 25px;
+        background-position: center;
+    }
+
+    .impact-hero-content {
+        width: 100%;
+    }
+
+    .impact-hero-content h1 {
+        font-size: 52px;
+    }
+
+    .impact-hero-content p {
+        font-size: 16px;
+    }
+
+    .impact-page-main {
+        width: calc(100% - 30px);
+        padding: 60px 0;
+    }
+
+    .impact-intro {
+        gap: 30px;
+        margin-bottom: 70px;
+    }
+
+    .impact-intro-image {
+        height: 350px;
+    }
+
+    .impact-intro-content h2 {
+        font-size: 38px;
+    }
+
+    .impact-section-heading {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .impact-statistics,
+    .impact-activities-section,
+    .impact-achievements-section {
+        margin-bottom: 70px;
+    }
+
+    .impact-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .impact-progress-section {
+        padding: 35px 25px;
+    }
+
+    .impact-achievements-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .impact-motivation-content {
+        padding: 40px 30px;
+    }
+
+    .dashboard-header {
+        padding: 45px 25px;
+    }
+
+    .dashboard-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dashboard-welcome {
+        width: 100%;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 46px;
+    }
+
+    .dashboard-welcome p {
+        font-size: 15px;
+    }
+
+    .dashboard-profile-button,
+    .dashboard-profile-button button {
+        width: 100%;
+    }
+
+    .dashboard-profile-button button {
+        justify-content: center;
+    }
+
+    .dashboard-main {
+        padding: 40px 25px 60px;
+    }
+
+    .dashboard-stats,
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-right {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dashboard-motivation {
+        grid-template-columns: 1fr;
+    }
+
+    .motivation-image {
+        height: 280px;
+        min-height: 280px;
+    }
+
+    .motivation-content {
+        padding: 40px 30px;
+    }
+
+    .checkout-page {
+        padding: 50px 15px;
+    }
+
+    .checkout-card {
+        padding: 25px;
+        border-radius: 16px;
+    }
+
+    .checkout-header h1 {
+        font-size: 26px;
+    }
+
+    .checkout-summary,
+    .payment-methods {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-pay-button {
+        width: 100%;
+    }
+}
+@media (max-width: 760px) {
+  .volunteer-profile-page .profile-page-hero {
+    padding: 35px 20px 40px;
+  }
+
+  .volunteer-profile-page .profile-page-hero .back-button {
+    margin-bottom: 24px;
+  }
+
+  .volunteer-profile-page .profile-page-hero h1 {
+    font-size: 36px;
+  }
+
+  .volunteer-profile-page .profile-hero-description {
+    margin-bottom: 28px;
+    font-size: 14px;
+  }
+
+  .volunteer-profile-page .profile-hero-community {
+    height: auto;
+    flex-direction: column;
+  }
+
+  .volunteer-profile-page .profile-hero-community-image {
+    width: 100%;
+    height: 210px;
+    flex: none;
+  }
+
+  .volunteer-profile-page .profile-hero-community-content {
+    width: 100%;
+    height: auto;
+    min-height: 245px;
+    padding: 25px 24px;
+  }
+
+  .volunteer-profile-page .profile-hero-community-content h2 {
+    font-size: 25px;
+  }
+
+  .volunteer-profile-page .profile-page-main {
+    padding: 35px 18px 50px;
+  }
+
+  .volunteer-profile-page .profile-page-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .volunteer-profile-page .profile-main-card {
+    padding: 24px 22px;
+  }
+
+  .volunteer-profile-page .profile-information {
+    gap: 20px;
+  }
+
+  .volunteer-profile-page .profile-detail-grid,
+  .volunteer-profile-page .profile-preference-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .volunteer-hero {
+    min-height: 620px;
+    padding: 60px 22px 150px;
+    align-items: flex-start;
+  }
+
+  .hero-text {
+    width: 100%;
+  }
+
+  .hero-text h1 {
+    font-size: clamp(40px, 12vw, 55px);
+  }
+
+  .hero-stats {
+    width: calc(100% - 30px);
+  }
+
+  .stat-box {
+    min-height: 85px;
+    padding: 12px 8px;
+    gap: 7px;
+  }
+
+  .stat-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .stat-box h3 {
+    font-size: 20px;
+  }
+
+  .stat-box p {
+    font-size: 10px;
+  }
+
+  .volunteer-intro {
+    width: calc(100% - 30px);
+    margin-top: 100px;
+  }
+
+  .benefits-grid,
+  .activities-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .why-volunteer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .volunteer-activities {
+    width: calc(100% - 30px);
+  }
+}
+
+/* MOBILE — 600px */
+@media (max-width: 600px) {
+    .application-hero {
+        min-height: 230px;
+    }
+
+    .application-hero-content {
+        padding: 28px 0;
+    }
+
+    .back-button {
+        margin-bottom: 14px;
+        padding: 7px 12px;
+    }
+
+    .application-hero-content h1 {
+        font-size: 34px;
+    }
+
+    .application-hero-content p {
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    .application-section {
+        padding: 28px 12px;
+    }
+
+    .application-layout {
+        gap: 18px;
+    }
+
+    .application-info {
+        padding: 20px;
+    }
+
+    .application-image {
+        height: 180px;
+        margin-bottom: 18px;
+    }
+
+    .application-info h2 {
+        font-size: 25px;
+        margin-bottom: 10px;
+    }
+
+    .application-info > p {
+        margin-bottom: 20px;
+    }
+
+    .info-points {
+        gap: 16px;
+    }
+
+    .info-point {
+        gap: 10px;
+    }
+
+    .info-point-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+    }
+
+    .application-form-card {
+        padding: 22px 16px;
+        border-radius: 13px;
+    }
+
+    .form-heading {
+        margin-bottom: 22px;
+    }
+
+    .form-heading h2 {
+        font-size: 25px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin-bottom: 0;
+    }
+
+    .form-row .form-group,
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .input-wrapper {
+        min-height: 46px;
+    }
+
+    .input-wrapper input,
+    .input-wrapper select {
+        height: 44px;
+    }
+
+    .activity-select-button {
+        height: 46px;
+    }
+
+    .activity-dropdown {
+        top: 46px;
+    }
+
+    .activity-option {
+        min-height: 40px;
+        padding: 8px 12px;
+    }
+
+    .application-status-page {
+        padding: 20px 0;
+    }
+
+    .application-status-page .application-hero {
+        min-height: 225px;
+    }
+
+    .application-status-page .application-hero-content {
+        padding: 28px 0;
+    }
+
+    .application-status-page .back-button {
+        margin-bottom: 14px;
+    }
+
+    .application-status-page .application-hero-content h1 {
+        font-size: 34px;
+    }
+
+    .application-status-page .application-hero-content > p {
+        font-size: 14px;
+    }
+
+    .application-status-page .application-section {
+        padding: 24px 12px;
+    }
+
+    .application-status-page .status-container {
+        gap: 15px;
+    }
+
+    .application-status-page .status-card {
+        padding: 25px 17px;
+        border-radius: 13px;
+    }
+
+    .application-status-page .status-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 13px;
+    }
+
+    .application-status-page .status-card h2 {
+        font-size: 24px;
+    }
+
+    .application-status-page .status-card > p {
+        font-size: 13px;
+        line-height: 1.55;
+    }
+
+    .application-status-page .status-bottom-actions {
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .application-status-page .status-bottom-actions .orange-button,
+    .application-status-page .status-bottom-actions .outline-button {
+        width: 100%;
+    }
+
+    .application-status-page .application-details-card,
+    .application-status-page .status-next-card {
+        padding: 20px 15px;
+        border-radius: 13px;
+    }
+
+    .application-status-page .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .application-status-page .detail-item {
+        padding: 13px 14px;
+    }
+
+    .application-status-page .status-next-card > h2 {
+        font-size: 21px;
+        margin-bottom: 17px;
+    }
+
+    .volunteer-page .volunteer-hero {
+        padding: 28px 16px 82px;
+    }
+
+    .volunteer-page .hero-small-title {
+        font-size: 11px;
+        letter-spacing: 1.2px;
+    }
+
+    .volunteer-page .hero-text h1 {
+        font-size: 35px;
+    }
+
+    .volunteer-page .hero-text h2 {
+        font-size: 17px;
+    }
+
+    .volunteer-page .hero-text p {
+        font-size: 14px;
+    }
+
+    .volunteer-page .hero-button {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .volunteer-page .hero-stats {
+        width: calc(100% - 24px);
+    }
+
+    .volunteer-page .stat-box {
+        min-height: 95px;
+    }
+
+    .volunteer-page .stat-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .volunteer-page .stat-box h3 {
+        font-size: 20px;
+    }
+
+    .volunteer-page .stat-box p {
+        font-size: 10px;
+    }
+
+    .volunteer-page .volunteer-intro {
+        width: calc(100% - 24px);
+        margin-top: 54px;
+        gap: 20px;
+    }
+
+    .volunteer-page .section-image img {
+        height: 245px;
+    }
+
+    .volunteer-page .section-content h2 {
+        font-size: 27px;
+    }
+
+    .volunteer-page .why-volunteer {
+        margin-top: 38px;
+        padding: 34px 12px;
+    }
+
+    .volunteer-page .section-heading {
+        margin-bottom: 22px;
+    }
+
+    .volunteer-page .section-heading h2 {
+        font-size: 27px;
+    }
+
+    .volunteer-page .benefits-grid {
+        width: 100%;
+    }
+
+    .volunteer-page .benefit-image {
+        height: 200px;
+    }
+
+    .volunteer-page .volunteer-activities {
+        width: calc(100% - 24px);
+        margin: 38px auto;
+    }
+
+    .volunteer-page .activities-grid {
+        width: 100%;
+    }
+
+    .volunteer-page .activity-image {
+        height: 200px;
+    }
+
+    .volunteer-page .volunteer-cta {
+        width: calc(100% - 24px);
+        margin-bottom: 36px;
+    }
+
+    .volunteer-page .cta-image {
+        min-height: 190px;
+        height: 190px;
+    }
+
+    .volunteer-page .cta-content {
+        padding: 24px 18px;
+    }
+
+    .volunteer-page .cta-content h2 {
+        font-size: 27px;
+    }
+
+    .volunteer-application-page .application-hero {
+        padding: 22px 0 26px;
+    }
+
+    .volunteer-application-page .application-hero-content {
+        width: calc(100% - 24px);
+    }
+
+    .volunteer-application-page .application-hero h1 {
+        font-size: 34px;
+    }
+
+    .volunteer-application-page .application-hero p {
+        font-size: 13px;
+    }
+
+    .volunteer-application-page .application-section {
+        width: calc(100% - 24px);
+        padding: 24px 0 30px;
+    }
+
+    .volunteer-application-page .application-info {
+        padding: 18px;
+    }
+
+    .volunteer-application-page .application-image {
+        height: 170px;
+    }
+
+    .volunteer-application-page .application-info h2 {
+        font-size: 22px;
+    }
+
+    .volunteer-application-page .application-info > p {
+        margin-bottom: 18px;
+        font-size: 13px;
+    }
+
+    .volunteer-application-page .info-point-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+
+    .volunteer-application-page .application-form-card {
+        padding: 20px 15px;
+    }
+
+    .volunteer-application-page .form-heading h2 {
+        font-size: 22px;
+    }
+
+    .volunteer-application-page .input-wrapper {
+        min-height: 44px;
+    }
+
+    .volunteer-application-page .input-wrapper input,
+    .volunteer-application-page .input-wrapper select {
+        height: 42px;
+    }
+
+    .volunteer-application-page .activity-select-button {
+        height: 44px;
+    }
+
+    .impact-page-hero {
+        min-height: 500px;
+        padding: 50px 20px;
+    }
+
+    .impact-hero-content h1 {
+        font-size: 45px;
+    }
+
+    .impact-page-main {
+        width: calc(100% - 24px);
+        padding: 50px 0;
+    }
+
+    .impact-intro-image {
+        height: 290px;
+    }
+
+    .impact-intro-content h2 {
+        font-size: 34px;
+    }
+
+    .impact-intro-content p {
+        font-size: 15px;
+    }
+
+    .impact-progress-section {
+        padding: 28px 20px;
+    }
+
+    .impact-progress-content h2 {
+        font-size: 29px;
+    }
+
+    .impact-progress-icon strong {
+        font-size: 38px;
+    }
+
+    .impact-activity-card {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 18px;
+    }
+
+    .impact-completed {
+        width: fit-content;
+    }
+
+    .impact-motivation-content {
+        padding: 32px 22px;
+    }
+
+    .impact-motivation-content h2 {
+        font-size: 31px;
+    }
+
+    .impact-motivation-image {
+        min-height: 250px;
+        height: 250px;
+    }
+
+    .dashboard-header {
+        padding: 40px 20px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 40px;
+    }
+
+    .dashboard-main {
+        padding: 35px 20px 50px;
+    }
+
+    .dashboard-stat-card {
+        min-height: 105px;
+        padding: 20px;
+    }
+
+    .dashboard-card {
+        padding: 20px;
+    }
+
+    .dashboard-card-header {
+        align-items: flex-start;
+    }
+
+    .dashboard-card-header h2,
+    .dashboard-quick-card h2 {
+        font-size: 21px;
+    }
+
+    .dashboard-event {
+        grid-template-columns: 58px minmax(0, 1fr) 36px;
+        gap: 10px;
+    }
+
+    .event-date {
+        width: 55px;
+        height: 62px;
+    }
+
+    .event-information h3 {
+        font-size: 14px;
+    }
+
+    .event-information p {
+        font-size: 11px;
+    }
+
+    .event-arrow {
+        width: 34px;
+        height: 34px;
+    }
+
+    .task-item {
+        grid-template-columns: 40px minmax(0, 1fr);
+    }
+
+    .task-status {
+        grid-column: 2;
+        justify-self: start;
+        margin-top: -5px;
+    }
+
+    .dashboard-certificate-card {
+        grid-template-columns: 45px minmax(0, 1fr) 34px;
+    }
+
+    .motivation-image {
+        height: 240px;
+        min-height: 240px;
+    }
+
+    .motivation-content {
+        padding: 32px 22px;
+    }
+
+    .motivation-content h2 {
+        font-size: 30px;
+    }
+}
+/*  MOBILE — MAX 480px */
+@media (max-width: 480px) {
+    .application-status-page .application-section {
+        padding: 32px 13px;
+    }
+
+    .application-status-page .application-hero {
+        min-height: 235px;
+    }
+
+    .application-status-page .application-hero-content {
+        width: 92%;
+        padding: 32px 0;
+    }
+
+    .application-status-page .application-hero-content h1 {
+        font-size: clamp(1.8rem, 9vw, 2.35rem);
+    }
+
+    .application-status-page .status-card {
+        padding: 24px 16px;
+    }
+
+    .application-status-page .status-card h2 {
+        font-size: 22px;
+    }
+
+    .application-status-page .status-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .application-status-page .application-details-card,
+    .application-status-page .status-next-card {
+        padding: 18px 15px;
+    }
+
+    .application-status-page .detail-item {
+        padding: 13px;
+    }
+
+    .application-status-page .journey-step {
+        gap: 9px;
+    }
+
+    .application-status-page .journey-number {
+        width: 37px;
+        height: 37px;
+        min-width: 37px;
+    }
+
+    .application-status-page .journey-line {
+        height: 20px;
+        margin-left: 18px;
+    }
+
+    .application-status-page .journey-step h3 {
+        font-size: 14px;
+    }
+
+    .application-status-page .journey-step p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .application-status-page .status-bottom-actions {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .application-status-page .status-bottom-action,
+    .application-status-page .status-bottom-action button {
+        width: 100%;
+    }
+
+    .certificates-page-hero {
+        padding: 42px 5% 45px;
+    }
+
+    .certificates-page-hero h1 {
+        font-size: 2.25rem;
+    }
+
+    .certificates-page-hero p {
+        font-size: 14px;
+    }
+
+    .certificates-page-main {
+        width: 92%;
+        padding: 38px 0 48px;
+    }
+
+    .certificate-stat-card {
+        padding: 16px;
+    }
+
+    .certificate-stat-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .certificate-stat-card strong {
+        font-size: 21px;
+    }
+
+    .certificates-intro {
+        padding: 20px;
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+
+    .certificates-intro-icon {
+        width: 54px;
+        height: 54px;
+    }
+
+    .certificates-intro h2 {
+        font-size: 1.5rem;
+    }
+
+    .certificates-section-heading h2 {
+        font-size: 1.7rem;
+    }
+
+    .certificate-image {
+        height: 205px;
+    }
+
+    .certificate-content {
+        padding: 18px;
+    }
+
+    .certificate-content h3 {
+        font-size: 17px;
+    }
+
+    .certificate-actions {
+        grid-template-columns: 1fr;
+        margin-top: 18px;
+    }
+
+    .certificates-motivation-image {
+        min-height: 200px;
+        max-height: 230px;
+    }
+
+    .certificates-motivation-content {
+        padding: 30px 20px;
+    }
+
+    .certificates-motivation-content h2 {
+        font-size: 1.9rem;
+    }
+
+    .certificates-motivation-content p {
+        font-size: 14px;
+        margin-bottom: 22px;
+    }
+
+    .certificates-bottom-action {
+        margin-top: 30px;
+    }
+
+    .certificates-bottom-action .outline-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tasks-page-hero {
+        padding: 45px 5% 50px;
+    }
+
+    .tasks-page-hero h1 {
+        font-size: 2.3rem;
+    }
+
+    .tasks-page-hero p {
+        font-size: 15px;
+    }
+
+    .tasks-page-main {
+        width: 92%;
+        padding: 40px 0 48px;
+    }
+
+    .tasks-stat-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .task-stat-card {
+        padding: 17px;
+    }
+
+    .task-stat-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    .task-stat-card strong {
+        font-size: 21px;
+    }
+
+    .tasks-section {
+        margin-bottom: 40px;
+    }
+
+    .tasks-section-heading h2 {
+        font-size: 1.7rem;
+    }
+
+    .task-section-count {
+        min-width: 35px;
+        height: 35px;
+    }
+
+    .task-card-image {
+        height: 210px;
+        min-height: 210px;
+    }
+
+    .task-card-content {
+        padding: 20px;
+    }
+
+    .task-card-content h3 {
+        font-size: 18px;
+    }
+
+    .task-card-content > p {
+        font-size: 13px;
+    }
+
+    .task-meta div {
+        font-size: 11.5px;
+    }
+
+    .task-action-button,
+    .task-completed-message {
+        min-height: 41px;
+        margin-top: 17px;
+    }
+
+    .empty-task-box {
+        padding: 35px 18px;
+    }
+
+    .tasks-motivation-image {
+        min-height: 220px;
+        max-height: 230px;
+    }
+
+    .tasks-motivation-content {
+        padding: 35px 22px;
+    }
+
+    .tasks-motivation-content h2 {
+        font-size: 2rem;
+    }
+
+    .tasks-motivation-content p {
+        font-size: 14px;
+        margin-bottom: 22px;
+    }
+
+    .tasks-bottom-action {
+        margin-top: 40px;
+    }
+
+    .tasks-bottom-action .outline-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .section-heading h2 {
+        font-size: 28px;
+    }
+
+    .section-heading p {
+        font-size: 13px;
+    }
+
+    .volunteer-hero {
+        min-height: 700px;
+        padding: 45px 18px 190px;
+    }
+
+    .hero-small-title {
+        font-size: 11px;
+    }
+
+    .hero-text h1 {
+        font-size: 39px;
+    }
+
+    .hero-text h2 {
+        font-size: 17px;
+        line-height: 1.4;
+    }
+
+    .hero-text p {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .hero-button {
+        width: 100%;
+    }
+
+    .hero-stats {
+        width: calc(100% - 20px);
+        bottom: -100px;
+        border-radius: 14px;
+    }
+
+    .stat-box {
+        min-height: 90px;
+        padding: 10px 5px;
+        gap: 5px;
+    }
+
+    .stat-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .stat-box h3 {
+        font-size: 18px;
+    }
+
+    .stat-box p {
+        font-size: 9px;
+    }
+
+    .volunteer-intro {
+        width: calc(100% - 20px);
+        margin-top: 155px;
+    }
+
+    .section-image {
+        border-radius: 16px;
+    }
+
+    .section-image img {
+        height: 250px;
+    }
+
+    .section-content h2 {
+        font-size: 29px;
+    }
+
+    .section-content p {
+        font-size: 13px;
+    }
+
+    .section-content .outline-button {
+        width: 100%;
+    }
+
+    .why-volunteer {
+        padding: 50px 10px;
+    }
+
+    .benefits-grid,
+    .activities-grid {
+        width: 100%;
+    }
+
+    .benefit-card,
+    .activity-card {
+        border-radius: 15px;
+    }
+
+    .benefit-image,
+    .activity-image {
+        height: 180px;
+    }
+
+    .benefit-content,
+    .activity-body {
+        padding: 18px;
+    }
+
+    .volunteer-cta {
+        width: calc(100% - 20px);
+        border-radius: 16px;
+    }
+
+    .cta-image {
+        height: 200px;
+        min-height: 200px;
+    }
+
+    .cta-content {
+        padding: 25px 18px;
+    }
+
+    .cta-content h2 {
+        font-size: 27px;
+    }
+
+    .cta-content p {
+        font-size: 13px;
+    }
+
+    .cta-content .orange-button {
+        width: 100%;
+    }
+
+    .application-hero {
+        min-height: 500px;
+        padding: 45px 18px;
+    }
+
+    .application-hero h1 {
+        font-size: 38px;
+    }
+
+    .application-hero p {
+        font-size: 13px;
+    }
+
+    .application-section {
+        width: calc(100% - 20px);
+    }
+
+    .application-form-card {
+        padding: 20px 14px;
+        border-radius: 16px;
+    }
+
+    .input-wrapper input,
+    .input-wrapper select,
+    .input-wrapper textarea {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .status-container {
+        width: calc(100% - 20px);
+    }
+
+    .status-card {
+        padding: 25px 15px;
+        border-radius: 16px;
+    }
+
+    .status-icon {
+        width: 65px;
+        height: 65px;
+    }
+
+    .status-card h2 {
+        font-size: 25px;
+    }
+
+    .status-card p {
+        font-size: 13px;
+    }
+
+    .application-details-card {
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .impact-page-hero {
+        min-height: 470px;
+        padding: 45px 18px;
+    }
+
+    .impact-hero-content .back-button {
+        margin-bottom: 25px;
+    }
+
+    .impact-hero-content .application-label {
+        font-size: 11px;
+    }
+
+    .impact-hero-content h1 {
+        font-size: 40px;
+    }
+
+    .impact-hero-content p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .impact-page-main {
+        width: calc(100% - 20px);
+        padding: 45px 0;
+    }
+
+    .impact-intro-image {
+        height: 240px;
+        border-radius: 16px;
+    }
+
+    .impact-intro-content h2 {
+        font-size: 30px;
+    }
+
+    .impact-intro-content p {
+        font-size: 14px;
+    }
+
+    .impact-highlight {
+        width: 100%;
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+
+    .impact-section-heading h2 {
+        font-size: 28px;
+    }
+
+    .impact-stat-card {
+        padding: 22px 18px;
+    }
+
+    .impact-stat-number {
+        font-size: 32px;
+    }
+
+    .impact-progress-section {
+        padding: 25px 16px;
+        border-radius: 16px;
+    }
+
+    .impact-progress-content h2 {
+        font-size: 27px;
+    }
+
+    .impact-progress-content > p {
+        font-size: 13px;
+    }
+
+    .impact-achievement-card {
+        padding: 18px;
+        gap: 12px;
+    }
+
+    .impact-achievement-icon {
+        min-width: 45px;
+        width: 45px;
+        height: 45px;
+    }
+
+    .impact-motivation {
+        border-radius: 16px;
+    }
+
+    .impact-motivation-content {
+        padding: 28px 18px;
+    }
+
+    .impact-motivation-content h2 {
+        font-size: 29px;
+    }
+
+    .impact-motivation-content p {
+        font-size: 13px;
+    }
+
+    .impact-motivation-content .orange-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .impact-motivation-image {
+        height: 220px;
+        min-height: 220px;
+    }
+
+    .dashboard-header {
+        padding: 35px 18px;
+    }
+
+    .dashboard-label {
+        font-size: 11px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 36px;
+    }
+
+    .dashboard-welcome p {
+        font-size: 14px;
+    }
+
+    .dashboard-main {
+        padding: 30px 18px 45px;
+    }
+
+    .dashboard-stat-card {
+        padding: 18px;
+        gap: 13px;
+    }
+
+    .dashboard-stat-icon {
+        width: 45px;
+        height: 45px;
+    }
+
+    .dashboard-stat-card h3 {
+        font-size: 26px;
+    }
+
+    .dashboard-card {
+        padding: 17px;
+        border-radius: 15px;
+    }
+
+    .dashboard-card-header h2,
+    .dashboard-quick-card h2 {
+        font-size: 20px;
+    }
+
+    .dashboard-event {
+        grid-template-columns: 52px minmax(0, 1fr);
+        gap: 9px;
+    }
+
+    .event-date {
+        width: 50px;
+        height: 58px;
+    }
+
+    .checkout-page {
+        padding: 40px 12px;
+    }
+
+    .checkout-card {
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .checkout-header {
+        margin-bottom: 25px;
+    }
+
+    .checkout-header h1 {
+        font-size: 23px;
+    }
+
+    .checkout-header p {
+        font-size: 14px;
+    }
+
+    .checkout-summary-box {
+        padding: 16px;
+    }
+
+    .checkout-summary-box strong {
+        font-size: 19px;
+    }
+
+    .payment-section {
+        margin-top: 25px;
+    }
+
+    .checkout-pay-button {
+        padding: 14px 18px;
+        font-size: 15px;
+    }
+
+    .volunteer-profile-page .profile-page-hero {
+        padding: 28px 16px 32px;
+    }
+
+    .volunteer-profile-page .profile-page-hero h1 {
+        font-size: 31px;
+    }
+
+    .volunteer-profile-page .profile-hero-community-image {
+        height: 180px;
+    }
+
+    .volunteer-profile-page .profile-hero-community-content {
+        min-height: 250px;
+        padding: 22px 20px;
+    }
+
+    .volunteer-profile-page .profile-hero-community-content h2 {
+        font-size: 22px;
+    }
+
+    .volunteer-profile-page .profile-hero-community-content p {
+        font-size: 13px;
+    }
+
+    .volunteer-profile-page .profile-hero-community-content .outline-button {
+        width: 100%;
+    }
+
+    .volunteer-profile-page .profile-page-main {
+        padding: 28px 14px 45px;
+    }
+
+    .volunteer-profile-page .profile-info-card {
+        padding: 23px 18px;
+    }
+
+    .volunteer-profile-page .profile-info-heading h2 {
+        font-size: 22px;
+    }
+
+    .volunteer-profile-page .profile-detail {
+        padding: 12px 14px;
+    }
+
+    .volunteer-profile-page .preference-box {
+        padding: 15px;
+    }
+
+    .volunteer-profile-page .profile-bottom-action .outline-button {
+        width: 100%;
+    }
+}
+/* EXTRA SMALL MOBILE — MAX 400px */
+@media (max-width: 400px) {
+    .volunteer-application-page .application-hero {
+        padding: 20px 0 24px;
+    }
+
+    .volunteer-application-page .application-hero-content {
+        width: calc(100% - 20px);
+    }
+
+    .volunteer-application-page .application-hero h1 {
+        font-size: 30px;
+    }
+
+    .volunteer-application-page .application-section {
+        width: calc(100% - 20px);
+        padding: 22px 0 26px;
+    }
+
+    .volunteer-application-page .application-info {
+        padding: 16px;
+    }
+
+    .volunteer-application-page .application-image {
+        height: 155px;
+    }
+
+    .volunteer-application-page .application-form-card {
+        padding: 18px 13px;
+    }
+
+    .volunteer-application-page .form-heading h2 {
+        font-size: 21px;
+    }
+
+    .volunteer-application-page .status-bottom-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .volunteer-page .volunteer-hero {
+        padding: 24px 14px 78px;
+    }
+
+    .volunteer-page .hero-text h1 {
+        font-size: 32px;
+    }
+
+    .volunteer-page .hero-text h2 {
+        font-size: 16px;
+    }
+
+    .volunteer-page .hero-text p {
+        font-size: 13px;
+    }
+
+    .volunteer-page .hero-stats {
+        width: calc(100% - 18px);
+    }
+
+    .volunteer-page .stat-box {
+        padding: 8px 5px;
+        gap: 6px;
+    }
+
+    .volunteer-page .stat-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .volunteer-page .stat-box h3 {
+        font-size: 15px;
+    }
+
+    .volunteer-page .stat-box p {
+        font-size: 8px;
+    }
+
+    .volunteer-page .volunteer-intro {
+        width: calc(100% - 20px);
+        margin-top: 50px;
+    }
+
+    .volunteer-page .section-image img {
+        height: 220px;
+    }
+
+    .volunteer-page .section-content h2 {
+        font-size: 25px;
+    }
+
+    .volunteer-page .why-volunteer {
+        padding: 30px 10px;
+    }
+
+    .volunteer-page .section-heading h2 {
+        font-size: 25px;
+    }
+
+    .volunteer-page .volunteer-activities {
+        width: calc(100% - 20px);
+        margin: 34px auto;
+    }
+
+    .volunteer-page .volunteer-cta {
+        width: calc(100% - 20px);
+    }
+
+    .volunteer-page .cta-content h2 {
+        font-size: 25px;
+    }
+
+    .impact-page-hero {
+        min-height: 460px;
+        padding: 45px 5%;
+    }
+
+    .impact-hero-content h1 {
+        font-size: 40px;
+    }
+
+    .impact-page-main {
+        width: 92%;
+    }
+
+    .impact-stat-card {
+        padding: 24px 20px;
+    }
+
+    .impact-progress-section {
+        padding: 25px 18px;
+    }
+
+    .impact-motivation-content {
+        padding: 30px 20px;
+    }
+}
+@media (max-width: 360px) {
+    .application-status-page .application-section {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .application-status-page .application-hero-content h1 {
+        font-size: 1.75rem;
+    }
+
+    .application-status-page .status-card {
+        padding: 20px 12px;
+    }
+
+    .application-status-page .status-card h2 {
+        font-size: 20px;
+    }
+
+    .application-status-page .journey-number {
+        width: 35px;
+        height: 35px;
+        min-width: 35px;
+    }
+
+    .application-status-page .journey-line {
+        margin-left: 17px;
+    }
+
+    .certificates-page-main,
+    .tasks-page-main {
+        width: 94%;
+    }
+
+    .certificates-page-hero h1,
+    .tasks-page-hero h1 {
+        font-size: 2rem;
+    }
+
+    .certificate-content,
+    .task-card-content {
+        padding: 16px;
+    }
+
+    .certificate-image,
+    .task-card-image {
+        height: 190px;
+        min-height: 190px;
+    }
+
+    .certificates-motivation-content,
+    .tasks-motivation-content {
+        padding: 26px 17px;
+    }
+
+    .hero-text h1 {
+        font-size: 32px;
+    }
+
+    .hero-small-title {
+        font-size: 11px;
+    }
+
+    .hero-stats {
+        width: 94%;
+    }
+
+    .stat-box {
+        gap: 5px;
+        padding: 9px 5px;
+    }
+
+    .stat-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .stat-box h3 {
+        font-size: 17px;
+    }
+
+    .stat-box p {
+        font-size: 9px;
+    }
+
+    .section-content h2 {
+        font-size: 26px;
+    }
+
+    .application-form-card {
+        padding: 18px 12px;
+    }
+
+    .application-status-page .details-heading h3 {
+        font-size: 17px;
+    }
+
+    .application-status-page .status-next-card > h2 {
+        font-size: 19px;
+    }
+}

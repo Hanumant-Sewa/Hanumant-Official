@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Let Vite's generated assets and real files pass through unchanged.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# React Router handles all application routes.
+RewriteRule ^ index.html [L]

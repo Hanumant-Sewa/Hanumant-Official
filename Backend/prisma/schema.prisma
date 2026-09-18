@@ -1,0 +1,760 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/**
+ * =====================================================
+ * ENUMS
+ * =====================================================
+ */
+
+enum Role {
+  USER
+  VOLUNTEER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum VolunteerApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  WITHDRAWN
+}
+
+enum CommunityMemberRole {
+  MEMBER
+  MODERATOR
+  ADMIN
+}
+
+enum CommunityMemberStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
+
+enum DonationStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  UPI
+  CARD
+  NET_BANKING
+  WALLET
+  BANK_TRANSFER
+  CASH
+  OTHER
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum EventRegistrationStatus {
+  REGISTERED
+  ATTENDED
+  ABSENT
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum CertificateType {
+  VOLUNTEER
+  EVENT
+  SPECIAL_RECOGNITION
+}
+
+enum ContactStatus {
+  UNREAD
+  READ
+  REPLIED
+}
+
+/**
+ * =====================================================
+ * USER
+ * =====================================================
+ */
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+
+  role   Role       @default(USER)
+  status UserStatus @default(ACTIVE)
+
+  phone  String?
+  avatar String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  volunteerProfile VolunteerProfile?
+
+  donations Donation[]
+
+  volunteerApplications VolunteerApplication[]
+
+  communityMemberships CommunityMember[]
+
+  communityInvitationsSent CommunityInvitation[] @relation("CommunityInvitationsSent")
+
+  createdCommunities Community[] @relation("CommunityCreator")
+
+  organizedEvents VolunteerEvent[] @relation("EventOrganizer")
+
+  eventRegistrations EventRegistration[]
+
+  assignedTasks VolunteerTask[] @relation("TaskAssignee")
+
+  createdTasks VolunteerTask[] @relation("TaskCreator")
+
+  certificates Certificate[]
+
+  notifications Notification[]
+
+  passwordResetTokens PasswordResetToken[]
+
+  auditLogs AuditLog[]
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+}
+
+/**
+ * =====================================================
+ * VOLUNTEER PROFILE
+ * =====================================================
+ */
+model VolunteerProfile {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  age Int?
+  ageGroup String?
+  city String?
+  skills String?
+  availability String?
+  totalHours Int @default(0)
+  totalEvents Int @default(0)
+  joinedAt DateTime @default(now())
+  isVerified Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  applications VolunteerApplication[]
+  eventRegistrations EventRegistration[]
+  tasks VolunteerTask[]
+  impactRecords VolunteerImpact[]
+  certificates Certificate[]
+  @@index([city])
+}
+/**
+ * =====================================================
+ * VOLUNTEER APPLICATION
+ * =====================================================
+ */
+
+model VolunteerApplication {
+  id Int @id @default(autoincrement())
+
+  userId Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  volunteerProfileId Int?
+
+  volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
+
+  motivation    String
+  experience    String?
+  skills        String?
+  preferredArea String?
+  availability  String?
+
+  status VolunteerApplicationStatus @default(PENDING)
+
+  adminRemarks String?
+
+  reviewedAt DateTime?
+  reviewedBy Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+/**
+ * =====================================================
+ * COMMUNITY
+ * =====================================================
+ */
+
+model Community {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  description String?
+
+  image String?
+
+  city    String?
+  state   String?
+  country String?
+
+  isPublic Boolean @default(true)
+  isActive Boolean @default(true)
+
+  createdById Int
+
+  createdBy User @relation("CommunityCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
+  members CommunityMember[]
+
+  invitations CommunityInvitation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@index([city])
+}
+
+/**
+ * =====================================================
+ * COMMUNITY MEMBER
+ * =====================================================
+ */
+
+model CommunityMember {
+  id Int @id @default(autoincrement())
+
+  communityId Int
+  userId      Int
+
+  referredById Int?
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  referredBy CommunityMember? @relation("CommunityMemberReferral", fields: [referredById], references: [id], onDelete: SetNull)
+
+  referrals CommunityMember[] @relation("CommunityMemberReferral")
+
+  role CommunityMemberRole @default(MEMBER)
+
+  status CommunityMemberStatus @default(ACTIVE)
+
+  joinedAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([communityId, userId])
+  @@index([communityId])
+  @@index([userId])
+  @@index([referredById])
+}
+
+/**
+ * =====================================================
+ * COMMUNITY INVITATION
+ * =====================================================
+ */
+
+model CommunityInvitation {
+  id Int @id @default(autoincrement())
+
+  token String @unique
+
+  inviterId Int
+
+  inviter User @relation("CommunityInvitationsSent", fields: [inviterId], references: [id], onDelete: Cascade)
+
+  communityId Int?
+
+  community Community? @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  status String @default("PENDING")
+
+  expiresAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([inviterId])
+  @@index([communityId])
+  @@index([status])
+}
+
+/**
+ * =====================================================
+ * CAMPAIGN
+ * =====================================================
+ */
+
+model Campaign {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  image String?
+
+  targetAmount Decimal @db.Decimal(12, 2)
+
+  raisedAmount Decimal @default(0) @db.Decimal(12, 2)
+
+  status CampaignStatus @default(DRAFT)
+
+  startDate DateTime?
+  endDate   DateTime?
+
+  donations Donation[]
+
+  expenses Expense[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([startDate])
+  @@index([endDate])
+}
+
+/**
+ * =====================================================
+ * DONATION
+ * =====================================================
+ */
+
+model Donation {
+  id Int @id @default(autoincrement())
+
+  userId Int?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  campaignId Int?
+
+  campaign Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  amount Decimal @db.Decimal(12, 2)
+
+  frequency String @default("one-time")
+
+  currency String @default("INR")
+
+  paymentMethod PaymentMethod
+
+  status DonationStatus @default(PENDING)
+
+  transactionId  String?
+  paymentId      String?
+  orderId        String?
+  paymentGateway String?
+
+  donorName  String?
+  donorEmail String?
+  donorPhone String?
+
+  isAnonymous Boolean @default(false)
+
+  message String?
+
+  receiptNumber String? @unique
+
+  receiptUrl String?
+
+  donatedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([campaignId])
+  @@index([status])
+  @@index([transactionId])
+  @@index([paymentId])
+  @@index([donatedAt])
+}
+
+/**
+ * =====================================================
+ * EXPENSE
+ * =====================================================
+ */
+
+model Expense {
+  id String @id @default(cuid())
+
+  campaignId Int
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  title String
+
+  category String
+
+  amount Decimal @db.Decimal(12, 2)
+
+  description String?
+
+  expenseDate DateTime
+
+  receiptUrl String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([campaignId])
+  @@index([expenseDate])
+  @@index([category])
+}
+
+/**
+ * =====================================================
+ * VOLUNTEER EVENT
+ * =====================================================
+ */
+
+model VolunteerEvent {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  image String?
+
+  location String?
+
+  city String?
+
+  state String?
+
+  startDate DateTime
+
+  endDate DateTime?
+
+  capacity Int?
+
+  status EventStatus @default(UPCOMING)
+
+  organizerId Int?
+
+  organizer User? @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: SetNull)
+
+  registrations EventRegistration[]
+
+  tasks VolunteerTask[]
+
+  impactRecords VolunteerImpact[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startDate])
+  @@index([status])
+  @@index([city])
+}
+
+/**
+ * =====================================================
+ * EVENT REGISTRATION
+ * =====================================================
+ */
+
+model EventRegistration {
+  id Int @id @default(autoincrement())
+
+  eventId Int
+
+  userId Int
+
+  volunteerProfileId Int?
+
+  event VolunteerEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
+
+  status EventRegistrationStatus @default(REGISTERED)
+
+  registeredAt DateTime @default(now())
+
+  attendedAt DateTime?
+
+  hoursCompleted Decimal? @db.Decimal(6, 2)
+
+  feedback String?
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+  @@index([status])
+}
+
+/**
+ * =====================================================
+ * VOLUNTEER TASK
+ * =====================================================
+ */
+
+model VolunteerTask {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  eventId Int?
+
+  event VolunteerEvent? @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  assignedToId Int?
+
+  assignedTo User? @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  volunteerProfileId Int?
+
+  volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
+
+  createdById Int?
+
+  createdBy User? @relation("TaskCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  status TaskStatus @default(TODO)
+
+  dueDate DateTime?
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([eventId])
+  @@index([assignedToId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+/**
+ * =====================================================
+ * VOLUNTEER IMPACT
+ * =====================================================
+ */
+
+model VolunteerImpact {
+  id Int @id @default(autoincrement())
+
+  volunteerProfileId Int
+
+  volunteerProfile VolunteerProfile @relation(fields: [volunteerProfileId], references: [id], onDelete: Cascade)
+
+  eventId Int?
+
+  event VolunteerEvent? @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  hours Decimal @db.Decimal(6, 2)
+
+  mealsServed Int @default(0)
+
+  peopleHelped Int @default(0)
+
+  familiesSupported Int @default(0)
+
+  description String?
+
+  recordedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([volunteerProfileId])
+  @@index([eventId])
+}
+
+/**
+ * =====================================================
+ * CERTIFICATE
+ * =====================================================
+ */
+
+model Certificate {
+  id Int @id @default(autoincrement())
+
+  userId Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  volunteerProfileId Int?
+
+  volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
+
+  title String
+
+  description String?
+
+  type CertificateType
+
+  certificateNumber String @unique
+
+  issueDate DateTime @default(now())
+
+  fileUrl String?
+
+  eventId Int?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([issueDate])
+}
+
+/**
+ * =====================================================
+ * NOTIFICATION
+ * =====================================================
+ */
+
+model Notification {
+  id Int @id @default(autoincrement())
+
+  userId Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title String
+
+  message String
+
+  type String?
+
+  isRead Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+/**
+ * =====================================================
+ * PASSWORD RESET TOKEN
+ * =====================================================
+ */
+
+model PasswordResetToken {
+  id Int @id @default(autoincrement())
+
+  userId Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  token String @unique
+
+  expiresAt DateTime
+
+  used Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/**
+ * =====================================================
+ * AUDIT LOG
+ * =====================================================
+ */
+
+model AuditLog {
+  id Int @id @default(autoincrement())
+
+  userId Int?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  action String
+
+  entity String?
+
+  entityId String?
+
+  details String?
+
+  ipAddress String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
+}
+
+/**
+ * =====================================================
+ * CONTACT MESSAGE
+ * =====================================================
+ */
+
+model ContactMessage {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  email String
+
+  subject String
+
+  message String
+
+  status ContactStatus @default(UNREAD)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}

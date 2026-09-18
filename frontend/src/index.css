@@ -1,0 +1,142 @@
+:root{
+    --primary:#D97706;
+    --primary-dark:#B45309;
+    --primary-light:#F59E0B;
+    --primary-soft:#FFF0CE;
+    --white:#fff;
+    --cream:#FFF8F0;
+    --bg:#FFFDF9;
+    --text:#1F2937;
+    --text-light:#6B7280;
+    --border:#c2c0c0;
+    --shadow-sm:0 5px 15px rgba(0,0,0,.05);
+    --shadow-md:0 15px 40px rgba(0,0,0,.08);
+    --shadow-lg:0 25px 60px rgba(0,0,0,.12);
+    --radius:18px;
+    --transition:.35s ease;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+    line-height:1.7;
+}
+
+img{
+    width:100%;
+    display:block;
+}
+
+a{
+    text-decoration:none;
+}
+
+ul{
+    list-style:none;
+}
+
+button,
+input,
+textarea{
+    font-family:inherit;
+}
+
+section {
+    padding: clamp(2.5rem, 4vw, 4rem) 0;
+    margin-top: 10px;
+}
+
+.container {
+    width: min(92%, 1200px);
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: clamp(2rem, 3vw, 3rem);
+}
+
+.section-title span{
+    display:inline-block;
+    color:var(--primary);
+    font-weight:700;
+    letter-spacing:1px;
+    margin-bottom:15px;
+    text-transform:uppercase;
+}
+
+.section-title h2 {
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+}
+
+.section-title h2 span{
+    color:var(--primary);
+}
+
+.section-title p{
+    max-width:760px;
+    margin:auto;
+    color:var(--text-light);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.4rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: var(--transition);
+    cursor: pointer;
+    color: var(--primary);
+}
+
+.btn-primary{
+    background:linear-gradient(135deg,#D97706,#B45309);
+    color:#fff;
+    box-shadow:0 12px 30px rgba(217,119,6,.25);
+}
+
+.btn-primary:hover{
+    transform:translateY(-4px);
+    box-shadow:0 20px 40px rgba(217,119,6,.35);
+}
+
+.btn-outline{
+    border:2px solid var(--primary);
+    color:var(--primary);
+    margin-left:15px;
+}
+
+.btn-outline:hover{
+    background:var(--primary);
+    color:#fff;
+}
+
+.mobile-menu-button{
+    display:none;
+}
+
+.mobile-menu{
+    display:none;
+}
+
+::selection{
+    background:var(--primary);
+    color:#fff;
+}
