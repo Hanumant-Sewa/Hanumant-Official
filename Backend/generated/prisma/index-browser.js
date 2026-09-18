@@ -137,6 +137,7 @@ exports.Prisma.VolunteerProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   age: 'age',
+  ageGroup: 'ageGroup',
   city: 'city',
   skills: 'skills',
   availability: 'availability',
@@ -184,10 +185,21 @@ exports.Prisma.CommunityMemberScalarFieldEnum = {
   id: 'id',
   communityId: 'communityId',
   userId: 'userId',
+  referredById: 'referredById',
   role: 'role',
   status: 'status',
   joinedAt: 'joinedAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommunityInvitationScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  inviterId: 'inviterId',
+  communityId: 'communityId',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.CampaignScalarFieldEnum = {
@@ -225,6 +237,19 @@ exports.Prisma.DonationScalarFieldEnum = {
   receiptNumber: 'receiptNumber',
   receiptUrl: 'receiptUrl',
   donatedAt: 'donatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ExpenseScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  title: 'title',
+  category: 'category',
+  amount: 'amount',
+  description: 'description',
+  expenseDate: 'expenseDate',
+  receiptUrl: 'receiptUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -450,8 +475,10 @@ exports.Prisma.ModelName = {
   VolunteerApplication: 'VolunteerApplication',
   Community: 'Community',
   CommunityMember: 'CommunityMember',
+  CommunityInvitation: 'CommunityInvitation',
   Campaign: 'Campaign',
   Donation: 'Donation',
+  Expense: 'Expense',
   VolunteerEvent: 'VolunteerEvent',
   EventRegistration: 'EventRegistration',
   VolunteerTask: 'VolunteerTask',

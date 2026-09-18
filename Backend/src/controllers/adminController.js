@@ -255,8 +255,7 @@ export const getAdminDashboard = async (req, res) => {
         upcomingEvents,
         totalCommunities,
 
-        totalDonationAmount:
-          donationTotals._sum.amount?.toString() || "0",
+        totalDonationAmount: donationTotals._sum.amount?.toString() || "0",
       },
 
       recentApplications,
@@ -334,11 +333,7 @@ export const updateUserStatus = async (req, res) => {
       });
     }
 
-    const allowedStatuses = [
-      "ACTIVE",
-      "INACTIVE",
-      "SUSPENDED",
-    ];
+    const allowedStatuses = ["ACTIVE", "INACTIVE", "SUSPENDED"];
 
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
@@ -426,54 +421,50 @@ export const getVolunteerApplications = async (req, res) => {
       where.status = status;
     }
 
-    const applications =
-      await prisma.volunteerApplication.findMany({
-        where,
+    const applications = await prisma.volunteerApplication.findMany({
+      where,
 
-        orderBy: {
-          createdAt: "desc",
-        },
+      orderBy: {
+        createdAt: "desc",
+      },
 
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              phone: true,
-              role: true,
-              status: true,
-            },
-          },
-
-          volunteerProfile: {
-            select: {
-              id: true,
-              userId: true,
-              age: true,
-              skills: true,
-              city: true,
-              availability: true,
-              totalHours: true,
-              totalEvents: true,
-              isVerified: true,
-              joinedAt: true,
-              createdAt: true,
-              updatedAt: true,
-            },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            role: true,
+            status: true,
           },
         },
-      });
+
+        volunteerProfile: {
+          select: {
+            id: true,
+            userId: true,
+            age: true,
+            skills: true,
+            city: true,
+            availability: true,
+            totalHours: true,
+            totalEvents: true,
+            isVerified: true,
+            joinedAt: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+      },
+    });
 
     return res.status(200).json({
       success: true,
       applications,
     });
   } catch (error) {
-    console.error(
-      "Get volunteer applications error:",
-      error
-    );
+    console.error("Get volunteer applications error:", error);
 
     return res.status(500).json({
       success: false,
@@ -485,11 +476,9 @@ export const getVolunteerApplications = async (req, res) => {
 /* =====================================================
    APPROVE VOLUNTEER
 ===================================================== */
-
 export const approveVolunteerApplication = async (req, res) => {
   try {
     const applicationId = Number(req.params.id);
-
     const { adminRemarks = "" } = req.body || {};
 
     if (!Number.isInteger(applicationId)) {
@@ -499,17 +488,13 @@ export const approveVolunteerApplication = async (req, res) => {
       });
     }
 
-    const application =
-      await prisma.volunteerApplication.findUnique({
-        where: {
-          id: applicationId,
-        },
-
-        include: {
-          user: true,
-          volunteerProfile: true,
-        },
-      });
+    const application = await prisma.volunteerApplication.findUnique({
+      where: { id: applicationId },
+      include: {
+        user: true,
+        volunteerProfile: true,
+      },
+    });
 
     if (!application) {
       return res.status(404).json({
@@ -526,210 +511,181 @@ export const approveVolunteerApplication = async (req, res) => {
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      /* -----------------------------------------------
-         Make user a volunteer
-      ------------------------------------------------ */
+      /* =========================================
+         1. MAKE USER A VOLUNTEER
+      ========================================= */
 
       const user = await tx.user.update({
-        where: {
-          id: application.userId,
-        },
-
+        where: { id: application.userId },
         data: {
           role: "VOLUNTEER",
         },
       });
 
-      /* -----------------------------------------------
-         Create or update volunteer profile
-      ------------------------------------------------ */
+      /* =========================================
+         2. CREATE / UPDATE VOLUNTEER PROFILE
+      ========================================= */
 
       let volunteerProfile;
 
       if (application.volunteerProfileId) {
-        volunteerProfile =
-          await tx.volunteerProfile.update({
-            where: {
-              id: application.volunteerProfileId,
-            },
-
-            data: {
-              isVerified: true,
-
-              skills:
-                application.skills ||
-                application.volunteerProfile?.skills ||
-                null,
-
-              availability:
-                application.availability ||
-                application.volunteerProfile?.availability ||
-                null,
-            },
-          });
-      } else {
-        const existingProfile =
-          await tx.volunteerProfile.findUnique({
-            where: {
-              userId: application.userId,
-            },
-          });
-
-        if (existingProfile) {
-          volunteerProfile =
-            await tx.volunteerProfile.update({
-              where: {
-                id: existingProfile.id,
-              },
-
-              data: {
-                isVerified: true,
-
-                skills:
-                  application.skills ||
-                  existingProfile.skills ||
-                  null,
-
-                availability:
-                  application.availability ||
-                  existingProfile.availability ||
-                  null,
-              },
-            });
-        } else {
-          volunteerProfile =
-            await tx.volunteerProfile.create({
-              data: {
-                userId: application.userId,
-
-                skills: application.skills || null,
-
-                availability:
-                  application.availability || null,
-
-                city: null,
-
-                isVerified: true,
-              },
-            });
-        }
-      }
-
-      /* -----------------------------------------------
-         Update volunteer application
-      ------------------------------------------------ */
-
-      const updatedApplication =
-        await tx.volunteerApplication.update({
+        volunteerProfile = await tx.volunteerProfile.update({
           where: {
-            id: applicationId,
+            id: application.volunteerProfileId,
           },
-
           data: {
-            status: "APPROVED",
+            isVerified: true,
 
-            adminRemarks:
-              adminRemarks.trim() || null,
+            skills:
+              application.skills ||
+              application.volunteerProfile?.skills ||
+              null,
 
-            reviewedAt: new Date(),
-
-            reviewedBy: req.user.userId,
-
-            volunteerProfileId:
-              volunteerProfile.id,
+            availability:
+              application.availability ||
+              application.volunteerProfile?.availability ||
+              null,
           },
-
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                phone: true,
-                role: true,
-              },
-            },
+        });
+      } else {
+        const existingProfile = await tx.volunteerProfile.findUnique({
+          where: {
+            userId: application.userId,
           },
         });
 
-      /* -----------------------------------------------
-         AUTOMATIC CERTIFICATE CREATION
-      ------------------------------------------------ */
+        if (existingProfile) {
+          volunteerProfile = await tx.volunteerProfile.update({
+            where: {
+              id: existingProfile.id,
+            },
+            data: {
+              isVerified: true,
 
-      // Check if this volunteer already has
-      // a volunteer appreciation certificate.
-      const existingCertificate =
-        await tx.certificate.findFirst({
+              skills: application.skills || existingProfile.skills || null,
+
+              availability:
+                application.availability ||
+                existingProfile.availability ||
+                null,
+
+              city: existingProfile.city || null,
+            },
+          });
+        } else {
+          volunteerProfile = await tx.volunteerProfile.create({
+            data: {
+              userId: application.userId,
+              skills: application.skills || null,
+              availability: application.availability || null,
+              city: null,
+              isVerified: true,
+            },
+          });
+        }
+      }
+
+      /* =========================================
+         3. APPROVE APPLICATION
+      ========================================= */
+
+      const updatedApplication = await tx.volunteerApplication.update({
+        where: {
+          id: applicationId,
+        },
+        data: {
+          status: "APPROVED",
+
+          adminRemarks: adminRemarks.trim() || null,
+
+          reviewedAt: new Date(),
+
+          reviewedBy: req.user.userId,
+
+          volunteerProfileId: volunteerProfile.id,
+        },
+
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+              role: true,
+            },
+          },
+        },
+      });
+
+      /* =========================================
+         4. CREATE VOLUNTEER CERTIFICATE
+         ========================================= */
+
+      // Check whether this volunteer already has
+      // a volunteer certificate.
+      const existingCertificate = await tx.certificate.findFirst({
+        where: {
+          userId: application.userId,
+          type: "VOLUNTEER",
+        },
+      });
+
+      let certificate = existingCertificate;
+
+      if (!existingCertificate) {
+        const certificateCount = await tx.certificate.count({
           where: {
-            userId: application.userId,
             type: "VOLUNTEER",
           },
         });
 
-      let certificate;
-
-      if (!existingCertificate) {
-        // Count existing volunteer certificates
-        const certificateCount =
-          await tx.certificate.count({
-            where: {
-              type: "VOLUNTEER",
-            },
-          });
-
-        // Current year
         const year = new Date().getFullYear();
 
-        // Generate certificate number
-        const certificateNumber =
-          `HSF-VA-${year}-${String(
-            certificateCount + 1
-          ).padStart(3, "0")}`;
+        const certificateNumber = `HSF-VA-${year}-${String(
+          certificateCount + 1,
+        ).padStart(3, "0")}`;
 
-        // Create certificate
-        certificate =
-          await tx.certificate.create({
-            data: {
-              userId: application.userId,
+        certificate = await tx.certificate.create({
+          data: {
+            userId: application.userId,
 
-              volunteerProfileId:
-                volunteerProfile.id,
+            volunteerProfileId: volunteerProfile.id,
 
-              title:
-                "Volunteer Appreciation",
+            title: "Volunteer Appreciation",
 
-              description:
-                "This certificate is awarded in recognition of valuable volunteer service and contribution to Hanumant Seva Foundation.",
+            description:
+              "In appreciation of your dedication and service as a volunteer with Hanumant Seva.",
 
-              type: "VOLUNTEER",
+            type: "VOLUNTEER",
 
-              certificateNumber,
-            },
-          });
-      } else {
-        // Certificate already exists,
-        // so don't create another one.
-        certificate = existingCertificate;
+            certificateNumber,
+
+            issueDate: new Date(),
+          },
+        });
       }
 
-      /* -----------------------------------------------
-         Notification
-      ------------------------------------------------ */
+      /* =========================================
+         5. NOTIFICATION
+      ========================================= */
 
       await tx.notification.create({
         data: {
           userId: application.userId,
 
-          title:
-            "Volunteer Application Approved",
+          title: "Volunteer Application Approved",
 
           message:
-            "Congratulations! Your volunteer application has been approved and your volunteer certificate has been generated.",
+            "Congratulations! Your volunteer application has been approved. Your volunteer certificate has been generated.",
 
-          type:
-            "VOLUNTEER_APPLICATION",
+          type: "VOLUNTEER_APPLICATION",
         },
       });
+
+      /* =========================================
+         RETURN EVERYTHING
+      ========================================= */
 
       return {
         user,
@@ -739,26 +695,27 @@ export const approveVolunteerApplication = async (req, res) => {
       };
     });
 
-    /* -----------------------------------------------
-       Audit log
-    ------------------------------------------------ */
+    /* =========================================
+       6. AUDIT LOG
+    ========================================= */
 
     await createAuditLog({
       userId: req.user.userId,
 
-      action:
-        "APPROVE_VOLUNTEER_APPLICATION",
+      action: "APPROVE_VOLUNTEER_APPLICATION",
 
-      entity:
-        "VolunteerApplication",
+      entity: "VolunteerApplication",
 
       entityId: applicationId,
 
-      details:
-        `Approved volunteer application for ${application.user.email}`,
+      details: `Approved volunteer application and generated certificate for ${application.user.email}`,
 
       ipAddress: req.ip,
     });
+
+    /* =========================================
+       7. RESPONSE
+    ========================================= */
 
     return res.status(200).json({
       success: true,
@@ -769,16 +726,12 @@ export const approveVolunteerApplication = async (req, res) => {
       ...result,
     });
   } catch (error) {
-    console.error(
-      "Approve volunteer error:",
-      error
-    );
+    console.error("Approve volunteer error:", error);
 
     return res.status(500).json({
       success: false,
 
-      message:
-        "Failed to approve volunteer application.",
+      message: "Failed to approve volunteer application.",
     });
   }
 };
@@ -787,10 +740,7 @@ export const approveVolunteerApplication = async (req, res) => {
    REJECT VOLUNTEER
 ===================================================== */
 
-export const rejectVolunteerApplication = async (
-  req,
-  res
-) => {
+export const rejectVolunteerApplication = async (req, res) => {
   try {
     const applicationId = Number(req.params.id);
 
@@ -810,16 +760,15 @@ export const rejectVolunteerApplication = async (
       });
     }
 
-    const application =
-      await prisma.volunteerApplication.findUnique({
-        where: {
-          id: applicationId,
-        },
+    const application = await prisma.volunteerApplication.findUnique({
+      where: {
+        id: applicationId,
+      },
 
-        include: {
-          user: true,
-        },
-      });
+      include: {
+        user: true,
+      },
+    });
 
     if (!application) {
       return res.status(404).json({
@@ -835,103 +784,20 @@ export const rejectVolunteerApplication = async (
       });
     }
 
-    const updatedApplication =
-      await prisma.$transaction(async (tx) => {
-        const updated =
-          await tx.volunteerApplication.update({
-            where: {
-              id: applicationId,
-            },
+    const updatedApplication = await prisma.$transaction(async (tx) => {
+      const updated = await tx.volunteerApplication.update({
+        where: {
+          id: applicationId,
+        },
 
-            data: {
-              status: "REJECTED",
+        data: {
+          status: "REJECTED",
 
-              adminRemarks:
-                adminRemarks.trim(),
+          adminRemarks: adminRemarks.trim(),
 
-              reviewedAt: new Date(),
+          reviewedAt: new Date(),
 
-              reviewedBy: req.user.userId,
-            },
-
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
-              },
-            },
-          });
-
-        await tx.notification.create({
-          data: {
-            userId: application.userId,
-
-            title:
-              "Volunteer Application Update",
-
-            message:
-              `Your volunteer application was not approved at this time. Reason: ${adminRemarks.trim()}`,
-
-            type:
-              "VOLUNTEER_APPLICATION",
-          },
-        });
-
-        return updated;
-      });
-
-    await createAuditLog({
-      userId: req.user.userId,
-
-      action:
-        "REJECT_VOLUNTEER_APPLICATION",
-
-      entity:
-        "VolunteerApplication",
-
-      entityId: applicationId,
-
-      details:
-        `Rejected application for ${application.user.email}. Reason: ${adminRemarks.trim()}`,
-
-      ipAddress: req.ip,
-    });
-
-    return res.status(200).json({
-      success: true,
-
-      message:
-        "Volunteer application rejected.",
-
-      application: updatedApplication,
-    });
-  } catch (error) {
-    console.error(
-      "Reject volunteer error:",
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      message:
-        "Failed to reject volunteer application.",
-    });
-  }
-};
-
-/* =====================================================
-   DONATIONS
-===================================================== */
-
-export const getAllDonations = async (req, res) => {
-  try {
-    const donations =
-      await prisma.donation.findMany({
-        orderBy: {
-          donatedAt: "desc",
+          reviewedBy: req.user.userId,
         },
 
         include: {
@@ -942,25 +808,90 @@ export const getAllDonations = async (req, res) => {
               email: true,
             },
           },
-
-          campaign: {
-            select: {
-              id: true,
-              title: true,
-            },
-          },
         },
       });
+
+      await tx.notification.create({
+        data: {
+          userId: application.userId,
+
+          title: "Volunteer Application Update",
+
+          message: `Your volunteer application was not approved at this time. Reason: ${adminRemarks.trim()}`,
+
+          type: "VOLUNTEER_APPLICATION",
+        },
+      });
+
+      return updated;
+    });
+
+    await createAuditLog({
+      userId: req.user.userId,
+
+      action: "REJECT_VOLUNTEER_APPLICATION",
+
+      entity: "VolunteerApplication",
+
+      entityId: applicationId,
+
+      details: `Rejected application for ${application.user.email}. Reason: ${adminRemarks.trim()}`,
+
+      ipAddress: req.ip,
+    });
+
+    return res.status(200).json({
+      success: true,
+
+      message: "Volunteer application rejected.",
+
+      application: updatedApplication,
+    });
+  } catch (error) {
+    console.error("Reject volunteer error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to reject volunteer application.",
+    });
+  }
+};
+
+/* =====================================================
+   DONATIONS
+===================================================== */
+
+export const getAllDonations = async (req, res) => {
+  try {
+    const donations = await prisma.donation.findMany({
+      orderBy: {
+        donatedAt: "desc",
+      },
+
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+
+        campaign: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+    });
 
     return res.status(200).json({
       success: true,
       donations,
     });
   } catch (error) {
-    console.error(
-      "Get donations error:",
-      error
-    );
+    console.error("Get donations error:", error);
 
     return res.status(500).json({
       success: false,
@@ -979,30 +910,26 @@ export const getAllDonations = async (req, res) => {
 
 export const getAllCampaigns = async (req, res) => {
   try {
-    const campaigns =
-      await prisma.campaign.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
+    const campaigns = await prisma.campaign.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
 
-        include: {
-          _count: {
-            select: {
-              donations: true,
-            },
+      include: {
+        _count: {
+          select: {
+            donations: true,
           },
         },
-      });
+      },
+    });
 
     return res.status(200).json({
       success: true,
       campaigns,
     });
   } catch (error) {
-    console.error(
-      "Get campaigns error:",
-      error
-    );
+    console.error("Get campaigns error:", error);
 
     return res.status(500).json({
       success: false,
@@ -1035,8 +962,7 @@ export const createCampaign = async (req, res) => {
       });
     }
 
-    const parsedTargetAmount =
-      Number(targetAmount);
+    const parsedTargetAmount = Number(targetAmount);
 
     if (
       targetAmount === undefined ||
@@ -1047,8 +973,7 @@ export const createCampaign = async (req, res) => {
     ) {
       return res.status(400).json({
         success: false,
-        message:
-          "Target amount must be greater than 0.",
+        message: "Target amount must be greater than 0.",
       });
     }
 
@@ -1059,27 +984,17 @@ export const createCampaign = async (req, res) => {
       raisedAmount !== null &&
       raisedAmount !== ""
     ) {
-      parsedRaisedAmount =
-        Number(raisedAmount);
+      parsedRaisedAmount = Number(raisedAmount);
 
-      if (
-        !Number.isFinite(parsedRaisedAmount) ||
-        parsedRaisedAmount < 0
-      ) {
+      if (!Number.isFinite(parsedRaisedAmount) || parsedRaisedAmount < 0) {
         return res.status(400).json({
           success: false,
-          message:
-            "Raised amount cannot be negative.",
+          message: "Raised amount cannot be negative.",
         });
       }
     }
 
-    const allowedStatuses = [
-      "DRAFT",
-      "ACTIVE",
-      "COMPLETED",
-      "CANCELLED",
-    ];
+    const allowedStatuses = ["DRAFT", "ACTIVE", "COMPLETED", "CANCELLED"];
 
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
@@ -1088,76 +1003,58 @@ export const createCampaign = async (req, res) => {
       });
     }
 
-    const parsedStartDate = startDate
-      ? parseDate(startDate)
-      : null;
+    const parsedStartDate = startDate ? parseDate(startDate) : null;
 
-    const parsedEndDate = endDate
-      ? parseDate(endDate)
-      : null;
+    const parsedEndDate = endDate ? parseDate(endDate) : null;
 
     if (startDate && !parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "Invalid campaign start date.",
+        message: "Invalid campaign start date.",
       });
     }
 
     if (endDate && !parsedEndDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "Invalid campaign end date.",
+        message: "Invalid campaign end date.",
       });
     }
 
-    if (
-      parsedStartDate &&
-      parsedEndDate &&
-      parsedEndDate <= parsedStartDate
-    ) {
+    if (parsedStartDate && parsedEndDate && parsedEndDate <= parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "Campaign end date must be after the start date.",
+        message: "Campaign end date must be after the start date.",
       });
     }
 
-    const campaign =
-      await prisma.campaign.create({
-        data: {
-          title: title.trim(),
+    const campaign = await prisma.campaign.create({
+      data: {
+        title: title.trim(),
 
-          description:
-            description?.trim() || null,
+        description: description?.trim() || null,
 
-          image:
-            image?.trim() || null,
+        image: image?.trim() || null,
 
-          targetAmount:
-            parsedTargetAmount,
+        targetAmount: parsedTargetAmount,
 
-          raisedAmount:
-            parsedRaisedAmount,
+        raisedAmount: parsedRaisedAmount,
 
-          status,
+        status,
 
-          startDate:
-            parsedStartDate,
+        startDate: parsedStartDate,
 
-          endDate:
-            parsedEndDate,
-        },
+        endDate: parsedEndDate,
+      },
 
-        include: {
-          _count: {
-            select: {
-              donations: true,
-            },
+      include: {
+        _count: {
+          select: {
+            donations: true,
           },
         },
-      });
+      },
+    });
 
     await createAuditLog({
       userId: req.user.userId,
@@ -1168,8 +1065,7 @@ export const createCampaign = async (req, res) => {
 
       entityId: campaign.id,
 
-      details:
-        `Created campaign "${campaign.title}"`,
+      details: `Created campaign "${campaign.title}"`,
 
       ipAddress: req.ip,
     });
@@ -1177,16 +1073,12 @@ export const createCampaign = async (req, res) => {
     return res.status(201).json({
       success: true,
 
-      message:
-        "Campaign created successfully.",
+      message: "Campaign created successfully.",
 
       campaign,
     });
   } catch (error) {
-    console.error(
-      "Create campaign error:",
-      error
-    );
+    console.error("Create campaign error:", error);
 
     return res.status(500).json({
       success: false,
@@ -1201,8 +1093,7 @@ export const createCampaign = async (req, res) => {
 
 export const updateCampaign = async (req, res) => {
   try {
-    const campaignId =
-      Number(req.params.id);
+    const campaignId = Number(req.params.id);
 
     if (!Number.isInteger(campaignId)) {
       return res.status(400).json({
@@ -1211,12 +1102,11 @@ export const updateCampaign = async (req, res) => {
       });
     }
 
-    const existingCampaign =
-      await prisma.campaign.findUnique({
-        where: {
-          id: campaignId,
-        },
-      });
+    const existingCampaign = await prisma.campaign.findUnique({
+      where: {
+        id: campaignId,
+      },
+    });
 
     if (!existingCampaign) {
       return res.status(404).json({
@@ -1243,8 +1133,7 @@ export const updateCampaign = async (req, res) => {
       });
     }
 
-    const parsedTargetAmount =
-      Number(targetAmount);
+    const parsedTargetAmount = Number(targetAmount);
 
     if (
       targetAmount === undefined ||
@@ -1255,13 +1144,11 @@ export const updateCampaign = async (req, res) => {
     ) {
       return res.status(400).json({
         success: false,
-        message:
-          "Target amount must be greater than 0.",
+        message: "Target amount must be greater than 0.",
       });
     }
 
-    const parsedRaisedAmount =
-      Number(raisedAmount);
+    const parsedRaisedAmount = Number(raisedAmount);
 
     if (
       raisedAmount === undefined ||
@@ -1272,17 +1159,11 @@ export const updateCampaign = async (req, res) => {
     ) {
       return res.status(400).json({
         success: false,
-        message:
-          "Raised amount cannot be negative.",
+        message: "Raised amount cannot be negative.",
       });
     }
 
-    const allowedStatuses = [
-      "DRAFT",
-      "ACTIVE",
-      "COMPLETED",
-      "CANCELLED",
-    ];
+    const allowedStatuses = ["DRAFT", "ACTIVE", "COMPLETED", "CANCELLED"];
 
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
@@ -1291,80 +1172,62 @@ export const updateCampaign = async (req, res) => {
       });
     }
 
-    const parsedStartDate = startDate
-      ? parseDate(startDate)
-      : null;
+    const parsedStartDate = startDate ? parseDate(startDate) : null;
 
-    const parsedEndDate = endDate
-      ? parseDate(endDate)
-      : null;
+    const parsedEndDate = endDate ? parseDate(endDate) : null;
 
     if (startDate && !parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "Invalid campaign start date.",
+        message: "Invalid campaign start date.",
       });
     }
 
     if (endDate && !parsedEndDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "Invalid campaign end date.",
+        message: "Invalid campaign end date.",
       });
     }
 
-    if (
-      parsedStartDate &&
-      parsedEndDate &&
-      parsedEndDate <= parsedStartDate
-    ) {
+    if (parsedStartDate && parsedEndDate && parsedEndDate <= parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "Campaign end date must be after the start date.",
+        message: "Campaign end date must be after the start date.",
       });
     }
 
-    const updatedCampaign =
-      await prisma.campaign.update({
-        where: {
-          id: campaignId,
-        },
+    const updatedCampaign = await prisma.campaign.update({
+      where: {
+        id: campaignId,
+      },
 
-        data: {
-          title: title.trim(),
+      data: {
+        title: title.trim(),
 
-          description:
-            description?.trim() || null,
+        description: description?.trim() || null,
 
-          image:
-            image?.trim() || null,
+        image: image?.trim() || null,
 
-          targetAmount:
-            parsedTargetAmount,
+        targetAmount: parsedTargetAmount,
 
-          raisedAmount:
-            parsedRaisedAmount,
+        raisedAmount: parsedRaisedAmount,
 
-          status,
+        status,
 
-          startDate:
-            parsedStartDate,
+        startDate: parsedStartDate,
 
-          endDate:
-            parsedEndDate,
-        },
+        endDate: parsedEndDate,
+      },
 
-        include: {
-          _count: {
-            select: {
-              donations: true,
-            },
+      include: {
+        _count: {
+          select: {
+            donations: true,
           },
         },
-      });
+      },
+    });
 
     await createAuditLog({
       userId: req.user.userId,
@@ -1375,8 +1238,7 @@ export const updateCampaign = async (req, res) => {
 
       entityId: campaignId,
 
-      details:
-        `Updated campaign "${updatedCampaign.title}"`,
+      details: `Updated campaign "${updatedCampaign.title}"`,
 
       ipAddress: req.ip,
     });
@@ -1384,16 +1246,12 @@ export const updateCampaign = async (req, res) => {
     return res.status(200).json({
       success: true,
 
-      message:
-        "Campaign updated successfully.",
+      message: "Campaign updated successfully.",
 
       campaign: updatedCampaign,
     });
   } catch (error) {
-    console.error(
-      "Update campaign error:",
-      error
-    );
+    console.error("Update campaign error:", error);
 
     return res.status(500).json({
       success: false,
@@ -1408,8 +1266,7 @@ export const updateCampaign = async (req, res) => {
 
 export const cancelCampaign = async (req, res) => {
   try {
-    const campaignId =
-      Number(req.params.id);
+    const campaignId = Number(req.params.id);
 
     if (!Number.isInteger(campaignId)) {
       return res.status(400).json({
@@ -1418,12 +1275,11 @@ export const cancelCampaign = async (req, res) => {
       });
     }
 
-    const campaign =
-      await prisma.campaign.findUnique({
-        where: {
-          id: campaignId,
-        },
-      });
+    const campaign = await prisma.campaign.findUnique({
+      where: {
+        id: campaignId,
+      },
+    });
 
     if (!campaign) {
       return res.status(404).json({
@@ -1435,37 +1291,34 @@ export const cancelCampaign = async (req, res) => {
     if (campaign.status === "CANCELLED") {
       return res.status(400).json({
         success: false,
-        message:
-          "Campaign is already cancelled.",
+        message: "Campaign is already cancelled.",
       });
     }
 
     if (campaign.status === "COMPLETED") {
       return res.status(400).json({
         success: false,
-        message:
-          "Completed campaigns cannot be cancelled.",
+        message: "Completed campaigns cannot be cancelled.",
       });
     }
 
-    const updatedCampaign =
-      await prisma.campaign.update({
-        where: {
-          id: campaignId,
-        },
+    const updatedCampaign = await prisma.campaign.update({
+      where: {
+        id: campaignId,
+      },
 
-        data: {
-          status: "CANCELLED",
-        },
+      data: {
+        status: "CANCELLED",
+      },
 
-        include: {
-          _count: {
-            select: {
-              donations: true,
-            },
+      include: {
+        _count: {
+          select: {
+            donations: true,
           },
         },
-      });
+      },
+    });
 
     await createAuditLog({
       userId: req.user.userId,
@@ -1476,8 +1329,7 @@ export const cancelCampaign = async (req, res) => {
 
       entityId: campaignId,
 
-      details:
-        `Cancelled campaign "${campaign.title}"`,
+      details: `Cancelled campaign "${campaign.title}"`,
 
       ipAddress: req.ip,
     });
@@ -1485,21 +1337,16 @@ export const cancelCampaign = async (req, res) => {
     return res.status(200).json({
       success: true,
 
-      message:
-        "Campaign cancelled successfully.",
+      message: "Campaign cancelled successfully.",
 
       campaign: updatedCampaign,
     });
   } catch (error) {
-    console.error(
-      "Cancel campaign error:",
-      error
-    );
+    console.error("Cancel campaign error:", error);
 
     return res.status(500).json({
       success: false,
-      message:
-        "Failed to cancel campaign.",
+      message: "Failed to cancel campaign.",
     });
   }
 };
@@ -1510,8 +1357,7 @@ export const cancelCampaign = async (req, res) => {
 
 export const deleteCampaign = async (req, res) => {
   try {
-    const campaignId =
-      Number(req.params.id);
+    const campaignId = Number(req.params.id);
 
     if (!Number.isInteger(campaignId)) {
       return res.status(400).json({
@@ -1520,20 +1366,19 @@ export const deleteCampaign = async (req, res) => {
       });
     }
 
-    const campaign =
-      await prisma.campaign.findUnique({
-        where: {
-          id: campaignId,
-        },
+    const campaign = await prisma.campaign.findUnique({
+      where: {
+        id: campaignId,
+      },
 
-        include: {
-          _count: {
-            select: {
-              donations: true,
-            },
+      include: {
+        _count: {
+          select: {
+            donations: true,
           },
         },
-      });
+      },
+    });
 
     if (!campaign) {
       return res.status(404).json({
@@ -1565,27 +1410,21 @@ export const deleteCampaign = async (req, res) => {
 
       entityId: campaignId,
 
-      details:
-        `Deleted campaign "${campaign.title}"`,
+      details: `Deleted campaign "${campaign.title}"`,
 
       ipAddress: req.ip,
     });
 
     return res.status(200).json({
       success: true,
-      message:
-        "Campaign deleted successfully.",
+      message: "Campaign deleted successfully.",
     });
   } catch (error) {
-    console.error(
-      "Delete campaign error:",
-      error
-    );
+    console.error("Delete campaign error:", error);
 
     return res.status(500).json({
       success: false,
-      message:
-        "Failed to delete campaign.",
+      message: "Failed to delete campaign.",
     });
   }
 };
@@ -1600,35 +1439,30 @@ export const deleteCampaign = async (req, res) => {
 
 export const getAllEvents = async (req, res) => {
   try {
-    const events =
-      await prisma.volunteerEvent.findMany({
-        orderBy: {
-          startDate: "asc",
-        },
+    const events = await prisma.volunteerEvent.findMany({
+      orderBy: {
+        startDate: "asc",
+      },
 
-        include: {
-          _count: {
-            select: {
-              registrations: true,
-              tasks: true,
-              impactRecords: true,
-            },
+      include: {
+        _count: {
+          select: {
+            registrations: true,
+            tasks: true,
+            impactRecords: true,
           },
         },
-      });
+      },
+    });
 
-    const formattedEvents =
-      events.map(formatEvent);
+    const formattedEvents = events.map(formatEvent);
 
     return res.status(200).json({
       success: true,
       events: formattedEvents,
     });
   } catch (error) {
-    console.error(
-      "Get events error:",
-      error
-    );
+    console.error("Get events error:", error);
 
     return res.status(500).json({
       success: false,
@@ -1663,19 +1497,16 @@ export const createEvent = async (req, res) => {
       });
     }
 
-    const parsedStartDate =
-      parseDate(startDate);
+    const parsedStartDate = parseDate(startDate);
 
     if (!parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "A valid event start date is required.",
+        message: "A valid event start date is required.",
       });
     }
 
-    const parsedEndDate =
-      parseDate(endDate);
+    const parsedEndDate = parseDate(endDate);
 
     if (!parsedEndDate) {
       return res.status(400).json({
@@ -1688,16 +1519,11 @@ export const createEvent = async (req, res) => {
     if (parsedEndDate <= parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "Event end date must be after the start date.",
+        message: "Event end date must be after the start date.",
       });
     }
 
-    if (
-      !["UPCOMING", "CANCELLED"].includes(
-        status
-      )
-    ) {
+    if (!["UPCOMING", "CANCELLED"].includes(status)) {
       return res.status(400).json({
         success: false,
         message:
@@ -1714,84 +1540,61 @@ export const createEvent = async (req, res) => {
             status: "UPCOMING",
           });
 
-    if (
-      lifecycleStatus === "COMPLETED" &&
-      status !== "CANCELLED"
-    ) {
+    if (lifecycleStatus === "COMPLETED" && status !== "CANCELLED") {
       return res.status(400).json({
         success: false,
-        message:
-          "Cannot create an event whose end date has already passed.",
+        message: "Cannot create an event whose end date has already passed.",
       });
     }
 
     let parsedCapacity = null;
 
-    if (
-      capacity !== undefined &&
-      capacity !== null &&
-      capacity !== ""
-    ) {
+    if (capacity !== undefined && capacity !== null && capacity !== "") {
       parsedCapacity = Number(capacity);
 
-      if (
-        !Number.isInteger(parsedCapacity) ||
-        parsedCapacity <= 0
-      ) {
+      if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
         return res.status(400).json({
           success: false,
-          message:
-            "Capacity must be a positive whole number.",
+          message: "Capacity must be a positive whole number.",
         });
       }
     }
 
-    const event =
-      await prisma.volunteerEvent.create({
-        data: {
-          title: title.trim(),
+    const event = await prisma.volunteerEvent.create({
+      data: {
+        title: title.trim(),
 
-          description:
-            description?.trim() || null,
+        description: description?.trim() || null,
 
-          image:
-            image?.trim() || null,
+        image: image?.trim() || null,
 
-          location:
-            location?.trim() || null,
+        location: location?.trim() || null,
 
-          city:
-            city?.trim() || null,
+        city: city?.trim() || null,
 
-          state:
-            state?.trim() || null,
+        state: state?.trim() || null,
 
-          startDate:
-            parsedStartDate,
+        startDate: parsedStartDate,
 
-          endDate:
-            parsedEndDate,
+        endDate: parsedEndDate,
 
-          capacity:
-            parsedCapacity,
+        capacity: parsedCapacity,
 
-          status:
-            lifecycleStatus,
+        status: lifecycleStatus,
 
-          organizerId:
-            req.user.userId,
-        },
+        organizerId: req.user.userId,
+      },
 
-        include: {
-          _count: {
-            select: {
-              registrations: true,
-              tasks: true,
-              impactRecords: true,
-            },
+      include: {
+        _count: {
+          select: {
+            registrations: true,
+            tasks: true,
+            impactRecords: true,
           },
         },
-      });
+      },
+    });
 
     await createAuditLog({
       userId: req.user.userId,
@@ -1802,8 +1605,7 @@ export const createEvent = async (req, res) => {
 
       entityId: event.id,
 
-      details:
-        `Created event "${event.title}" with lifecycle status ${lifecycleStatus}`,
+      details: `Created event "${event.title}" with lifecycle status ${lifecycleStatus}`,
 
       ipAddress: req.ip,
     });
@@ -1811,16 +1613,12 @@ export const createEvent = async (req, res) => {
     return res.status(201).json({
       success: true,
 
-      message:
-        "Event created successfully.",
+      message: "Event created successfully.",
 
       event: formatEvent(event),
     });
   } catch (error) {
-    console.error(
-      "Create event error:",
-      error
-    );
+    console.error("Create event error:", error);
 
     return res.status(500).json({
       success: false,
@@ -1835,8 +1633,7 @@ export const createEvent = async (req, res) => {
 
 export const updateEvent = async (req, res) => {
   try {
-    const eventId =
-      Number(req.params.id);
+    const eventId = Number(req.params.id);
 
     if (!Number.isInteger(eventId)) {
       return res.status(400).json({
@@ -1845,12 +1642,11 @@ export const updateEvent = async (req, res) => {
       });
     }
 
-    const existingEvent =
-      await prisma.volunteerEvent.findUnique({
-        where: {
-          id: eventId,
-        },
-      });
+    const existingEvent = await prisma.volunteerEvent.findUnique({
+      where: {
+        id: eventId,
+      },
+    });
 
     if (!existingEvent) {
       return res.status(404).json({
@@ -1879,19 +1675,16 @@ export const updateEvent = async (req, res) => {
       });
     }
 
-    const parsedStartDate =
-      parseDate(startDate);
+    const parsedStartDate = parseDate(startDate);
 
     if (!parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "A valid event start date is required.",
+        message: "A valid event start date is required.",
       });
     }
 
-    const parsedEndDate =
-      parseDate(endDate);
+    const parsedEndDate = parseDate(endDate);
 
     if (!parsedEndDate) {
       return res.status(400).json({
@@ -1904,17 +1697,11 @@ export const updateEvent = async (req, res) => {
     if (parsedEndDate <= parsedStartDate) {
       return res.status(400).json({
         success: false,
-        message:
-          "Event end date must be after the start date.",
+        message: "Event end date must be after the start date.",
       });
     }
 
-    if (
-      status &&
-      !["UPCOMING", "CANCELLED"].includes(
-        status
-      )
-    ) {
+    if (status && !["UPCOMING", "CANCELLED"].includes(status)) {
       return res.status(400).json({
         success: false,
         message:
@@ -1926,87 +1713,66 @@ export const updateEvent = async (req, res) => {
 
     if (status === "CANCELLED") {
       newStatus = "CANCELLED";
-    } else if (
-      existingEvent.status === "CANCELLED"
-    ) {
+    } else if (existingEvent.status === "CANCELLED") {
       newStatus = "CANCELLED";
     } else {
-      newStatus =
-        getEventLifecycleStatus({
-          startDate: parsedStartDate,
-          endDate: parsedEndDate,
-          status: "UPCOMING",
-        });
+      newStatus = getEventLifecycleStatus({
+        startDate: parsedStartDate,
+        endDate: parsedEndDate,
+        status: "UPCOMING",
+      });
     }
 
     let parsedCapacity = null;
 
-    if (
-      capacity !== undefined &&
-      capacity !== null &&
-      capacity !== ""
-    ) {
+    if (capacity !== undefined && capacity !== null && capacity !== "") {
       parsedCapacity = Number(capacity);
 
-      if (
-        !Number.isInteger(parsedCapacity) ||
-        parsedCapacity <= 0
-      ) {
+      if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
         return res.status(400).json({
           success: false,
-          message:
-            "Capacity must be a positive whole number.",
+          message: "Capacity must be a positive whole number.",
         });
       }
     }
 
-    const updatedEvent =
-      await prisma.volunteerEvent.update({
-        where: {
-          id: eventId,
-        },
+    const updatedEvent = await prisma.volunteerEvent.update({
+      where: {
+        id: eventId,
+      },
 
-        data: {
-          title: title.trim(),
+      data: {
+        title: title.trim(),
 
-          description:
-            description?.trim() || null,
+        description: description?.trim() || null,
 
-          image:
-            image?.trim() || null,
+        image: image?.trim() || null,
 
-          location:
-            location?.trim() || null,
+        location: location?.trim() || null,
 
-          city:
-            city?.trim() || null,
+        city: city?.trim() || null,
 
-          state:
-            state?.trim() || null,
+        state: state?.trim() || null,
 
-          startDate:
-            parsedStartDate,
+        startDate: parsedStartDate,
 
-          endDate:
-            parsedEndDate,
+        endDate: parsedEndDate,
 
-          capacity:
-            parsedCapacity,
+        capacity: parsedCapacity,
 
-          status:
-            newStatus,
-        },
+        status: newStatus,
+      },
 
-        include: {
-          _count: {
-            select: {
-              registrations: true,
-              tasks: true,
-              impactRecords: true,
-            },
+      include: {
+        _count: {
+          select: {
+            registrations: true,
+            tasks: true,
+            impactRecords: true,
           },
         },
-      });
+      },
+    });
 
     await createAuditLog({
       userId: req.user.userId,
@@ -2017,8 +1783,7 @@ export const updateEvent = async (req, res) => {
 
       entityId: eventId,
 
-      details:
-        `Updated event "${updatedEvent.title}". Lifecycle status: ${newStatus}`,
+      details: `Updated event "${updatedEvent.title}". Lifecycle status: ${newStatus}`,
 
       ipAddress: req.ip,
     });
@@ -2026,17 +1791,12 @@ export const updateEvent = async (req, res) => {
     return res.status(200).json({
       success: true,
 
-      message:
-        "Event updated successfully.",
+      message: "Event updated successfully.",
 
-      event:
-        formatEvent(updatedEvent),
+      event: formatEvent(updatedEvent),
     });
   } catch (error) {
-    console.error(
-      "Update event error:",
-      error
-    );
+    console.error("Update event error:", error);
 
     return res.status(500).json({
       success: false,
@@ -2051,8 +1811,7 @@ export const updateEvent = async (req, res) => {
 
 export const cancelEvent = async (req, res) => {
   try {
-    const eventId =
-      Number(req.params.id);
+    const eventId = Number(req.params.id);
 
     if (!Number.isInteger(eventId)) {
       return res.status(400).json({
@@ -2061,12 +1820,11 @@ export const cancelEvent = async (req, res) => {
       });
     }
 
-    const event =
-      await prisma.volunteerEvent.findUnique({
-        where: {
-          id: eventId,
-        },
-      });
+    const event = await prisma.volunteerEvent.findUnique({
+      where: {
+        id: eventId,
+      },
+    });
 
     if (!event) {
       return res.status(404).json({
@@ -2075,45 +1833,41 @@ export const cancelEvent = async (req, res) => {
       });
     }
 
-    const currentStatus =
-      getEventLifecycleStatus(event);
+    const currentStatus = getEventLifecycleStatus(event);
 
     if (currentStatus === "CANCELLED") {
       return res.status(400).json({
         success: false,
-        message:
-          "Event is already cancelled.",
+        message: "Event is already cancelled.",
       });
     }
 
     if (currentStatus === "COMPLETED") {
       return res.status(400).json({
         success: false,
-        message:
-          "Completed events cannot be cancelled.",
+        message: "Completed events cannot be cancelled.",
       });
     }
 
-    const updatedEvent =
-      await prisma.volunteerEvent.update({
-        where: {
-          id: eventId,
-        },
+    const updatedEvent = await prisma.volunteerEvent.update({
+      where: {
+        id: eventId,
+      },
 
-        data: {
-          status: "CANCELLED",
-        },
+      data: {
+        status: "CANCELLED",
+      },
 
-        include: {
-          _count: {
-            select: {
-              registrations: true,
-              tasks: true,
-              impactRecords: true,
-            },
+      include: {
+        _count: {
+          select: {
+            registrations: true,
+            tasks: true,
+            impactRecords: true,
           },
         },
-      });
+      },
+    });
 
     await createAuditLog({
       userId: req.user.userId,
@@ -2124,8 +1878,7 @@ export const cancelEvent = async (req, res) => {
 
       entityId: eventId,
 
-      details:
-        `Cancelled event "${event.title}"`,
+      details: `Cancelled event "${event.title}"`,
 
       ipAddress: req.ip,
     });
@@ -2133,22 +1886,16 @@ export const cancelEvent = async (req, res) => {
     return res.status(200).json({
       success: true,
 
-      message:
-        "Event cancelled successfully.",
+      message: "Event cancelled successfully.",
 
-      event:
-        formatEvent(updatedEvent),
+      event: formatEvent(updatedEvent),
     });
   } catch (error) {
-    console.error(
-      "Cancel event error:",
-      error
-    );
+    console.error("Cancel event error:", error);
 
     return res.status(500).json({
       success: false,
-      message:
-        "Failed to cancel event.",
+      message: "Failed to cancel event.",
     });
   }
 };
@@ -2159,8 +1906,7 @@ export const cancelEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
   try {
-    const eventId =
-      Number(req.params.id);
+    const eventId = Number(req.params.id);
 
     if (!Number.isInteger(eventId)) {
       return res.status(400).json({
@@ -2169,22 +1915,21 @@ export const deleteEvent = async (req, res) => {
       });
     }
 
-    const event =
-      await prisma.volunteerEvent.findUnique({
-        where: {
-          id: eventId,
-        },
+    const event = await prisma.volunteerEvent.findUnique({
+      where: {
+        id: eventId,
+      },
 
-        include: {
-          _count: {
-            select: {
-              registrations: true,
-              tasks: true,
-              impactRecords: true,
-            },
+      include: {
+        _count: {
+          select: {
+            registrations: true,
+            tasks: true,
+            impactRecords: true,
           },
         },
-      });
+      },
+    });
 
     if (!event) {
       return res.status(404).json({
@@ -2220,8 +1965,7 @@ export const deleteEvent = async (req, res) => {
 
       entityId: eventId,
 
-      details:
-        `Deleted event "${event.title}"`,
+      details: `Deleted event "${event.title}"`,
 
       ipAddress: req.ip,
     });
@@ -2229,19 +1973,14 @@ export const deleteEvent = async (req, res) => {
     return res.status(200).json({
       success: true,
 
-      message:
-        "Event deleted successfully.",
+      message: "Event deleted successfully.",
     });
   } catch (error) {
-    console.error(
-      "Delete event error:",
-      error
-    );
+    console.error("Delete event error:", error);
 
     return res.status(500).json({
       success: false,
-      message:
-        "Failed to delete event.",
+      message: "Failed to delete event.",
     });
   }
 };
@@ -2250,48 +1989,40 @@ export const deleteEvent = async (req, res) => {
    COMMUNITIES
 ===================================================== */
 
-export const getAllCommunities = async (
-  req,
-  res
-) => {
+export const getAllCommunities = async (req, res) => {
   try {
-    const communities =
-      await prisma.community.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
+    const communities = await prisma.community.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
 
-        include: {
-          createdBy: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-
-          _count: {
-            select: {
-              members: true,
-            },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
           },
         },
-      });
+
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+      },
+    });
 
     return res.status(200).json({
       success: true,
       communities,
     });
   } catch (error) {
-    console.error(
-      "Get communities error:",
-      error
-    );
+    console.error("Get communities error:", error);
 
     return res.status(500).json({
       success: false,
-      message:
-        "Failed to load communities.",
+      message: "Failed to load communities.",
     });
   }
 };
@@ -2472,7 +2203,8 @@ export const updateCommunity = async (req, res) => {
     const data = {};
 
     if (name !== undefined) data.name = String(name).trim();
-    if (description !== undefined) data.description = description?.trim() || null;
+    if (description !== undefined)
+      data.description = description?.trim() || null;
     if (image !== undefined) data.image = image?.trim() || null;
     if (city !== undefined) data.city = city?.trim() || null;
     if (state !== undefined) data.state = state?.trim() || null;
@@ -2574,13 +2306,17 @@ export const updateCommunityStatus = async (req, res) => {
       action: isActive ? "ACTIVATE_COMMUNITY" : "DEACTIVATE_COMMUNITY",
       entity: "Community",
       entityId: communityId,
-      details: `Community "${existing.name}" ${isActive ? "activated" : "deactivated"}`,
+      details: `Community "${existing.name}" ${
+        isActive ? "activated" : "deactivated"
+      }`,
       ipAddress: req.ip,
     });
 
     res.json({
       success: true,
-      message: `Community ${isActive ? "activated" : "deactivated"} successfully.`,
+      message: `Community ${
+        isActive ? "activated" : "deactivated"
+      } successfully.`,
       community,
     });
   } catch (error) {
@@ -2800,44 +2536,36 @@ export const removeCommunityMember = async (req, res) => {
    AUDIT LOGS
 ===================================================== */
 
-export const getAuditLogs = async (
-  req,
-  res
-) => {
+export const getAuditLogs = async (req, res) => {
   try {
-    const logs =
-      await prisma.auditLog.findMany({
-        take: 100,
+    const logs = await prisma.auditLog.findMany({
+      take: 100,
 
-        orderBy: {
-          createdAt: "desc",
-        },
+      orderBy: {
+        createdAt: "desc",
+      },
 
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
           },
         },
-      });
+      },
+    });
 
     return res.status(200).json({
       success: true,
       logs,
     });
   } catch (error) {
-    console.error(
-      "Get audit logs error:",
-      error
-    );
+    console.error("Get audit logs error:", error);
 
     return res.status(500).json({
       success: false,
-      message:
-        "Failed to load audit logs.",
+      message: "Failed to load audit logs.",
     });
   }
 };
@@ -2912,10 +2640,7 @@ export const getAllTasks = async (req, res) => {
       tasks,
     });
   } catch (error) {
-    console.error(
-      "Get all tasks error:",
-      error
-    );
+    console.error("Get all tasks error:", error);
 
     return res.status(500).json({
       success: false,
@@ -2956,11 +2681,7 @@ export const createTask = async (req, res) => {
 
     let parsedEventId = null;
 
-    if (
-      eventId !== undefined &&
-      eventId !== null &&
-      eventId !== ""
-    ) {
+    if (eventId !== undefined && eventId !== null && eventId !== "") {
       parsedEventId = Number(eventId);
 
       if (!Number.isInteger(parsedEventId)) {
@@ -2970,12 +2691,11 @@ export const createTask = async (req, res) => {
         });
       }
 
-      const event =
-        await prisma.volunteerEvent.findUnique({
-          where: {
-            id: parsedEventId,
-          },
-        });
+      const event = await prisma.volunteerEvent.findUnique({
+        where: {
+          id: parsedEventId,
+        },
+      });
 
       if (!event) {
         return res.status(404).json({
@@ -2989,11 +2709,7 @@ export const createTask = async (req, res) => {
        Status
     ------------------------------------------------ */
 
-    const allowedStatuses = [
-      "TODO",
-      "IN_PROGRESS",
-      "COMPLETED",
-    ];
+    const allowedStatuses = ["TODO", "IN_PROGRESS", "COMPLETED"];
 
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
@@ -3011,9 +2727,7 @@ export const createTask = async (req, res) => {
     if (dueDate) {
       parsedDueDate = new Date(dueDate);
 
-      if (
-        Number.isNaN(parsedDueDate.getTime())
-      ) {
+      if (Number.isNaN(parsedDueDate.getTime())) {
         return res.status(400).json({
           success: false,
           message: "Invalid task due date.",
@@ -3029,8 +2743,7 @@ export const createTask = async (req, res) => {
       data: {
         title: title.trim(),
 
-        description:
-          description?.trim() || null,
+        description: description?.trim() || null,
 
         /*
           No volunteer is selected while creating
@@ -3048,10 +2761,7 @@ export const createTask = async (req, res) => {
 
         status,
 
-        completedAt:
-          status === "COMPLETED"
-            ? new Date()
-            : null,
+        completedAt: status === "COMPLETED" ? new Date() : null,
       },
 
       include: {
@@ -3099,8 +2809,7 @@ export const createTask = async (req, res) => {
 
       entityId: task.id,
 
-      details:
-        `Created general task "${task.title}"`,
+      details: `Created general task "${task.title}"`,
 
       ipAddress: req.ip,
     });
@@ -3108,16 +2817,12 @@ export const createTask = async (req, res) => {
     return res.status(201).json({
       success: true,
 
-      message:
-        "Task created successfully.",
+      message: "Task created successfully.",
 
       task,
     });
   } catch (error) {
-    console.error(
-      "Create task error:",
-      error
-    );
+    console.error("Create task error:", error);
 
     return res.status(500).json({
       success: false,
@@ -3132,8 +2837,7 @@ export const createTask = async (req, res) => {
 
 export const updateTask = async (req, res) => {
   try {
-    const taskId =
-      Number(req.params.id);
+    const taskId = Number(req.params.id);
 
     if (!Number.isInteger(taskId)) {
       return res.status(400).json({
@@ -3142,12 +2846,11 @@ export const updateTask = async (req, res) => {
       });
     }
 
-    const existingTask =
-      await prisma.volunteerTask.findUnique({
-        where: {
-          id: taskId,
-        },
-      });
+    const existingTask = await prisma.volunteerTask.findUnique({
+      where: {
+        id: taskId,
+      },
+    });
 
     if (!existingTask) {
       return res.status(404).json({
@@ -3156,13 +2859,7 @@ export const updateTask = async (req, res) => {
       });
     }
 
-    const {
-      title,
-      description,
-      eventId,
-      dueDate,
-      status,
-    } = req.body || {};
+    const { title, description, eventId, dueDate, status } = req.body || {};
 
     /* -----------------------------------------------
        Validate title
@@ -3181,11 +2878,7 @@ export const updateTask = async (req, res) => {
 
     let parsedEventId = null;
 
-    if (
-      eventId !== undefined &&
-      eventId !== null &&
-      eventId !== ""
-    ) {
+    if (eventId !== undefined && eventId !== null && eventId !== "") {
       parsedEventId = Number(eventId);
 
       if (!Number.isInteger(parsedEventId)) {
@@ -3195,12 +2888,11 @@ export const updateTask = async (req, res) => {
         });
       }
 
-      const event =
-        await prisma.volunteerEvent.findUnique({
-          where: {
-            id: parsedEventId,
-          },
-        });
+      const event = await prisma.volunteerEvent.findUnique({
+        where: {
+          id: parsedEventId,
+        },
+      });
 
       if (!event) {
         return res.status(404).json({
@@ -3214,11 +2906,7 @@ export const updateTask = async (req, res) => {
        Status
     ------------------------------------------------ */
 
-    const allowedStatuses = [
-      "TODO",
-      "IN_PROGRESS",
-      "COMPLETED",
-    ];
+    const allowedStatuses = ["TODO", "IN_PROGRESS", "COMPLETED"];
 
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
@@ -3234,14 +2922,9 @@ export const updateTask = async (req, res) => {
     let parsedDueDate = null;
 
     if (dueDate) {
-      parsedDueDate =
-        new Date(dueDate);
+      parsedDueDate = new Date(dueDate);
 
-      if (
-        Number.isNaN(
-          parsedDueDate.getTime()
-        )
-      ) {
+      if (Number.isNaN(parsedDueDate.getTime())) {
         return res.status(400).json({
           success: false,
           message: "Invalid task due date.",
@@ -3253,74 +2936,67 @@ export const updateTask = async (req, res) => {
        Update Task
     ------------------------------------------------ */
 
-    const updatedTask =
-      await prisma.volunteerTask.update({
-        where: {
-          id: taskId,
-        },
+    const updatedTask = await prisma.volunteerTask.update({
+      where: {
+        id: taskId,
+      },
 
-        data: {
-          title: title.trim(),
+      data: {
+        title: title.trim(),
 
-          description:
-            description?.trim() || null,
+        description: description?.trim() || null,
 
-          /*
+        /*
             Keep the current assignment.
             New tasks are unassigned.
           */
-          assignedToId:
-            existingTask.assignedToId,
+        assignedToId: existingTask.assignedToId,
 
-          volunteerProfileId:
-            existingTask.volunteerProfileId,
+        volunteerProfileId: existingTask.volunteerProfileId,
 
-          eventId:
-            parsedEventId,
+        eventId: parsedEventId,
 
-          dueDate:
-            parsedDueDate,
+        dueDate: parsedDueDate,
 
-          status,
+        status,
 
-          completedAt:
-            status === "COMPLETED"
-              ? existingTask.completedAt ||
-                new Date()
-              : null,
-        },
+        completedAt:
+          status === "COMPLETED"
+            ? existingTask.completedAt || new Date()
+            : null,
+      },
 
-        include: {
-          assignedTo: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              phone: true,
-            },
-          },
-
-          createdBy: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-
-          event: {
-            select: {
-              id: true,
-              title: true,
-              location: true,
-              city: true,
-              state: true,
-              startDate: true,
-              endDate: true,
-            },
+      include: {
+        assignedTo: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
           },
         },
-      });
+
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+
+        event: {
+          select: {
+            id: true,
+            title: true,
+            location: true,
+            city: true,
+            state: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
+      },
+    });
 
     /* -----------------------------------------------
        Audit Log
@@ -3329,16 +3005,13 @@ export const updateTask = async (req, res) => {
     await createAuditLog({
       userId: req.user.userId,
 
-      action:
-        "UPDATE_VOLUNTEER_TASK",
+      action: "UPDATE_VOLUNTEER_TASK",
 
-      entity:
-        "VolunteerTask",
+      entity: "VolunteerTask",
 
       entityId: taskId,
 
-      details:
-        `Updated task "${updatedTask.title}"`,
+      details: `Updated task "${updatedTask.title}"`,
 
       ipAddress: req.ip,
     });
@@ -3346,16 +3019,12 @@ export const updateTask = async (req, res) => {
     return res.status(200).json({
       success: true,
 
-      message:
-        "Task updated successfully.",
+      message: "Task updated successfully.",
 
       task: updatedTask,
     });
   } catch (error) {
-    console.error(
-      "Update task error:",
-      error
-    );
+    console.error("Update task error:", error);
 
     return res.status(500).json({
       success: false,
@@ -3370,8 +3039,7 @@ export const updateTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
   try {
-    const taskId =
-      Number(req.params.id);
+    const taskId = Number(req.params.id);
 
     if (!Number.isInteger(taskId)) {
       return res.status(400).json({
@@ -3380,12 +3048,11 @@ export const deleteTask = async (req, res) => {
       });
     }
 
-    const task =
-      await prisma.volunteerTask.findUnique({
-        where: {
-          id: taskId,
-        },
-      });
+    const task = await prisma.volunteerTask.findUnique({
+      where: {
+        id: taskId,
+      },
+    });
 
     if (!task) {
       return res.status(404).json({
@@ -3403,35 +3070,28 @@ export const deleteTask = async (req, res) => {
     await createAuditLog({
       userId: req.user.userId,
 
-      action:
-        "DELETE_VOLUNTEER_TASK",
+      action: "DELETE_VOLUNTEER_TASK",
 
-      entity:
-        "VolunteerTask",
+      entity: "VolunteerTask",
 
       entityId: taskId,
 
-      details:
-        `Deleted task "${task.title}"`,
+      details: `Deleted task "${task.title}"`,
 
       ipAddress: req.ip,
     });
 
     return res.status(200).json({
       success: true,
-      message:
-        "Task deleted successfully.",
+
+      message: "Task deleted successfully.",
     });
   } catch (error) {
-    console.error(
-      "Delete task error:",
-      error
-    );
+    console.error("Delete task error:", error);
 
     return res.status(500).json({
       success: false,
-      message:
-        "Failed to delete task.",
+      message: "Failed to delete task.",
     });
   }
 };

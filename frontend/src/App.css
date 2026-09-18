@@ -174,7 +174,25 @@
   align-items: center;
   min-height: clamp(480px, 45vw, 620px);
 }
+.navbar-language {
+  display: flex;
+  align-items: center;
+}
 
+.navbar-language select {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.navbar-language select:focus {
+  border-color: #d97706;
+}
 /* ========================================
    LEFT CONTENT
 ======================================== */
@@ -3496,11 +3514,12 @@
     grid-template-columns: repeat(3, 1fr);
     gap: clamp(22px, 3vw, 40px);
 }
-
-.donation-card:hover {
+@media (hover: hover) and (pointer: fine) {
+  .donation-card:hover {
     transform: translateY(-10px);
     box-shadow: var(--shadow-lg);
     border-color: #F4C27A;
+  }
 }
 
 .donation-card h3 {
@@ -3563,34 +3582,6 @@
 
 .volunteer {
     background: linear-gradient(135deg, #FFF8F0, #FFFDF9);
-}
-
-.volunteer-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(25px, 5vw, 60px);
-    align-items: center;
-}
-
-.volunteer-content span {
-    color: var(--primary);
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: clamp(11px, 1vw, 14px);
-}
-
-.volunteer-content h2 {
-    font-size: clamp(32px, 4vw, 48px);
-    font-family: 'Poppins', sans-serif;
-    margin: clamp(12px, 1.5vw, 18px) 0;
-    line-height: 1.2;
-}
-
-.volunteer-content p {
-    color: var(--text-light);
-    font-size: clamp(14px, 1.3vw, 17px);
-    line-height: 1.7;
 }
 
 .volunteer-form {

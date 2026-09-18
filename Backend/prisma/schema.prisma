@@ -131,6 +131,8 @@ model User {
 
   communityMemberships CommunityMember[]
 
+  communityInvitationsSent CommunityInvitation[] @relation("CommunityInvitationsSent")
+
   createdCommunities Community[] @relation("CommunityCreator")
 
   organizedEvents VolunteerEvent[] @relation("EventOrganizer")
@@ -159,65 +161,28 @@ model User {
  * VOLUNTEER PROFILE
  * =====================================================
  */
-
 model VolunteerProfile {
   id Int @id @default(autoincrement())
-
   userId Int @unique
-
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  /**
-   * =================================================
-   * VOLUNTEER INFORMATION
-   * =================================================
-   */
-
   age Int?
-
+  ageGroup String?
   city String?
-
   skills String?
-
   availability String?
-
-  /**
-   * =================================================
-   * VOLUNTEER STATISTICS
-   * =================================================
-   */
-
   totalHours Int @default(0)
-
   totalEvents Int @default(0)
-
   joinedAt DateTime @default(now())
-
   isVerified Boolean @default(false)
-
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
-
-  /**
-   * =================================================
-   * RELATIONS
-   * =================================================
-   */
-
   applications VolunteerApplication[]
-
   eventRegistrations EventRegistration[]
-
   tasks VolunteerTask[]
-
   impactRecords VolunteerImpact[]
-
   certificates Certificate[]
-
   @@index([city])
 }
-
 /**
  * =====================================================
  * VOLUNTEER APPLICATION
@@ -227,64 +192,28 @@ model VolunteerProfile {
 model VolunteerApplication {
   id Int @id @default(autoincrement())
 
-  /**
-   * =================================================
-   * USER WHO APPLIED
-   * =================================================
-   */
-
   userId Int
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  /**
-   * =================================================
-   * OPTIONAL VOLUNTEER PROFILE
-   * =================================================
-   */
 
   volunteerProfileId Int?
 
   volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
 
-  /**
-   * =================================================
-   * APPLICATION INFORMATION
-   * =================================================
-   */
-
-  motivation String
-
-  experience String?
-
-  skills String?
-
+  motivation    String
+  experience    String?
+  skills        String?
   preferredArea String?
-
-  availability String?
-
-  /**
-   * =================================================
-   * APPLICATION STATUS
-   * =================================================
-   */
+  availability  String?
 
   status VolunteerApplicationStatus @default(PENDING)
 
   adminRemarks String?
 
   reviewedAt DateTime?
-
   reviewedBy Int?
 
-  /**
-   * =================================================
-   * TIMESTAMPS
-   * =================================================
-   */
-
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
 
   @@index([userId])
@@ -306,14 +235,11 @@ model Community {
 
   image String?
 
-  city String?
-
-  state String?
-
+  city    String?
+  state   String?
   country String?
 
   isPublic Boolean @default(true)
-
   isActive Boolean @default(true)
 
   createdById Int
@@ -322,8 +248,9 @@ model Community {
 
   members CommunityMember[]
 
-  createdAt DateTime @default(now())
+  invitations CommunityInvitation[]
 
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([createdById])
@@ -340,12 +267,17 @@ model CommunityMember {
   id Int @id @default(autoincrement())
 
   communityId Int
+  userId      Int
 
-  userId Int
+  referredById Int?
 
   community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  referredBy CommunityMember? @relation("CommunityMemberReferral", fields: [referredById], references: [id], onDelete: SetNull)
+
+  referrals CommunityMember[] @relation("CommunityMemberReferral")
 
   role CommunityMemberRole @default(MEMBER)
 
@@ -358,6 +290,37 @@ model CommunityMember {
   @@unique([communityId, userId])
   @@index([communityId])
   @@index([userId])
+  @@index([referredById])
+}
+
+/**
+ * =====================================================
+ * COMMUNITY INVITATION
+ * =====================================================
+ */
+
+model CommunityInvitation {
+  id Int @id @default(autoincrement())
+
+  token String @unique
+
+  inviterId Int
+
+  inviter User @relation("CommunityInvitationsSent", fields: [inviterId], references: [id], onDelete: Cascade)
+
+  communityId Int?
+
+  community Community? @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  status String @default("PENDING")
+
+  expiresAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([inviterId])
+  @@index([communityId])
+  @@index([status])
 }
 
 /**
@@ -382,13 +345,13 @@ model Campaign {
   status CampaignStatus @default(DRAFT)
 
   startDate DateTime?
-
-  endDate DateTime?
+  endDate   DateTime?
 
   donations Donation[]
 
-  createdAt DateTime @default(now())
+  expenses Expense[]
 
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([status])
@@ -405,31 +368,13 @@ model Campaign {
 model Donation {
   id Int @id @default(autoincrement())
 
-  /**
-   * =================================================
-   * DONOR
-   * =================================================
-   */
-
   userId Int?
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  /**
-   * =================================================
-   * CAMPAIGN
-   * =================================================
-   */
-
   campaignId Int?
 
   campaign Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
-
-  /**
-   * =================================================
-   * DONATION DETAILS
-   * =================================================
-   */
 
   amount Decimal @db.Decimal(12, 2)
 
@@ -441,41 +386,18 @@ model Donation {
 
   status DonationStatus @default(PENDING)
 
-  /**
-   * =================================================
-   * PAYMENT GATEWAY DETAILS
-   * =================================================
-   */
-
-  transactionId String?
-
-  paymentId String?
-
-  orderId String?
-
+  transactionId  String?
+  paymentId      String?
+  orderId        String?
   paymentGateway String?
 
-  /**
-   * =================================================
-   * DONOR INFORMATION
-   * =================================================
-   */
-
-  donorName String?
-
+  donorName  String?
   donorEmail String?
-
   donorPhone String?
 
   isAnonymous Boolean @default(false)
 
   message String?
-
-  /**
-   * =================================================
-   * RECEIPT
-   * =================================================
-   */
 
   receiptNumber String? @unique
 
@@ -484,7 +406,6 @@ model Donation {
   donatedAt DateTime @default(now())
 
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
 
   @@index([userId])
@@ -493,6 +414,40 @@ model Donation {
   @@index([transactionId])
   @@index([paymentId])
   @@index([donatedAt])
+}
+
+/**
+ * =====================================================
+ * EXPENSE
+ * =====================================================
+ */
+
+model Expense {
+  id String @id @default(cuid())
+
+  campaignId Int
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  title String
+
+  category String
+
+  amount Decimal @db.Decimal(12, 2)
+
+  description String?
+
+  expenseDate DateTime
+
+  receiptUrl String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([campaignId])
+  @@index([expenseDate])
+  @@index([category])
 }
 
 /**
@@ -535,7 +490,6 @@ model VolunteerEvent {
   impactRecords VolunteerImpact[]
 
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
 
   @@index([startDate])
@@ -593,41 +547,17 @@ model VolunteerTask {
 
   description String?
 
-  /**
-   * =================================================
-   * EVENT
-   * =================================================
-   */
-
   eventId Int?
 
   event VolunteerEvent? @relation(fields: [eventId], references: [id], onDelete: SetNull)
-
-  /**
-   * =================================================
-   * ASSIGNED USER
-   * =================================================
-   */
 
   assignedToId Int?
 
   assignedTo User? @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
 
-  /**
-   * =================================================
-   * VOLUNTEER PROFILE
-   * =================================================
-   */
-
   volunteerProfileId Int?
 
   volunteerProfile VolunteerProfile? @relation(fields: [volunteerProfileId], references: [id], onDelete: SetNull)
-
-  /**
-   * =================================================
-   * TASK CREATOR
-   * =================================================
-   */
 
   createdById Int?
 
