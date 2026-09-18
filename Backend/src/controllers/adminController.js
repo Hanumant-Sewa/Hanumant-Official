@@ -476,11 +476,9 @@ export const getVolunteerApplications = async (req, res) => {
 /* =====================================================
    APPROVE VOLUNTEER
 ===================================================== */
-
 export const approveVolunteerApplication = async (req, res) => {
   try {
     const applicationId = Number(req.params.id);
-
     const { adminRemarks = "" } = req.body || {};
 
     if (!Number.isInteger(applicationId)) {
@@ -491,10 +489,7 @@ export const approveVolunteerApplication = async (req, res) => {
     }
 
     const application = await prisma.volunteerApplication.findUnique({
-      where: {
-        id: applicationId,
-      },
-
+      where: { id: applicationId },
       include: {
         user: true,
         volunteerProfile: true,
@@ -516,23 +511,20 @@ export const approveVolunteerApplication = async (req, res) => {
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      /* -----------------------------------------------
-         Make user a volunteer
-      ------------------------------------------------ */
+      /* =========================================
+         1. MAKE USER A VOLUNTEER
+      ========================================= */
 
       const user = await tx.user.update({
-        where: {
-          id: application.userId,
-        },
-
+        where: { id: application.userId },
         data: {
           role: "VOLUNTEER",
         },
       });
 
-      /* -----------------------------------------------
-         Create or update volunteer profile
-      ------------------------------------------------ */
+      /* =========================================
+         2. CREATE / UPDATE VOLUNTEER PROFILE
+      ========================================= */
 
       let volunteerProfile;
 
@@ -541,7 +533,6 @@ export const approveVolunteerApplication = async (req, res) => {
           where: {
             id: application.volunteerProfileId,
           },
-
           data: {
             isVerified: true,
 
@@ -568,7 +559,6 @@ export const approveVolunteerApplication = async (req, res) => {
             where: {
               id: existingProfile.id,
             },
-
             data: {
               isVerified: true,
 
@@ -580,42 +570,29 @@ export const approveVolunteerApplication = async (req, res) => {
                 null,
 
               city: existingProfile.city || null,
-
-              state: existingProfile.state || null,
-
-              country: existingProfile.country || null,
             },
           });
         } else {
           volunteerProfile = await tx.volunteerProfile.create({
             data: {
               userId: application.userId,
-
               skills: application.skills || null,
-
               availability: application.availability || null,
-
               city: null,
-
-              state: null,
-
-              country: null,
-
               isVerified: true,
             },
           });
         }
       }
 
-      /* -----------------------------------------------
-         Update volunteer application
-      ------------------------------------------------ */
+      /* =========================================
+         3. APPROVE APPLICATION
+      ========================================= */
 
       const updatedApplication = await tx.volunteerApplication.update({
         where: {
           id: applicationId,
         },
-
         data: {
           status: "APPROVED",
 
@@ -641,9 +618,57 @@ export const approveVolunteerApplication = async (req, res) => {
         },
       });
 
-      /* -----------------------------------------------
-         Notification
-      ------------------------------------------------ */
+      /* =========================================
+         4. CREATE VOLUNTEER CERTIFICATE
+         ========================================= */
+
+      // Check whether this volunteer already has
+      // a volunteer certificate.
+      const existingCertificate = await tx.certificate.findFirst({
+        where: {
+          userId: application.userId,
+          type: "VOLUNTEER",
+        },
+      });
+
+      let certificate = existingCertificate;
+
+      if (!existingCertificate) {
+        const certificateCount = await tx.certificate.count({
+          where: {
+            type: "VOLUNTEER",
+          },
+        });
+
+        const year = new Date().getFullYear();
+
+        const certificateNumber = `HSF-VA-${year}-${String(
+          certificateCount + 1,
+        ).padStart(3, "0")}`;
+
+        certificate = await tx.certificate.create({
+          data: {
+            userId: application.userId,
+
+            volunteerProfileId: volunteerProfile.id,
+
+            title: "Volunteer Appreciation",
+
+            description:
+              "In appreciation of your dedication and service as a volunteer with Hanumant Seva.",
+
+            type: "VOLUNTEER",
+
+            certificateNumber,
+
+            issueDate: new Date(),
+          },
+        });
+      }
+
+      /* =========================================
+         5. NOTIFICATION
+      ========================================= */
 
       await tx.notification.create({
         data: {
@@ -652,22 +677,27 @@ export const approveVolunteerApplication = async (req, res) => {
           title: "Volunteer Application Approved",
 
           message:
-            "Congratulations! Your volunteer application has been approved.",
+            "Congratulations! Your volunteer application has been approved. Your volunteer certificate has been generated.",
 
           type: "VOLUNTEER_APPLICATION",
         },
       });
 
+      /* =========================================
+         RETURN EVERYTHING
+      ========================================= */
+
       return {
         user,
         volunteerProfile,
         application: updatedApplication,
+        certificate,
       };
     });
 
-    /* -----------------------------------------------
-       Audit log
-    ------------------------------------------------ */
+    /* =========================================
+       6. AUDIT LOG
+    ========================================= */
 
     await createAuditLog({
       userId: req.user.userId,
@@ -678,15 +708,20 @@ export const approveVolunteerApplication = async (req, res) => {
 
       entityId: applicationId,
 
-      details: `Approved volunteer application for ${application.user.email}`,
+      details: `Approved volunteer application and generated certificate for ${application.user.email}`,
 
       ipAddress: req.ip,
     });
 
+    /* =========================================
+       7. RESPONSE
+    ========================================= */
+
     return res.status(200).json({
       success: true,
 
-      message: "Volunteer application approved successfully.",
+      message:
+        "Volunteer application approved and certificate generated successfully.",
 
       ...result,
     });
@@ -695,6 +730,7 @@ export const approveVolunteerApplication = async (req, res) => {
 
     return res.status(500).json({
       success: false,
+
       message: "Failed to approve volunteer application.",
     });
   }
