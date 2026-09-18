@@ -161,42 +161,28 @@ model User {
  * VOLUNTEER PROFILE
  * =====================================================
  */
-
 model VolunteerProfile {
   id Int @id @default(autoincrement())
-
   userId Int @unique
-
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  age          Int?
-  city         String?
-  skills       String?
+  age Int?
+  ageGroup String?
+  city String?
+  skills String?
   availability String?
-
-  totalHours  Int @default(0)
+  totalHours Int @default(0)
   totalEvents Int @default(0)
-
   joinedAt DateTime @default(now())
-
   isVerified Boolean @default(false)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   applications VolunteerApplication[]
-
   eventRegistrations EventRegistration[]
-
   tasks VolunteerTask[]
-
   impactRecords VolunteerImpact[]
-
   certificates Certificate[]
-
   @@index([city])
 }
-
 /**
  * =====================================================
  * VOLUNTEER APPLICATION

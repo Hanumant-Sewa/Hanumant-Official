@@ -20,7 +20,10 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
  * Model VolunteerProfile
- * 
+ * *
+ *  * =====================================================
+ *  * VOLUNTEER PROFILE
+ *  * =====================================================
  */
 export type VolunteerProfile = $Result.DefaultSelection<Prisma.$VolunteerProfilePayload>
 /**
@@ -4556,6 +4559,7 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     age: number | null
+    ageGroup: string | null
     city: string | null
     skills: string | null
     availability: string | null
@@ -4571,6 +4575,7 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     age: number | null
+    ageGroup: string | null
     city: string | null
     skills: string | null
     availability: string | null
@@ -4586,6 +4591,7 @@ export namespace Prisma {
     id: number
     userId: number
     age: number
+    ageGroup: number
     city: number
     skills: number
     availability: number
@@ -4619,6 +4625,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     age?: true
+    ageGroup?: true
     city?: true
     skills?: true
     availability?: true
@@ -4634,6 +4641,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     age?: true
+    ageGroup?: true
     city?: true
     skills?: true
     availability?: true
@@ -4649,6 +4657,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     age?: true
+    ageGroup?: true
     city?: true
     skills?: true
     availability?: true
@@ -4751,6 +4760,7 @@ export namespace Prisma {
     id: number
     userId: number
     age: number | null
+    ageGroup: string | null
     city: string | null
     skills: string | null
     availability: string | null
@@ -4785,6 +4795,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     age?: boolean
+    ageGroup?: boolean
     city?: boolean
     skills?: boolean
     availability?: boolean
@@ -4807,6 +4818,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     age?: boolean
+    ageGroup?: boolean
     city?: boolean
     skills?: boolean
     availability?: boolean
@@ -4823,6 +4835,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     age?: boolean
+    ageGroup?: boolean
     city?: boolean
     skills?: boolean
     availability?: boolean
@@ -4839,6 +4852,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     age?: boolean
+    ageGroup?: boolean
     city?: boolean
     skills?: boolean
     availability?: boolean
@@ -4850,7 +4864,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type VolunteerProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "age" | "city" | "skills" | "availability" | "totalHours" | "totalEvents" | "joinedAt" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["volunteerProfile"]>
+  export type VolunteerProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "age" | "ageGroup" | "city" | "skills" | "availability" | "totalHours" | "totalEvents" | "joinedAt" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["volunteerProfile"]>
   export type VolunteerProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     applications?: boolean | VolunteerProfile$applicationsArgs<ExtArgs>
@@ -4881,6 +4895,7 @@ export namespace Prisma {
       id: number
       userId: number
       age: number | null
+      ageGroup: string | null
       city: string | null
       skills: string | null
       availability: string | null
@@ -5322,6 +5337,7 @@ export namespace Prisma {
     readonly id: FieldRef<"VolunteerProfile", 'Int'>
     readonly userId: FieldRef<"VolunteerProfile", 'Int'>
     readonly age: FieldRef<"VolunteerProfile", 'Int'>
+    readonly ageGroup: FieldRef<"VolunteerProfile", 'String'>
     readonly city: FieldRef<"VolunteerProfile", 'String'>
     readonly skills: FieldRef<"VolunteerProfile", 'String'>
     readonly availability: FieldRef<"VolunteerProfile", 'String'>
@@ -25274,6 +25290,7 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     age: 'age',
+    ageGroup: 'ageGroup',
     city: 'city',
     skills: 'skills',
     availability: 'availability',
@@ -25972,6 +25989,7 @@ export namespace Prisma {
     id?: IntFilter<"VolunteerProfile"> | number
     userId?: IntFilter<"VolunteerProfile"> | number
     age?: IntNullableFilter<"VolunteerProfile"> | number | null
+    ageGroup?: StringNullableFilter<"VolunteerProfile"> | string | null
     city?: StringNullableFilter<"VolunteerProfile"> | string | null
     skills?: StringNullableFilter<"VolunteerProfile"> | string | null
     availability?: StringNullableFilter<"VolunteerProfile"> | string | null
@@ -25993,6 +26011,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     age?: SortOrderInput | SortOrder
+    ageGroup?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     skills?: SortOrderInput | SortOrder
     availability?: SortOrderInput | SortOrder
@@ -26017,6 +26036,7 @@ export namespace Prisma {
     OR?: VolunteerProfileWhereInput[]
     NOT?: VolunteerProfileWhereInput | VolunteerProfileWhereInput[]
     age?: IntNullableFilter<"VolunteerProfile"> | number | null
+    ageGroup?: StringNullableFilter<"VolunteerProfile"> | string | null
     city?: StringNullableFilter<"VolunteerProfile"> | string | null
     skills?: StringNullableFilter<"VolunteerProfile"> | string | null
     availability?: StringNullableFilter<"VolunteerProfile"> | string | null
@@ -26038,6 +26058,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     age?: SortOrderInput | SortOrder
+    ageGroup?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     skills?: SortOrderInput | SortOrder
     availability?: SortOrderInput | SortOrder
@@ -26061,6 +26082,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"VolunteerProfile"> | number
     userId?: IntWithAggregatesFilter<"VolunteerProfile"> | number
     age?: IntNullableWithAggregatesFilter<"VolunteerProfile"> | number | null
+    ageGroup?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
     city?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
     skills?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
     availability?: StringNullableWithAggregatesFilter<"VolunteerProfile"> | string | null
@@ -27631,6 +27653,7 @@ export namespace Prisma {
 
   export type VolunteerProfileCreateInput = {
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -27652,6 +27675,7 @@ export namespace Prisma {
     id?: number
     userId: number
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -27670,6 +27694,7 @@ export namespace Prisma {
 
   export type VolunteerProfileUpdateInput = {
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27691,6 +27716,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27711,6 +27737,7 @@ export namespace Prisma {
     id?: number
     userId: number
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -27724,6 +27751,7 @@ export namespace Prisma {
 
   export type VolunteerProfileUpdateManyMutationInput = {
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27739,6 +27767,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29594,6 +29623,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     age?: SortOrder
+    ageGroup?: SortOrder
     city?: SortOrder
     skills?: SortOrder
     availability?: SortOrder
@@ -29617,6 +29647,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     age?: SortOrder
+    ageGroup?: SortOrder
     city?: SortOrder
     skills?: SortOrder
     availability?: SortOrder
@@ -29632,6 +29663,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     age?: SortOrder
+    ageGroup?: SortOrder
     city?: SortOrder
     skills?: SortOrder
     availability?: SortOrder
@@ -32971,6 +33003,7 @@ export namespace Prisma {
 
   export type VolunteerProfileCreateWithoutUserInput = {
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -32990,6 +33023,7 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedCreateWithoutUserInput = {
     id?: number
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -33489,6 +33523,7 @@ export namespace Prisma {
 
   export type VolunteerProfileUpdateWithoutUserInput = {
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33508,6 +33543,7 @@ export namespace Prisma {
   export type VolunteerProfileUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34383,6 +34419,7 @@ export namespace Prisma {
 
   export type VolunteerProfileCreateWithoutApplicationsInput = {
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -34403,6 +34440,7 @@ export namespace Prisma {
     id?: number
     userId: number
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -34498,6 +34536,7 @@ export namespace Prisma {
 
   export type VolunteerProfileUpdateWithoutApplicationsInput = {
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34518,6 +34557,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36010,6 +36050,7 @@ export namespace Prisma {
 
   export type VolunteerProfileCreateWithoutEventRegistrationsInput = {
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -36030,6 +36071,7 @@ export namespace Prisma {
     id?: number
     userId: number
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -36173,6 +36215,7 @@ export namespace Prisma {
 
   export type VolunteerProfileUpdateWithoutEventRegistrationsInput = {
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36193,6 +36236,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36308,6 +36352,7 @@ export namespace Prisma {
 
   export type VolunteerProfileCreateWithoutTasksInput = {
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -36328,6 +36373,7 @@ export namespace Prisma {
     id?: number
     userId: number
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -36527,6 +36573,7 @@ export namespace Prisma {
 
   export type VolunteerProfileUpdateWithoutTasksInput = {
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36547,6 +36594,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36626,6 +36674,7 @@ export namespace Prisma {
 
   export type VolunteerProfileCreateWithoutImpactRecordsInput = {
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -36646,6 +36695,7 @@ export namespace Prisma {
     id?: number
     userId: number
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -36721,6 +36771,7 @@ export namespace Prisma {
 
   export type VolunteerProfileUpdateWithoutImpactRecordsInput = {
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36741,6 +36792,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36862,6 +36914,7 @@ export namespace Prisma {
 
   export type VolunteerProfileCreateWithoutCertificatesInput = {
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -36882,6 +36935,7 @@ export namespace Prisma {
     id?: number
     userId: number
     age?: number | null
+    ageGroup?: string | null
     city?: string | null
     skills?: string | null
     availability?: string | null
@@ -36977,6 +37031,7 @@ export namespace Prisma {
 
   export type VolunteerProfileUpdateWithoutCertificatesInput = {
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36997,6 +37052,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     age?: NullableIntFieldUpdateOperationsInput | number | null
+    ageGroup?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: NullableStringFieldUpdateOperationsInput | string | null
     availability?: NullableStringFieldUpdateOperationsInput | string | null
