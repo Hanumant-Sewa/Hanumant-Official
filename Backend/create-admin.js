@@ -7,6 +7,7 @@ const createAdmin = async () => {
     const name = process.env.ADMIN_NAME || "System Administrator";
     const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
     const password = process.env.ADMIN_PASSWORD;
+    const resetPassword = process.env.RESET_ADMIN_PASSWORD === "true";
 
     if (!email || !password) {
       throw new Error(
@@ -29,6 +30,22 @@ const createAdmin = async () => {
 
       if (existingAdmin.role === "ADMIN") {
         console.log("This account is already an ADMIN.");
+
+        if (resetPassword) {
+          const hashedPassword = await bcrypt.hash(password, 12);
+
+          await prisma.user.update({
+            where: {
+              id: existingAdmin.id,
+            },
+            data: {
+              password: hashedPassword,
+              status: "ACTIVE",
+            },
+          });
+
+          console.log("Admin password reset successfully.");
+        }
       } else {
         console.log("Changing existing account role to ADMIN...");
 
