@@ -8,6 +8,7 @@
     "dev": "nodemon server.js",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
+    "db:seed-admin": "node create-admin.js",
     "postinstall": "prisma skills sync || exit 0"
   },
   "keywords": [],

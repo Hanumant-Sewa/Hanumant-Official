@@ -4,9 +4,19 @@ import prisma from "./src/config/prisma.js";
 
 const createAdmin = async () => {
   try {
-    const name = "System Administrator";
-    const email = "admin@hanumantseva.org";
-    const password = "Admin@12345";
+    const name = process.env.ADMIN_NAME || "System Administrator";
+    const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+    const password = process.env.ADMIN_PASSWORD;
+
+    if (!email || !password) {
+      throw new Error(
+        "ADMIN_EMAIL and ADMIN_PASSWORD must be configured before seeding an admin.",
+      );
+    }
+
+    if (password.length < 16) {
+      throw new Error("ADMIN_PASSWORD must be at least 16 characters long.");
+    }
 
     const existingAdmin = await prisma.user.findUnique({
       where: {
@@ -55,7 +65,6 @@ const createAdmin = async () => {
     console.log("=================================");
     console.log(`ID: ${admin.id}`);
     console.log(`Email: ${admin.email}`);
-    console.log(`Password: ${password}`);
     console.log("Role: ADMIN");
     console.log("=================================");
   } catch (error) {
