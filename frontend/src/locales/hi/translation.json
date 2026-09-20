@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "home": "होम",
+    "about": "हमारे बारे में",
+    "programs": "कार्यक्रम",
+    "impact": "प्रभाव",
+    "campaigns": "अभियान",
+    "community": "समुदाय",
+    "donate": "दान करें",
+    "volunteer": "स्वयंसेवक",
+    "adminPanel": "एडमिन पैनल",
+    "dashboard": "डैशबोर्ड",
+    "profile": "प्रोफ़ाइल",
+    "logout": "लॉगआउट"
+  }
+}
