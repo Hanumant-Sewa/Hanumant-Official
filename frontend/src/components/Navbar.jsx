@@ -12,11 +12,20 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading, logout } = useAuth();
+  const { t, i18n } = useTranslation();
+
+  // =====================================================
+  // LANGUAGE CHANGE
+  // =====================================================
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language);
+  };
 
   const isHomePage = location.pathname === "/";
   const isAdminPage = location.pathname === "/admin";
@@ -24,9 +33,11 @@ function Navbar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
   const profileRef = useRef(null);
+  const languageRef = useRef(null);
 
   // =====================================================
   // CLOSE MENUS WHEN ROUTE CHANGES
@@ -34,22 +45,37 @@ function Navbar() {
   useEffect(() => {
     setMenuOpen(false);
     setProfileOpen(false);
+    setLanguageOpen(false);
   }, [location.pathname]);
 
   // =====================================================
-  // CLOSE PROFILE DROPDOWN WHEN CLICKING OUTSIDE
+  // CLOSE PROFILE AND LANGUAGE DROPDOWN
+  // WHEN CLICKING OUTSIDE
   // =====================================================
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
         setProfileOpen(false);
+      }
+
+      if (
+        languageRef.current &&
+        !languageRef.current.contains(event.target)
+      ) {
+        setLanguageOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener(
+        "mousedown",
+        handleOutsideClick
+      );
     };
   }, []);
 
@@ -59,7 +85,13 @@ function Navbar() {
   useEffect(() => {
     if (!isHomePage) return;
 
-    const sections = ["home", "about", "programs", "impact", "campaigns"];
+    const sections = [
+      "home",
+      "about",
+      "programs",
+      "impact",
+      "campaigns",
+    ];
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 150;
@@ -68,7 +100,10 @@ function Navbar() {
       sections.forEach((section) => {
         const element = document.getElementById(section);
 
-        if (element && scrollPosition >= element.offsetTop) {
+        if (
+          element &&
+          scrollPosition >= element.offsetTop
+        ) {
           currentSection = section;
         }
       });
@@ -102,7 +137,9 @@ function Navbar() {
         const navbarHeight = 100;
 
         const elementPosition =
-          element.getBoundingClientRect().top + window.scrollY - navbarHeight;
+          element.getBoundingClientRect().top +
+          window.scrollY -
+          navbarHeight;
 
         window.scrollTo({
           top: elementPosition,
@@ -129,6 +166,7 @@ function Navbar() {
 
     setMenuOpen(false);
     setProfileOpen(false);
+    setLanguageOpen(false);
     setActiveSection("home");
 
     if (!isHomePage) {
@@ -150,6 +188,7 @@ function Navbar() {
 
     setMenuOpen(false);
     setProfileOpen(false);
+    setLanguageOpen(false);
 
     if (isHomePage) {
       const element = document.getElementById(section);
@@ -158,7 +197,9 @@ function Navbar() {
         const navbarHeight = 100;
 
         const elementPosition =
-          element.getBoundingClientRect().top + window.scrollY - navbarHeight;
+          element.getBoundingClientRect().top +
+          window.scrollY -
+          navbarHeight;
 
         window.scrollTo({
           top: elementPosition,
@@ -184,6 +225,7 @@ function Navbar() {
   const handleProtectedNavigation = (path, pageName) => {
     setMenuOpen(false);
     setProfileOpen(false);
+    setLanguageOpen(false);
 
     if (!user) {
       Swal.fire({
@@ -213,6 +255,7 @@ function Navbar() {
   const handleAdminNavigation = () => {
     setMenuOpen(false);
     setProfileOpen(false);
+    setLanguageOpen(false);
 
     if (!user) {
       navigate("/login", {
@@ -244,6 +287,7 @@ function Navbar() {
   const handleLogout = async () => {
     setProfileOpen(false);
     setMenuOpen(false);
+    setLanguageOpen(false);
 
     try {
       await logout();
@@ -263,11 +307,79 @@ function Navbar() {
       Swal.fire({
         icon: "error",
         title: "Logout Failed",
-        text: error.message || "Unable to logout. Please try again.",
+        text:
+          error.message ||
+          "Unable to logout. Please try again.",
         confirmButtonText: "OK",
       });
     }
   };
+
+  // =====================================================
+  // LANGUAGE DROPDOWN
+  // =====================================================
+  const renderLanguageDropdown = () => (
+    <div
+      className="language-dropdown"
+      ref={languageRef}
+    >
+      <button
+        type="button"
+        className="language-dropdown-button"
+        onClick={() =>
+          setLanguageOpen(
+            (previous) => !previous
+          )
+        }
+      >
+        <span>
+          {i18n.language === "hi"
+            ? "हिंदी"
+            : "English"}
+        </span>
+
+        <span className="language-arrow">
+          {languageOpen ? "▲" : "▼"}
+        </span>
+      </button>
+
+      {languageOpen && (
+        <div className="language-dropdown-menu">
+          {/* ENGLISH */}
+          <button
+            type="button"
+            className={
+              i18n.language === "en"
+                ? "language-option active"
+                : "language-option"
+            }
+            onClick={() => {
+              changeLanguage("en");
+              setLanguageOpen(false);
+            }}
+          >
+            English
+          </button>
+
+          {/* HINDI */}
+          <button
+            type="button"
+            className={
+              i18n.language === "hi"
+                ? "language-option active"
+                : "language-option"
+            }
+            onClick={() => {
+              changeLanguage("hi");
+              setLanguageOpen(false);
+            }}
+          >
+            हिंदी
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
   // =====================================================
   // DESKTOP NAVIGATION
@@ -277,59 +389,100 @@ function Navbar() {
       {/* HOME */}
       <a
         href="/"
-        className={isHomePage && activeSection === "home" ? "active" : ""}
+        className={
+          isHomePage &&
+          activeSection === "home"
+            ? "active"
+            : ""
+        }
         onClick={handleHomeClick}
       >
-        Home
+        {t("nav.home")}
       </a>
 
       {/* ABOUT */}
       <a
         href="/#about"
-        className={isHomePage && activeSection === "about" ? "active" : ""}
-        onClick={(event) => handleSectionClick(event, "about")}
+        className={
+          isHomePage &&
+          activeSection === "about"
+            ? "active"
+            : ""
+        }
+        onClick={(event) =>
+          handleSectionClick(event, "about")
+        }
       >
-        About
+        {t("nav.about")}
       </a>
 
       {/* PROGRAMS */}
       <a
         href="/#programs"
-        className={isHomePage && activeSection === "programs" ? "active" : ""}
-        onClick={(event) => handleSectionClick(event, "programs")}
+        className={
+          isHomePage &&
+          activeSection === "programs"
+            ? "active"
+            : ""
+        }
+        onClick={(event) =>
+          handleSectionClick(event, "programs")
+        }
       >
-        Programs
+        {t("nav.programs")}
       </a>
 
       {/* IMPACT */}
       <a
         href="/#impact"
-        className={isHomePage && activeSection === "impact" ? "active" : ""}
-        onClick={(event) => handleSectionClick(event, "impact")}
+        className={
+          isHomePage &&
+          activeSection === "impact"
+            ? "active"
+            : ""
+        }
+        onClick={(event) =>
+          handleSectionClick(event, "impact")
+        }
       >
-        Impact
+        {t("nav.impact")}
       </a>
 
       {/* CAMPAIGNS */}
       <a
         href="/#campaigns"
-        className={isHomePage && activeSection === "campaigns" ? "active" : ""}
-        onClick={(event) => handleSectionClick(event, "campaigns")}
+        className={
+          isHomePage &&
+          activeSection === "campaigns"
+            ? "active"
+            : ""
+        }
+        onClick={(event) =>
+          handleSectionClick(event, "campaigns")
+        }
       >
-        Campaigns
+        {t("nav.campaigns")}
       </a>
 
       {/* COMMUNITY */}
       <Link
         to="/community"
-        className={location.pathname === "/community" ? "active" : ""}
+        className={
+          location.pathname === "/community"
+            ? "active"
+            : ""
+        }
         onClick={() => {
           setMenuOpen(false);
           setProfileOpen(false);
+          setLanguageOpen(false);
         }}
       >
-        Community
+        {t("nav.community")}
       </Link>
+
+      {/* LANGUAGE */}
+      {renderLanguageDropdown()}
     </>
   );
 
@@ -341,59 +494,100 @@ function Navbar() {
       {/* HOME */}
       <a
         href="/"
-        className={isHomePage && activeSection === "home" ? "active" : ""}
+        className={
+          isHomePage &&
+          activeSection === "home"
+            ? "active"
+            : ""
+        }
         onClick={handleHomeClick}
       >
-        Home
+        {t("nav.home")}
       </a>
 
       {/* ABOUT */}
       <a
         href="/#about"
-        className={isHomePage && activeSection === "about" ? "active" : ""}
-        onClick={(event) => handleSectionClick(event, "about")}
+        className={
+          isHomePage &&
+          activeSection === "about"
+            ? "active"
+            : ""
+        }
+        onClick={(event) =>
+          handleSectionClick(event, "about")
+        }
       >
-        About
+        {t("nav.about")}
       </a>
 
       {/* PROGRAMS */}
       <a
         href="/#programs"
-        className={isHomePage && activeSection === "programs" ? "active" : ""}
-        onClick={(event) => handleSectionClick(event, "programs")}
+        className={
+          isHomePage &&
+          activeSection === "programs"
+            ? "active"
+            : ""
+        }
+        onClick={(event) =>
+          handleSectionClick(event, "programs")
+        }
       >
-        Programs
+        {t("nav.programs")}
       </a>
 
       {/* IMPACT */}
       <a
         href="/#impact"
-        className={isHomePage && activeSection === "impact" ? "active" : ""}
-        onClick={(event) => handleSectionClick(event, "impact")}
+        className={
+          isHomePage &&
+          activeSection === "impact"
+            ? "active"
+            : ""
+        }
+        onClick={(event) =>
+          handleSectionClick(event, "impact")
+        }
       >
-        Impact
+        {t("nav.impact")}
       </a>
 
       {/* CAMPAIGNS */}
       <a
         href="/#campaigns"
-        className={isHomePage && activeSection === "campaigns" ? "active" : ""}
-        onClick={(event) => handleSectionClick(event, "campaigns")}
+        className={
+          isHomePage &&
+          activeSection === "campaigns"
+            ? "active"
+            : ""
+        }
+        onClick={(event) =>
+          handleSectionClick(event, "campaigns")
+        }
       >
-        Campaigns
+        {t("nav.campaigns")}
       </a>
 
       {/* COMMUNITY */}
       <Link
         to="/community"
-        className={location.pathname === "/community" ? "active" : ""}
+        className={
+          location.pathname === "/community"
+            ? "active"
+            : ""
+        }
         onClick={() => {
           setMenuOpen(false);
           setProfileOpen(false);
+          setLanguageOpen(false);
         }}
       >
-        Community
+        {t("nav.community")}
       </Link>
+
+      {/* LANGUAGE */}
+      {renderLanguageDropdown()}
     </>
   );
 
@@ -411,7 +605,10 @@ function Navbar() {
     return (
       <header className="navbar">
         <div className="navbar-container">
-          <Link to="/" className="navbar-logo">
+          <Link
+            to="/"
+            className="navbar-logo"
+          >
             <img
               src="/images/logo.png"
               alt="Hanumat Seva"
@@ -429,15 +626,15 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar-container">
-        {/* =================================================
-            LOGO
-        ================================================= */}
+
+        {/* LOGO */}
         <Link
           to="/"
           className="navbar-logo"
           onClick={() => {
             setMenuOpen(false);
             setProfileOpen(false);
+            setLanguageOpen(false);
           }}
         >
           <img
@@ -447,18 +644,15 @@ function Navbar() {
           />
         </Link>
 
-        {/* =================================================
-            DESKTOP NAVIGATION
-        ================================================= */}
-        <nav className="nav-links">{renderDesktopNavigation()}</nav>
+        {/* DESKTOP NAVIGATION */}
+        <nav className="nav-links">
+          {renderDesktopNavigation()}
+        </nav>
 
-        {/* =================================================
-            RIGHT SIDE ACTIONS
-        ================================================= */}
+        {/* RIGHT SIDE ACTIONS */}
         <div className="navbar-actions">
-          {/* ==============================
-              LOGGED IN
-          ============================== */}
+
+          {/* LOGGED IN */}
           {user ? (
             <>
               {/* DONATE */}
@@ -468,18 +662,26 @@ function Navbar() {
                 onClick={() => {
                   setMenuOpen(false);
                   setProfileOpen(false);
+                  setLanguageOpen(false);
                 }}
               >
                 <Heart size={20} />
-                Donate
+                {t("nav.donate")}
               </Link>
 
               {/* PROFILE */}
-              <div className="profile-dropdown-container" ref={profileRef}>
+              <div
+                className="profile-dropdown-container"
+                ref={profileRef}
+              >
                 <button
                   type="button"
                   className="navbar-profile-button"
-                  onClick={() => setProfileOpen((previous) => !previous)}
+                  onClick={() =>
+                    setProfileOpen(
+                      (previous) => !previous
+                    )
+                  }
                   aria-expanded={profileOpen}
                   aria-label="Open profile menu"
                 >
@@ -489,31 +691,41 @@ function Navbar() {
                     <UserCircle size={22} />
                   )}
 
-                  <span className="profile-name">{user.name}</span>
+                  <span className="profile-name">
+                    {user.name}
+                  </span>
                 </button>
 
                 {/* PROFILE DROPDOWN */}
                 {profileOpen && (
                   <div className="profile-dropdown">
+
                     {/* ADMIN OPTIONS */}
                     {isAdmin ? (
                       <>
-                        {/* ADMIN PANEL */}
-                        <button type="button" onClick={handleAdminNavigation}>
+                        <button
+                          type="button"
+                          onClick={handleAdminNavigation}
+                        >
                           <ShieldCheck size={19} />
-                          <span>Admin Panel</span>
+
+                          <span>
+                            {t("nav.adminPanel")}
+                          </span>
                         </button>
 
                         <div className="profile-dropdown-divider" />
 
-                        {/* LOGOUT */}
                         <button
                           type="button"
                           className="logout-button"
                           onClick={handleLogout}
                         >
                           <LogOut size={19} />
-                          <span>Logout</span>
+
+                          <span>
+                            {t("nav.logout")}
+                          </span>
                         </button>
                       </>
                     ) : (
@@ -522,11 +734,17 @@ function Navbar() {
                         <button
                           type="button"
                           onClick={() =>
-                            handleProtectedNavigation("/dashboard", "Dashboard")
+                            handleProtectedNavigation(
+                              "/dashboard",
+                              "Dashboard"
+                            )
                           }
                         >
                           <LayoutDashboard size={19} />
-                          <span>Dashboard</span>
+
+                          <span>
+                            {t("nav.dashboard")}
+                          </span>
                         </button>
 
                         {/* PROFILE */}
@@ -535,23 +753,32 @@ function Navbar() {
                           onClick={() =>
                             handleProtectedNavigation(
                               "/volunteer/profile",
-                              "Profile",
+                              "Profile"
                             )
                           }
                         >
                           <UserCircle size={19} />
-                          <span>Profile</span>
+
+                          <span>
+                            {t("nav.profile")}
+                          </span>
                         </button>
 
                         {/* VOLUNTEER */}
                         <button
                           type="button"
                           onClick={() =>
-                            handleProtectedNavigation("/volunteer", "Volunteer")
+                            handleProtectedNavigation(
+                              "/volunteer",
+                              "Volunteer"
+                            )
                           }
                         >
                           <Users size={19} />
-                          <span>Volunteer</span>
+
+                          <span>
+                            {t("nav.volunteer")}
+                          </span>
                         </button>
 
                         <div className="profile-dropdown-divider" />
@@ -563,7 +790,10 @@ function Navbar() {
                           onClick={handleLogout}
                         >
                           <LogOut size={19} />
-                          <span>Logout</span>
+
+                          <span>
+                            {t("nav.logout")}
+                          </span>
                         </button>
                       </>
                     )}
@@ -572,20 +802,22 @@ function Navbar() {
               </div>
             </>
           ) : (
-            /* ==============================
-               LOGGED OUT
-            ============================== */
+            /* LOGGED OUT */
             <>
               {/* VOLUNTEER */}
               <button
                 type="button"
                 className="navbar-community"
                 onClick={() =>
-                  handleProtectedNavigation("/volunteer", "Volunteer")
+                  handleProtectedNavigation(
+                    "/volunteer",
+                    "Volunteer"
+                  )
                 }
               >
                 <Users size={20} />
-                Volunteer
+
+                {t("nav.volunteer")}
               </button>
 
               {/* DONATE */}
@@ -598,58 +830,70 @@ function Navbar() {
                 onClick={() => {
                   setMenuOpen(false);
                   setProfileOpen(false);
+                  setLanguageOpen(false);
                 }}
               >
                 <Heart size={20} />
-                Donate
+
+                {t("nav.donate")}
               </Link>
             </>
           )}
         </div>
 
-        {/* =================================================
-            MOBILE MENU BUTTON
-        ================================================= */}
+        {/* MOBILE MENU BUTTON */}
         <button
           type="button"
           className="mobile-menu-button"
-          onClick={() => setMenuOpen((previous) => !previous)}
+          onClick={() =>
+            setMenuOpen(
+              (previous) => !previous
+            )
+          }
           aria-label="Toggle navigation"
           aria-expanded={menuOpen}
         >
-          {menuOpen ? <X size={26} /> : <Menu size={26} />}
+          {menuOpen ? (
+            <X size={26} />
+          ) : (
+            <Menu size={26} />
+          )}
         </button>
 
-        {/* =================================================
-            MOBILE MENU
-        ================================================= */}
+        {/* MOBILE MENU */}
         {menuOpen && (
           <div className="mobile-menu">
+
             {/* MAIN NAVIGATION */}
             {renderMobileNavigation()}
 
-            {/* =================================================
-                LOGGED-IN MOBILE OPTIONS
-            ================================================= */}
+            {/* LOGGED-IN MOBILE OPTIONS */}
             {user ? (
               <>
                 {/* ADMIN MOBILE OPTIONS */}
                 {isAdmin ? (
                   <>
                     {/* ADMIN PANEL */}
-                    <button type="button" onClick={handleAdminNavigation}>
+                    <button
+                      type="button"
+                      onClick={handleAdminNavigation}
+                    >
                       <ShieldCheck size={19} />
-                      Admin Panel
+
+                      {t("nav.adminPanel")}
                     </button>
 
                     {/* DONATE */}
                     <Link
                       to="/donate"
                       className="mobile-donate"
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() =>
+                        setMenuOpen(false)
+                      }
                     >
                       <Heart size={19} />
-                      Donate
+
+                      {t("nav.donate")}
                     </Link>
 
                     {/* LOGOUT */}
@@ -659,7 +903,8 @@ function Navbar() {
                       onClick={handleLogout}
                     >
                       <LogOut size={19} />
-                      Logout
+
+                      {t("nav.logout")}
                     </button>
                   </>
                 ) : (
@@ -668,11 +913,15 @@ function Navbar() {
                     <button
                       type="button"
                       onClick={() =>
-                        handleProtectedNavigation("/dashboard", "Dashboard")
+                        handleProtectedNavigation(
+                          "/dashboard",
+                          "Dashboard"
+                        )
                       }
                     >
                       <LayoutDashboard size={19} />
-                      Dashboard
+
+                      {t("nav.dashboard")}
                     </button>
 
                     {/* PROFILE */}
@@ -681,33 +930,41 @@ function Navbar() {
                       onClick={() =>
                         handleProtectedNavigation(
                           "/volunteer/profile",
-                          "Profile",
+                          "Profile"
                         )
                       }
                     >
                       <UserCircle size={19} />
-                      Profile
+
+                      {t("nav.profile")}
                     </button>
 
                     {/* VOLUNTEER */}
                     <button
                       type="button"
                       onClick={() =>
-                        handleProtectedNavigation("/volunteer", "Volunteer")
+                        handleProtectedNavigation(
+                          "/volunteer",
+                          "Volunteer"
+                        )
                       }
                     >
                       <Users size={19} />
-                      Volunteer
+
+                      {t("nav.volunteer")}
                     </button>
 
                     {/* DONATE */}
                     <Link
                       to="/donate"
                       className="mobile-donate"
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() =>
+                        setMenuOpen(false)
+                      }
                     >
                       <Heart size={19} />
-                      Donate
+
+                      {t("nav.donate")}
                     </Link>
 
                     {/* LOGOUT */}
@@ -717,26 +974,29 @@ function Navbar() {
                       onClick={handleLogout}
                     >
                       <LogOut size={19} />
-                      Logout
+
+                      {t("nav.logout")}
                     </button>
                   </>
                 )}
               </>
             ) : (
-              /* ==============================
-                 MOBILE LOGGED OUT
-              ============================== */
+              /* MOBILE LOGGED OUT */
               <>
                 {/* VOLUNTEER */}
                 <button
                   type="button"
                   className="mobile-volunteer"
                   onClick={() =>
-                    handleProtectedNavigation("/volunteer", "Volunteer")
+                    handleProtectedNavigation(
+                      "/volunteer",
+                      "Volunteer"
+                    )
                   }
                 >
                   <Users size={19} />
-                  Volunteer
+
+                  {t("nav.volunteer")}
                 </button>
 
                 {/* DONATE */}
@@ -746,10 +1006,13 @@ function Navbar() {
                     from: "/donate",
                   }}
                   className="mobile-donate"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() =>
+                    setMenuOpen(false)
+                  }
                 >
                   <Heart size={19} />
-                  Donate
+
+                  {t("nav.donate")}
                 </Link>
               </>
             )}
