@@ -3,7 +3,7 @@ import "./index.css";
 import "./css/responsive.css";
 import "./css/Volunteer.css";
 import "./css/Dashboard.css";
-import GoogleTranslate from "./components/GoogleTranslate";
+import ResetPassword from "./pages/ResetPassword";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
@@ -569,6 +569,8 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* =================================================
               ADMIN

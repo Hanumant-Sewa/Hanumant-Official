@@ -261,7 +261,7 @@
 
     .hero-art img {
         display: block;
-        width: 100%;
+        width: 120%;
         height: 100%;
         max-width: none;
         max-height: none;
@@ -745,9 +745,7 @@
     .hero-container {
         width: 100%;
         min-height: 560px;
-
         padding: 48px 18px 65px;
-
         border-radius: 0;
     }
 
@@ -2511,9 +2509,7 @@
 
     .hero-container {
         width: 100%;
-
         min-height: 545px;
-
         padding: 28px 8px 42px;
     }
 
@@ -3051,9 +3047,7 @@
 
     .hero-container {
         width: 100%;
-
         min-height: 525px;
-
         padding: 24px 7px 35px;
     }
 
@@ -3756,10 +3750,8 @@
     }
 
     .hero-container {
-        width: 96%;
-
+        width: 100%;
         min-height: 500px;
-
         padding: 21px 5px 30px;
     }
 
@@ -4221,5 +4213,12 @@ button,
     .activity-card:hover,
     .dashboard-stat-card:hover {
         transform: none;
+    }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hero-content {
+        width: 100%;
+        max-width: 760px;
+        margin: 0 auto;
     }
 }

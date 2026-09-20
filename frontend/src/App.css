@@ -157,6 +157,8 @@
 ======================================== */
 .hero {
   padding-top: 0;
+  width: 100%;
+  max-width: none;
   position: relative;
   background: var(--cream);
   overflow: visible;
@@ -3962,6 +3964,22 @@ footer {
 ::selection {
     background: var(--primary);
     color: #fff;
+}
+/*forget password toggle */
+.password-toggle {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #777;
+}
+
+.password-toggle:hover {
+  color: #d97706;
 }
 /*login switch */
 /* ========================================

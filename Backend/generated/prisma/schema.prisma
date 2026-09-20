@@ -117,11 +117,12 @@ model User {
   role   Role       @default(USER)
   status UserStatus @default(ACTIVE)
 
-  phone  String?
-  avatar String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  phone                    String?
+  avatar                   String?
+  resetPasswordToken       String?
+  resetPasswordTokenExpiry DateTime?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
 
   volunteerProfile VolunteerProfile?
 

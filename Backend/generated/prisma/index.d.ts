@@ -3023,6 +3023,8 @@ export namespace Prisma {
     status: $Enums.UserStatus | null
     phone: string | null
     avatar: string | null
+    resetPasswordToken: string | null
+    resetPasswordTokenExpiry: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3036,6 +3038,8 @@ export namespace Prisma {
     status: $Enums.UserStatus | null
     phone: string | null
     avatar: string | null
+    resetPasswordToken: string | null
+    resetPasswordTokenExpiry: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3049,6 +3053,8 @@ export namespace Prisma {
     status: number
     phone: number
     avatar: number
+    resetPasswordToken: number
+    resetPasswordTokenExpiry: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -3072,6 +3078,8 @@ export namespace Prisma {
     status?: true
     phone?: true
     avatar?: true
+    resetPasswordToken?: true
+    resetPasswordTokenExpiry?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3085,6 +3093,8 @@ export namespace Prisma {
     status?: true
     phone?: true
     avatar?: true
+    resetPasswordToken?: true
+    resetPasswordTokenExpiry?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3098,6 +3108,8 @@ export namespace Prisma {
     status?: true
     phone?: true
     avatar?: true
+    resetPasswordToken?: true
+    resetPasswordTokenExpiry?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3198,6 +3210,8 @@ export namespace Prisma {
     status: $Enums.UserStatus
     phone: string | null
     avatar: string | null
+    resetPasswordToken: string | null
+    resetPasswordTokenExpiry: Date | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -3230,6 +3244,8 @@ export namespace Prisma {
     status?: boolean
     phone?: boolean
     avatar?: boolean
+    resetPasswordToken?: boolean
+    resetPasswordTokenExpiry?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     volunteerProfile?: boolean | User$volunteerProfileArgs<ExtArgs>
@@ -3258,6 +3274,8 @@ export namespace Prisma {
     status?: boolean
     phone?: boolean
     avatar?: boolean
+    resetPasswordToken?: boolean
+    resetPasswordTokenExpiry?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3271,6 +3289,8 @@ export namespace Prisma {
     status?: boolean
     phone?: boolean
     avatar?: boolean
+    resetPasswordToken?: boolean
+    resetPasswordTokenExpiry?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3284,11 +3304,13 @@ export namespace Prisma {
     status?: boolean
     phone?: boolean
     avatar?: boolean
+    resetPasswordToken?: boolean
+    resetPasswordTokenExpiry?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "status" | "phone" | "avatar" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "status" | "phone" | "avatar" | "resetPasswordToken" | "resetPasswordTokenExpiry" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     volunteerProfile?: boolean | User$volunteerProfileArgs<ExtArgs>
     donations?: boolean | User$donationsArgs<ExtArgs>
@@ -3336,6 +3358,8 @@ export namespace Prisma {
       status: $Enums.UserStatus
       phone: string | null
       avatar: string | null
+      resetPasswordToken: string | null
+      resetPasswordTokenExpiry: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -3783,6 +3807,8 @@ export namespace Prisma {
     readonly status: FieldRef<"User", 'UserStatus'>
     readonly phone: FieldRef<"User", 'String'>
     readonly avatar: FieldRef<"User", 'String'>
+    readonly resetPasswordToken: FieldRef<"User", 'String'>
+    readonly resetPasswordTokenExpiry: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -25279,6 +25305,8 @@ export namespace Prisma {
     status: 'status',
     phone: 'phone',
     avatar: 'avatar',
+    resetPasswordToken: 'resetPasswordToken',
+    resetPasswordTokenExpiry: 'resetPasswordTokenExpiry',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -25873,6 +25901,8 @@ export namespace Prisma {
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     phone?: StringNullableFilter<"User"> | string | null
     avatar?: StringNullableFilter<"User"> | string | null
+    resetPasswordToken?: StringNullableFilter<"User"> | string | null
+    resetPasswordTokenExpiry?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     volunteerProfile?: XOR<VolunteerProfileNullableScalarRelationFilter, VolunteerProfileWhereInput> | null
@@ -25900,6 +25930,8 @@ export namespace Prisma {
     status?: SortOrder
     phone?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
+    resetPasswordToken?: SortOrderInput | SortOrder
+    resetPasswordTokenExpiry?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     volunteerProfile?: VolunteerProfileOrderByWithRelationInput
@@ -25930,6 +25962,8 @@ export namespace Prisma {
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     phone?: StringNullableFilter<"User"> | string | null
     avatar?: StringNullableFilter<"User"> | string | null
+    resetPasswordToken?: StringNullableFilter<"User"> | string | null
+    resetPasswordTokenExpiry?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     volunteerProfile?: XOR<VolunteerProfileNullableScalarRelationFilter, VolunteerProfileWhereInput> | null
@@ -25957,6 +25991,8 @@ export namespace Prisma {
     status?: SortOrder
     phone?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
+    resetPasswordToken?: SortOrderInput | SortOrder
+    resetPasswordTokenExpiry?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -25978,6 +26014,8 @@ export namespace Prisma {
     status?: EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     avatar?: StringNullableWithAggregatesFilter<"User"> | string | null
+    resetPasswordToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    resetPasswordTokenExpiry?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -27515,6 +27553,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -27542,6 +27582,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -27568,6 +27610,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -27595,6 +27639,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -27622,6 +27668,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27634,6 +27682,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27647,6 +27697,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29314,6 +29366,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -29464,6 +29527,8 @@ export namespace Prisma {
     status?: SortOrder
     phone?: SortOrder
     avatar?: SortOrder
+    resetPasswordToken?: SortOrder
+    resetPasswordTokenExpiry?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29481,6 +29546,8 @@ export namespace Prisma {
     status?: SortOrder
     phone?: SortOrder
     avatar?: SortOrder
+    resetPasswordToken?: SortOrder
+    resetPasswordTokenExpiry?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29494,6 +29561,8 @@ export namespace Prisma {
     status?: SortOrder
     phone?: SortOrder
     avatar?: SortOrder
+    resetPasswordToken?: SortOrder
+    resetPasswordTokenExpiry?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29572,6 +29641,20 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -29714,17 +29797,6 @@ export namespace Prisma {
     not?: NestedEnumVolunteerApplicationStatusFilter<$PrismaModel> | $Enums.VolunteerApplicationStatus
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type VolunteerApplicationCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -29798,20 +29870,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumVolunteerApplicationStatusFilter<$PrismaModel>
     _max?: NestedEnumVolunteerApplicationStatusFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type CommunityCountOrderByAggregateInput = {
@@ -31101,6 +31159,10 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -31747,10 +31809,6 @@ export namespace Prisma {
 
   export type EnumVolunteerApplicationStatusFieldUpdateOperationsInput = {
     set?: $Enums.VolunteerApplicationStatus
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type UserUpdateOneRequiredWithoutVolunteerApplicationsNestedInput = {
@@ -32578,6 +32636,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -32681,6 +32750,20 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -32742,17 +32825,6 @@ export namespace Prisma {
     not?: NestedEnumVolunteerApplicationStatusFilter<$PrismaModel> | $Enums.VolunteerApplicationStatus
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedEnumVolunteerApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.VolunteerApplicationStatus | EnumVolunteerApplicationStatusFieldRefInput<$PrismaModel>
     in?: $Enums.VolunteerApplicationStatus[] | ListEnumVolunteerApplicationStatusFieldRefInput<$PrismaModel>
@@ -32761,20 +32833,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumVolunteerApplicationStatusFilter<$PrismaModel>
     _max?: NestedEnumVolunteerApplicationStatusFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumCommunityMemberRoleFilter<$PrismaModel = never> = {
@@ -33978,6 +34036,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     donations?: DonationCreateNestedManyWithoutUserInput
@@ -34004,6 +34064,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     donations?: DonationUncheckedCreateNestedManyWithoutUserInput
@@ -34222,6 +34284,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     donations?: DonationUpdateManyWithoutUserNestedInput
@@ -34248,6 +34312,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     donations?: DonationUncheckedUpdateManyWithoutUserNestedInput
@@ -34369,6 +34435,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -34395,6 +34463,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -34480,6 +34550,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -34506,6 +34578,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -34581,6 +34655,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -34607,6 +34683,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -34706,6 +34784,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -34732,6 +34812,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -34825,6 +34907,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -34851,6 +34935,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -34991,6 +35077,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -35017,6 +35105,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -35090,6 +35180,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -35116,6 +35208,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -35193,6 +35287,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -35219,6 +35315,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -35425,6 +35523,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -35451,6 +35551,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -35526,6 +35628,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -35552,6 +35656,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -35691,6 +35797,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -35717,6 +35825,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -35859,6 +35969,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -35885,6 +35997,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -36000,6 +36114,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -36026,6 +36142,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -36159,6 +36277,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -36185,6 +36305,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -36302,6 +36424,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -36328,6 +36452,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -36402,6 +36528,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -36428,6 +36556,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -36517,6 +36647,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -36543,6 +36675,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -36629,6 +36763,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -36655,6 +36791,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -36864,6 +37002,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -36890,6 +37030,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -36975,6 +37117,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -37001,6 +37145,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -37076,6 +37222,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -37102,6 +37250,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -37143,6 +37293,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -37169,6 +37321,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -37194,6 +37348,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -37220,6 +37376,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -37261,6 +37419,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -37287,6 +37447,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -37312,6 +37474,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileCreateNestedOneWithoutUserInput
@@ -37338,6 +37502,8 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     phone?: string | null
     avatar?: string | null
+    resetPasswordToken?: string | null
+    resetPasswordTokenExpiry?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     volunteerProfile?: VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
@@ -37379,6 +37545,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUpdateOneWithoutUserNestedInput
@@ -37405,6 +37573,8 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetPasswordTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     volunteerProfile?: VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput

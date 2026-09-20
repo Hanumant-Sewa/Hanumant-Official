@@ -30,6 +30,8 @@ import communityInvitationRoutes from "./src/routes/communityInvitationRoutes.js
 
 import transparencyRoute from "./src/routes/transparencyRoute.js";
 
+import eventRoutes from "./src/routes/eventRoutes.js";
+
 const app = express();
 
 // Log which database is in use (password masked) — catches wrong-DATABASE_URL issues at boot
@@ -100,6 +102,7 @@ app.use("/api/community-invitations", communityInvitationRoutes);
 
 app.use("/api/transparency", transparencyRoute);
 
+app.use("/api/events", eventRoutes);
 // ===============================
 // ADMIN ROUTES
 // ===============================
