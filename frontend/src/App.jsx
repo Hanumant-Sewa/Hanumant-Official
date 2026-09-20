@@ -3,7 +3,6 @@ import "./index.css";
 import "./css/responsive.css";
 import "./css/Volunteer.css";
 import "./css/Dashboard.css";
-import GoogleTranslate from "./components/GoogleTranslate";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";

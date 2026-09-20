@@ -4673,3 +4673,148 @@ footer {
 .hanumat-swal-cancel:hover {
   background: #735846 !important;
 }
+
+/* =====================================================
+   LANGUAGE DROPDOWN
+===================================================== */
+
+.language-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+/* =====================================================
+   MAIN LANGUAGE BUTTON
+===================================================== */
+
+.language-dropdown-button {
+  min-width: 90px;
+  height: 34px;
+
+  padding: 0 9px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 7px;
+
+  border: 1.5px solid #D97706;
+  border-radius: 7px;
+
+  background-color: #D97706;
+  color: #FFFFFF;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.language-dropdown-button:hover {
+  background-color: #B45309;
+  border-color: #B45309;
+}
+
+/* Arrow */
+
+.language-arrow {
+  font-size: 8px;
+}
+
+
+/* =====================================================
+   OPEN LANGUAGE MENU
+===================================================== */
+
+.language-dropdown-menu {
+  position: absolute;
+
+  top: calc(100% + 4px);
+  right: 0;
+
+  width: 90px;
+
+  background-color: #FFF7ED;
+
+  border: 1.5px solid #D97706;
+  border-radius: 7px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  z-index: 1000;
+}
+
+
+/* =====================================================
+   LANGUAGE OPTION
+===================================================== */
+
+.language-option {
+  width: 100%;
+
+  padding: 8px 9px;
+
+  border: none;
+
+  background-color: #FFF7ED;
+  color: #B45309;
+
+  text-align: left;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+
+/* Hover - ORANGE */
+
+.language-option:hover {
+  background-color: #D97706;
+  color: #FFFFFF;
+}
+
+
+/* Selected language - ORANGE */
+
+.language-option.active {
+  background-color: #D97706;
+  color: #FFFFFF;
+}
+
+
+/* =====================================================
+   MOBILE LANGUAGE DROPDOWN
+===================================================== */
+
+@media (max-width: 768px) {
+
+  .language-dropdown {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .language-dropdown-button {
+    width: 90px;
+    height: 34px;
+  }
+
+  .language-dropdown-menu {
+    position: static;
+
+    width: 90px;
+
+    margin-top: 4px;
+  }
+}

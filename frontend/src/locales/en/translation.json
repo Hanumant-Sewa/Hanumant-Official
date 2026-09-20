@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "programs": "Programs",
+    "impact": "Impact",
+    "campaigns": "Campaigns",
+    "community": "Community",
+    "donate": "Donate",
+    "volunteer": "Volunteer",
+    "adminPanel": "Admin Panel",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "logout": "Logout"
+  }
+}
