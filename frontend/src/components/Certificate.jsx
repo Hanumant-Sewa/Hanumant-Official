@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { useTranslation } from "react-i18next";
 
 import "../css/Certificate.css";
 import logo from "../assets/hanumant-logo.png";
@@ -11,6 +12,8 @@ const Certificate = ({
   issueDate = "16 September 2026",
   certificateNumber = "HSF-VA-2026-001",
 }) => {
+  const { t } = useTranslation();
+
   const certificateRef = useRef(null);
 
   const downloadCertificate = async () => {
@@ -76,9 +79,9 @@ const Certificate = ({
 
           <div className="certificate-quote">
             <p>
-              "Small Acts
+              {t("certificate.quoteFirst")}
               <br />
-              Create Big Changes"
+              {t("certificate.quoteSecond")}
             </p>
           </div>
 
@@ -87,11 +90,11 @@ const Certificate = ({
         {/* Main heading */}
         <div className="certificate-title">
 
-          <h1>CERTIFICATE</h1>
+          <h1>{t("certificate.title")}</h1>
 
           <div className="certificate-subtitle">
             <span></span>
-            <h2>OF APPRECIATION</h2>
+            <h2>{t("certificate.subtitle")}</h2>
             <span></span>
           </div>
 
@@ -101,7 +104,7 @@ const Certificate = ({
         <div className="presented-section">
 
           <p className="presented-text">
-            THIS CERTIFICATE IS PROUDLY PRESENTED TO
+            {t("certificate.presentedTo")}
           </p>
 
           <h3>{volunteerName}</h3>
@@ -114,17 +117,15 @@ const Certificate = ({
         <div className="certificate-message">
 
           <p>
-            In recognition of your valuable contribution and dedicated
-            service as a Volunteer with Hanumant Seva Foundation.
+            {t("certificate.messageFirst")}
           </p>
 
           <p>
-            Your efforts have made a positive impact in our mission to
-            serve the community and create a better tomorrow.
+            {t("certificate.messageSecond")}
           </p>
 
           <strong>
-            Thank you for being a part of our journey!
+            {t("certificate.thankYou")}
           </strong>
 
         </div>
@@ -139,7 +140,7 @@ const Certificate = ({
             </div>
 
             <span>
-              Certificate Type
+              {t("certificate.details.type")}
             </span>
 
             <strong>
@@ -157,7 +158,7 @@ const Certificate = ({
             </div>
 
             <span>
-              Issued On
+              {t("certificate.details.issuedOn")}
             </span>
 
             <strong>
@@ -175,7 +176,7 @@ const Certificate = ({
             </div>
 
             <span>
-              Certificate ID
+              {t("certificate.details.certificateId")}
             </span>
 
             <strong>
@@ -193,7 +194,7 @@ const Certificate = ({
             </div>
 
             <span>
-              Issued By
+              {t("certificate.details.issuedBy")}
             </span>
 
             <strong>
@@ -221,7 +222,7 @@ const Certificate = ({
 
             <span>—</span>
 
-            Together We Serve
+            {t("certificate.footerText")}
 
             <span>—</span>
 
@@ -237,7 +238,7 @@ const Certificate = ({
         className="certificate-download-button"
         onClick={downloadCertificate}
       >
-        Download Certificate PDF
+        {t("certificate.downloadButton")}
       </button>
 
     </div>

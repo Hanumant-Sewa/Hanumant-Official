@@ -1,4 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer>
       <div className="container footer-grid">
@@ -6,10 +10,7 @@ function Footer() {
         <div className="footer-col">
           <h2>Hanumant Seva</h2>
 
-          <p>
-            Serving humanity through compassion, food distribution and community
-            support.
-          </p>
+          <p>{t("footer.about.description")}</p>
 
           <div className="social-links">
             <a href="#">
@@ -32,64 +33,69 @@ function Footer() {
 
         {/* Quick Links */}
         <div className="footer-col">
-          <h3>Quick Links</h3>
+          <h3>{t("footer.quickLinks.title")}</h3>
 
           <ul>
             <li>
-              <a href="#home">Home</a>
+              <a href="#home">{t("footer.quickLinks.home")}</a>
             </li>
 
             <li>
-              <a href="#about">About</a>
+              <a href="#about">{t("footer.quickLinks.about")}</a>
             </li>
 
             <li>
-              <a href="#services">Services</a>
+              <a href="#services">{t("footer.quickLinks.services")}</a>
             </li>
 
             <li>
-              <a href="#gallery">Gallery</a>
+              <a href="#gallery">{t("footer.quickLinks.gallery")}</a>
             </li>
 
             <li>
-              <a href="#contact">Contact</a>
+              <a href="#contact">{t("footer.quickLinks.contact")}</a>
             </li>
           </ul>
         </div>
 
         {/* Programs */}
         <div className="footer-col">
-          <h3>Our Programs</h3>
+          <h3>{t("footer.programs.title")}</h3>
 
           <ul>
-            <li>Food Distribution</li>
+            <li>{t("footer.programs.foodDistribution")}</li>
 
-            <li>Community Kitchen</li>
+            <li>{t("footer.programs.communityKitchen")}</li>
 
-            <li>Volunteer Program</li>
+            <li>{t("footer.programs.volunteerProgram")}</li>
 
-            <li>Food Donation Drive</li>
+            <li>{t("footer.programs.foodDonationDrive")}</li>
 
-            <li>Emergency Relief</li>
+            <li>{t("footer.programs.emergencyRelief")}</li>
           </ul>
         </div>
 
         {/* Newsletter */}
         <div className="footer-col">
-          <h3>Newsletter</h3>
+          <h3>{t("footer.newsletter.title")}</h3>
 
-          <p>Subscribe to receive updates about our food drives.</p>
+          <p>{t("footer.newsletter.description")}</p>
 
           <form className="newsletter">
-            <input type="email" placeholder="Email Address" />
+            <input
+              type="email"
+              placeholder={t("footer.newsletter.placeholder")}
+            />
 
-            <button type="submit">Subscribe</button>
+            <button type="submit">
+              {t("footer.newsletter.subscribe")}
+            </button>
           </form>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <p>© 2026 Hanumant Seva. All Rights Reserved.</p>
+        <p>{t("footer.copyright")}</p>
       </div>
     </footer>
   );

@@ -8,7 +8,11 @@ import {
   Star,
 } from "lucide-react";
 import ProtectedButton from "./ProtectedButton";
+import { useTranslation } from "react-i18next";
+
 function Hero() {
+  const { t } = useTranslation();
+
   return (
     <section className="hero" id="home">
       <div className="hero-container">
@@ -17,13 +21,19 @@ function Hero() {
         ========================== */}
 
         <div className="hero-content">
-          <div className="hero-badge">🙏 सेवा • समर्पण • संस्कार</div>
+          <div className="hero-badge">
+            {t("home.hero.badge")}
+          </div>
 
           <h1>
-            सेवा से बड़ा
+            {t("home.hero.titleFirst")}
             <br />
             <span className="second-line">
-              कोई <span className="orange">धर्म</span> नहीं
+              {t("home.hero.titleSecond")}{" "}
+              <span className="orange">
+                {t("home.hero.titleHighlight")}
+              </span>{" "}
+              {t("home.hero.titleLast")}
             </span>
           </h1>
 
@@ -31,11 +41,12 @@ function Hero() {
             <span></span>✧<span></span>
           </div>
 
-          <h3 className="hero-theme">₹50. One Person. One Meal. One Month.</h3>
+          <h3 className="hero-theme">
+            {t("home.hero.theme")}
+          </h3>
 
           <p>
-            You don't have to do everything to help someone. Sometimes, one
-            small contribution can become someone's meal.
+            {t("home.hero.description")}
           </p>
 
           {/* =========================
@@ -49,7 +60,7 @@ function Hero() {
               className="hero-btn hero-btn-primary"
             >
               <Heart size={20} />
-              Support 1 Person – ₹50
+              {t("home.hero.supportButton")}
             </ProtectedButton>
 
             <ProtectedButton
@@ -58,11 +69,13 @@ function Hero() {
               className="hero-btn hero-btn-outline"
             >
               <Users size={25} />
-              Join Our Community
+              {t("home.hero.communityButton")}
             </ProtectedButton>
           </div>
 
-          <p className="hero-founder">Founded in 2026 by Manisha Nigam</p>
+          <p className="hero-founder">
+            {t("home.hero.founded")}
+          </p>
 
           {/* =========================
               TRUST FEATURES
@@ -73,8 +86,13 @@ function Hero() {
               <ShieldCheck size={43} />
 
               <div>
-                <strong>100%</strong>
-                <span>Transparent</span>
+                <strong>
+                  {t("home.hero.features.transparent.value")}
+                </strong>
+
+                <span>
+                  {t("home.hero.features.transparent.label")}
+                </span>
               </div>
             </div>
 
@@ -82,8 +100,13 @@ function Hero() {
               <Clock3 size={43} />
 
               <div>
-                <strong>24/7</strong>
-                <span>Community Support</span>
+                <strong>
+                  {t("home.hero.features.support.value")}
+                </strong>
+
+                <span>
+                  {t("home.hero.features.support.label")}
+                </span>
               </div>
             </div>
 
@@ -91,7 +114,9 @@ function Hero() {
               <Infinity size={45} />
 
               <div>
-                <span>Hope &amp; Service</span>
+                <span>
+                  {t("home.hero.features.hope")}
+                </span>
               </div>
             </div>
           </div>
@@ -119,7 +144,9 @@ function Hero() {
 
           <div>
             <strong>50K+</strong>
-            <span>Lives Touched</span>
+            <span>
+              {t("home.hero.stats.lives")}
+            </span>
           </div>
         </div>
 
@@ -128,7 +155,9 @@ function Hero() {
 
           <div>
             <strong>500+</strong>
-            <span>Volunteers</span>
+            <span>
+              {t("home.hero.stats.volunteers")}
+            </span>
           </div>
         </div>
 
@@ -137,7 +166,9 @@ function Hero() {
 
           <div>
             <strong>20+</strong>
-            <span>Cities</span>
+            <span>
+              {t("home.hero.stats.cities")}
+            </span>
           </div>
         </div>
 
@@ -146,7 +177,9 @@ function Hero() {
 
           <div>
             <strong>1000+</strong>
-            <span>Families Helped</span>
+            <span>
+              {t("home.hero.stats.families")}
+            </span>
           </div>
         </div>
       </div>

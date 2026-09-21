@@ -1,28 +1,27 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function FAQ() {
+  const { t } = useTranslation();
+
   const [activeIndex, setActiveIndex] = useState(null);
 
   const faqs = [
     {
-      question: "How can I donate?",
-      answer:
-        "You can donate online through our donation page or contribute groceries and food materials during our food drives.",
+      question: t("faq.questions.donate.question"),
+      answer: t("faq.questions.donate.answer"),
     },
     {
-      question: "Can I volunteer on weekends?",
-      answer:
-        "Yes. Most of our food distribution programs are conducted on weekends and public holidays.",
+      question: t("faq.questions.volunteer.question"),
+      answer: t("faq.questions.volunteer.answer"),
     },
     {
-      question: "Where are your food drives conducted?",
-      answer:
-        "We organize food drives across different communities, orphanages, old age homes, and public locations where support is needed.",
+      question: t("faq.questions.foodDrives.question"),
+      answer: t("faq.questions.foodDrives.answer"),
     },
     {
-      question: "Is my donation tax deductible?",
-      answer:
-        "Once your NGO is registered under the applicable Indian regulations (such as 80G), eligible donations may qualify for tax benefits.",
+      question: t("faq.questions.tax.question"),
+      answer: t("faq.questions.tax.answer"),
     },
   ];
 
@@ -34,23 +33,25 @@ function FAQ() {
     <section className="faq section" id="faq">
       <div className="container">
         <div className="section-title">
-          <span>FAQ</span>
+          <span>{t("faq.badge")}</span>
 
-          <h2>Frequently Asked Questions</h2>
+          <h2>{t("faq.title")}</h2>
 
-          <p>
-            Find answers to the most common questions about Hanumant Seva and
-            our initiatives.
-          </p>
+          <p>{t("faq.description")}</p>
         </div>
 
         <div className="faq-container">
           {faqs.map((faq, index) => (
             <div
-              className={`faq-item ${activeIndex === index ? "active" : ""}`}
+              className={`faq-item ${
+                activeIndex === index ? "active" : ""
+              }`}
               key={index}
             >
-              <button className="faq-question" onClick={() => toggleFAQ(index)}>
+              <button
+                className="faq-question"
+                onClick={() => toggleFAQ(index)}
+              >
                 {faq.question}
 
                 <i className="fa-solid fa-plus"></i>

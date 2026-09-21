@@ -10,8 +10,10 @@ import {
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Donate() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [amount, setAmount] = useState(50);
@@ -22,19 +24,19 @@ function Donate() {
   const amounts = [
     {
       value: 50,
-      title: "Support 1 Person",
+      title: t("donate.amounts.support1"),
     },
     {
       value: 100,
-      title: "Support 2 People",
+      title: t("donate.amounts.support2"),
     },
     {
       value: 250,
-      title: "Support 5 People",
+      title: t("donate.amounts.support5"),
     },
     {
       value: 500,
-      title: "Support 10 People",
+      title: t("donate.amounts.support10"),
     },
   ];
 
@@ -45,7 +47,7 @@ function Donate() {
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const existingScript = document.querySelector(
-        'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
+        'script[src="https://checkout.razorpay.com/v1/checkout.js"]',
       );
 
       if (existingScript) {
@@ -78,7 +80,7 @@ function Donate() {
     e.preventDefault();
 
     if (!amount || Number(amount) < 50) {
-      alert("Minimum donation amount is ₹50");
+      alert(t("donate.alerts.minimumAmount"));
       return;
     }
 
@@ -94,7 +96,7 @@ function Donate() {
 
       if (!razorpayLoaded) {
         alert(
-          "Razorpay failed to load. Please check your internet connection."
+          t("donate.alerts.razorpayLoadFailed"),
         );
 
         setLoading(false);
@@ -121,7 +123,7 @@ function Donate() {
             frequency,
             paymentMethod,
           }),
-        }
+        },
       );
 
       // ========================================
@@ -138,11 +140,11 @@ function Donate() {
 
         console.error(
           "Backend returned non-JSON response:",
-          text
+          text,
         );
 
         throw new Error(
-          "Backend returned an invalid response. Please make sure the backend is running."
+          t("donate.alerts.invalidBackendResponse"),
         );
       }
 
@@ -151,7 +153,7 @@ function Donate() {
 
       console.log(
         "Create Order Response:",
-        orderData
+        orderData,
       );
 
       // ========================================
@@ -164,7 +166,7 @@ function Donate() {
       ) {
         alert(
           orderData.message ||
-            "Failed to create donation order."
+            t("donate.alerts.orderFailed"),
         );
 
         setLoading(false);
@@ -208,7 +210,7 @@ function Donate() {
 
         notes: {
           donationId: String(
-            orderData.donation.id
+            orderData.donation.id,
           ),
 
           frequency,
@@ -231,7 +233,7 @@ function Donate() {
         handler: async function (response) {
           console.log(
             "Razorpay Payment Response:",
-            response
+            response,
           );
 
           try {
@@ -265,7 +267,7 @@ function Donate() {
                     donationId:
                       orderData.donation.id,
                   }),
-                }
+                },
               );
 
             // ==================================
@@ -274,12 +276,12 @@ function Donate() {
 
             const verifyContentType =
               verifyResponse.headers.get(
-                "content-type"
+                "content-type",
               );
 
             if (
               !verifyContentType?.includes(
-                "application/json"
+                "application/json",
               )
             ) {
               const text =
@@ -287,11 +289,11 @@ function Donate() {
 
               console.error(
                 "Verification returned non-JSON:",
-                text
+                text,
               );
 
               throw new Error(
-                "Payment verification returned an invalid response."
+                t("donate.alerts.invalidVerificationResponse"),
               );
             }
 
@@ -300,7 +302,7 @@ function Donate() {
 
             console.log(
               "Payment Verification Response:",
-              verifyData
+              verifyData,
             );
 
             // ==================================
@@ -313,7 +315,7 @@ function Donate() {
             ) {
               alert(
                 verifyData.message ||
-                  "Payment verification failed."
+                  t("donate.alerts.verificationFailed"),
               );
 
               setLoading(false);
@@ -325,7 +327,7 @@ function Donate() {
             // ==================================
 
             alert(
-              "Donation successful! Thank you for your support ❤️"
+              t("donate.alerts.donationSuccessful"),
             );
 
             // ==================================
@@ -363,7 +365,7 @@ function Donate() {
                   // ==============================
 
                   amount: Number(
-                    verifyData.donation.amount
+                    verifyData.donation.amount,
                   ),
 
                   frequency:
@@ -409,16 +411,16 @@ function Donate() {
                   donationId:
                     verifyData.donation.id,
                 },
-              }
+              },
             );
           } catch (error) {
             console.error(
               "Payment Verification Error:",
-              error
+              error,
             );
 
             alert(
-              "Payment completed, but verification failed. Please contact support."
+              t("donate.alerts.paymentVerificationContact"),
             );
           } finally {
             setLoading(false);
@@ -432,7 +434,7 @@ function Donate() {
         modal: {
           ondismiss: function () {
             console.log(
-              "Razorpay checkout closed."
+              "Razorpay checkout closed.",
             );
 
             setLoading(false);
@@ -446,7 +448,7 @@ function Donate() {
 
       if (!window.Razorpay) {
         throw new Error(
-          "Razorpay Checkout is not available."
+          t("donate.alerts.razorpayUnavailable"),
         );
       }
 
@@ -466,16 +468,16 @@ function Donate() {
         function (response) {
           console.error(
             "Razorpay Payment Failed:",
-            response.error
+            response.error,
           );
 
           alert(
             response.error?.description ||
-              "Payment failed. Please try again."
+              t("donate.alerts.paymentFailed"),
           );
 
           setLoading(false);
-        }
+        },
       );
 
       // ========================================
@@ -486,12 +488,12 @@ function Donate() {
     } catch (error) {
       console.error(
         "Donation Payment Error:",
-        error
+        error,
       );
 
       alert(
         error.message ||
-          "Something went wrong while starting the payment."
+          t("donate.alerts.paymentStartFailed"),
       );
 
       setLoading(false);
@@ -507,18 +509,16 @@ function Donate() {
         <div className="container">
 
           <span className="section-badge">
-            Make a Difference
+            {t("donate.header.badge")}
           </span>
 
           <h1>
-            Choose Your{" "}
-            <span>Impact</span>
+            {t("donate.header.titleFirst")}{" "}
+            <span>{t("donate.header.titleHighlight")}</span>
           </h1>
 
           <p>
-            Choose the amount you are comfortable
-            contributing. Every contribution makes a
-            difference.
+            {t("donate.header.description")}
           </p>
 
         </div>
@@ -535,7 +535,7 @@ function Donate() {
           <aside className="donation-summary">
 
             <span className="summary-label">
-              YOUR CONTRIBUTION
+              {t("donate.summary.contribution")}
             </span>
 
             <strong className="summary-amount">
@@ -543,31 +543,39 @@ function Donate() {
             </strong>
 
             <div className="summary-line">
-              <span>Contribution</span>
+              <span>
+                {t("donate.summary.contributionLabel")}
+              </span>
 
               <b>
                 {frequency === "monthly"
-                  ? "Monthly"
-                  : "One Time"}
+                  ? t("donate.frequency.monthly")
+                  : t("donate.frequency.oneTime")}
               </b>
             </div>
 
             <div className="summary-line">
-              <span>Payment</span>
+              <span>
+                {t("donate.summary.paymentLabel")}
+              </span>
 
               <b>
                 {paymentMethod === "upi"
                   ? "UPI"
                   : paymentMethod === "card"
-                  ? "Card"
-                  : "Net Banking"}
+                  ? t("donate.paymentMethods.card")
+                  : t("donate.paymentMethods.netBanking")}
               </b>
             </div>
 
             <div className="summary-line">
-              <span>Purpose</span>
+              <span>
+                {t("donate.summary.purposeLabel")}
+              </span>
 
-              <b>Food Support</b>
+              <b>
+                {t("donate.summary.purpose")}
+              </b>
             </div>
 
             <div className="summary-divider"></div>
@@ -577,14 +585,14 @@ function Donate() {
             </div>
 
             <h3>
-              Your support creates
-              <span> meaningful impact.</span>
+              {t("donate.summary.impactFirst")}
+              <span>
+                {t("donate.summary.impactSecond")}
+              </span>
             </h3>
 
             <p>
-              Your contribution helps support
-              food-related service activities and
-              community initiatives.
+              {t("donate.summary.description")}
             </p>
 
             <div className="summary-security">
@@ -593,11 +601,11 @@ function Donate() {
 
               <div>
                 <strong>
-                  Secure Contribution
+                  {t("donate.security.title")}
                 </strong>
 
                 <span>
-                  Your payment information is protected.
+                  {t("donate.security.description")}
                 </span>
               </div>
 
@@ -612,13 +620,14 @@ function Donate() {
             <div className="donation-header">
 
               <h2>
-                Choose Your{" "}
-                <span>Impact</span>
+                {t("donate.header.titleFirst")}{" "}
+                <span>
+                  {t("donate.header.titleHighlight")}
+                </span>
               </h2>
 
               <p>
-                Choose the amount you are comfortable
-                contributing.
+                {t("donate.header.shortDescription")}
               </p>
 
             </div>
@@ -638,7 +647,7 @@ function Donate() {
                   setFrequency("one-time")
                 }
               >
-                One Time
+                {t("donate.frequency.oneTime")}
               </button>
 
               <button
@@ -652,7 +661,7 @@ function Donate() {
                   setFrequency("monthly")
                 }
               >
-                Monthly
+                {t("donate.frequency.monthly")}
               </button>
 
             </div>
@@ -662,7 +671,7 @@ function Donate() {
             <div className="amount-section">
 
               <h3>
-                Select Contribution Amount
+                {t("donate.amounts.title")}
               </h3>
 
               <div className="donation-options">
@@ -708,7 +717,7 @@ function Donate() {
               <div className="custom-donation">
 
                 <label>
-                  Custom Amount
+                  {t("donate.customAmount.label")}
                 </label>
 
                 <div className="amount-input">
@@ -746,8 +755,7 @@ function Donate() {
                 </div>
 
                 <small>
-                  Choose an amount from ₹50 to
-                  ₹10,00,000.
+                  {t("donate.customAmount.range")}
                 </small>
 
               </div>
@@ -763,11 +771,11 @@ function Donate() {
                 <div>
 
                   <h3>
-                    Payment Details
+                    {t("donate.payment.title")}
                   </h3>
 
                   <p>
-                    Choose your preferred payment method.
+                    {t("donate.payment.description")}
                   </p>
 
                 </div>
@@ -776,7 +784,7 @@ function Donate() {
 
                   <Lock size={14} />
 
-                  Secure Payment
+                  {t("donate.payment.secure")}
 
                 </span>
 
@@ -813,7 +821,7 @@ function Donate() {
                   }
                 >
                   <CreditCard size={19} />
-                  Card
+                  {t("donate.paymentMethods.card")}
                 </button>
 
                 <button
@@ -828,7 +836,7 @@ function Donate() {
                   }
                 >
                   <Building2 size={19} />
-                  Net Banking
+                  {t("donate.paymentMethods.netBanking")}
                 </button>
 
               </div>
@@ -840,7 +848,7 @@ function Donate() {
                 <div className="form-group">
 
                   <label>
-                    Payment Information
+                    {t("donate.paymentInfo.label")}
                   </label>
 
                   <div className="payment-input">
@@ -859,17 +867,16 @@ function Donate() {
 
                     <span>
                       {paymentMethod === "upi"
-                        ? "UPI payment will be handled securely by Razorpay."
+                        ? t("donate.paymentInfo.upi")
                         : paymentMethod === "card"
-                        ? "Card details will be entered securely in Razorpay Checkout."
-                        : "Your bank will be selected securely in Razorpay Checkout."}
+                        ? t("donate.paymentInfo.card")
+                        : t("donate.paymentInfo.netBanking")}
                     </span>
 
                   </div>
 
                   <small>
-                    You will enter your payment details
-                    in the secure Razorpay Checkout.
+                    {t("donate.paymentInfo.secureDetails")}
                   </small>
 
                 </div>
@@ -886,8 +893,8 @@ function Donate() {
                   <Heart size={18} />
 
                   {loading
-                    ? "Opening Payment..."
-                    : "Continue to Payment"}
+                    ? t("donate.payment.opening")
+                    : t("donate.payment.continue")}
 
                   <ArrowRight size={18} />
 
