@@ -13,62 +13,65 @@ import {
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "../css/Community.css";
 
 function Community() {
+  const { t } = useTranslation();
+
   const impactLevels = [
     {
       icon: Sparkles,
-      level: "Seed",
-      description: "New Community Member",
+      level: t("community.impactLevels.seed.title"),
+      description: t("community.impactLevels.seed.description"),
     },
     {
       icon: Users,
-      level: "Volunteer",
-      description: "Active Participant",
+      level: t("community.impactLevels.volunteer.title"),
+      description: t("community.impactLevels.volunteer.description"),
     },
     {
       icon: TreePine,
-      level: "Community Builder",
-      description: "Consistent Contributor",
+      level: t("community.impactLevels.builder.title"),
+      description: t("community.impactLevels.builder.description"),
     },
     {
       icon: Trophy,
-      level: "Impact Leader",
-      description: "High Verified Impact",
+      level: t("community.impactLevels.leader.title"),
+      description: t("community.impactLevels.leader.description"),
     },
     {
       icon: HandHeart,
-      level: "Service Champion",
-      description: "Exceptional Contribution",
+      level: t("community.impactLevels.champion.title"),
+      description: t("community.impactLevels.champion.description"),
     },
   ];
 
   const communityJourney = [
     {
       icon: Heart,
-      title: "Support",
-      text: "Support a meal, campaign or community initiative.",
+      title: t("community.journey.steps.support.title"),
+      text: t("community.journey.steps.support.text"),
     },
     {
       icon: Users,
-      title: "Volunteer",
-      text: "Give your time, skills and energy when you can.",
+      title: t("community.journey.steps.volunteer.title"),
+      text: t("community.journey.steps.volunteer.text"),
     },
     {
       icon: HandHeart,
-      title: "Participate",
-      text: "Take part in genuine community activities.",
+      title: t("community.journey.steps.participate.title"),
+      text: t("community.journey.steps.participate.text"),
     },
     {
       icon: Sparkles,
-      title: "Inspire",
-      text: "Encourage others to contribute through service.",
+      title: t("community.journey.steps.inspire.title"),
+      text: t("community.journey.steps.inspire.text"),
     },
     {
       icon: TreePine,
-      title: "Build",
-      text: "Help grow a community centered around meaningful service.",
+      title: t("community.journey.steps.build.title"),
+      text: t("community.journey.steps.build.text"),
     },
   ];
 
@@ -76,22 +79,22 @@ function Community() {
     {
       icon: Utensils,
       value: "142",
-      label: "Meals Supported",
+      label: t("community.impact.stats.meals"),
     },
     {
       icon: Clock3,
       value: "34",
-      label: "Volunteer Hours",
+      label: t("community.impact.stats.hours"),
     },
     {
       icon: Heart,
       value: "8",
-      label: "Campaigns Supported",
+      label: t("community.impact.stats.campaigns"),
     },
     {
       icon: Users,
       value: "11",
-      label: "People Inspired",
+      label: t("community.impact.stats.people"),
     },
   ];
 
@@ -106,26 +109,22 @@ function Community() {
           <div className="community-hero-content">
             <span className="community-badge">
               <Users size={17} />
-              OUR COMMUNITY
+              {t("community.hero.badge")}
             </span>
 
             <h1>
-              Don't Just Be a Donor.
-              <span> Become Part of the Community.</span>
+              {t("community.hero.titleFirst")}
+              <span> {t("community.hero.titleSecond")}</span>
             </h1>
 
-            <p>
-              Hanumat Seva is being built around people who believe that
-              meaningful change begins when we come together through genuine
-              service.
-            </p>
+            <p>{t("community.hero.description")}</p>
 
             <div className="community-hero-actions">
               <Link
                 to="/community/join"
                 className="community-btn community-btn-primary"
               >
-                Join Our Community
+                {t("community.hero.joinButton")}
                 <ArrowRight size={18} />
               </Link>
 
@@ -133,7 +132,7 @@ function Community() {
                 to="/volunteer"
                 className="community-btn community-btn-outline"
               >
-                Become a Volunteer
+                {t("community.hero.volunteerButton")}
                 <Users size={18} />
               </Link>
             </div>
@@ -148,15 +147,15 @@ function Community() {
                 <Users size={42} />
               </div>
 
-              <span>ONE COMMUNITY</span>
+              <span>{t("community.hero.card.label")}</span>
 
               <h3>
-                Many Hands.
+                {t("community.hero.card.titleFirst")}
                 <br />
-                One Purpose.
+                {t("community.hero.card.titleSecond")}
               </h3>
 
-              <p>Support → Volunteer → Participate → Inspire → Build</p>
+              <p>{t("community.hero.card.journey")}</p>
             </div>
           </div>
         </div>
@@ -169,17 +168,14 @@ function Community() {
       <section className="community-journey section">
         <div className="container">
           <div className="section-title">
-            <span>THE COMMUNITY JOURNEY</span>
+            <span>{t("community.journey.badge")}</span>
 
             <h2>
-              From One Small Act to
-              <span> Meaningful Service</span>
+              {t("community.journey.titleFirst")}
+              <span> {t("community.journey.titleSecond")}</span>
             </h2>
 
-            <p>
-              Every genuine contribution to the mission can become part of a
-              growing community of people serving society.
-            </p>
+            <p>{t("community.journey.description")}</p>
           </div>
 
           <div className="community-journey-grid">
@@ -220,35 +216,33 @@ function Community() {
             {/* LEFT */}
 
             <div className="community-tree-content">
-              <span className="section-badge">COMMUNITY TREE</span>
+              <span className="section-badge">
+                {t("community.tree.badge")}
+              </span>
 
               <h2>
-                One Person Can Start a<span> Chain of Service.</span>
+                {t("community.tree.titleFirst")}
+                <span> {t("community.tree.titleSecond")}</span>
               </h2>
 
-              <p>
-                If you introduce someone to Hanumat Seva and they genuinely want
-                to participate, your community can grow.
-              </p>
+              <p>{t("community.tree.description")}</p>
 
               <div className="community-principle">
                 <ShieldCheck size={24} />
 
                 <div>
-                  <strong>We don't reward recruitment.</strong>
+                  <strong>{t("community.tree.principleTitle")}</strong>
 
-                  <span>We recognize service.</span>
+                  <span>{t("community.tree.principleText")}</span>
                 </div>
               </div>
 
               <p className="community-tree-description">
-                Your community profile can show the people you introduced,
-                participation in activities, meals supported, volunteer hours,
-                campaigns supported and verified impact.
+                {t("community.tree.details")}
               </p>
 
               <Link to="/register" className="community-text-link">
-                Build Your Community
+                {t("community.tree.button")}
                 <ArrowRight size={18} />
               </Link>
             </div>
@@ -263,9 +257,9 @@ function Community() {
                   <Users size={25} />
                 </div>
 
-                <strong>You</strong>
+                <strong>{t("community.tree.nodes.you.title")}</strong>
 
-                <span>Community Member</span>
+                <span>{t("community.tree.nodes.you.description")}</span>
               </div>
 
               <div className="tree-branches">
@@ -274,9 +268,14 @@ function Community() {
                     <div className="tree-node-icon">
                       <Heart size={20} />
                     </div>
-                    <strong>Member</strong>
 
-                    <span>Participating</span>
+                    <strong>
+                      {t("community.tree.nodes.member.title")}
+                    </strong>
+
+                    <span>
+                      {t("community.tree.nodes.member.description")}
+                    </span>
                   </div>
                 </div>
 
@@ -286,9 +285,13 @@ function Community() {
                       <HandHeart size={20} />
                     </div>
 
-                    <strong>Volunteer</strong>
+                    <strong>
+                      {t("community.tree.nodes.volunteer.title")}
+                    </strong>
 
-                    <span>Serving</span>
+                    <span>
+                      {t("community.tree.nodes.volunteer.description")}
+                    </span>
                   </div>
                 </div>
 
@@ -298,9 +301,13 @@ function Community() {
                       <Sparkles size={20} />
                     </div>
 
-                    <strong>Inspired</strong>
+                    <strong>
+                      {t("community.tree.nodes.inspired.title")}
+                    </strong>
 
-                    <span>Growing</span>
+                    <span>
+                      {t("community.tree.nodes.inspired.description")}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -308,7 +315,7 @@ function Community() {
               <div className="tree-impact">
                 <TreePine size={22} />
 
-                <span>Community Impact Tree</span>
+                <span>{t("community.tree.impact")}</span>
               </div>
             </div>
           </div>
@@ -322,18 +329,14 @@ function Community() {
       <section className="community-impact section">
         <div className="container">
           <div className="section-title">
-            <span>COMMUNITY IMPACT</span>
+            <span>{t("community.impact.badge")}</span>
 
             <h2>
-              Your Contribution.
-              <span> Your Impact. Your Journey.</span>
+              {t("community.impact.titleFirst")}
+              <span> {t("community.impact.titleSecond")}</span>
             </h2>
 
-            <p>
-              Every verified activity can contribute toward a community impact
-              score. The score reflects service and verified impact, not simply
-              how much someone donated.
-            </p>
+            <p>{t("community.impact.description")}</p>
           </div>
 
           <div className="impact-profile">
@@ -342,13 +345,13 @@ function Community() {
                 <div className="impact-avatar">RS</div>
 
                 <div>
-                  <span>Example Community Profile</span>
+                  <span>{t("community.impact.profileLabel")}</span>
                   <h3>Rahul Sharma</h3>
                 </div>
               </div>
 
               <div className="impact-score">
-                <span>IMPACT SCORE</span>
+                <span>{t("community.impact.scoreLabel")}</span>
 
                 <strong>780</strong>
               </div>
@@ -359,7 +362,10 @@ function Community() {
                 const Icon = stat.icon;
 
                 return (
-                  <div className="community-impact-stat" key={stat.label}>
+                  <div
+                    className="community-impact-stat"
+                    key={stat.label}
+                  >
                     <div className="impact-stat-icon">
                       <Icon size={22} />
                     </div>
@@ -376,10 +382,7 @@ function Community() {
             <div className="impact-note">
               <ShieldCheck size={19} />
 
-              <span>
-                Example values shown for demonstration. Actual impact will be
-                generated from verified activity records.
-              </span>
+              <span>{t("community.impact.note")}</span>
             </div>
           </div>
         </div>
@@ -392,17 +395,14 @@ function Community() {
       <section className="community-levels section">
         <div className="container">
           <div className="section-title">
-            <span>IMPACT LEVELS</span>
+            <span>{t("community.levels.badge")}</span>
 
             <h2>
-              Grow Through
-              <span> Service</span>
+              {t("community.levels.titleFirst")}
+              <span> {t("community.levels.titleSecond")}</span>
             </h2>
 
-            <p>
-              Your level should reflect the genuine service and verified impact
-              you create within the community.
-            </p>
+            <p>{t("community.levels.description")}</p>
           </div>
 
           <div className="impact-levels">
@@ -442,14 +442,14 @@ function Community() {
         <div className="container">
           <div className="community-cta-card">
             <div>
-              <span>BE PART OF THE JOURNEY</span>
+              <span>{t("community.cta.badge")}</span>
 
               <h2>
-                Your Small Step Can Become
-                <strong> Someone Else's Hope.</strong>
+                {t("community.cta.titleFirst")}
+                <strong> {t("community.cta.titleSecond")}</strong>
               </h2>
 
-              <p>Support. Volunteer. Participate. Inspire. Build.</p>
+              <p>{t("community.cta.description")}</p>
             </div>
 
             <div className="community-cta-actions">
@@ -457,12 +457,15 @@ function Community() {
                 to="/register"
                 className="community-btn community-btn-light"
               >
-                Join Community
+                {t("community.cta.joinButton")}
                 <Users size={18} />
               </Link>
 
-              <Link to="/donate" className="community-btn community-btn-ghost">
-                Support a Meal
+              <Link
+                to="/donate"
+                className="community-btn community-btn-ghost"
+              >
+                {t("community.cta.supportButton")}
                 <Heart size={18} />
               </Link>
             </div>

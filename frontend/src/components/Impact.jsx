@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function Counter({ target }) {
   const [count, setCount] = useState(0);
@@ -45,26 +46,28 @@ function Counter({ target }) {
 }
 
 function Impact() {
+  const { t } = useTranslation();
+
   const impactData = [
     {
       icon: "fa-solid fa-bowl-food",
       target: 1500,
-      label: "Meals Served",
+      label: t("impact.stats.meals"),
     },
     {
       icon: "fa-solid fa-user-group",
       target: 500,
-      label: "Active Volunteers",
+      label: t("impact.stats.volunteers"),
     },
     {
       icon: "fa-solid fa-location-dot",
       target: 20,
-      label: "Cities Reached",
+      label: t("impact.stats.cities"),
     },
     {
       icon: "fa-solid fa-heart",
       target: 1000,
-      label: "Families Supported",
+      label: t("impact.stats.families"),
     },
   ];
 
@@ -72,10 +75,11 @@ function Impact() {
     <section className="impact section" id="impact">
       <div className="container">
         <div className="section-title">
-          <span>OUR IMPACT</span>
+          <span>{t("impact.heading.badge")}</span>
 
           <h2>
-            Together We Are <span>Making A Difference</span>
+            {t("impact.heading.titleFirst")}{" "}
+            <span>{t("impact.heading.titleSecond")}</span>
           </h2>
         </div>
 

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 
 function Contact() {
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -47,9 +50,11 @@ function Contact() {
 
       await Swal.fire({
         icon: "success",
-        title: "Message Sent!",
-        text: data.message || "Thank you for contacting Hanumant Seva.",
-        confirmButtonText: "Okay",
+        title: t("contact.alert.successTitle"),
+        text:
+          data.message ||
+          t("contact.alert.successMessage"),
+        confirmButtonText: t("contact.alert.okay"),
         customClass: {
           popup: "swal-popup",
           confirmButton: "swal-confirm-btn",
@@ -68,11 +73,11 @@ function Contact() {
 
       Swal.fire({
         icon: "error",
-        title: "Something went wrong",
+        title: t("contact.alert.errorTitle"),
         text:
           error.message ||
-          "Unable to send your message. Please try again later.",
-        confirmButtonText: "Try Again",
+          t("contact.alert.errorMessage"),
+        confirmButtonText: t("contact.alert.tryAgain"),
         customClass: {
           popup: "swal-popup",
           confirmButton: "swal-confirm-btn",
@@ -87,11 +92,11 @@ function Contact() {
     <section className="contact section" id="contact">
       <div className="container">
         <div className="section-title">
-          <span>CONTACT</span>
+          <span>{t("contact.badge")}</span>
 
-          <h2>We'd Love To Hear From You</h2>
+          <h2>{t("contact.title")}</h2>
 
-          <p>Have questions or want to support our mission? Reach out to us.</p>
+          <p>{t("contact.description")}</p>
         </div>
 
         <div className="contact-wrapper">
@@ -100,7 +105,7 @@ function Contact() {
               <i className="fa-solid fa-location-dot"></i>
 
               <div>
-                <h3>Address</h3>
+                <h3>{t("contact.info.address.title")}</h3>
 
                 <p>Kanpur, Uttar Pradesh, India</p>
               </div>
@@ -110,7 +115,7 @@ function Contact() {
               <i className="fa-solid fa-phone"></i>
 
               <div>
-                <h3>Phone</h3>
+                <h3>{t("contact.info.phone.title")}</h3>
 
                 <p>+91 XXXXX XXXXX</p>
               </div>
@@ -120,7 +125,7 @@ function Contact() {
               <i className="fa-solid fa-envelope"></i>
 
               <div>
-                <h3>Email</h3>
+                <h3>{t("contact.info.email.title")}</h3>
 
                 <p>info@hanumantseva.org</p>
               </div>
@@ -131,7 +136,7 @@ function Contact() {
             <input
               type="text"
               name="name"
-              placeholder="Your Name"
+              placeholder={t("contact.form.name")}
               value={formData.name}
               onChange={handleChange}
               required
@@ -141,7 +146,7 @@ function Contact() {
             <input
               type="email"
               name="email"
-              placeholder="Your Email"
+              placeholder={t("contact.form.email")}
               value={formData.email}
               onChange={handleChange}
               required
@@ -151,7 +156,7 @@ function Contact() {
             <input
               type="text"
               name="subject"
-              placeholder="Subject"
+              placeholder={t("contact.form.subject")}
               value={formData.subject}
               onChange={handleChange}
               required
@@ -161,7 +166,7 @@ function Contact() {
             <textarea
               name="message"
               rows="6"
-              placeholder="Your Message"
+              placeholder={t("contact.form.message")}
               value={formData.message}
               onChange={handleChange}
               required
@@ -173,7 +178,9 @@ function Contact() {
               type="submit"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Sending..." : "Send Message"}
+              {isSubmitting
+                ? t("contact.form.sending")
+                : t("contact.form.send")}
             </button>
           </form>
         </div>

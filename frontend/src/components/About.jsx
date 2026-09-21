@@ -5,7 +5,11 @@ import { Link } from "react-router-dom";
 import ProtectedButton from "./ProtectedButton";
 import ProtectedLink from "./ProtectedLink";
 
+import { useTranslation } from "react-i18next";
+
 const About = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       {/* =====================================================
@@ -18,12 +22,15 @@ const About = () => {
 
           <div className="about-image">
             <div className="about-image-wrapper">
-              <img src="/images/about.jpg" alt="Hanumat Seva food service" />
+              <img
+                src="/images/about.jpg"
+                alt={t("about.monthlyMission.imageAlt")}
+              />
 
               <div className="about-image-badge">
                 <Heart size={20} fill="currentColor" />
 
-                <span>Small acts. Big impact.</span>
+                <span>{t("about.monthlyMission.imageBadge")}</span>
               </div>
             </div>
           </div>
@@ -31,22 +38,21 @@ const About = () => {
           {/* ================= RIGHT - CONTENT ================= */}
 
           <div className="about-content">
-            <span className="section-badge">₹50 MONTHLY MISSION</span>
+            <span className="section-badge">
+              {t("about.monthlyMission.badge")}
+            </span>
 
             <h2>
-              One Person.
-              <span> One Meal. One Month.</span>
+              {t("about.monthlyMission.titleFirst")}
+              <span> {t("about.monthlyMission.titleSecond")}</span>
             </h2>
 
             <p className="about-intro">
-              You don't have to do everything to help someone. Sometimes, one
-              small contribution can become someone's meal.
+              {t("about.monthlyMission.intro")}
             </p>
 
             <p>
-              A simple ₹50 monthly contribution can become part of a collective
-              effort to support food-related initiatives and people who need
-              support.
+              {t("about.monthlyMission.description")}
             </p>
 
             {/* ================= CONTRIBUTION OPTIONS ================= */}
@@ -54,22 +60,22 @@ const About = () => {
             <div className="about-highlights">
               <div className="about-highlight">
                 <strong>₹50</strong>
-                <span>1 Person</span>
+                <span>{t("about.monthlyMission.people.one")}</span>
               </div>
 
               <div className="about-highlight">
                 <strong>₹100</strong>
-                <span>2 People</span>
+                <span>{t("about.monthlyMission.people.two")}</span>
               </div>
 
               <div className="about-highlight">
                 <strong>₹250</strong>
-                <span>5 People</span>
+                <span>{t("about.monthlyMission.people.five")}</span>
               </div>
 
               <div className="about-highlight">
                 <strong>₹500</strong>
-                <span>10 People</span>
+                <span>{t("about.monthlyMission.people.ten")}</span>
               </div>
             </div>
 
@@ -80,7 +86,7 @@ const About = () => {
               allowedRoles={["USER", "VOLUNTEER"]}
               className="about-btn"
             >
-              Start Monthly Support
+              {t("about.monthlyMission.button")}
               <ArrowRight size={18} />
             </ProtectedButton>
           </div>
@@ -96,17 +102,15 @@ const About = () => {
           {/* ================= SECTION TITLE ================= */}
 
           <div className="section-title">
-            <span>OUR TRANSPARENCY PROMISE</span>
+            <span>{t("about.transparency.badge")}</span>
 
             <h2>
-              Show The Work.
-              <span> Build The Trust.</span>
+              {t("about.transparency.titleFirst")}
+              <span> {t("about.transparency.titleSecond")}</span>
             </h2>
 
             <p>
-              We don't ask you to blindly trust us. We invite you to understand
-              how your contribution moves through the journey and what impact it
-              creates.
+              {t("about.transparency.description")}
             </p>
           </div>
 
@@ -117,9 +121,11 @@ const About = () => {
 
             <div className="transparency-header">
               <div>
-                <span className="transparency-label">YOUR CONTRIBUTION</span>
+                <span className="transparency-label">
+                  {t("about.transparency.contributionLabel")}
+                </span>
 
-                <h3>Follow Your Contribution</h3>
+                <h3>{t("about.transparency.followTitle")}</h3>
               </div>
 
               <div className="transparency-icon">
@@ -137,9 +143,13 @@ const About = () => {
                   <Heart size={22} />
                 </div>
 
-                <strong>Contribution</strong>
+                <strong>
+                  {t("about.transparency.steps.contribution.title")}
+                </strong>
 
-                <span>Your support</span>
+                <span>
+                  {t("about.transparency.steps.contribution.description")}
+                </span>
               </div>
 
               <div className="flow-line"></div>
@@ -151,9 +161,13 @@ const About = () => {
                   <Users size={22} />
                 </div>
 
-                <strong>Campaign</strong>
+                <strong>
+                  {t("about.transparency.steps.campaign.title")}
+                </strong>
 
-                <span>Where it goes</span>
+                <span>
+                  {t("about.transparency.steps.campaign.description")}
+                </span>
               </div>
 
               <div className="flow-line"></div>
@@ -165,9 +179,13 @@ const About = () => {
                   <ShieldCheck size={22} />
                 </div>
 
-                <strong>Purchase</strong>
+                <strong>
+                  {t("about.transparency.steps.purchase.title")}
+                </strong>
 
-                <span>Recorded use</span>
+                <span>
+                  {t("about.transparency.steps.purchase.description")}
+                </span>
               </div>
 
               <div className="flow-line"></div>
@@ -179,9 +197,13 @@ const About = () => {
                   <Heart size={22} />
                 </div>
 
-                <strong>Distribution</strong>
+                <strong>
+                  {t("about.transparency.steps.distribution.title")}
+                </strong>
 
-                <span>People reached</span>
+                <span>
+                  {t("about.transparency.steps.distribution.description")}
+                </span>
               </div>
 
               <div className="flow-line"></div>
@@ -193,16 +215,20 @@ const About = () => {
                   <ArrowRight size={22} />
                 </div>
 
-                <strong>Impact</strong>
+                <strong>
+                  {t("about.transparency.steps.impact.title")}
+                </strong>
 
-                <span>Visible results</span>
+                <span>
+                  {t("about.transparency.steps.impact.description")}
+                </span>
               </div>
             </div>
 
             {/* ================= FOOTER ================= */}
 
             <div className="transparency-footer">
-              <p>Every contribution should have a visible journey.</p>
+              <p>{t("about.transparency.footer")}</p>
 
               <ProtectedLink
                 to="/transparency"
@@ -212,7 +238,7 @@ const About = () => {
                 }}
                 className="transparency-link"
               >
-                View Transparency
+                {t("about.transparency.viewButton")}
                 <ArrowRight size={17} />
               </ProtectedLink>
             </div>
@@ -223,13 +249,17 @@ const About = () => {
       <section className="founder-section" id="about">
         <div className="container">
           <div className="founder-heading">
-            <span className="section-badge">OUR FOUNDER</span>
+            <span className="section-badge">
+              {t("about.founder.badge")}
+            </span>
+
             <h2>
-              Meet the <span>Founder</span>
+              {t("about.founder.headingFirst")}{" "}
+              <span>{t("about.founder.headingSecond")}</span>
             </h2>
+
             <p>
-              A simple belief in helping others grew into a vision for building
-              a transparent and compassionate food-support movement.
+              {t("about.founder.headingDescription")}
             </p>
           </div>
 
@@ -237,132 +267,143 @@ const About = () => {
             <div className="founder-photo">
               <img
                 src="/images/founder.png"
-                alt="Manisha Nigam, Founder of Hanumat Seva Foundation"
+                alt={t("about.founder.imageAlt")}
               />
+
               <div className="founder-photo-badge">
-                <span>FOUNDER</span>
+                <span>{t("about.founder.photoBadge")}</span>
                 <strong>Hanumat Seva Foundation</strong>
               </div>
             </div>
 
             <div className="founder-profile-content">
-              <span className="founder-label">MANISHA NIGAM</span>
-              <h3>Founder, Hanumat Seva Foundation</h3>
+              <span className="founder-label">
+                MANISHA NIGAM
+              </span>
+
+              <h3>{t("about.founder.role")}</h3>
 
               <p>
-                For over a decade, Manisha Nigam has been personally involved in
-                helping people and supporting communities in need in Kanpur.
+                {t("about.founder.paragraph1")}
               </p>
 
               <p>
-                Her journey has been driven not by the idea of building an
-                organization, but by a simple human responsibility — if we can
-                help someone, we should.
+                {t("about.founder.paragraph2")}
               </p>
 
               <p>
-                Seeing the everyday reality of hunger and food wastage inspired
-                her to think beyond individual acts of help and create a system
-                that could allow many more people to participate.
+                {t("about.founder.paragraph3")}
               </p>
 
               <p>
-                Hanumat Seva Foundation is an effort to turn that belief into a
-                larger, organized movement.
+                {t("about.founder.paragraph4")}
               </p>
             </div>
           </div>
 
           <div className="founder-quote">
             <span className="founder-quote-mark">“</span>
+
             <p>
-              Seva does not begin with how much we have. It begins with how much
-              we are willing to share.
+              {t("about.founder.quote")}
             </p>
           </div>
 
           <div className="founder-vision">
             <div className="founder-vision-content">
-              <span className="founder-label">OUR VISION</span>
-              <h3>What We Want to Build</h3>
+              <span className="founder-label">
+                {t("about.founder.vision.label")}
+              </span>
+
+              <h3>{t("about.founder.vision.title")}</h3>
 
               <p>
-                We don't want to be just another organization that distributes
-                food.
+                {t("about.founder.vision.paragraph1")}
               </p>
 
               <p>
-                We want to build an ecosystem where food rescue becomes simple,
-                transparent, and scalable.
+                {t("about.founder.vision.paragraph2")}
               </p>
 
               <div className="founder-vision-points">
                 <div className="founder-vision-point">
                   <span>01</span>
                   <p>
-                    A restaurant should be able to report surplus food in
-                    seconds.
+                    {t("about.founder.vision.points.one")}
                   </p>
                 </div>
 
                 <div className="founder-vision-point">
                   <span>02</span>
-                  <p>A volunteer should be able to find a nearby pickup.</p>
+                  <p>
+                    {t("about.founder.vision.points.two")}
+                  </p>
                 </div>
 
                 <div className="founder-vision-point">
                   <span>03</span>
-                  <p>An organization should be able to request meals.</p>
+                  <p>
+                    {t("about.founder.vision.points.three")}
+                  </p>
                 </div>
 
                 <div className="founder-vision-point">
                   <span>04</span>
                   <p>
-                    A donor should be able to see the impact of their
-                    contribution.
+                    {t("about.founder.vision.points.four")}
                   </p>
                 </div>
 
                 <div className="founder-vision-point">
                   <span>05</span>
                   <p>
-                    Every meal should have a journey that can be understood and
-                    trusted.
+                    {t("about.founder.vision.points.five")}
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="founder-journey">
-              <span>THE JOURNEY</span>
-              <strong>One Meal</strong>
+              <span>{t("about.founder.journey.label")}</span>
+
+              <strong>{t("about.founder.journey.one")}</strong>
               <i>↓</i>
-              <strong>One Community</strong>
+
+              <strong>{t("about.founder.journey.two")}</strong>
               <i>↓</i>
-              <strong>One City</strong>
+
+              <strong>{t("about.founder.journey.three")}</strong>
               <i>↓</i>
-              <strong>An Entire Movement</strong>
+
+              <strong>{t("about.founder.journey.four")}</strong>
             </div>
           </div>
 
           <div className="founder-promise">
             <div className="founder-promise-heading">
-              <span className="founder-label">OUR PROMISE</span>
-              <h3>Simple words. A serious commitment.</h3>
+              <span className="founder-label">
+                {t("about.founder.promise.label")}
+              </span>
+
+              <h3>
+                {t("about.founder.promise.title")}
+              </h3>
             </div>
 
             <div className="founder-promise-list">
-              <div>Rescue what can be saved.</div>
-              <div>Share what can be shared.</div>
-              <div>Serve with dignity.</div>
-              <div>Waste less.</div>
-              <div>Feed more.</div>
+              <div>{t("about.founder.promise.one")}</div>
+              <div>{t("about.founder.promise.two")}</div>
+              <div>{t("about.founder.promise.three")}</div>
+              <div>{t("about.founder.promise.four")}</div>
+              <div>{t("about.founder.promise.five")}</div>
             </div>
           </div>
 
           <div className="founder-signature">
             <strong>Hanumat Seva Foundation</strong>
-            <span>Serving Humanity. One Meal at a Time.</span>
+            <span>
+              {t("about.founder.signature")}
+            </span>
           </div>
         </div>
       </section>
