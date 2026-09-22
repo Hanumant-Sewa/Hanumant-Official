@@ -90,4 +90,4 @@ The generated `.htaccess` preserves React Router routes when a page is refreshed
 
 ### 4. Verify deployment
 
-Open `https://api.example.com/` and confirm it returns the backend status JSON. Then open the main domain, refresh a nested route, register a test account, and verify browser requests target the API subdomain.
+Open `https://api.example.com/` and confirm it returns the backend status JSON. Then open the main domain, refresh a nested route, register a test account, and verify browser requests target the API subdomain.# Hanumant-Seva-Foundation
