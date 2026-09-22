@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Heart, Lock, Mail, ArrowLeft, ShieldCheck } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 
 import { useAuth } from "../context/AuthContext";
 
 function Login() {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -79,7 +82,7 @@ function Login() {
       // ===================================================
 
       if (!data?.user) {
-        throw new Error("Invalid response received from server.");
+        throw new Error(t("login.errors.invalidResponse"));
       }
 
       // ===================================================
@@ -89,9 +92,9 @@ function Login() {
       if (loginType === "admin" && data.user.role !== "ADMIN") {
         await Swal.fire({
           icon: "error",
-          title: "Access Denied",
-          text: "This account does not have administrator access.",
-          confirmButtonText: "OK",
+          title: t("login.alerts.accessDenied.title"),
+          text: t("login.alerts.accessDenied.text"),
+          confirmButtonText: t("login.alerts.ok"),
         });
 
         return;
@@ -104,8 +107,12 @@ function Login() {
       await Swal.fire({
         icon: "success",
         title:
-          loginType === "admin" ? "Admin Login Successful" : "Login Successful",
-        text: `Welcome back, ${data.user.name}!`,
+          loginType === "admin"
+            ? t("login.alerts.adminSuccess.title")
+            : t("login.alerts.loginSuccess.title"),
+        text: t("login.alerts.welcome", {
+          name: data.user.name,
+        }),
         timer: 1500,
         showConfirmButton: false,
       });
@@ -124,7 +131,7 @@ function Login() {
 
       // ===================================================
       // NORMAL USER
-      // ===================================================
+      // =====================================================
 
       const redirectPath = location.state?.from;
 
@@ -144,11 +151,11 @@ function Login() {
 
       Swal.fire({
         icon: "error",
-        title: "Login Failed",
+        title: t("login.alerts.loginFailed.title"),
         text:
           error.message ||
-          "Unable to login. Please check your credentials and try again.",
-        confirmButtonText: "Try Again",
+          t("login.alerts.loginFailed.text"),
+        confirmButtonText: t("login.alerts.tryAgain"),
       });
     } finally {
       setLoading(false);
@@ -158,6 +165,7 @@ function Login() {
   return (
     <main className="auth-page">
       <div className="auth-container">
+
         {/* =================================================
             LEFT SECTION
         ================================================= */}
@@ -165,7 +173,7 @@ function Login() {
         <div className="auth-info">
           <Link to="/" className="auth-back">
             <ArrowLeft size={18} />
-            Back to Home
+            {t("login.backToHome")}
           </Link>
 
           <div className="auth-heart">
@@ -179,25 +187,27 @@ function Login() {
           <h1>
             {loginType === "admin" ? (
               <>
-                Admin <span>Access</span>
+                {t("login.adminAccess.first")}{" "}
+                <span>{t("login.adminAccess.highlight")}</span>
               </>
             ) : (
               <>
-                Welcome <span>Back</span>
+                {t("login.welcome.first")}{" "}
+                <span>{t("login.welcome.highlight")}</span>
               </>
             )}
           </h1>
 
           <p>
             {loginType === "admin"
-              ? "Sign in securely to manage Hanumant Seva and monitor our initiatives."
-              : "Sign in to continue your journey of service with Hanumant Seva."}
+              ? t("login.adminDescription")
+              : t("login.userDescription")}
           </p>
 
           <div className="auth-quote">
             {loginType === "admin"
-              ? '"Responsible service begins with responsible management."'
-              : '"One small contribution can become someone\'s meal."'}
+              ? t("login.adminQuote")
+              : t("login.userQuote")}
           </div>
         </div>
 
@@ -206,12 +216,16 @@ function Login() {
         ================================================= */}
 
         <div className="auth-card">
-          <h2>{loginType === "admin" ? "Admin Login" : "Login"}</h2>
+          <h2>
+            {loginType === "admin"
+              ? t("login.adminLogin")
+              : t("login.login")}
+          </h2>
 
           <p className="auth-subtitle">
             {loginType === "admin"
-              ? "Sign in to access the administration panel."
-              : "Sign in to continue with Hanumant Seva."}
+              ? t("login.adminSubtitle")
+              : t("login.userSubtitle")}
           </p>
 
           {/* =================================================
@@ -225,7 +239,7 @@ function Login() {
               onClick={() => handleLoginTypeChange("user")}
               disabled={loading}
             >
-              User / Volunteer
+              {t("login.userVolunteer")}
             </button>
 
             <button
@@ -234,7 +248,7 @@ function Login() {
               onClick={() => handleLoginTypeChange("admin")}
               disabled={loading}
             >
-              Admin
+              {t("login.admin")}
             </button>
           </div>
 
@@ -243,12 +257,15 @@ function Login() {
           ================================================= */}
 
           <form onSubmit={handleSubmit}>
+
             {/* =================================================
                 EMAIL
             ================================================= */}
 
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">
+                {t("login.emailAddress")}
+              </label>
 
               <div className="input-box">
                 <Mail size={20} />
@@ -257,7 +274,7 @@ function Login() {
                   id="email"
                   type="email"
                   name="email"
-                  placeholder="Enter your email"
+                  placeholder={t("login.emailPlaceholder")}
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -272,7 +289,9 @@ function Login() {
             ================================================= */}
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">
+                {t("login.password")}
+              </label>
 
               <div className="input-box">
                 <Lock size={20} />
@@ -281,7 +300,7 @@ function Login() {
                   id="password"
                   type="password"
                   name="password"
-                  placeholder="Enter your password"
+                  placeholder={t("login.passwordPlaceholder")}
                   value={formData.password}
                   onChange={handleChange}
                   required
@@ -297,7 +316,9 @@ function Login() {
 
             {loginType === "admin" && (
               <div className="form-group">
-                <label htmlFor="adminKey">Admin Key</label>
+                <label htmlFor="adminKey">
+                  {t("login.adminKey")}
+                </label>
 
                 <div className="input-box">
                   <ShieldCheck size={20} />
@@ -306,7 +327,7 @@ function Login() {
                     id="adminKey"
                     type="password"
                     name="adminKey"
-                    placeholder="Enter admin key"
+                    placeholder={t("login.adminKeyPlaceholder")}
                     value={formData.adminKey}
                     onChange={handleChange}
                     required
@@ -316,7 +337,7 @@ function Login() {
                 </div>
 
                 <small className="admin-key-note">
-                  Administrator access is verified using your account role.
+                  {t("login.adminKeyNote")}
                 </small>
               </div>
             )}
@@ -326,7 +347,9 @@ function Login() {
             ================================================= */}
 
             <div className="forgot-row">
-              <Link to="/forgot-password">Forgot Password?</Link>
+              <Link to="/forgot-password">
+                {t("login.forgotPassword")}
+              </Link>
             </div>
 
             {/* =================================================
@@ -339,10 +362,10 @@ function Login() {
               disabled={loading}
             >
               {loading
-                ? "Logging in..."
+                ? t("login.loggingIn")
                 : loginType === "admin"
-                  ? "Login as Admin"
-                  : "Login"}
+                  ? t("login.loginAsAdmin")
+                  : t("login.login")}
             </button>
           </form>
 
@@ -353,18 +376,19 @@ function Login() {
           {loginType === "user" && (
             <>
               <div className="auth-divider">
-                <span>OR</span>
+                <span>{t("login.or")}</span>
               </div>
 
               <p className="register-text">
-                Don't have an account?{" "}
+                {t("login.noAccount")}{" "}
+
                 <Link
                   to="/register"
                   state={{
                     from: location.state?.from,
                   }}
                 >
-                  Create Account
+                  {t("login.createAccount")}
                 </Link>
               </p>
             </>
@@ -379,8 +403,7 @@ function Login() {
               <ShieldCheck size={18} />
 
               <span>
-                Administrator access is restricted to authorized Hanumant Seva
-                members.
+                {t("login.adminRestricted")}
               </span>
             </div>
           )}

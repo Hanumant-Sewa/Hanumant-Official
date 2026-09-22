@@ -11,17 +11,18 @@ import {
 } from "react-router-dom";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import jsPDF from "jspdf";
 
 import "../css/DonationReceipt.css";
 
-
 function DonationReceipt() {
+  const { t } = useTranslation();
+
   const { id } = useParams();
   const location = useLocation();
 
   const [downloading, setDownloading] = useState(false);
-
 
   /* =========================================================
      DONATION DATA
@@ -62,7 +63,6 @@ function DonationReceipt() {
   const donatedAt =
     location.state?.donatedAt || "";
 
-
   /* =========================================================
      PAYMENT METHOD
      ========================================================= */
@@ -79,19 +79,18 @@ function DonationReceipt() {
       paymentMethod === "CARD" ||
       paymentMethod === "card"
     ) {
-      return "Card";
+      return t("donationReceipt.card");
     }
 
     if (
       paymentMethod === "NET_BANKING" ||
       paymentMethod === "netbanking"
     ) {
-      return "Net Banking";
+      return t("donationReceipt.netBanking");
     }
 
     return paymentMethod;
   };
-
 
   /* =========================================================
      FREQUENCY
@@ -99,12 +98,11 @@ function DonationReceipt() {
 
   const getFrequencyName = () => {
     if (frequency === "monthly") {
-      return "Monthly";
+      return t("donationReceipt.monthly");
     }
 
-    return "One Time";
+    return t("donationReceipt.oneTime");
   };
-
 
   /* =========================================================
      DATE FORMAT
@@ -129,7 +127,6 @@ function DonationReceipt() {
       minute: "2-digit",
     });
   };
-
 
   /* =========================================================
      DOWNLOAD PDF RECEIPT
@@ -159,7 +156,6 @@ function DonationReceipt() {
       const contentWidth =
         pageWidth - margin * 2;
 
-
       /* =====================================================
          COLORS
          ===================================================== */
@@ -180,7 +176,6 @@ function DonationReceipt() {
 
       const lightGreen = [240, 253, 244];
 
-
       /* =====================================================
          OUTER BORDER
          ===================================================== */
@@ -198,7 +193,6 @@ function DonationReceipt() {
         2,
         "S"
       );
-
 
       /* =====================================================
          HEADER
@@ -236,14 +230,13 @@ function DonationReceipt() {
       doc.setTextColor(...gray);
 
       doc.text(
-        "DONATION RECEIPT",
+        t("donationReceipt.pdf.receiptTitle"),
         pageWidth / 2,
         y,
         {
           align: "center",
         }
       );
-
 
       /* =====================================================
          ORANGE DIVIDER
@@ -262,7 +255,6 @@ function DonationReceipt() {
         y
       );
 
-
       /* =====================================================
          RECEIPT INFORMATION
          ===================================================== */
@@ -279,16 +271,12 @@ function DonationReceipt() {
       doc.setTextColor(...dark);
 
       doc.text(
-        "Receipt Information",
+        t("donationReceipt.pdf.receiptInformation"),
         margin + 5,
         y
       );
 
       y += 6;
-
-      /*
-        Three small columns
-      */
 
       const column1 = margin + 5;
 
@@ -306,19 +294,19 @@ function DonationReceipt() {
       doc.setTextColor(...gray);
 
       doc.text(
-        "Receipt Number",
+        t("donationReceipt.pdf.receiptNumber"),
         column1,
         y
       );
 
       doc.text(
-        "Donation ID",
+        t("donationReceipt.pdf.donationId"),
         column2,
         y
       );
 
       doc.text(
-        "Date",
+        t("donationReceipt.pdf.date"),
         column3,
         y
       );
@@ -350,7 +338,6 @@ function DonationReceipt() {
         y
       );
 
-
       /* =====================================================
          DONOR INFORMATION BOX
          ===================================================== */
@@ -379,7 +366,7 @@ function DonationReceipt() {
       doc.setTextColor(...dark);
 
       doc.text(
-        "Donor Information",
+        t("donationReceipt.pdf.donorInformation"),
         margin + 10,
         y + 2
       );
@@ -394,13 +381,13 @@ function DonationReceipt() {
       doc.setTextColor(...gray);
 
       doc.text(
-        "Name",
+        t("donationReceipt.donorName"),
         margin + 10,
         y + 9
       );
 
       doc.text(
-        "Email",
+        t("donationReceipt.email"),
         pageWidth / 2,
         y + 9
       );
@@ -424,7 +411,6 @@ function DonationReceipt() {
         y + 15
       );
 
-
       /* =====================================================
          DONATION DETAILS
          ===================================================== */
@@ -441,16 +427,12 @@ function DonationReceipt() {
       doc.setTextColor(...dark);
 
       doc.text(
-        "Donation Details",
+        t("donationReceipt.pdf.donationDetails"),
         margin + 5,
         y
       );
 
       y += 6;
-
-      /*
-        Table header
-      */
 
       doc.setFillColor(...orange);
 
@@ -478,17 +460,16 @@ function DonationReceipt() {
       );
 
       doc.text(
-        "DETAIL",
+        t("donationReceipt.pdf.detail"),
         margin + 9,
         y + 1
       );
 
       doc.text(
-        "INFORMATION",
+        t("donationReceipt.pdf.information"),
         pageWidth - margin - 55,
         y + 1
       );
-
 
       /* =====================================================
          DONATION ROWS
@@ -496,33 +477,32 @@ function DonationReceipt() {
 
       const donationRows = [
         [
-          "Amount",
+          t("donationReceipt.amount"),
           `INR ${amount.toFixed(2)}`,
         ],
         [
-          "Contribution",
+          t("donationReceipt.contribution"),
           getFrequencyName(),
         ],
         [
-          "Campaign",
-          "Food Support",
+          t("donationReceipt.campaign"),
+          t("donationReceipt.foodSupport"),
         ],
         [
-          "Payment Method",
+          t("donationReceipt.paymentMethod"),
           getPaymentMethodName(),
         ],
         [
-          "Payment Status",
+          t("donationReceipt.paymentStatus"),
           status === "SUCCESS"
-            ? "Successful"
+            ? t("donationReceipt.successful")
             : status,
         ],
         [
-          "Donation Date",
+          t("donationReceipt.donationDate"),
           getFormattedDate(),
         ],
       ];
-
 
       doc.setFont(
         "helvetica",
@@ -534,10 +514,6 @@ function DonationReceipt() {
       donationRows.forEach(
         ([label, value], index) => {
           y += 7;
-
-          /*
-            Alternate background
-          */
 
           if (index % 2 === 0) {
             doc.setFillColor(
@@ -563,7 +539,7 @@ function DonationReceipt() {
 
           if (
             label ===
-            "Payment Status"
+            t("donationReceipt.paymentStatus")
           ) {
             doc.setTextColor(
               ...green
@@ -592,7 +568,6 @@ function DonationReceipt() {
         }
       );
 
-
       /* =====================================================
          PAYMENT INFORMATION
          ===================================================== */
@@ -609,29 +584,27 @@ function DonationReceipt() {
       doc.setTextColor(...dark);
 
       doc.text(
-        "Payment Information",
+        t("donationReceipt.pdf.paymentInformation"),
         margin + 5,
         y
       );
 
       y += 6;
 
-
       const paymentRows = [
         [
-          "Transaction ID",
+          t("donationReceipt.transactionId"),
           transactionId,
         ],
         [
-          "Razorpay Payment ID",
+          t("donationReceipt.razorpayPaymentId"),
           paymentId,
         ],
         [
-          "Razorpay Order ID",
+          t("donationReceipt.razorpayOrderId"),
           orderId,
         ],
       ];
-
 
       paymentRows.forEach(
         ([label, value], index) => {
@@ -673,10 +646,6 @@ function DonationReceipt() {
 
           doc.setTextColor(...dark);
 
-          /*
-            Keep long IDs inside the page
-          */
-
           const displayValue =
             String(value);
 
@@ -704,7 +673,6 @@ function DonationReceipt() {
           );
         }
       );
-
 
       /* =====================================================
          TOTAL DONATION BOX
@@ -742,7 +710,7 @@ function DonationReceipt() {
       doc.setTextColor(...dark);
 
       doc.text(
-        "TOTAL DONATION",
+        t("donationReceipt.pdf.totalDonation"),
         margin + 10,
         y + 5
       );
@@ -760,7 +728,6 @@ function DonationReceipt() {
         }
       );
 
-
       /* =====================================================
          SMALL THANK YOU MESSAGE
          ===================================================== */
@@ -777,7 +744,7 @@ function DonationReceipt() {
       doc.setTextColor(...dark);
 
       doc.text(
-        "Thank you for supporting Hanumant Seva Foundation.",
+        t("donationReceipt.pdf.thankYou"),
         pageWidth / 2,
         y,
         {
@@ -797,14 +764,13 @@ function DonationReceipt() {
       doc.setTextColor(...gray);
 
       doc.text(
-        "Your contribution helps us serve people and communities in need.",
+        t("donationReceipt.pdf.impactMessage"),
         pageWidth / 2,
         y,
         {
           align: "center",
         }
       );
-
 
       /* =====================================================
          BOTTOM LINE
@@ -821,7 +787,6 @@ function DonationReceipt() {
         pageHeight - 20
       );
 
-
       /* =====================================================
          FILE NAME
          ===================================================== */
@@ -836,7 +801,6 @@ function DonationReceipt() {
             /-+/g,
             "-"
           );
-
 
       /* =====================================================
          DOWNLOAD
@@ -853,14 +817,13 @@ function DonationReceipt() {
       );
 
       alert(
-        "Unable to generate receipt. Please try again."
+        t("donationReceipt.downloadError")
       );
 
     } finally {
       setDownloading(false);
     }
   };
-
 
   /* =========================================================
      WEBPAGE RECEIPT
@@ -888,30 +851,27 @@ function DonationReceipt() {
 
           </div>
 
-
           {/* TITLE */}
 
           <h1>
-            Thank You for Your{" "}
-            <span>Contribution!</span>
+            {t("donationReceipt.titleFirst")}{" "}
+            <span>
+              {t("donationReceipt.titleHighlight")}
+            </span>
           </h1>
-
 
           {/* MESSAGE */}
 
           <p className="receipt-message">
-            Your contribution has been recorded
-            successfully. Thank you for supporting
-            the work of Hanumant Seva Foundation.
+            {t("donationReceipt.message")}
           </p>
-
 
           {/* DONOR NAME */}
 
           <div className="receipt-id">
 
             <span>
-              Donor Name
+              {t("donationReceipt.donorName")}
             </span>
 
             <strong>
@@ -920,13 +880,12 @@ function DonationReceipt() {
 
           </div>
 
-
           {/* DONATION ID */}
 
           <div className="receipt-id">
 
             <span>
-              Donation ID
+              {t("donationReceipt.donationId")}
             </span>
 
             <strong>
@@ -935,146 +894,115 @@ function DonationReceipt() {
 
           </div>
 
-
           {/* DETAILS */}
 
           <div className="receipt-details">
 
             <div>
-
               <span>
-                Amount
+                {t("donationReceipt.amount")}
               </span>
 
               <strong>
                 ₹{amount.toFixed(2)}
               </strong>
-
             </div>
 
-
             <div>
-
               <span>
-                Contribution
+                {t("donationReceipt.contribution")}
               </span>
 
               <strong>
                 {getFrequencyName()}
               </strong>
-
             </div>
 
-
             <div>
-
               <span>
-                Campaign
+                {t("donationReceipt.campaign")}
               </span>
 
               <strong>
-                Food Support
+                {t("donationReceipt.foodSupport")}
               </strong>
-
             </div>
 
-
             <div>
-
               <span>
-                Payment Method
+                {t("donationReceipt.paymentMethod")}
               </span>
 
               <strong>
                 {getPaymentMethodName()}
               </strong>
-
             </div>
 
-
             <div>
-
               <span>
-                Payment Status
+                {t("donationReceipt.paymentStatus")}
               </span>
 
               <strong className="success-text">
                 {status === "SUCCESS"
-                  ? "Successful"
+                  ? t("donationReceipt.successful")
                   : status}
               </strong>
-
             </div>
 
-
             <div>
-
               <span>
-                Receipt Number
+                {t("donationReceipt.receiptNumber")}
               </span>
 
               <strong>
                 {receiptNumber}
               </strong>
-
             </div>
 
-
             <div>
-
               <span>
-                Donation Date
+                {t("donationReceipt.donationDate")}
               </span>
 
               <strong>
                 {getFormattedDate()}
               </strong>
-
             </div>
 
-
             <div>
-
               <span>
-                Transaction ID
+                {t("donationReceipt.transactionId")}
               </span>
 
               <strong>
                 {transactionId}
               </strong>
-
             </div>
 
-
             <div>
-
               <span>
-                Razorpay Payment ID
+                {t("donationReceipt.razorpayPaymentId")}
               </span>
 
               <strong>
                 {paymentId}
               </strong>
-
             </div>
 
-
             <div>
-
               <span>
-                Razorpay Order ID
+                {t("donationReceipt.razorpayOrderId")}
               </span>
 
               <strong>
                 {orderId}
               </strong>
-
             </div>
 
           </div>
 
         </div>
-
 
         {/* ACTION BUTTONS */}
 
@@ -1089,27 +1017,22 @@ function DonationReceipt() {
             disabled={downloading}
           >
 
-            <Download
-              size={18}
-            />
+            <Download size={18} />
 
             {downloading
-              ? "Generating Receipt..."
-              : "Download Receipt"}
+              ? t("donationReceipt.generating")
+              : t("donationReceipt.download")}
 
           </button>
-
 
           <Link
             to="/"
             className="btn btn-outline"
           >
 
-            <Home
-              size={18}
-            />
+            <Home size={18} />
 
-            Back to Home
+            {t("donationReceipt.backHome")}
 
           </Link>
 
@@ -1120,6 +1043,5 @@ function DonationReceipt() {
     </main>
   );
 }
-
 
 export default DonationReceipt;

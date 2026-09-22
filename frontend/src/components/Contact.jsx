@@ -183,10 +183,11 @@ function Contact() {
                 : t("contact.form.send")}
             </button>
           </form>
+          
         </div>
       </div>
     </section>
   );
 }
 
-export default Contact;
+export default Contact; 

@@ -1,8 +1,10 @@
 import { Mail, ArrowLeft, Heart, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function ForgotPassword() {
+  const { t } = useTranslation();
 
   const [method, setMethod] = useState("email");
   const [value, setValue] = useState("");
@@ -11,9 +13,9 @@ function ForgotPassword() {
     e.preventDefault();
 
     if (method === "email") {
-      alert("Password reset link sent to your email.");
+      alert(t("forgotPassword.alerts.email"));
     } else {
-      alert("Password reset OTP sent to your mobile number.");
+      alert(t("forgotPassword.alerts.mobile"));
     }
   };
 
@@ -26,7 +28,7 @@ function ForgotPassword() {
 
           <Link to="/login" className="auth-back">
             <ArrowLeft size={18} />
-            Back to Login
+            {t("forgotPassword.backToLogin")}
           </Link>
 
           <div className="auth-heart">
@@ -34,22 +36,22 @@ function ForgotPassword() {
           </div>
 
           <h1>
-            Reset Your <span>Password</span>
+            {t("forgotPassword.titleFirst")}{" "}
+            <span>{t("forgotPassword.titleHighlight")}</span>
           </h1>
 
           <p>
-            Enter your registered email address or mobile
-            number to reset your password.
+            {t("forgotPassword.description")}
           </p>
 
         </div>
 
         <div className="auth-card">
 
-          <h2>Forgot Password?</h2>
+          <h2>{t("forgotPassword.cardTitle")}</h2>
 
           <p className="auth-subtitle">
-            Choose email or mobile number to reset your password.
+            {t("forgotPassword.subtitle")}
           </p>
 
           {/* EMAIL / MOBILE OPTION */}
@@ -69,7 +71,7 @@ function ForgotPassword() {
               }}
             >
               <Mail size={20} />
-              Email
+              {t("forgotPassword.email")}
             </button>
 
             <button
@@ -85,7 +87,7 @@ function ForgotPassword() {
               }}
             >
               <Phone size={20} />
-              Mobile Number
+              {t("forgotPassword.mobile")}
             </button>
 
           </div>
@@ -96,8 +98,8 @@ function ForgotPassword() {
 
               <label>
                 {method === "email"
-                  ? "Email Address"
-                  : "Mobile Number"}
+                  ? t("forgotPassword.emailAddress")
+                  : t("forgotPassword.mobileNumber")}
               </label>
 
               <div className="input-box">
@@ -116,8 +118,8 @@ function ForgotPassword() {
                   }
                   placeholder={
                     method === "email"
-                      ? "Enter your email"
-                      : "Enter your mobile number"
+                      ? t("forgotPassword.emailPlaceholder")
+                      : t("forgotPassword.mobilePlaceholder")
                   }
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
@@ -133,18 +135,18 @@ function ForgotPassword() {
               className="btn btn-primary auth-submit"
             >
               {method === "email"
-                ? "Send Reset Link"
-                : "Send OTP"}
+                ? t("forgotPassword.sendResetLink")
+                : t("forgotPassword.sendOtp")}
             </button>
 
           </form>
 
           <p className="register-text">
 
-            Remember your password?
+            {t("forgotPassword.rememberPassword")}{" "}
 
             <Link to="/login">
-              Login
+              {t("forgotPassword.login")}
             </Link>
 
           </p>

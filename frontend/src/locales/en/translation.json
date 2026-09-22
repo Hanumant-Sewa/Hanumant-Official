@@ -623,6 +623,435 @@
     "paymentFailed": "Payment failed. Please try again.",
     "paymentStartFailed": "Something went wrong while starting the payment."
   }
+},
+
+
+"donateSection": {
+  "badge": "DONATE TODAY",
+  "titleFirst": "Your Contribution",
+  "titleHighlight": "Feeds Someone",
+  "description": "Every donation, regardless of size, helps provide nutritious meals and hope to people who need it most.",
+
+  "cards": {
+    "basic": {
+      "title": "Basic Meal",
+      "description": "Provides meals for 2 people."
+    },
+
+    "family": {
+      "title": "Family Support",
+      "description": "Provides meals for 10 people."
+    },
+
+    "community": {
+      "title": "Community Support",
+      "description": "Provides meals for 25+ people."
+    },
+
+    "popular": "Most Popular",
+    "donateButton": "Donate Now"
+  }
+},
+
+"donationCheckout": {
+  "titleFirst": "Payment",
+  "titleHighlight": "Successful",
+  "thankYou": "Thank you for supporting Hanumant Seva Foundation.",
+
+  "amount": "Donation Amount",
+  "contribution": "Contribution",
+
+  "oneTime": "One Time",
+  "monthly": "Monthly",
+
+  "paymentMethod": "Payment Method",
+  "paymentStatus": "Payment Status",
+
+  "card": "Card",
+  "netBanking": "Net Banking",
+  "successful": "Successful",
+
+  "transactionId": "Transaction ID",
+  "receiptNumber": "Receipt Number",
+
+  "viewReceipt": "View Donation Receipt"
+},
+
+
+"donationReceipt": {
+  "titleFirst": "Thank You for Your",
+  "titleHighlight": "Contribution!",
+  "message": "Your contribution has been recorded successfully. Thank you for supporting the work of Hanumant Seva Foundation.",
+
+  "donorName": "Donor Name",
+  "email": "Email",
+  "donationId": "Donation ID",
+
+  "amount": "Amount",
+  "contribution": "Contribution",
+  "campaign": "Campaign",
+  "foodSupport": "Food Support",
+  "paymentMethod": "Payment Method",
+  "paymentStatus": "Payment Status",
+  "successful": "Successful",
+
+  "oneTime": "One Time",
+  "monthly": "Monthly",
+  "card": "Card",
+  "netBanking": "Net Banking",
+
+  "receiptNumber": "Receipt Number",
+  "donationDate": "Donation Date",
+  "transactionId": "Transaction ID",
+  "razorpayPaymentId": "Razorpay Payment ID",
+  "razorpayOrderId": "Razorpay Order ID",
+
+  "generating": "Generating Receipt...",
+  "download": "Download Receipt",
+  "backHome": "Back to Home",
+
+  "downloadError": "Unable to generate receipt. Please try again.",
+
+  "pdf": {
+    "receiptTitle": "DONATION RECEIPT",
+    "receiptInformation": "Receipt Information",
+    "receiptNumber": "Receipt Number",
+    "donationId": "Donation ID",
+    "date": "Date",
+    "donorInformation": "Donor Information",
+    "donationDetails": "Donation Details",
+    "detail": "DETAIL",
+    "information": "INFORMATION",
+    "paymentInformation": "Payment Information",
+    "totalDonation": "TOTAL DONATION",
+    "thankYou": "Thank you for supporting Hanumant Seva Foundation.",
+    "impactMessage": "Your contribution helps us serve people and communities in need."
+  }
+},
+
+"events": {
+  "badge": "UPCOMING EVENTS",
+  "titleFirst": "Join Our Next",
+  "titleHighlight": "Food Drive",
+
+  "event1": {
+    "title": "Independence Day Food Drive",
+    "description": "Food distribution for underprivileged families across the city."
+  },
+
+  "event2": {
+    "title": "Community Kitchen",
+    "description": "Volunteers prepare and distribute fresh meals for people in need."
+  },
+
+  "event3": {
+    "title": "Food Donation Camp",
+    "description": "Donate groceries and essential food items for our monthly hunger relief campaign."
+  },
+
+  "joinEvent": "Join Event"
+},
+
+"forgotPassword": {
+  "backToLogin": "Back to Login",
+  "titleFirst": "Reset Your",
+  "titleHighlight": "Password",
+  "description": "Enter your registered email address or mobile number to reset your password.",
+
+  "cardTitle": "Forgot Password?",
+  "subtitle": "Choose email or mobile number to reset your password.",
+
+  "email": "Email",
+  "mobile": "Mobile Number",
+
+  "emailAddress": "Email Address",
+  "mobileNumber": "Mobile Number",
+
+  "emailPlaceholder": "Enter your email",
+  "mobilePlaceholder": "Enter your mobile number",
+
+  "sendResetLink": "Send Reset Link",
+  "sendOtp": "Send OTP",
+
+  "rememberPassword": "Remember your password?",
+  "login": "Login",
+
+  "alerts": {
+    "email": "Password reset link sent to your email.",
+    "mobile": "Password reset OTP sent to your mobile number."
+  }
+},
+
+
+"gallery": {
+  "badge": "OUR GALLERY",
+  "titleFirst": "Moments Of",
+  "titleHighlight": "Compassion",
+  "description": "Every picture tells the story of hope, kindness, teamwork and smiles shared through service.",
+
+  "images": {
+    "foodDistribution": "Food distribution",
+    "communityService": "Community service",
+    "volunteerActivity": "Volunteer activity",
+    "foodDrive": "Food drive",
+    "communitySupport": "Community support"
+  }
+},
+
+"login": {
+  "backToHome": "Back to Home",
+
+  "adminAccess": {
+    "first": "Admin",
+    "highlight": "Access"
+  },
+
+  "welcome": {
+    "first": "Welcome",
+    "highlight": "Back"
+  },
+
+  "adminDescription": "Sign in securely to manage Hanumant Seva and monitor our initiatives.",
+  "userDescription": "Sign in to continue your journey of service with Hanumant Seva.",
+
+  "adminQuote": "\"Responsible service begins with responsible management.\"",
+  "userQuote": "\"One small contribution can become someone's meal.\"",
+
+  "adminLogin": "Admin Login",
+  "login": "Login",
+
+  "adminSubtitle": "Sign in to access the administration panel.",
+  "userSubtitle": "Sign in to continue with Hanumant Seva.",
+
+  "userVolunteer": "User / Volunteer",
+  "admin": "Admin",
+
+  "emailAddress": "Email Address",
+  "emailPlaceholder": "Enter your email",
+
+  "password": "Password",
+  "passwordPlaceholder": "Enter your password",
+
+  "adminKey": "Admin Key",
+  "adminKeyPlaceholder": "Enter admin key",
+  "adminKeyNote": "Administrator access is verified using your account role.",
+
+  "forgotPassword": "Forgot Password?",
+
+  "loggingIn": "Logging in...",
+  "loginAsAdmin": "Login as Admin",
+
+  "or": "OR",
+
+  "noAccount": "Don't have an account?",
+  "createAccount": "Create Account",
+
+  "adminRestricted": "Administrator access is restricted to authorized Hanumant Seva members.",
+
+  "alerts": {
+    "accessDenied": {
+      "title": "Access Denied",
+      "text": "This account does not have administrator access."
+    },
+
+    "adminSuccess": {
+      "title": "Admin Login Successful"
+    },
+
+    "loginSuccess": {
+      "title": "Login Successful"
+    },
+
+    "welcome": "Welcome back, {{name}}!",
+
+    "loginFailed": {
+      "title": "Login Failed",
+      "text": "Unable to login. Please check your credentials and try again."
+    },
+
+    "invalidResponse": "Invalid response received from server.",
+    "ok": "OK",
+    "tryAgain": "Try Again"
+  },
+
+  "errors": {
+    "invalidResponse": "Invalid response received from server."
+  }
+},
+
+"protectedButton": {
+  "loginRequired": {
+    "title": "Login Required",
+    "text": "Please login first to continue.",
+    "login": "Go to Login",
+    "cancel": "Cancel"
+  },
+
+  "access": {
+    "adminTitle": "Admin Access",
+    "restrictedTitle": "Access Restricted",
+    "adminText": "This action is not available for administrators. Please use the Admin Dashboard to manage the organization.",
+    "restrictedText": "You do not have permission to access this section.",
+    "adminButton": "Go to Admin Dashboard",
+    "dashboardButton": "Go to Dashboard",
+    "stayHere": "Stay Here"
+  }
+},
+
+"protectedLink": {
+  "loginRequired": {
+    "title": "Login Required",
+    "text": "Please login first to continue.",
+    "login": "Go to Login",
+    "cancel": "Cancel"
+  },
+
+  "access": {
+    "adminTitle": "Admin Access",
+    "restrictedTitle": "Access Restricted",
+    "adminText": "This section is not available for administrators. Please use the Admin Dashboard to manage the organization.",
+    "restrictedText": "You do not have permission to access this section.",
+    "adminButton": "Go to Admin Dashboard",
+    "dashboardButton": "Go to Dashboard",
+    "stayHere": "Stay Here"
+  }
+},
+
+"protectedRoute": {
+  "loginRequired": {
+    "title": "Login Required",
+    "text": "Please login to access this page.",
+    "login": "Go to Login"
+  },
+
+  "access": {
+    "adminTitle": "Admin Access",
+    "restrictedTitle": "Access Restricted",
+    "adminText": "This page is not available for administrators. You can manage this section from the Admin Dashboard.",
+    "restrictedText": "You do not have permission to access this page.",
+    "adminButton": "Go to Admin Dashboard",
+    "dashboardButton": "Go to Dashboard"
+  },
+
+  "checkingAuthentication": "Checking authentication..."
+},
+
+"register": {
+  "backToHome": "Back to Home",
+
+  "join": "Join",
+  "hanumatSeva": "Hanumat Seva",
+
+  "description": "Create your account and become part of a community built around service and compassion.",
+
+  "points": {
+    "support": "Support food-related initiatives",
+    "track": "Track your contribution",
+    "impact": "Build your impact profile",
+    "community": "Join the community"
+  },
+
+  "createAccount": "Create Account",
+  "subtitle": "Create your Hanumat Seva account.",
+
+  "fullName": "Full Name",
+  "fullNamePlaceholder": "Enter your full name",
+
+  "emailAddress": "Email Address",
+  "emailPlaceholder": "Enter your email",
+
+  "phoneNumber": "Phone Number",
+  "phonePlaceholder": "Enter 10-digit phone number",
+
+  "password": "Password",
+  "passwordPlaceholder": "Create a password",
+
+  "confirmPassword": "Confirm Password",
+  "confirmPasswordPlaceholder": "Confirm your password",
+
+  "creatingAccount": "Creating Account...",
+
+  "alreadyHaveAccount": "Already have an account?",
+  "login": "Login",
+
+  "alerts": {
+    "passwordMismatch": {
+      "title": "Passwords Don't Match",
+      "text": "Please make sure both passwords are the same."
+    },
+
+    "passwordShort": {
+      "title": "Password Too Short",
+      "text": "Password must contain at least 6 characters."
+    },
+
+    "invalidPhone": {
+      "title": "Invalid Phone Number",
+      "text": "Please enter a valid 10-digit phone number."
+    },
+
+    "registrationFailed": {
+      "title": "Registration Failed",
+      "text": "Unable to create your account. Please try again."
+    },
+
+    "success": {
+      "title": "Account Created!",
+      "text": "Your Hanumat Seva account has been created successfully.",
+      "continue": "Continue to Login"
+    },
+
+    "connectionError": {
+      "title": "Connection Error",
+      "text": "Unable to connect to the server. Please make sure the backend is running."
+    },
+
+    "ok": "OK",
+    "tryAgain": "Try Again"
+  }
+},
+
+"testimonials": {
+  "badge": "REAL STORIES",
+  "titleFirst": "Stories Of",
+  "titleHighlight": "Service & Impact",
+  "description": "Behind every contribution, volunteer hour and food distribution is a real person, a real experience and a real moment of impact.",
+
+  "stories": {
+    "volunteer": {
+      "text": "I joined Hanumat Seva as a volunteer because I wanted to do something meaningful with my time. Serving meals and meeting people in the community showed me that even a small effort can make someone's day better.",
+      "title": "Volunteer Story",
+      "role": "Community Volunteer",
+      "imageAlt": "Hanumat Seva volunteer"
+    },
+
+    "supporter": {
+      "text": "What stood out to me was the focus on transparency. I wanted my contribution to become something useful, and seeing how support reaches food-related initiatives made the experience meaningful.",
+      "title": "Supporter Story",
+      "role": "Community Supporter",
+      "imageAlt": "Hanumat Seva donor"
+    },
+
+    "community": {
+      "text": "Food is more than just a meal. It can bring dignity, comfort and hope. Being part of a food distribution activity reminded me that genuine service begins with caring for others.",
+      "title": "Community Story",
+      "role": "Food Distribution",
+      "imageAlt": "Hanumat Seva community"
+    }
+  },
+
+  "bottomFirst": "Every story is a reminder that",
+  "bottomHighlight": "genuine service matters."
+},
+
+"upcomingEvent": {
+  "close": "Close event",
+  "imageAlt": "Upcoming Hanumat Seva event",
+  "label": "Upcoming Event",
+  "title": "Community Food Drive",
+  "date": "15 September 2026",
+  "description": "Join us in serving meals and spreading hope.",
+  "view": "View"
 }
   
 

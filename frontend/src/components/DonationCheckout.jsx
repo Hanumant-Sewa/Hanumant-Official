@@ -1,8 +1,11 @@
 import { CheckCircle, Heart, ArrowRight } from "lucide-react";
 
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function DonationCheckout() {
+  const { t } = useTranslation();
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -38,9 +41,18 @@ function DonationCheckout() {
         status,
         transactionId,
         receiptNumber,
-        paymentId: location.state?.paymentId || donation.paymentId || "",
-        orderId: location.state?.orderId || donation.orderId || "",
-        donatedAt: location.state?.donatedAt || donation.donatedAt || "",
+        paymentId:
+          location.state?.paymentId ||
+          donation.paymentId ||
+          "",
+        orderId:
+          location.state?.orderId ||
+          donation.orderId ||
+          "",
+        donatedAt:
+          location.state?.donatedAt ||
+          donation.donatedAt ||
+          "",
       },
     });
   };
@@ -50,6 +62,7 @@ function DonationCheckout() {
       <section className="internal-section">
         <div className="checkout-container">
           <div className="checkout-card">
+
             {/* SUCCESS ICON */}
 
             <div className="checkout-heart">
@@ -60,26 +73,37 @@ function DonationCheckout() {
 
             <div className="checkout-header">
               <h1>
-                Payment <span>Successful</span>
+                {t("donationCheckout.titleFirst")}{" "}
+                <span>
+                  {t("donationCheckout.titleHighlight")}
+                </span>
               </h1>
 
-              <p>Thank you for supporting Hanumant Seva Foundation.</p>
+              <p>
+                {t("donationCheckout.thankYou")}
+              </p>
             </div>
 
             {/* DONATION SUMMARY */}
 
             <div className="checkout-summary">
               <div className="checkout-summary-box">
-                <span>Donation Amount</span>
+                <span>
+                  {t("donationCheckout.amount")}
+                </span>
 
                 <strong>₹{amount}</strong>
               </div>
 
               <div className="checkout-summary-box">
-                <span>Contribution</span>
+                <span>
+                  {t("donationCheckout.contribution")}
+                </span>
 
                 <strong>
-                  {frequency === "monthly" ? "Monthly" : "One Time"}
+                  {frequency === "monthly"
+                    ? t("donationCheckout.monthly")
+                    : t("donationCheckout.oneTime")}
                 </strong>
               </div>
             </div>
@@ -87,32 +111,38 @@ function DonationCheckout() {
             {/* PAYMENT DETAILS */}
 
             <div className="selected-payment">
-              Payment Method:{" "}
+              {t("donationCheckout.paymentMethod")}:{" "}
               <strong>
                 {paymentMethod === "UPI"
                   ? "UPI"
                   : paymentMethod === "CARD"
-                    ? "Card"
+                    ? t("donationCheckout.card")
                     : paymentMethod === "NET_BANKING"
-                      ? "Net Banking"
+                      ? t("donationCheckout.netBanking")
                       : paymentMethod}
               </strong>
             </div>
 
             <div className="selected-payment">
-              Payment Status:{" "}
-              <strong>{status === "SUCCESS" ? "Successful" : status}</strong>
+              {t("donationCheckout.paymentStatus")}:{" "}
+              <strong>
+                {status === "SUCCESS"
+                  ? t("donationCheckout.successful")
+                  : status}
+              </strong>
             </div>
 
             {transactionId && (
               <div className="selected-payment">
-                Transaction ID: <strong>{transactionId}</strong>
+                {t("donationCheckout.transactionId")}:{" "}
+                <strong>{transactionId}</strong>
               </div>
             )}
 
             {receiptNumber && (
               <div className="selected-payment">
-                Receipt Number: <strong>{receiptNumber}</strong>
+                {t("donationCheckout.receiptNumber")}:{" "}
+                <strong>{receiptNumber}</strong>
               </div>
             )}
 
@@ -125,10 +155,13 @@ function DonationCheckout() {
                 onClick={handleViewReceipt}
               >
                 <Heart size={18} />
-                View Donation Receipt
+
+                {t("donationCheckout.viewReceipt")}
+
                 <ArrowRight size={18} />
               </button>
             </div>
+
           </div>
         </div>
       </section>
