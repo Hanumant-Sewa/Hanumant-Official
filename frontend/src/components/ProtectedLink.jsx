@@ -2,8 +2,11 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 function ProtectedLink({ to, children, allowedRoles, ...props }) {
+  const { t } = useTranslation();
+
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -25,12 +28,12 @@ function ProtectedLink({ to, children, allowedRoles, ...props }) {
       e.preventDefault();
 
       Swal.fire({
-        title: "Login Required",
-        text: "Please login first to continue.",
+        title: t("protectedLink.loginRequired.title"),
+        text: t("protectedLink.loginRequired.text"),
         icon: "warning",
-        confirmButtonText: "Go to Login",
+        confirmButtonText: t("protectedLink.loginRequired.login"),
         showCancelButton: true,
-        cancelButtonText: "Cancel",
+        cancelButtonText: t("protectedLink.loginRequired.cancel"),
 
         background: "#fffaf3",
         color: "#3b2a1f",
@@ -70,20 +73,22 @@ function ProtectedLink({ to, children, allowedRoles, ...props }) {
       const isAdmin = user.role === "ADMIN";
 
       Swal.fire({
-        title: isAdmin ? "Admin Access" : "Access Restricted",
+        title: isAdmin
+          ? t("protectedLink.access.adminTitle")
+          : t("protectedLink.access.restrictedTitle"),
 
         text: isAdmin
-          ? "This section is not available for administrators. Please use the Admin Dashboard to manage the organization."
-          : "You do not have permission to access this section.",
+          ? t("protectedLink.access.adminText")
+          : t("protectedLink.access.restrictedText"),
 
         icon: "info",
 
         confirmButtonText: isAdmin
-          ? "Go to Admin Dashboard"
-          : "Go to Dashboard",
+          ? t("protectedLink.access.adminButton")
+          : t("protectedLink.access.dashboardButton"),
 
         showCancelButton: true,
-        cancelButtonText: "Stay Here",
+        cancelButtonText: t("protectedLink.access.stayHere"),
 
         background: "#fffaf3",
         color: "#3b2a1f",

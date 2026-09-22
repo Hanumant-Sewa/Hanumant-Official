@@ -1,23 +1,29 @@
+import { useTranslation } from "react-i18next";
+
 function Testimonials() {
+  const { t } = useTranslation();
+
   return (
     <section className="testimonials section" id="stories">
       <div className="container">
+
         {/* SECTION HEADER */}
         <div className="section-title">
-          <span>REAL STORIES</span>
+          <span>{t("testimonials.badge")}</span>
 
           <h2>
-            Stories Of <span>Service & Impact</span>
+            {t("testimonials.titleFirst")}{" "}
+            <span>{t("testimonials.titleHighlight")}</span>
           </h2>
 
           <p>
-            Behind every contribution, volunteer hour and food distribution is a
-            real person, a real experience and a real moment of impact.
+            {t("testimonials.description")}
           </p>
         </div>
 
         {/* STORIES */}
         <div className="testimonial-grid">
+
           {/* STORY 1 */}
           <div className="testimonial-card">
             <div className="stars">
@@ -25,21 +31,18 @@ function Testimonials() {
             </div>
 
             <p>
-              "I joined Hanumat Seva as a volunteer because I wanted to do
-              something meaningful with my time. Serving meals and meeting
-              people in the community showed me that even a small effort can
-              make someone's day better."
+              "{t("testimonials.stories.volunteer.text")}"
             </p>
 
             <div className="testimonial-user">
               <img
                 src="/images/story-volunteer.jpeg"
-                alt="Hanumat Seva volunteer"
+                alt={t("testimonials.stories.volunteer.imageAlt")}
               />
 
               <div>
-                <h4>Volunteer Story</h4>
-                <span>Community Volunteer</span>
+                <h4>{t("testimonials.stories.volunteer.title")}</h4>
+                <span>{t("testimonials.stories.volunteer.role")}</span>
               </div>
             </div>
           </div>
@@ -51,17 +54,18 @@ function Testimonials() {
             </div>
 
             <p>
-              "What stood out to me was the focus on transparency. I wanted my
-              contribution to become something useful, and seeing how support
-              reaches food-related initiatives made the experience meaningful."
+              "{t("testimonials.stories.supporter.text")}"
             </p>
 
             <div className="testimonial-user">
-              <img src="/images/story-donor.jpeg" alt="Hanumat Seva donor" />
+              <img
+                src="/images/story-donor.jpeg"
+                alt={t("testimonials.stories.supporter.imageAlt")}
+              />
 
               <div>
-                <h4>Supporter Story</h4>
-                <span>Community Supporter</span>
+                <h4>{t("testimonials.stories.supporter.title")}</h4>
+                <span>{t("testimonials.stories.supporter.role")}</span>
               </div>
             </div>
           </div>
@@ -73,20 +77,18 @@ function Testimonials() {
             </div>
 
             <p>
-              "Food is more than just a meal. It can bring dignity, comfort and
-              hope. Being part of a food distribution activity reminded me that
-              genuine service begins with caring for others."
+              "{t("testimonials.stories.community.text")}"
             </p>
 
             <div className="testimonial-user">
               <img
                 src="/images/story-community.jpeg"
-                alt="Hanumat Seva community"
+                alt={t("testimonials.stories.community.imageAlt")}
               />
 
               <div>
-                <h4>Community Story</h4>
-                <span>Food Distribution</span>
+                <h4>{t("testimonials.stories.community.title")}</h4>
+                <span>{t("testimonials.stories.community.role")}</span>
               </div>
             </div>
           </div>
@@ -95,10 +97,11 @@ function Testimonials() {
         {/* BOTTOM MESSAGE */}
         <div className="stories-bottom">
           <p>
-            Every story is a reminder that{" "}
-            <strong>genuine service matters.</strong>
+            {t("testimonials.bottomFirst")}{" "}
+            <strong>{t("testimonials.bottomHighlight")}</strong>
           </p>
         </div>
+
       </div>
     </section>
   );
