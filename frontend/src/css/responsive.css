@@ -168,7 +168,7 @@
 .hero {
         width: 100%;
         min-height: auto;
-        padding-bottom: 90px;
+        padding-bottom: 60px;
         margin: 0;
     }
 .hero-container {
@@ -271,39 +271,38 @@
     }
 
     /* Existing ::before becomes the readability layer */
-    .hero-art::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        background:
-            linear-gradient(
-                90deg,
-                rgba(255, 250, 243, 0.96) 0%,
-                rgba(255, 250, 243, 0.84) 34%,
-                rgba(255, 250, 243, 0.52) 67%,
-                rgba(255, 250, 243, 0.28) 100%
-            );
+  .hero-art::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
 
-        pointer-events: none;
-    }
+    background: linear-gradient(
+        90deg,
+        rgba(255, 250, 243, 0.90) 0%,
+        rgba(255, 250, 243, 0.60) 25%,
+        rgba(255, 250, 243, 0.25) 50%,
+        rgba(255, 250, 243, 0.05) 75%,
+        rgba(255, 250, 243, 0) 100%
+    );
+}
 
     /* Second subtle layer makes the lower part readable */
-    .hero-art::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        background:
-            linear-gradient(
-                180deg,
-                rgba(255, 250, 243, 0.08) 0%,
-                rgba(255, 250, 243, 0) 45%,
-                rgba(255, 250, 243, 0.30) 100%
-            );
+ .hero-art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
 
-        pointer-events: none;
-    }
+    background: linear-gradient(
+        180deg,
+        rgba(255, 250, 243, 0) 0%,
+        rgba(255, 250, 243, 0) 65%,
+        rgba(255, 250, 243, 0.12) 100%
+    );
+}
 
     .hero-founder {
         text-align: center;
@@ -312,9 +311,7 @@
     /* Three trust items */
     .hero-features {
         width: min(100%, 680px);
-
         justify-content: center;
-
         gap: 0;
     }
 
@@ -372,7 +369,7 @@
     }
 
     .about-highlights {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 10px;
     }
 
@@ -675,7 +672,7 @@
     }
     /*founder section*/
      .founder-section {
-        padding: 48px 0;
+        padding: 28px 0;
     }
     .founder-profile {
         max-width: 900px;
@@ -739,7 +736,7 @@
     ===================================================== */
 
     .hero {
-        padding-bottom: 96px;
+        padding-bottom: 70px;
     }
 
     .hero-container {
@@ -820,7 +817,7 @@
         left: 4%;
         right: 4%;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        transform: translateY(43%);
+        transform: translateY(28%);
         border-radius: 18px;
     }
 
@@ -835,7 +832,7 @@
     }
 
     .stat strong {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
 
     .stat span {
@@ -846,8 +843,8 @@
     /* ---------- MAIN SECTION SPACING ---------- */
 
     .section {
-        padding-top: clamp(55px, 7vw, 80px);
-        padding-bottom: clamp(55px, 7vw, 80px);
+        padding-top: clamp(32px, 3vw, 70px);
+        padding-bottom: clamp(32px, 3vw, 70px);
     }
 
     .section-title {
@@ -867,7 +864,6 @@
     /* ---------- ABOUT ---------- */
 
     .about-container {
-        grid-template-columns: 1fr;
         gap: 32px;
     }
 
@@ -902,12 +898,12 @@
 
     .transparency-header {
         align-items: flex-start;
-        gap: 18px;
+        gap: 12px;
     }
 
     .transparency-flow {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 24px 18px;
     }
 
@@ -1460,7 +1456,7 @@
         color: #dc2626;
     }
     .hero {
-        padding-bottom: 78px;
+        padding-bottom: 70px;
     }
     .hero-container {
         width: 100%;
@@ -1491,15 +1487,7 @@
         opacity: 5;
         transform: none;
     }
-    .hero-art::before {
-        /* background: linear-gradient(
-            180deg,
-            rgba(255, 250, 243, 0.82) 0%,
-            rgba(255, 250, 243, 0.58) 34%,
-            rgba(255, 250, 243, 0.58) 68%,
-            rgba(255, 250, 243, 0.86) 100%
-        ); */
-    }
+  
     .hero-art::after {
         content: "";
         position: absolute;
@@ -1616,7 +1604,7 @@
         right: 4%;
         bottom: 0;
         transform: translateY(50%);
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         min-height: auto;
         padding: 5px;
         border-radius: 16px;
@@ -1627,19 +1615,13 @@
         padding: 7px 6px;
         gap: 7px;
     }
-    .stat:nth-child(3),
-    .stat:nth-child(4) {
-        border-top: 1px solid #eadfd5;
-    }
-    .stat:nth-child(3) {
-        border-left: none;
-    }
+   
     .stat svg {
         width: 26px;
         height: 26px;
     }
     .stat strong {
-        font-size: 1.1rem;
+        font-size: 0.82rem;
     }
     .stat span {
         font-size: 0.63rem;
@@ -1677,13 +1659,13 @@
         width: 100%;
     }
     .about-content h2 {
-        font-size: clamp(1.85rem, 7vw, 2.5rem);
+        font-size: clamp(1.65rem, 6vw, 2.5rem);
     }
-    .about-intro {
-        font-size: 0.96rem;
+    .about-intro ,.about-content p{
+        font-size: 0.86rem;
     }
     .about-highlights {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 9px;
         margin: 22px 0;
     }
@@ -1708,14 +1690,14 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
-        margin-bottom: 28px;
+        margin-bottom: 20px;
     }
     .transparency-header h3 {
-        font-size: 1.45rem;
+        font-size: 1.4rem;
     }
     .transparency-flow {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 22px 10px;
     }
     .transparency-step {
@@ -2358,7 +2340,7 @@
         grid-template-columns: 1fr;
     }
      .founder-section {
-        padding: 42px 0;
+        padding: 20px 0;
     }
     .founder-heading {
         margin-bottom: 30px;
@@ -2619,7 +2601,7 @@
     }
 
     .stat strong {
-        font-size: 1rem;
+        font-size: 0.92rem;
     }
 
     .stat span {
@@ -2672,7 +2654,7 @@
     }
 
     .transparency-flow {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 18px 8px;
     }
 
@@ -3172,7 +3154,7 @@
     }
 
     .stat strong {
-        font-size: 0.92rem;
+        font-size: 0.82rem;
     }
 
     .stat span {
@@ -3206,7 +3188,7 @@
     }
 
     .about-highlights {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 7px;
     }
 
@@ -3226,8 +3208,8 @@
     /* ---------- TRANSPARENCY ---------- */
 
     .transparency-flow {
-        grid-template-columns: 1fr;
-        gap: 18px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
     }
 
 
@@ -3642,8 +3624,9 @@
     right: -16px;
     padding: 6px 26px;
     font-size: 9px;
-} .founder-section {
-        padding: 36px 0;
+}
+ .founder-section {
+        padding: 16px 0;
     }
     .founder-heading {
         margin-bottom: 26px;
@@ -3746,7 +3729,7 @@
     /* ---------- HERO ---------- */
 
     .hero {
-        padding-bottom: 90px;
+        padding-bottom: 30px;
     }
 
     .hero-container {
@@ -3848,7 +3831,7 @@
     }
 
     .stat strong {
-        font-size: 0.84rem;
+        font-size: 0.74rem;
     }
 
     .stat span {
@@ -4088,7 +4071,7 @@
         font-size: 18px;
     }
     .founder-section {
-        padding: 32px 0;
+        padding: 10px 0;
     }
     .founder-photo {
         height: 280px;

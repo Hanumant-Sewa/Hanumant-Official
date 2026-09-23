@@ -54,17 +54,11 @@ function Navbar() {
   // =====================================================
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target)
-      ) {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
         setProfileOpen(false);
       }
 
-      if (
-        languageRef.current &&
-        !languageRef.current.contains(event.target)
-      ) {
+      if (languageRef.current && !languageRef.current.contains(event.target)) {
         setLanguageOpen(false);
       }
     };
@@ -72,10 +66,7 @@ function Navbar() {
     document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleOutsideClick
-      );
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
 
@@ -85,13 +76,7 @@ function Navbar() {
   useEffect(() => {
     if (!isHomePage) return;
 
-    const sections = [
-      "home",
-      "about",
-      "programs",
-      "impact",
-      "campaigns",
-    ];
+    const sections = ["home", "about", "programs", "impact", "campaigns"];
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 150;
@@ -100,10 +85,7 @@ function Navbar() {
       sections.forEach((section) => {
         const element = document.getElementById(section);
 
-        if (
-          element &&
-          scrollPosition >= element.offsetTop
-        ) {
+        if (element && scrollPosition >= element.offsetTop) {
           currentSection = section;
         }
       });
@@ -137,9 +119,7 @@ function Navbar() {
         const navbarHeight = 100;
 
         const elementPosition =
-          element.getBoundingClientRect().top +
-          window.scrollY -
-          navbarHeight;
+          element.getBoundingClientRect().top + window.scrollY - navbarHeight;
 
         window.scrollTo({
           top: elementPosition,
@@ -197,9 +177,7 @@ function Navbar() {
         const navbarHeight = 100;
 
         const elementPosition =
-          element.getBoundingClientRect().top +
-          window.scrollY -
-          navbarHeight;
+          element.getBoundingClientRect().top + window.scrollY - navbarHeight;
 
         window.scrollTo({
           top: elementPosition,
@@ -307,9 +285,7 @@ function Navbar() {
       Swal.fire({
         icon: "error",
         title: "Logout Failed",
-        text:
-          error.message ||
-          "Unable to logout. Please try again.",
+        text: error.message || "Unable to logout. Please try again.",
         confirmButtonText: "OK",
       });
     }
@@ -319,28 +295,15 @@ function Navbar() {
   // LANGUAGE DROPDOWN
   // =====================================================
   const renderLanguageDropdown = () => (
-    <div
-      className="language-dropdown"
-      ref={languageRef}
-    >
+    <div className="language-dropdown" ref={languageRef}>
       <button
         type="button"
         className="language-dropdown-button"
-        onClick={() =>
-          setLanguageOpen(
-            (previous) => !previous
-          )
-        }
+        onClick={() => setLanguageOpen((previous) => !previous)}
       >
-        <span>
-          {i18n.language === "hi"
-            ? "हिंदी"
-            : "English"}
-        </span>
+        <span>{i18n.language === "hi" ? "हिंदी" : "English"}</span>
 
-        <span className="language-arrow">
-          {languageOpen ? "▲" : "▼"}
-        </span>
+        <span className="language-arrow">{languageOpen ? "▲" : "▼"}</span>
       </button>
 
       {languageOpen && (
@@ -389,12 +352,7 @@ function Navbar() {
       {/* HOME */}
       <a
         href="/"
-        className={
-          isHomePage &&
-          activeSection === "home"
-            ? "active"
-            : ""
-        }
+        className={isHomePage && activeSection === "home" ? "active" : ""}
         onClick={handleHomeClick}
       >
         {t("nav.home")}
@@ -403,15 +361,8 @@ function Navbar() {
       {/* ABOUT */}
       <a
         href="/#about"
-        className={
-          isHomePage &&
-          activeSection === "about"
-            ? "active"
-            : ""
-        }
-        onClick={(event) =>
-          handleSectionClick(event, "about")
-        }
+        className={isHomePage && activeSection === "about" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "about")}
       >
         {t("nav.about")}
       </a>
@@ -419,15 +370,8 @@ function Navbar() {
       {/* PROGRAMS */}
       <a
         href="/#programs"
-        className={
-          isHomePage &&
-          activeSection === "programs"
-            ? "active"
-            : ""
-        }
-        onClick={(event) =>
-          handleSectionClick(event, "programs")
-        }
+        className={isHomePage && activeSection === "programs" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "programs")}
       >
         {t("nav.programs")}
       </a>
@@ -435,15 +379,8 @@ function Navbar() {
       {/* IMPACT */}
       <a
         href="/#impact"
-        className={
-          isHomePage &&
-          activeSection === "impact"
-            ? "active"
-            : ""
-        }
-        onClick={(event) =>
-          handleSectionClick(event, "impact")
-        }
+        className={isHomePage && activeSection === "impact" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "impact")}
       >
         {t("nav.impact")}
       </a>
@@ -451,15 +388,8 @@ function Navbar() {
       {/* CAMPAIGNS */}
       <a
         href="/#campaigns"
-        className={
-          isHomePage &&
-          activeSection === "campaigns"
-            ? "active"
-            : ""
-        }
-        onClick={(event) =>
-          handleSectionClick(event, "campaigns")
-        }
+        className={isHomePage && activeSection === "campaigns" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "campaigns")}
       >
         {t("nav.campaigns")}
       </a>
@@ -467,11 +397,7 @@ function Navbar() {
       {/* COMMUNITY */}
       <Link
         to="/community"
-        className={
-          location.pathname === "/community"
-            ? "active"
-            : ""
-        }
+        className={location.pathname === "/community" ? "active" : ""}
         onClick={() => {
           setMenuOpen(false);
           setProfileOpen(false);
@@ -494,12 +420,7 @@ function Navbar() {
       {/* HOME */}
       <a
         href="/"
-        className={
-          isHomePage &&
-          activeSection === "home"
-            ? "active"
-            : ""
-        }
+        className={isHomePage && activeSection === "home" ? "active" : ""}
         onClick={handleHomeClick}
       >
         {t("nav.home")}
@@ -508,15 +429,8 @@ function Navbar() {
       {/* ABOUT */}
       <a
         href="/#about"
-        className={
-          isHomePage &&
-          activeSection === "about"
-            ? "active"
-            : ""
-        }
-        onClick={(event) =>
-          handleSectionClick(event, "about")
-        }
+        className={isHomePage && activeSection === "about" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "about")}
       >
         {t("nav.about")}
       </a>
@@ -524,15 +438,8 @@ function Navbar() {
       {/* PROGRAMS */}
       <a
         href="/#programs"
-        className={
-          isHomePage &&
-          activeSection === "programs"
-            ? "active"
-            : ""
-        }
-        onClick={(event) =>
-          handleSectionClick(event, "programs")
-        }
+        className={isHomePage && activeSection === "programs" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "programs")}
       >
         {t("nav.programs")}
       </a>
@@ -540,15 +447,8 @@ function Navbar() {
       {/* IMPACT */}
       <a
         href="/#impact"
-        className={
-          isHomePage &&
-          activeSection === "impact"
-            ? "active"
-            : ""
-        }
-        onClick={(event) =>
-          handleSectionClick(event, "impact")
-        }
+        className={isHomePage && activeSection === "impact" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "impact")}
       >
         {t("nav.impact")}
       </a>
@@ -556,15 +456,8 @@ function Navbar() {
       {/* CAMPAIGNS */}
       <a
         href="/#campaigns"
-        className={
-          isHomePage &&
-          activeSection === "campaigns"
-            ? "active"
-            : ""
-        }
-        onClick={(event) =>
-          handleSectionClick(event, "campaigns")
-        }
+        className={isHomePage && activeSection === "campaigns" ? "active" : ""}
+        onClick={(event) => handleSectionClick(event, "campaigns")}
       >
         {t("nav.campaigns")}
       </a>
@@ -572,11 +465,7 @@ function Navbar() {
       {/* COMMUNITY */}
       <Link
         to="/community"
-        className={
-          location.pathname === "/community"
-            ? "active"
-            : ""
-        }
+        className={location.pathname === "/community" ? "active" : ""}
         onClick={() => {
           setMenuOpen(false);
           setProfileOpen(false);
@@ -597,36 +486,12 @@ function Navbar() {
   if (isAdminPage) {
     return null;
   }
-
-  // =====================================================
-  // AUTH LOADING
-  // =====================================================
-  if (loading) {
-    return (
-      <header className="navbar">
-        <div className="navbar-container">
-          <Link
-            to="/"
-            className="navbar-logo"
-          >
-            <img
-              src="/images/logo.png"
-              alt="Hanumat Seva"
-              className="navbar-logo-image"
-            />
-          </Link>
-        </div>
-      </header>
-    );
-  }
-
   // =====================================================
   // MAIN NAVBAR
   // =====================================================
   return (
     <header className="navbar">
       <div className="navbar-container">
-
         {/* LOGO */}
         <Link
           to="/"
@@ -645,15 +510,17 @@ function Navbar() {
         </Link>
 
         {/* DESKTOP NAVIGATION */}
-        <nav className="nav-links">
-          {renderDesktopNavigation()}
-        </nav>
+        <nav className="nav-links">{renderDesktopNavigation()}</nav>
 
         {/* RIGHT SIDE ACTIONS */}
         <div className="navbar-actions">
-
-          {/* LOGGED IN */}
-          {user ? (
+          {/* AUTHENTICATION CHECKING */}
+          {loading ? (
+            <div className="navbar-auth-loading" aria-hidden="true" />
+          ) : user ? (
+            /* =========================
+       LOGGED IN
+       ========================= */
             <>
               {/* DONATE */}
               <Link
@@ -670,18 +537,11 @@ function Navbar() {
               </Link>
 
               {/* PROFILE */}
-              <div
-                className="profile-dropdown-container"
-                ref={profileRef}
-              >
+              <div className="profile-dropdown-container" ref={profileRef}>
                 <button
                   type="button"
                   className="navbar-profile-button"
-                  onClick={() =>
-                    setProfileOpen(
-                      (previous) => !previous
-                    )
-                  }
+                  onClick={() => setProfileOpen((previous) => !previous)}
                   aria-expanded={profileOpen}
                   aria-label="Open profile menu"
                 >
@@ -691,27 +551,19 @@ function Navbar() {
                     <UserCircle size={22} />
                   )}
 
-                  <span className="profile-name">
-                    {user.name}
-                  </span>
+                  <span className="profile-name">{user.name}</span>
                 </button>
 
                 {/* PROFILE DROPDOWN */}
                 {profileOpen && (
                   <div className="profile-dropdown">
-
                     {/* ADMIN OPTIONS */}
                     {isAdmin ? (
                       <>
-                        <button
-                          type="button"
-                          onClick={handleAdminNavigation}
-                        >
+                        <button type="button" onClick={handleAdminNavigation}>
                           <ShieldCheck size={19} />
 
-                          <span>
-                            {t("nav.adminPanel")}
-                          </span>
+                          <span>{t("nav.adminPanel")}</span>
                         </button>
 
                         <div className="profile-dropdown-divider" />
@@ -723,9 +575,7 @@ function Navbar() {
                         >
                           <LogOut size={19} />
 
-                          <span>
-                            {t("nav.logout")}
-                          </span>
+                          <span>{t("nav.logout")}</span>
                         </button>
                       </>
                     ) : (
@@ -734,17 +584,12 @@ function Navbar() {
                         <button
                           type="button"
                           onClick={() =>
-                            handleProtectedNavigation(
-                              "/dashboard",
-                              "Dashboard"
-                            )
+                            handleProtectedNavigation("/dashboard", "Dashboard")
                           }
                         >
                           <LayoutDashboard size={19} />
 
-                          <span>
-                            {t("nav.dashboard")}
-                          </span>
+                          <span>{t("nav.dashboard")}</span>
                         </button>
 
                         {/* PROFILE */}
@@ -753,32 +598,25 @@ function Navbar() {
                           onClick={() =>
                             handleProtectedNavigation(
                               "/volunteer/profile",
-                              "Profile"
+                              "Profile",
                             )
                           }
                         >
                           <UserCircle size={19} />
 
-                          <span>
-                            {t("nav.profile")}
-                          </span>
+                          <span>{t("nav.profile")}</span>
                         </button>
 
                         {/* VOLUNTEER */}
                         <button
                           type="button"
                           onClick={() =>
-                            handleProtectedNavigation(
-                              "/volunteer",
-                              "Volunteer"
-                            )
+                            handleProtectedNavigation("/volunteer", "Volunteer")
                           }
                         >
                           <Users size={19} />
 
-                          <span>
-                            {t("nav.volunteer")}
-                          </span>
+                          <span>{t("nav.volunteer")}</span>
                         </button>
 
                         <div className="profile-dropdown-divider" />
@@ -791,9 +629,7 @@ function Navbar() {
                         >
                           <LogOut size={19} />
 
-                          <span>
-                            {t("nav.logout")}
-                          </span>
+                          <span>{t("nav.logout")}</span>
                         </button>
                       </>
                     )}
@@ -802,17 +638,16 @@ function Navbar() {
               </div>
             </>
           ) : (
-            /* LOGGED OUT */
+            /* =========================
+       LOGGED OUT
+       ========================= */
             <>
               {/* VOLUNTEER */}
               <button
                 type="button"
                 className="navbar-community"
                 onClick={() =>
-                  handleProtectedNavigation(
-                    "/volunteer",
-                    "Volunteer"
-                  )
+                  handleProtectedNavigation("/volunteer", "Volunteer")
                 }
               >
                 <Users size={20} />
@@ -845,25 +680,16 @@ function Navbar() {
         <button
           type="button"
           className="mobile-menu-button"
-          onClick={() =>
-            setMenuOpen(
-              (previous) => !previous
-            )
-          }
+          onClick={() => setMenuOpen((previous) => !previous)}
           aria-label="Toggle navigation"
           aria-expanded={menuOpen}
         >
-          {menuOpen ? (
-            <X size={26} />
-          ) : (
-            <Menu size={26} />
-          )}
+          {menuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
 
         {/* MOBILE MENU */}
         {menuOpen && (
           <div className="mobile-menu">
-
             {/* MAIN NAVIGATION */}
             {renderMobileNavigation()}
 
@@ -874,10 +700,7 @@ function Navbar() {
                 {isAdmin ? (
                   <>
                     {/* ADMIN PANEL */}
-                    <button
-                      type="button"
-                      onClick={handleAdminNavigation}
-                    >
+                    <button type="button" onClick={handleAdminNavigation}>
                       <ShieldCheck size={19} />
 
                       {t("nav.adminPanel")}
@@ -887,9 +710,7 @@ function Navbar() {
                     <Link
                       to="/donate"
                       className="mobile-donate"
-                      onClick={() =>
-                        setMenuOpen(false)
-                      }
+                      onClick={() => setMenuOpen(false)}
                     >
                       <Heart size={19} />
 
@@ -913,10 +734,7 @@ function Navbar() {
                     <button
                       type="button"
                       onClick={() =>
-                        handleProtectedNavigation(
-                          "/dashboard",
-                          "Dashboard"
-                        )
+                        handleProtectedNavigation("/dashboard", "Dashboard")
                       }
                     >
                       <LayoutDashboard size={19} />
@@ -930,7 +748,7 @@ function Navbar() {
                       onClick={() =>
                         handleProtectedNavigation(
                           "/volunteer/profile",
-                          "Profile"
+                          "Profile",
                         )
                       }
                     >
@@ -943,10 +761,7 @@ function Navbar() {
                     <button
                       type="button"
                       onClick={() =>
-                        handleProtectedNavigation(
-                          "/volunteer",
-                          "Volunteer"
-                        )
+                        handleProtectedNavigation("/volunteer", "Volunteer")
                       }
                     >
                       <Users size={19} />
@@ -958,9 +773,7 @@ function Navbar() {
                     <Link
                       to="/donate"
                       className="mobile-donate"
-                      onClick={() =>
-                        setMenuOpen(false)
-                      }
+                      onClick={() => setMenuOpen(false)}
                     >
                       <Heart size={19} />
 
@@ -988,10 +801,7 @@ function Navbar() {
                   type="button"
                   className="mobile-volunteer"
                   onClick={() =>
-                    handleProtectedNavigation(
-                      "/volunteer",
-                      "Volunteer"
-                    )
+                    handleProtectedNavigation("/volunteer", "Volunteer")
                   }
                 >
                   <Users size={19} />
@@ -1006,9 +816,7 @@ function Navbar() {
                     from: "/donate",
                   }}
                   className="mobile-donate"
-                  onClick={() =>
-                    setMenuOpen(false)
-                  }
+                  onClick={() => setMenuOpen(false)}
                 >
                   <Heart size={19} />
 

@@ -34,7 +34,10 @@
     flex-shrink: 0;
     white-space: nowrap;
 }
-
+.navbar-auth-loading {
+  width: 180px;
+  height: 40px;
+}
 /* Volunteer */
 .navbar-community {
     display: inline-flex;
@@ -163,7 +166,7 @@
   background: var(--cream);
   overflow: visible;
   min-height: clamp(560px, 48vw, 720px);
-  padding-bottom: clamp(80px, 7vw, 110px);
+  padding-bottom: clamp(80px, 6vw, 110px);
 }
 
 /* Main hero layout */
@@ -398,8 +401,8 @@
   z-index: 5;
   left: 6.5%;
   right: 6.5%;
-  bottom: 0;
-  min-height: clamp(90px, 7vw, 115px);
+  /* bottom: clamp(10px, 1.5vw, 20px); */
+  min-height: clamp(90px, 5vw, 115px);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
@@ -407,7 +410,7 @@
   border-radius: clamp(14px, 1.5vw, 20px);
   box-shadow: 0 15px 40px rgba(90, 50, 15, 0.12);
   backdrop-filter: blur(10px);
-  transform: translateY(-15%);
+  /* transform: translateY(-15%); */
 }
 
 .stat {
