@@ -2,8 +2,11 @@ import { useState } from "react";
 import { User, Mail, Phone, Lock, Heart } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 
 function Register() {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -46,9 +49,9 @@ function Register() {
     if (formData.password !== formData.confirmPassword) {
       await Swal.fire({
         icon: "warning",
-        title: "Passwords Don't Match",
-        text: "Please make sure both passwords are the same.",
-        confirmButtonText: "OK",
+        title: t("register.alerts.passwordMismatch.title"),
+        text: t("register.alerts.passwordMismatch.text"),
+        confirmButtonText: t("register.alerts.ok"),
       });
 
       return;
@@ -61,9 +64,9 @@ function Register() {
     if (formData.password.length < 6) {
       await Swal.fire({
         icon: "warning",
-        title: "Password Too Short",
-        text: "Password must contain at least 6 characters.",
-        confirmButtonText: "OK",
+        title: t("register.alerts.passwordShort.title"),
+        text: t("register.alerts.passwordShort.text"),
+        confirmButtonText: t("register.alerts.ok"),
       });
 
       return;
@@ -76,9 +79,9 @@ function Register() {
     if (!/^[0-9]{10}$/.test(formData.phone)) {
       await Swal.fire({
         icon: "warning",
-        title: "Invalid Phone Number",
-        text: "Please enter a valid 10-digit phone number.",
-        confirmButtonText: "OK",
+        title: t("register.alerts.invalidPhone.title"),
+        text: t("register.alerts.invalidPhone.text"),
+        confirmButtonText: t("register.alerts.ok"),
       });
 
       return;
@@ -121,10 +124,11 @@ function Register() {
       if (!response.ok) {
         await Swal.fire({
           icon: "error",
-          title: "Registration Failed",
+          title: t("register.alerts.registrationFailed.title"),
           text:
-            data.message || "Unable to create your account. Please try again.",
-          confirmButtonText: "Try Again",
+            data.message ||
+            t("register.alerts.registrationFailed.text"),
+          confirmButtonText: t("register.alerts.tryAgain"),
         });
 
         return;
@@ -136,9 +140,9 @@ function Register() {
 
       await Swal.fire({
         icon: "success",
-        title: "Account Created!",
-        text: "Your Hanumat Seva account has been created successfully.",
-        confirmButtonText: "Continue to Login",
+        title: t("register.alerts.success.title"),
+        text: t("register.alerts.success.text"),
+        confirmButtonText: t("register.alerts.success.continue"),
       });
 
       /* =========================
@@ -156,9 +160,9 @@ function Register() {
 
       await Swal.fire({
         icon: "error",
-        title: "Connection Error",
-        text: "Unable to connect to the server. Please make sure the backend is running.",
-        confirmButtonText: "OK",
+        title: t("register.alerts.connectionError.title"),
+        text: t("register.alerts.connectionError.text"),
+        confirmButtonText: t("register.alerts.ok"),
       });
     } finally {
       setLoading(false);
@@ -168,11 +172,12 @@ function Register() {
   return (
     <main className="auth-page">
       <div className="auth-container">
+
         {/* ================= LEFT ================= */}
 
         <div className="auth-info">
           <Link to="/" className="auth-back">
-            ← Back to Home
+            ← {t("register.backToHome")}
           </Link>
 
           <div className="auth-heart">
@@ -180,34 +185,39 @@ function Register() {
           </div>
 
           <h1>
-            Join <span>Hanumat Seva</span>
+            {t("register.join")}{" "}
+            <span>{t("register.hanumatSeva")}</span>
           </h1>
 
           <p>
-            Create your account and become part of a community built around
-            service and compassion.
+            {t("register.description")}
           </p>
 
           <div className="auth-points">
-            <div>✓ Support food-related initiatives</div>
-            <div>✓ Track your contribution</div>
-            <div>✓ Build your impact profile</div>
-            <div>✓ Join the community</div>
+            <div>✓ {t("register.points.support")}</div>
+            <div>✓ {t("register.points.track")}</div>
+            <div>✓ {t("register.points.impact")}</div>
+            <div>✓ {t("register.points.community")}</div>
           </div>
         </div>
 
         {/* ================= RIGHT ================= */}
 
         <div className="auth-card register-card">
-          <h2>Create Account</h2>
+          <h2>{t("register.createAccount")}</h2>
 
-          <p className="auth-subtitle">Create your Hanumat Seva account.</p>
+          <p className="auth-subtitle">
+            {t("register.subtitle")}
+          </p>
 
           <form onSubmit={handleSubmit}>
+
             {/* ================= NAME ================= */}
 
             <div className="form-group">
-              <label htmlFor="name">Full Name</label>
+              <label htmlFor="name">
+                {t("register.fullName")}
+              </label>
 
               <div className="input-box">
                 <User size={20} />
@@ -216,7 +226,7 @@ function Register() {
                   id="name"
                   type="text"
                   name="name"
-                  placeholder="Enter your full name"
+                  placeholder={t("register.fullNamePlaceholder")}
                   value={formData.name}
                   onChange={handleChange}
                   required
@@ -229,7 +239,9 @@ function Register() {
             {/* ================= EMAIL ================= */}
 
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">
+                {t("register.emailAddress")}
+              </label>
 
               <div className="input-box">
                 <Mail size={20} />
@@ -238,7 +250,7 @@ function Register() {
                   id="email"
                   type="email"
                   name="email"
-                  placeholder="Enter your email"
+                  placeholder={t("register.emailPlaceholder")}
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -251,7 +263,9 @@ function Register() {
             {/* ================= PHONE ================= */}
 
             <div className="form-group">
-              <label htmlFor="phone">Phone Number</label>
+              <label htmlFor="phone">
+                {t("register.phoneNumber")}
+              </label>
 
               <div className="input-box">
                 <Phone size={20} />
@@ -260,7 +274,7 @@ function Register() {
                   id="phone"
                   type="tel"
                   name="phone"
-                  placeholder="Enter 10-digit phone number"
+                  placeholder={t("register.phonePlaceholder")}
                   value={formData.phone}
                   onChange={handleChange}
                   maxLength="10"
@@ -275,7 +289,9 @@ function Register() {
             {/* ================= PASSWORD ================= */}
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">
+                {t("register.password")}
+              </label>
 
               <div className="input-box">
                 <Lock size={20} />
@@ -284,7 +300,7 @@ function Register() {
                   id="password"
                   type="password"
                   name="password"
-                  placeholder="Create a password"
+                  placeholder={t("register.passwordPlaceholder")}
                   value={formData.password}
                   onChange={handleChange}
                   required
@@ -297,7 +313,9 @@ function Register() {
             {/* ================= CONFIRM PASSWORD ================= */}
 
             <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
+              <label htmlFor="confirmPassword">
+                {t("register.confirmPassword")}
+              </label>
 
               <div className="input-box">
                 <Lock size={20} />
@@ -306,7 +324,7 @@ function Register() {
                   id="confirmPassword"
                   type="password"
                   name="confirmPassword"
-                  placeholder="Confirm your password"
+                  placeholder={t("register.confirmPasswordPlaceholder")}
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
@@ -323,21 +341,24 @@ function Register() {
               className="btn btn-primary auth-submit"
               disabled={loading}
             >
-              {loading ? "Creating Account..." : "Create Account"}
+              {loading
+                ? t("register.creatingAccount")
+                : t("register.createAccount")}
             </button>
           </form>
 
           {/* ================= LOGIN ================= */}
 
           <p className="register-text">
-            Already have an account?{" "}
+            {t("register.alreadyHaveAccount")}{" "}
+
             <Link
               to="/login"
               state={{
                 from: location.state?.from,
               }}
             >
-              Login
+              {t("register.login")}
             </Link>
           </p>
         </div>

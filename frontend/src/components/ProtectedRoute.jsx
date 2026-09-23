@@ -2,8 +2,11 @@ import { useEffect, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { t } = useTranslation();
+
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -18,10 +21,10 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       alertShown.current = true;
 
       Swal.fire({
-        title: "Login Required",
-        text: "Please login to access this page.",
+        title: t("protectedRoute.loginRequired.title"),
+        text: t("protectedRoute.loginRequired.text"),
         icon: "warning",
-        confirmButtonText: "Go to Login",
+        confirmButtonText: t("protectedRoute.loginRequired.login"),
 
         // Hanumat Seva theme
         background: "#fffaf3",
@@ -39,7 +42,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
         },
       });
     }
-  }, [loading, user]);
+  }, [loading, user, t]);
 
   // =====================================================
   // ROLE ACCESS DENIED
@@ -58,17 +61,19 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       const isAdmin = user.role === "ADMIN";
 
       Swal.fire({
-        title: isAdmin ? "Admin Access" : "Access Restricted",
+        title: isAdmin
+          ? t("protectedRoute.access.adminTitle")
+          : t("protectedRoute.access.restrictedTitle"),
 
         text: isAdmin
-          ? "This page is not available for administrators. You can manage this section from the Admin Dashboard."
-          : "You do not have permission to access this page.",
+          ? t("protectedRoute.access.adminText")
+          : t("protectedRoute.access.restrictedText"),
 
         icon: "info",
 
         confirmButtonText: isAdmin
-          ? "Go to Admin Dashboard"
-          : "Go to Dashboard",
+          ? t("protectedRoute.access.adminButton")
+          : t("protectedRoute.access.dashboardButton"),
 
         background: "#fffaf3",
         color: "#3b2a1f",
@@ -85,7 +90,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
         },
       });
     }
-  }, [loading, user, allowedRoles]);
+  }, [loading, user, allowedRoles, t]);
 
   // =====================================================
   // WAIT FOR AUTHENTICATION CHECK
@@ -95,7 +100,8 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return (
       <div className="auth-loading">
         <div className="auth-spinner"></div>
-        <p>Checking authentication...</p>
+
+        <p>{t("protectedRoute.checkingAuthentication")}</p>
       </div>
     );
   }
@@ -121,7 +127,8 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   // =====================================================
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    const redirectPath = user.role === "ADMIN" ? "/admin" : "/dashboard";
+    const redirectPath =
+      user.role === "ADMIN" ? "/admin" : "/dashboard";
 
     return <Navigate to={redirectPath} replace />;
   }

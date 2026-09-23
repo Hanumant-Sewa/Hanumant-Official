@@ -10,13 +10,16 @@ import {
 import ProtectedButton from "./ProtectedButton";
 import ProtectedLink from "./ProtectedLink";
 
+import { useTranslation } from "react-i18next";
+
 function Campaigns() {
+  const { t } = useTranslation();
+
   const campaigns = [
     {
       icon: Utensils,
-      title: "500 Meals Community Drive",
-      description:
-        "Help us provide nutritious meals to people and families who need support through our community food drive.",
+      title: t("campaigns.active.items.meals500.title"),
+      description: t("campaigns.active.items.meals500.description"),
       target: 500,
       supported: 327,
       amount: "₹16,350",
@@ -24,9 +27,8 @@ function Campaigns() {
 
     {
       icon: Heart,
-      title: "Community Meal Support",
-      description:
-        "Support our ongoing food initiatives and help us reach more people through regular meal distribution.",
+      title: t("campaigns.active.items.mealSupport.title"),
+      description: t("campaigns.active.items.mealSupport.description"),
       target: 1000,
       supported: 640,
       amount: "₹32,000",
@@ -34,9 +36,8 @@ function Campaigns() {
 
     {
       icon: Utensils,
-      title: "Emergency Food Relief",
-      description:
-        "Help provide essential food support to communities facing difficult circumstances and emergencies.",
+      title: t("campaigns.active.items.emergency.title"),
+      description: t("campaigns.active.items.emergency.description"),
       target: 750,
       supported: 420,
       amount: "₹21,000",
@@ -47,24 +48,24 @@ function Campaigns() {
     {
       icon: Users,
       number: "01",
-      title: "Volunteer",
-      text: "Give your time, skills and energy to meaningful community activities.",
+      title: t("campaigns.journey.items.volunteer.title"),
+      text: t("campaigns.journey.items.volunteer.text"),
       link: "/volunteer",
     },
 
     {
       icon: GitBranch,
       number: "02",
-      title: "Community Tree",
-      text: "Grow together as a connected community of people serving a common purpose.",
+      title: t("campaigns.journey.items.community.title"),
+      text: t("campaigns.journey.items.community.text"),
       link: "/community",
     },
 
     {
       icon: Award,
       number: "03",
-      title: "Impact Leaders",
-      text: "Recognize people who create meaningful change through consistent service.",
+      title: t("campaigns.journey.items.leaders.title"),
+      text: t("campaigns.journey.items.leaders.text"),
       link: "/community",
     },
   ];
@@ -75,17 +76,15 @@ function Campaigns() {
         {/* ================= SECTION HEADER ================= */}
 
         <div className="section-title">
-          <span>ACTIVE CAMPAIGNS</span>
+          <span>{t("campaigns.active.heading.badge")}</span>
 
           <h2>
-            Together We Can Create
-            <span> Real Impact</span>
+            {t("campaigns.active.heading.titleFirst")}
+            <span> {t("campaigns.active.heading.titleSecond")}</span>
           </h2>
 
           <p>
-            Support an active Hanumat Seva campaign and help turn small
-            contributions into meaningful action for people and communities that
-            need support.
+            {t("campaigns.active.heading.description")}
           </p>
         </div>
 
@@ -108,7 +107,9 @@ function Campaigns() {
                     <Icon size={28} strokeWidth={2} />
                   </div>
 
-                  <span className="campaign-status">Active</span>
+                  <span className="campaign-status">
+                    {t("campaigns.active.status")}
+                  </span>
                 </div>
 
                 {/* CONTENT */}
@@ -124,7 +125,8 @@ function Campaigns() {
                 <div className="campaign-progress">
                   <div className="campaign-progress-info">
                     <span>
-                      {campaign.supported} / {campaign.target} meals
+                      {campaign.supported} / {campaign.target}{" "}
+                      {t("campaigns.active.meals")}
                     </span>
 
                     <strong>{percentage}%</strong>
@@ -143,15 +145,17 @@ function Campaigns() {
 
                 <div className="campaign-meta">
                   <div>
-                    <span>Supported</span>
+                    <span>{t("campaigns.active.supported")}</span>
 
                     <strong>{campaign.amount}</strong>
                   </div>
 
                   <div>
-                    <span>Target</span>
+                    <span>{t("campaigns.active.target")}</span>
 
-                    <strong>{campaign.target} meals</strong>
+                    <strong>
+                      {campaign.target} {t("campaigns.active.meals")}
+                    </strong>
                   </div>
                 </div>
 
@@ -162,7 +166,7 @@ function Campaigns() {
                   allowedRoles={["USER", "VOLUNTEER"]}
                   className="campaign-link"
                 >
-                  View Campaign
+                  {t("campaigns.active.viewCampaign")}
                   <ArrowRight size={17} />
                 </ProtectedLink>
               </div>
@@ -175,17 +179,16 @@ function Campaigns() {
         <div className="community-journey">
           <div className="community-journey-header">
             <div>
-              <span>BEYOND A CAMPAIGN</span>
+              <span>{t("campaigns.journey.badge")}</span>
 
               <h3>
-                From One Volunteer
-                <span> To A Growing Community</span>
+                {t("campaigns.journey.titleFirst")}
+                <span> {t("campaigns.journey.titleSecond")}</span>
               </h3>
             </div>
 
             <p>
-              Every contribution can become a connection, and every connection
-              can become meaningful impact.
+              {t("campaigns.journey.description")}
             </p>
           </div>
 
@@ -194,7 +197,10 @@ function Campaigns() {
               const Icon = item.icon;
 
               return (
-                <div className="community-journey-item" key={item.title}>
+                <div
+                  className="community-journey-item"
+                  key={item.title}
+                >
                   {/* ICON */}
 
                   <div className="community-journey-icon">
@@ -221,7 +227,7 @@ function Campaigns() {
                       allowedRoles={["USER", "VOLUNTEER"]}
                       className="community-journey-explore"
                     >
-                      Explore
+                      {t("campaigns.journey.explore")}
                       <ArrowRight size={15} />
                     </ProtectedLink>
                   </div>
@@ -241,9 +247,9 @@ function Campaigns() {
 
         <div className="campaigns-cta">
           <div className="campaigns-cta-content">
-            <span>YOUR CONTRIBUTION MATTERS</span>
+            <span>{t("campaigns.cta.badge")}</span>
 
-            <h3>Every small contribution can help move a campaign forward.</h3>
+            <h3>{t("campaigns.cta.title")}</h3>
           </div>
 
           {/* PROTECTED DONATION ACTION */}
@@ -253,7 +259,7 @@ function Campaigns() {
             allowedRoles={["USER", "VOLUNTEER"]}
             className="campaigns-cta-btn"
           >
-            Support a Campaign
+            {t("campaigns.cta.button")}
             <Heart size={18} />
           </ProtectedButton>
         </div>

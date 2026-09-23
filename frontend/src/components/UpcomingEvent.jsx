@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
+
 import { CalendarDays, X } from "lucide-react";
+
 import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "../context/AuthContext";
+
 import Swal from "sweetalert2";
+
+import { useTranslation } from "react-i18next";
+
 import "../css/UpcomingEvent.css";
 
 function UpcomingEvent() {
+  const { t } = useTranslation();
+
   const [visible, setVisible] = useState(true);
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,7 +38,6 @@ function UpcomingEvent() {
         setEvent(data.event || null);
       } catch (error) {
         console.error("Error fetching upcoming event:", error);
-
         setEvent(null);
       } finally {
         setLoading(false);
@@ -41,7 +49,7 @@ function UpcomingEvent() {
 
   const handleViewEvent = () => {
     if (user) {
-      navigate("dashboard");
+      navigate("/dashboard");
       return;
     }
 
@@ -78,7 +86,7 @@ function UpcomingEvent() {
       <button
         className="upcoming-event-close"
         onClick={() => setVisible(false)}
-        aria-label="Close event"
+        aria-label={t("upcomingEvent.close")}
       >
         <X size={15} />
       </button>
@@ -90,7 +98,7 @@ function UpcomingEvent() {
 
       {/* CONTENT */}
       <div className="upcoming-event-content">
-        <span className="upcoming-event-label">Upcoming Event</span>
+        <span className="upcoming-event-label">{t("upcomingEvent.label")}</span>
 
         <h3>{event.title}</h3>
 
@@ -110,7 +118,7 @@ function UpcomingEvent() {
         className="upcoming-event-button"
         onClick={handleViewEvent}
       >
-        View
+        {t("upcomingEvent.view")}
       </button>
     </div>
   );

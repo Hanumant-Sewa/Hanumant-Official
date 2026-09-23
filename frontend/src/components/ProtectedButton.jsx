@@ -2,8 +2,17 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
-function ProtectedButton({ to, className, children, allowedRoles, ...props }) {
+function ProtectedButton({
+  to,
+  className,
+  children,
+  allowedRoles,
+  ...props
+}) {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
@@ -24,12 +33,12 @@ function ProtectedButton({ to, className, children, allowedRoles, ...props }) {
 
     if (!user) {
       Swal.fire({
-        title: "Login Required",
-        text: "Please login first to continue.",
+        title: t("protectedButton.loginRequired.title"),
+        text: t("protectedButton.loginRequired.text"),
         icon: "warning",
-        confirmButtonText: "Go to Login",
+        confirmButtonText: t("protectedButton.loginRequired.login"),
         showCancelButton: true,
-        cancelButtonText: "Cancel",
+        cancelButtonText: t("protectedButton.loginRequired.cancel"),
 
         // Hanumat Seva theme
         background: "#fffaf3",
@@ -68,20 +77,22 @@ function ProtectedButton({ to, className, children, allowedRoles, ...props }) {
       const isAdmin = user.role === "ADMIN";
 
       Swal.fire({
-        title: isAdmin ? "Admin Access" : "Access Restricted",
+        title: isAdmin
+          ? t("protectedButton.access.adminTitle")
+          : t("protectedButton.access.restrictedTitle"),
 
         text: isAdmin
-          ? "This action is not available for administrators. Please use the Admin Dashboard to manage the organization."
-          : "You do not have permission to access this section.",
+          ? t("protectedButton.access.adminText")
+          : t("protectedButton.access.restrictedText"),
 
         icon: "info",
 
         confirmButtonText: isAdmin
-          ? "Go to Admin Dashboard"
-          : "Go to Dashboard",
+          ? t("protectedButton.access.adminButton")
+          : t("protectedButton.access.dashboardButton"),
 
         showCancelButton: true,
-        cancelButtonText: "Stay Here",
+        cancelButtonText: t("protectedButton.access.stayHere"),
 
         background: "#fffaf3",
         color: "#3b2a1f",

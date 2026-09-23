@@ -12,5 +12,1047 @@
     "dashboard": "Dashboard",
     "profile": "Profile",
     "logout": "Logout"
+  },
+
+  "home": {
+    "hero": {
+      "badge": "🙏 सेवा • समर्पण • संस्कार",
+      "titleFirst": "Service is greater",
+      "titleSecond": "There is no",
+      "titleHighlight": "religion",
+      "titleLast": "greater than service",
+      "theme": "₹50. One Person. One Meal. One Month.",
+      "description": "You don't have to do everything to help someone. Sometimes, one small contribution can become someone's meal.",
+      "supportButton": "Support 1 Person – ₹50",
+      "communityButton": "Join Our Community",
+      "founded": "Founded in 2026 by Manisha Nigam",
+
+      "features": {
+        "transparent": {
+          "value": "100%",
+          "label": "Transparent"
+        },
+        "support": {
+          "value": "24/7",
+          "label": "Community Support"
+        },
+        "hope": "Hope & Service"
+      },
+
+      "stats": {
+        "lives": "Lives Touched",
+        "volunteers": "Volunteers",
+        "cities": "Cities",
+        "families": "Families Helped"
+      }
+    }
+  },
+
+
+  "about" : {
+  "monthlyMission": {
+    "imageAlt": "Hanumat Seva food service",
+    "imageBadge": "Small acts. Big impact.",
+    "badge": "₹50 MONTHLY MISSION",
+    "titleFirst": "One Person.",
+    "titleSecond": "One Meal. One Month.",
+    "intro": "You don't have to do everything to help someone. Sometimes, one small contribution can become someone's meal.",
+    "description": "A simple ₹50 monthly contribution can become part of a collective effort to support food-related initiatives and people who need support.",
+    "people": {
+      "one": "1 Person",
+      "two": "2 People",
+      "five": "5 People",
+      "ten": "10 People"
+    },
+    "button": "Start Monthly Support"
+  },
+
+  "transparency": {
+    "badge": "OUR TRANSPARENCY PROMISE",
+    "titleFirst": "Show The Work.",
+    "titleSecond": "Build The Trust.",
+    "description": "We don't ask you to blindly trust us. We invite you to understand how your contribution moves through the journey and what impact it creates.",
+    "contributionLabel": "YOUR CONTRIBUTION",
+    "followTitle": "Follow Your Contribution",
+
+    "steps": {
+      "contribution": {
+        "title": "Contribution",
+        "description": "Your support"
+      },
+      "campaign": {
+        "title": "Campaign",
+        "description": "Where it goes"
+      },
+      "purchase": {
+        "title": "Purchase",
+        "description": "Recorded use"
+      },
+      "distribution": {
+        "title": "Distribution",
+        "description": "People reached"
+      },
+      "impact": {
+        "title": "Impact",
+        "description": "Visible results"
+      }
+    },
+
+    "footer": "Every contribution should have a visible journey.",
+    "viewButton": "View Transparency"
+  },
+
+  "founder": {
+    "badge": "OUR FOUNDER",
+    "headingFirst": "Meet the",
+    "headingSecond": "Founder",
+    "headingDescription": "A simple belief in helping others grew into a vision for building a transparent and compassionate food-support movement.",
+    "imageAlt": "Manisha Nigam, Founder of Hanumat Seva Foundation",
+    "photoBadge": "FOUNDER",
+    "role": "Founder, Hanumat Seva Foundation",
+
+    "paragraph1": "For over a decade, Manisha Nigam has been personally involved in helping people and supporting communities in need in Kanpur.",
+    "paragraph2": "Her journey has been driven not by the idea of building an organization, but by a simple human responsibility — if we can help someone, we should.",
+    "paragraph3": "Seeing the everyday reality of hunger and food wastage inspired her to think beyond individual acts of help and create a system that could allow many more people to participate.",
+    "paragraph4": "Hanumat Seva Foundation is an effort to turn that belief into a larger, organized movement.",
+
+    "quote": "Seva does not begin with how much we have. It begins with how much we are willing to share.",
+
+    "vision": {
+      "label": "OUR VISION",
+      "title": "What We Want to Build",
+      "paragraph1": "We don't want to be just another organization that distributes food.",
+      "paragraph2": "We want to build an ecosystem where food rescue becomes simple, transparent, and scalable.",
+
+      "points": {
+        "one": "A restaurant should be able to report surplus food in seconds.",
+        "two": "A volunteer should be able to find a nearby pickup.",
+        "three": "An organization should be able to request meals.",
+        "four": "A donor should be able to see the impact of their contribution.",
+        "five": "Every meal should have a journey that can be understood and trusted."
+      }
+    },
+
+    "journey": {
+      "label": "THE JOURNEY",
+      "one": "One Meal",
+      "two": "One Community",
+      "three": "One City",
+      "four": "An Entire Movement"
+    },
+
+    "promise": {
+      "label": "OUR PROMISE",
+      "title": "Simple words. A serious commitment.",
+      "one": "Rescue what can be saved.",
+      "two": "Share what can be shared.",
+      "three": "Serve with dignity.",
+      "four": "Waste less.",
+      "five": "Feed more."
+    },
+
+    "signature": "Serving Humanity. One Meal at a Time."
   }
+},
+
+"programs": {
+  "heading": {
+    "badge": "OUR PROGRAMS",
+    "titleFirst": "Turning Compassion Into",
+    "titleSecond": "Meaningful Action",
+    "description": "Hanumat Seva brings people together through practical initiatives that support food security, community care, volunteering and emergency assistance."
+  },
+
+  "items": {
+    "foodDistribution": {
+      "title": "Food Distribution",
+      "text": "Providing nutritious meals to people and families who need support, with dignity and compassion."
+    },
+
+    "foodRescue": {
+      "title": "Food Rescue",
+      "text": "Helping reduce food waste by redirecting usable food toward communities where it can make a difference."
+    },
+
+    "communityKitchen": {
+      "title": "Community Kitchen",
+      "text": "Bringing volunteers together to prepare and serve fresh meals for people in need."
+    },
+
+    "grocerySupport": {
+      "title": "Grocery Support",
+      "text": "Supporting families with essential groceries and food supplies when they need them most."
+    },
+
+    "emergencyRelief": {
+      "title": "Emergency Relief",
+      "text": "Providing food and essential support during emergencies and difficult situations."
+    },
+
+    "communityCare": {
+      "title": "Community Care",
+      "text": "Supporting vulnerable communities through compassionate outreach and meaningful service."
+    },
+
+    "volunteerProgram": {
+      "title": "Volunteer Program",
+      "text": "Giving people opportunities to contribute their time, skills and energy to real community activities."
+    },
+
+    "awareness": {
+      "title": "Awareness",
+      "text": "Creating awareness about food waste, hunger, nutrition and the importance of serving society."
+    }
+  },
+
+  "cta": {
+    "badge": "BE PART OF THE CHANGE",
+    "title": "Your time, support and compassion can become someone's hope.",
+    "button": "Join Our Community"
+  }
+},
+
+"impact": {
+  "heading": {
+    "badge": "OUR IMPACT",
+    "titleFirst": "Together We Are",
+    "titleSecond": "Making A Difference"
+  },
+  "stats": {
+    "meals": "Meals Served",
+    "volunteers": "Active Volunteers",
+    "cities": "Cities Reached",
+    "families": "Families Supported"
+  }
+},
+
+"campaigns": {
+  "active": {
+    "heading": {
+      "badge": "ACTIVE CAMPAIGNS",
+      "titleFirst": "Together We Can Create",
+      "titleSecond": "Real Impact",
+      "description": "Support an active Hanumat Seva campaign and help turn small contributions into meaningful action for people and communities that need support."
+    },
+
+    "status": "Active",
+    "meals": "meals",
+    "supported": "Supported",
+    "target": "Target",
+    "viewCampaign": "View Campaign",
+
+    "items": {
+      "meals500": {
+        "title": "500 Meals Community Drive",
+        "description": "Help us provide nutritious meals to people and families who need support through our community food drive."
+      },
+
+      "mealSupport": {
+        "title": "Community Meal Support",
+        "description": "Support our ongoing food initiatives and help us reach more people through regular meal distribution."
+      },
+
+      "emergency": {
+        "title": "Emergency Food Relief",
+        "description": "Help provide essential food support to communities facing difficult circumstances and emergencies."
+      }
+    }
+  },
+
+  "journey": {
+    "badge": "BEYOND A CAMPAIGN",
+    "titleFirst": "From One Volunteer",
+    "titleSecond": "To A Growing Community",
+    "description": "Every contribution can become a connection, and every connection can become meaningful impact.",
+    "explore": "Explore",
+
+    "items": {
+      "volunteer": {
+        "title": "Volunteer",
+        "text": "Give your time, skills and energy to meaningful community activities."
+      },
+
+      "community": {
+        "title": "Community Tree",
+        "text": "Grow together as a connected community of people serving a common purpose."
+      },
+
+      "leaders": {
+        "title": "Impact Leaders",
+        "text": "Recognize people who create meaningful change through consistent service."
+      }
+    }
+  },
+
+  "cta": {
+    "badge": "YOUR CONTRIBUTION MATTERS",
+    "title": "Every small contribution can help move a campaign forward.",
+    "button": "Support a Campaign"
+  }
+},
+
+"community": {
+  "hero": {
+    "badge": "OUR COMMUNITY",
+    "titleFirst": "Don't Just Be a Donor.",
+    "titleSecond": "Become Part of the Community.",
+    "description": "Hanumat Seva is being built around people who believe that meaningful change begins when we come together through genuine service.",
+    "joinButton": "Join Our Community",
+    "volunteerButton": "Become a Volunteer",
+    "card": {
+      "label": "ONE COMMUNITY",
+      "titleFirst": "Many Hands.",
+      "titleSecond": "One Purpose.",
+      "journey": "Support → Volunteer → Participate → Inspire → Build"
+    }
+  },
+
+  "journey": {
+    "badge": "THE COMMUNITY JOURNEY",
+    "titleFirst": "From One Small Act to",
+    "titleSecond": "Meaningful Service",
+    "description": "Every genuine contribution to the mission can become part of a growing community of people serving society.",
+    "steps": {
+      "support": {
+        "title": "Support",
+        "text": "Support a meal, campaign or community initiative."
+      },
+      "volunteer": {
+        "title": "Volunteer",
+        "text": "Give your time, skills and energy when you can."
+      },
+      "participate": {
+        "title": "Participate",
+        "text": "Take part in genuine community activities."
+      },
+      "inspire": {
+        "title": "Inspire",
+        "text": "Encourage others to contribute through service."
+      },
+      "build": {
+        "title": "Build",
+        "text": "Help grow a community centered around meaningful service."
+      }
+    }
+  },
+
+  "tree": {
+    "badge": "COMMUNITY TREE",
+    "titleFirst": "One Person Can Start a",
+    "titleSecond": "Chain of Service.",
+    "description": "If you introduce someone to Hanumat Seva and they genuinely want to participate, your community can grow.",
+    "principleTitle": "We don't reward recruitment.",
+    "principleText": "We recognize service.",
+    "details": "Your community profile can show the people you introduced, participation in activities, meals supported, volunteer hours, campaigns supported and verified impact.",
+    "button": "Build Your Community",
+    "nodes": {
+      "you": {
+        "title": "You",
+        "description": "Community Member"
+      },
+      "member": {
+        "title": "Member",
+        "description": "Participating"
+      },
+      "volunteer": {
+        "title": "Volunteer",
+        "description": "Serving"
+      },
+      "inspired": {
+        "title": "Inspired",
+        "description": "Growing"
+      }
+    },
+    "impact": "Community Impact Tree"
+  },
+
+  "impact": {
+    "badge": "COMMUNITY IMPACT",
+    "titleFirst": "Your Contribution.",
+    "titleSecond": "Your Impact. Your Journey.",
+    "description": "Every verified activity can contribute toward a community impact score. The score reflects service and verified impact, not simply how much someone donated.",
+    "profileLabel": "Example Community Profile",
+    "scoreLabel": "IMPACT SCORE",
+    "stats": {
+      "meals": "Meals Supported",
+      "hours": "Volunteer Hours",
+      "campaigns": "Campaigns Supported",
+      "people": "People Inspired"
+    },
+    "note": "Example values shown for demonstration. Actual impact will be generated from verified activity records."
+  },
+
+  "impactLevels": {
+    "seed": {
+      "title": "Seed",
+      "description": "New Community Member"
+    },
+    "volunteer": {
+      "title": "Volunteer",
+      "description": "Active Participant"
+    },
+    "builder": {
+      "title": "Community Builder",
+      "description": "Consistent Contributor"
+    },
+    "leader": {
+      "title": "Impact Leader",
+      "description": "High Verified Impact"
+    },
+    "champion": {
+      "title": "Service Champion",
+      "description": "Exceptional Contribution"
+    }
+  },
+
+  "levels": {
+    "badge": "IMPACT LEVELS",
+    "titleFirst": "Grow Through",
+    "titleSecond": "Service",
+    "description": "Your level should reflect the genuine service and verified impact you create within the community."
+  },
+
+  "cta": {
+    "badge": "BE PART OF THE JOURNEY",
+    "titleFirst": "Your Small Step Can Become",
+    "titleSecond": "Someone Else's Hope.",
+    "description": "Support. Volunteer. Participate. Inspire. Build.",
+    "joinButton": "Join Community",
+    "supportButton": "Support a Meal"
+  }
+},
+
+"faq": {
+  "badge": "FAQ",
+  "title": "Frequently Asked Questions",
+  "description": "Find answers to the most common questions about Hanumant Seva and our initiatives.",
+
+  "questions": {
+    "donate": {
+      "question": "How can I donate?",
+      "answer": "You can donate online through our donation page or contribute groceries and food materials during our food drives."
+    },
+
+    "volunteer": {
+      "question": "Can I volunteer on weekends?",
+      "answer": "Yes. Most of our food distribution programs are conducted on weekends and public holidays."
+    },
+
+    "foodDrives": {
+      "question": "Where are your food drives conducted?",
+      "answer": "We organize food drives across different communities, orphanages, old age homes, and public locations where support is needed."
+    },
+
+    "tax": {
+      "question": "Is my donation tax deductible?",
+      "answer": "Once your NGO is registered under the applicable Indian regulations (such as 80G), eligible donations may qualify for tax benefits."
+    }
+  }
+},
+
+"footer": {
+  "about": {
+    "description": "Serving humanity through compassion, food distribution and community support."
+  },
+
+  "quickLinks": {
+    "title": "Quick Links",
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "gallery": "Gallery",
+    "contact": "Contact"
+  },
+
+  "programs": {
+    "title": "Our Programs",
+    "foodDistribution": "Food Distribution",
+    "communityKitchen": "Community Kitchen",
+    "volunteerProgram": "Volunteer Program",
+    "foodDonationDrive": "Food Donation Drive",
+    "emergencyRelief": "Emergency Relief"
+  },
+
+  "newsletter": {
+    "title": "Newsletter",
+    "description": "Subscribe to receive updates about our food drives.",
+    "placeholder": "Email Address",
+    "subscribe": "Subscribe"
+  },
+
+  "copyright": "© 2026 Hanumant Seva. All Rights Reserved."
+},
+
+"certificate": {
+  "quoteFirst": "Small Acts",
+  "quoteSecond": "Create Big Changes",
+
+  "title": "CERTIFICATE",
+  "subtitle": "OF APPRECIATION",
+
+  "presentedTo": "THIS CERTIFICATE IS PROUDLY PRESENTED TO",
+
+  "messageFirst": "In recognition of your valuable contribution and dedicated service as a Volunteer with Hanumant Seva Foundation.",
+
+  "messageSecond": "Your efforts have made a positive impact in our mission to serve the community and create a better tomorrow.",
+
+  "thankYou": "Thank you for being a part of our journey!",
+
+  "details": {
+    "type": "Certificate Type",
+    "issuedOn": "Issued On",
+    "certificateId": "Certificate ID",
+    "issuedBy": "Issued By"
+  },
+
+  "footerText": "Together We Serve",
+
+  "downloadButton": "Download Certificate PDF"
+},
+
+"contact": {
+  "badge": "CONTACT",
+  "title": "We'd Love To Hear From You",
+  "description": "Have questions or want to support our mission? Reach out to us.",
+
+  "info": {
+    "address": {
+      "title": "Address"
+    },
+    "phone": {
+      "title": "Phone"
+    },
+    "email": {
+      "title": "Email"
+    }
+  },
+
+  "form": {
+    "name": "Your Name",
+    "email": "Your Email",
+    "subject": "Subject",
+    "message": "Your Message",
+    "sending": "Sending...",
+    "send": "Send Message"
+  },
+
+  "alert": {
+    "successTitle": "Message Sent!",
+    "successMessage": "Thank you for contacting Hanumant Seva.",
+    "okay": "Okay",
+    "errorTitle": "Something went wrong",
+    "errorMessage": "Unable to send your message. Please try again later.",
+    "tryAgain": "Try Again"
+  }
+},
+
+"donate": {
+  "header": {
+    "badge": "Make a Difference",
+    "titleFirst": "Choose Your",
+    "titleHighlight": "Impact",
+    "description": "Choose the amount you are comfortable contributing. Every contribution makes a difference.",
+    "shortDescription": "Choose the amount you are comfortable contributing."
+  },
+
+  "summary": {
+    "contribution": "YOUR CONTRIBUTION",
+    "contributionLabel": "Contribution",
+    "paymentLabel": "Payment",
+    "purposeLabel": "Purpose",
+    "purpose": "Food Support",
+    "impactFirst": "Your support creates",
+    "impactSecond": " meaningful impact.",
+    "description": "Your contribution helps support food-related service activities and community initiatives."
+  },
+
+  "frequency": {
+    "oneTime": "One Time",
+    "monthly": "Monthly"
+  },
+
+  "amounts": {
+    "title": "Select Contribution Amount",
+    "support1": "Support 1 Person",
+    "support2": "Support 2 People",
+    "support5": "Support 5 People",
+    "support10": "Support 10 People"
+  },
+
+  "customAmount": {
+    "label": "Custom Amount",
+    "range": "Choose an amount from ₹50 to ₹10,00,000."
+  },
+
+  "payment": {
+    "title": "Payment Details",
+    "description": "Choose your preferred payment method.",
+    "secure": "Secure Payment",
+    "opening": "Opening Payment...",
+    "continue": "Continue to Payment"
+  },
+
+  "paymentMethods": {
+    "card": "Card",
+    "netBanking": "Net Banking"
+  },
+
+  "paymentInfo": {
+    "label": "Payment Information",
+    "upi": "UPI payment will be handled securely by Razorpay.",
+    "card": "Card details will be entered securely in Razorpay Checkout.",
+    "netBanking": "Your bank will be selected securely in Razorpay Checkout.",
+    "secureDetails": "You will enter your payment details in the secure Razorpay Checkout."
+  },
+
+  "security": {
+    "title": "Secure Contribution",
+    "description": "Your payment information is protected."
+  },
+
+  "alerts": {
+    "minimumAmount": "Minimum donation amount is ₹50",
+    "razorpayLoadFailed": "Razorpay failed to load. Please check your internet connection.",
+    "invalidBackendResponse": "Backend returned an invalid response. Please make sure the backend is running.",
+    "orderFailed": "Failed to create donation order.",
+    "invalidVerificationResponse": "Payment verification returned an invalid response.",
+    "verificationFailed": "Payment verification failed.",
+    "donationSuccessful": "Donation successful! Thank you for your support ❤️",
+    "paymentVerificationContact": "Payment completed, but verification failed. Please contact support.",
+    "razorpayUnavailable": "Razorpay Checkout is not available.",
+    "paymentFailed": "Payment failed. Please try again.",
+    "paymentStartFailed": "Something went wrong while starting the payment."
+  }
+},
+
+
+"donateSection": {
+  "badge": "DONATE TODAY",
+  "titleFirst": "Your Contribution",
+  "titleHighlight": "Feeds Someone",
+  "description": "Every donation, regardless of size, helps provide nutritious meals and hope to people who need it most.",
+
+  "cards": {
+    "basic": {
+      "title": "Basic Meal",
+      "description": "Provides meals for 2 people."
+    },
+
+    "family": {
+      "title": "Family Support",
+      "description": "Provides meals for 10 people."
+    },
+
+    "community": {
+      "title": "Community Support",
+      "description": "Provides meals for 25+ people."
+    },
+
+    "popular": "Most Popular",
+    "donateButton": "Donate Now"
+  }
+},
+
+"donationCheckout": {
+  "titleFirst": "Payment",
+  "titleHighlight": "Successful",
+  "thankYou": "Thank you for supporting Hanumant Seva Foundation.",
+
+  "amount": "Donation Amount",
+  "contribution": "Contribution",
+
+  "oneTime": "One Time",
+  "monthly": "Monthly",
+
+  "paymentMethod": "Payment Method",
+  "paymentStatus": "Payment Status",
+
+  "card": "Card",
+  "netBanking": "Net Banking",
+  "successful": "Successful",
+
+  "transactionId": "Transaction ID",
+  "receiptNumber": "Receipt Number",
+
+  "viewReceipt": "View Donation Receipt"
+},
+
+
+"donationReceipt": {
+  "titleFirst": "Thank You for Your",
+  "titleHighlight": "Contribution!",
+  "message": "Your contribution has been recorded successfully. Thank you for supporting the work of Hanumant Seva Foundation.",
+
+  "donorName": "Donor Name",
+  "email": "Email",
+  "donationId": "Donation ID",
+
+  "amount": "Amount",
+  "contribution": "Contribution",
+  "campaign": "Campaign",
+  "foodSupport": "Food Support",
+  "paymentMethod": "Payment Method",
+  "paymentStatus": "Payment Status",
+  "successful": "Successful",
+
+  "oneTime": "One Time",
+  "monthly": "Monthly",
+  "card": "Card",
+  "netBanking": "Net Banking",
+
+  "receiptNumber": "Receipt Number",
+  "donationDate": "Donation Date",
+  "transactionId": "Transaction ID",
+  "razorpayPaymentId": "Razorpay Payment ID",
+  "razorpayOrderId": "Razorpay Order ID",
+
+  "generating": "Generating Receipt...",
+  "download": "Download Receipt",
+  "backHome": "Back to Home",
+
+  "downloadError": "Unable to generate receipt. Please try again.",
+
+  "pdf": {
+    "receiptTitle": "DONATION RECEIPT",
+    "receiptInformation": "Receipt Information",
+    "receiptNumber": "Receipt Number",
+    "donationId": "Donation ID",
+    "date": "Date",
+    "donorInformation": "Donor Information",
+    "donationDetails": "Donation Details",
+    "detail": "DETAIL",
+    "information": "INFORMATION",
+    "paymentInformation": "Payment Information",
+    "totalDonation": "TOTAL DONATION",
+    "thankYou": "Thank you for supporting Hanumant Seva Foundation.",
+    "impactMessage": "Your contribution helps us serve people and communities in need."
+  }
+},
+
+"events": {
+  "badge": "UPCOMING EVENTS",
+  "titleFirst": "Join Our Next",
+  "titleHighlight": "Food Drive",
+
+  "event1": {
+    "title": "Independence Day Food Drive",
+    "description": "Food distribution for underprivileged families across the city."
+  },
+
+  "event2": {
+    "title": "Community Kitchen",
+    "description": "Volunteers prepare and distribute fresh meals for people in need."
+  },
+
+  "event3": {
+    "title": "Food Donation Camp",
+    "description": "Donate groceries and essential food items for our monthly hunger relief campaign."
+  },
+
+  "joinEvent": "Join Event"
+},
+
+"forgotPassword": {
+  "backToLogin": "Back to Login",
+  "titleFirst": "Reset Your",
+  "titleHighlight": "Password",
+  "description": "Enter your registered email address or mobile number to reset your password.",
+
+  "cardTitle": "Forgot Password?",
+  "subtitle": "Choose email or mobile number to reset your password.",
+
+  "email": "Email",
+  "mobile": "Mobile Number",
+
+  "emailAddress": "Email Address",
+  "mobileNumber": "Mobile Number",
+
+  "emailPlaceholder": "Enter your email",
+  "mobilePlaceholder": "Enter your mobile number",
+
+  "sendResetLink": "Send Reset Link",
+  "sendOtp": "Send OTP",
+
+  "rememberPassword": "Remember your password?",
+  "login": "Login",
+
+  "alerts": {
+    "email": "Password reset link sent to your email.",
+    "mobile": "Password reset OTP sent to your mobile number."
+  }
+},
+
+
+"gallery": {
+  "badge": "OUR GALLERY",
+  "titleFirst": "Moments Of",
+  "titleHighlight": "Compassion",
+  "description": "Every picture tells the story of hope, kindness, teamwork and smiles shared through service.",
+
+  "images": {
+    "foodDistribution": "Food distribution",
+    "communityService": "Community service",
+    "volunteerActivity": "Volunteer activity",
+    "foodDrive": "Food drive",
+    "communitySupport": "Community support"
+  }
+},
+
+"login": {
+  "backToHome": "Back to Home",
+
+  "adminAccess": {
+    "first": "Admin",
+    "highlight": "Access"
+  },
+
+  "welcome": {
+    "first": "Welcome",
+    "highlight": "Back"
+  },
+
+  "adminDescription": "Sign in securely to manage Hanumant Seva and monitor our initiatives.",
+  "userDescription": "Sign in to continue your journey of service with Hanumant Seva.",
+
+  "adminQuote": "\"Responsible service begins with responsible management.\"",
+  "userQuote": "\"One small contribution can become someone's meal.\"",
+
+  "adminLogin": "Admin Login",
+  "login": "Login",
+
+  "adminSubtitle": "Sign in to access the administration panel.",
+  "userSubtitle": "Sign in to continue with Hanumant Seva.",
+
+  "userVolunteer": "User / Volunteer",
+  "admin": "Admin",
+
+  "emailAddress": "Email Address",
+  "emailPlaceholder": "Enter your email",
+
+  "password": "Password",
+  "passwordPlaceholder": "Enter your password",
+
+  "adminKey": "Admin Key",
+  "adminKeyPlaceholder": "Enter admin key",
+  "adminKeyNote": "Administrator access is verified using your account role.",
+
+  "forgotPassword": "Forgot Password?",
+
+  "loggingIn": "Logging in...",
+  "loginAsAdmin": "Login as Admin",
+
+  "or": "OR",
+
+  "noAccount": "Don't have an account?",
+  "createAccount": "Create Account",
+
+  "adminRestricted": "Administrator access is restricted to authorized Hanumant Seva members.",
+
+  "alerts": {
+    "accessDenied": {
+      "title": "Access Denied",
+      "text": "This account does not have administrator access."
+    },
+
+    "adminSuccess": {
+      "title": "Admin Login Successful"
+    },
+
+    "loginSuccess": {
+      "title": "Login Successful"
+    },
+
+    "welcome": "Welcome back, {{name}}!",
+
+    "loginFailed": {
+      "title": "Login Failed",
+      "text": "Unable to login. Please check your credentials and try again."
+    },
+
+    "invalidResponse": "Invalid response received from server.",
+    "ok": "OK",
+    "tryAgain": "Try Again"
+  },
+
+  "errors": {
+    "invalidResponse": "Invalid response received from server."
+  }
+},
+
+"protectedButton": {
+  "loginRequired": {
+    "title": "Login Required",
+    "text": "Please login first to continue.",
+    "login": "Go to Login",
+    "cancel": "Cancel"
+  },
+
+  "access": {
+    "adminTitle": "Admin Access",
+    "restrictedTitle": "Access Restricted",
+    "adminText": "This action is not available for administrators. Please use the Admin Dashboard to manage the organization.",
+    "restrictedText": "You do not have permission to access this section.",
+    "adminButton": "Go to Admin Dashboard",
+    "dashboardButton": "Go to Dashboard",
+    "stayHere": "Stay Here"
+  }
+},
+
+"protectedLink": {
+  "loginRequired": {
+    "title": "Login Required",
+    "text": "Please login first to continue.",
+    "login": "Go to Login",
+    "cancel": "Cancel"
+  },
+
+  "access": {
+    "adminTitle": "Admin Access",
+    "restrictedTitle": "Access Restricted",
+    "adminText": "This section is not available for administrators. Please use the Admin Dashboard to manage the organization.",
+    "restrictedText": "You do not have permission to access this section.",
+    "adminButton": "Go to Admin Dashboard",
+    "dashboardButton": "Go to Dashboard",
+    "stayHere": "Stay Here"
+  }
+},
+
+"protectedRoute": {
+  "loginRequired": {
+    "title": "Login Required",
+    "text": "Please login to access this page.",
+    "login": "Go to Login"
+  },
+
+  "access": {
+    "adminTitle": "Admin Access",
+    "restrictedTitle": "Access Restricted",
+    "adminText": "This page is not available for administrators. You can manage this section from the Admin Dashboard.",
+    "restrictedText": "You do not have permission to access this page.",
+    "adminButton": "Go to Admin Dashboard",
+    "dashboardButton": "Go to Dashboard"
+  },
+
+  "checkingAuthentication": "Checking authentication..."
+},
+
+"register": {
+  "backToHome": "Back to Home",
+
+  "join": "Join",
+  "hanumatSeva": "Hanumat Seva",
+
+  "description": "Create your account and become part of a community built around service and compassion.",
+
+  "points": {
+    "support": "Support food-related initiatives",
+    "track": "Track your contribution",
+    "impact": "Build your impact profile",
+    "community": "Join the community"
+  },
+
+  "createAccount": "Create Account",
+  "subtitle": "Create your Hanumat Seva account.",
+
+  "fullName": "Full Name",
+  "fullNamePlaceholder": "Enter your full name",
+
+  "emailAddress": "Email Address",
+  "emailPlaceholder": "Enter your email",
+
+  "phoneNumber": "Phone Number",
+  "phonePlaceholder": "Enter 10-digit phone number",
+
+  "password": "Password",
+  "passwordPlaceholder": "Create a password",
+
+  "confirmPassword": "Confirm Password",
+  "confirmPasswordPlaceholder": "Confirm your password",
+
+  "creatingAccount": "Creating Account...",
+
+  "alreadyHaveAccount": "Already have an account?",
+  "login": "Login",
+
+  "alerts": {
+    "passwordMismatch": {
+      "title": "Passwords Don't Match",
+      "text": "Please make sure both passwords are the same."
+    },
+
+    "passwordShort": {
+      "title": "Password Too Short",
+      "text": "Password must contain at least 6 characters."
+    },
+
+    "invalidPhone": {
+      "title": "Invalid Phone Number",
+      "text": "Please enter a valid 10-digit phone number."
+    },
+
+    "registrationFailed": {
+      "title": "Registration Failed",
+      "text": "Unable to create your account. Please try again."
+    },
+
+    "success": {
+      "title": "Account Created!",
+      "text": "Your Hanumat Seva account has been created successfully.",
+      "continue": "Continue to Login"
+    },
+
+    "connectionError": {
+      "title": "Connection Error",
+      "text": "Unable to connect to the server. Please make sure the backend is running."
+    },
+
+    "ok": "OK",
+    "tryAgain": "Try Again"
+  }
+},
+
+"testimonials": {
+  "badge": "REAL STORIES",
+  "titleFirst": "Stories Of",
+  "titleHighlight": "Service & Impact",
+  "description": "Behind every contribution, volunteer hour and food distribution is a real person, a real experience and a real moment of impact.",
+
+  "stories": {
+    "volunteer": {
+      "text": "I joined Hanumat Seva as a volunteer because I wanted to do something meaningful with my time. Serving meals and meeting people in the community showed me that even a small effort can make someone's day better.",
+      "title": "Volunteer Story",
+      "role": "Community Volunteer",
+      "imageAlt": "Hanumat Seva volunteer"
+    },
+
+    "supporter": {
+      "text": "What stood out to me was the focus on transparency. I wanted my contribution to become something useful, and seeing how support reaches food-related initiatives made the experience meaningful.",
+      "title": "Supporter Story",
+      "role": "Community Supporter",
+      "imageAlt": "Hanumat Seva donor"
+    },
+
+    "community": {
+      "text": "Food is more than just a meal. It can bring dignity, comfort and hope. Being part of a food distribution activity reminded me that genuine service begins with caring for others.",
+      "title": "Community Story",
+      "role": "Food Distribution",
+      "imageAlt": "Hanumat Seva community"
+    }
+  },
+
+  "bottomFirst": "Every story is a reminder that",
+  "bottomHighlight": "genuine service matters."
+},
+
+"upcomingEvent": {
+  "close": "Close event",
+  "imageAlt": "Upcoming Hanumat Seva event",
+  "label": "Upcoming Event",
+  "title": "Community Food Drive",
+  "date": "15 September 2026",
+  "description": "Join us in serving meals and spreading hope.",
+  "view": "View"
+}
+  
+
 }

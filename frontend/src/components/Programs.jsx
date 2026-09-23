@@ -11,76 +11,81 @@ import {
 } from "lucide-react";
 
 import ProtectedButton from "./ProtectedButton";
+import { useTranslation } from "react-i18next";
 
 function Programs() {
+  const { t } = useTranslation();
+
   const programs = [
     {
       icon: Utensils,
-      title: "Food Distribution",
-      text: "Providing nutritious meals to people and families who need support, with dignity and compassion.",
+      title: t("programs.items.foodDistribution.title"),
+      text: t("programs.items.foodDistribution.text"),
     },
 
     {
       icon: Recycle,
-      title: "Food Rescue",
-      text: "Helping reduce food waste by redirecting usable food toward communities where it can make a difference.",
+      title: t("programs.items.foodRescue.title"),
+      text: t("programs.items.foodRescue.text"),
     },
 
     {
       icon: CookingPot,
-      title: "Community Kitchen",
-      text: "Bringing volunteers together to prepare and serve fresh meals for people in need.",
+      title: t("programs.items.communityKitchen.title"),
+      text: t("programs.items.communityKitchen.text"),
     },
 
     {
       icon: ShoppingBasket,
-      title: "Grocery Support",
-      text: "Supporting families with essential groceries and food supplies when they need them most.",
+      title: t("programs.items.grocerySupport.title"),
+      text: t("programs.items.grocerySupport.text"),
     },
 
     {
       icon: Ambulance,
-      title: "Emergency Relief",
-      text: "Providing food and essential support during emergencies and difficult situations.",
+      title: t("programs.items.emergencyRelief.title"),
+      text: t("programs.items.emergencyRelief.text"),
     },
 
     {
       icon: HandHeart,
-      title: "Community Care",
-      text: "Supporting vulnerable communities through compassionate outreach and meaningful service.",
+      title: t("programs.items.communityCare.title"),
+      text: t("programs.items.communityCare.text"),
     },
 
     {
       icon: Users,
-      title: "Volunteer Program",
-      text: "Giving people opportunities to contribute their time, skills and energy to real community activities.",
+      title: t("programs.items.volunteerProgram.title"),
+      text: t("programs.items.volunteerProgram.text"),
     },
 
     {
       icon: Megaphone,
-      title: "Awareness",
-      text: "Creating awareness about food waste, hunger, nutrition and the importance of serving society.",
+      title: t("programs.items.awareness.title"),
+      text: t("programs.items.awareness.text"),
     },
   ];
+
   return (
     <section className="programs section" id="programs">
       <div className="container">
         {/* SECTION HEADER */}
+
         <div className="section-title">
-          <span>OUR PROGRAMS</span>
+          <span>{t("programs.heading.badge")}</span>
 
           <h2>
-            Turning Compassion Into <span>Meaningful Action</span>
+            {t("programs.heading.titleFirst")}{" "}
+            <span>{t("programs.heading.titleSecond")}</span>
           </h2>
 
           <p>
-            Hanumat Seva brings people together through practical initiatives
-            that support food security, community care, volunteering and
-            emergency assistance.
+            {t("programs.heading.description")}
           </p>
         </div>
 
         {/* PROGRAM GRID */}
+
         <div className="programs-grid">
           {programs.map((program, index) => {
             const Icon = program.icon;
@@ -88,11 +93,13 @@ function Programs() {
             return (
               <div className="program-card" key={program.title}>
                 {/* ICON */}
+
                 <div className="program-icon">
                   <Icon size={32} strokeWidth={2} />
                 </div>
 
                 {/* NUMBER */}
+
                 <span className="program-number">
                   {String(index + 1).padStart(2, "0")}
                 </span>
@@ -106,12 +113,13 @@ function Programs() {
         </div>
 
         {/* BOTTOM CTA */}
+
         <div className="programs-cta">
           <div>
-            <span>BE PART OF THE CHANGE</span>
+            <span>{t("programs.cta.badge")}</span>
 
             <h3>
-              Your time, support and compassion can become someone's hope.
+              {t("programs.cta.title")}
             </h3>
           </div>
 
@@ -120,7 +128,7 @@ function Programs() {
             allowedRoles={["USER", "VOLUNTEER"]}
             className="programs-cta-btn"
           >
-            Join Our Community
+            {t("programs.cta.button")}
             <ArrowRight size={18} />
           </ProtectedButton>
         </div>

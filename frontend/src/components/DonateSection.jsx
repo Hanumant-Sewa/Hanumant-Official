@@ -1,20 +1,21 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function DonateSection() {
+  const { t } = useTranslation();
+
   return (
     <section className="donate section" id="donate">
       <div className="container">
         <div className="section-title">
-          <span>DONATE TODAY</span>
+          <span>{t("donateSection.badge")}</span>
 
           <h2>
-            Your Contribution <span>Feeds Someone</span>
+            {t("donateSection.titleFirst")}{" "}
+            <span>{t("donateSection.titleHighlight")}</span>
           </h2>
 
-          <p>
-            Every donation, regardless of size, helps provide nutritious meals
-            and hope to people who need it most.
-          </p>
+          <p>{t("donateSection.description")}</p>
         </div>
 
         <div className="donation-grid">
@@ -22,27 +23,29 @@ function DonateSection() {
           <div className="donation-card">
             <h3>₹100</h3>
 
-            <h4>Basic Meal</h4>
+            <h4>{t("donateSection.cards.basic.title")}</h4>
 
-            <p>Provides meals for 2 people.</p>
+            <p>{t("donateSection.cards.basic.description")}</p>
 
             <Link to="/login" className="btn donate-btn">
-              Donate Now
+              {t("donateSection.cards.donateButton")}
             </Link>
           </div>
 
           {/* Family Support */}
           <div className="donation-card featured">
-            <span className="popular">Most Popular</span>
+            <span className="popular">
+              {t("donateSection.cards.popular")}
+            </span>
 
             <h3>₹500</h3>
 
-            <h4>Family Support</h4>
+            <h4>{t("donateSection.cards.family.title")}</h4>
 
-            <p>Provides meals for 10 people.</p>
+            <p>{t("donateSection.cards.family.description")}</p>
 
             <Link to="/login" className="btn donate-btn">
-              Donate Now
+              {t("donateSection.cards.donateButton")}
             </Link>
           </div>
 
@@ -50,12 +53,12 @@ function DonateSection() {
           <div className="donation-card">
             <h3>₹1000</h3>
 
-            <h4>Community Support</h4>
+            <h4>{t("donateSection.cards.community.title")}</h4>
 
-            <p>Provides meals for 25+ people.</p>
+            <p>{t("donateSection.cards.community.description")}</p>
 
             <Link to="/login" className="btn donate-btn">
-              Donate Now
+              {t("donateSection.cards.donateButton")}
             </Link>
           </div>
         </div>

@@ -1,69 +1,78 @@
 import { Link } from "react-router-dom";
 import ProtectedLink from "../components/ProtectedLink";
+import { useTranslation } from "react-i18next";
+
 function Events() {
+  const { t } = useTranslation();
+
   return (
     <section className="events section">
       <div className="container">
         <div className="section-title">
-          <span>UPCOMING EVENTS</span>
+          <span>{t("events.badge")}</span>
 
           <h2>
-            Join Our Next <span>Food Drive</span>
+            {t("events.titleFirst")}{" "}
+            <span>{t("events.titleHighlight")}</span>
           </h2>
         </div>
 
         <div className="events-grid">
+
           <div className="event-card">
             <span className="event-date">15 AUG</span>
 
-            <h3>Independence Day Food Drive</h3>
+            <h3>{t("events.event1.title")}</h3>
 
             <p>
-              Food distribution for underprivileged families across the city.
+              {t("events.event1.description")}
             </p>
+
             <ProtectedLink
               to="/dashboard"
               allowedRoles={["USER", "VOLUNTEER"]}
               className="btn btn-primary"
             >
-              Join Event
+              {t("events.joinEvent")}
             </ProtectedLink>
           </div>
 
           <div className="event-card">
             <span className="event-date">30 AUG</span>
 
-            <h3>Community Kitchen</h3>
+            <h3>{t("events.event2.title")}</h3>
 
             <p>
-              Volunteers prepare and distribute fresh meals for people in need.
+              {t("events.event2.description")}
             </p>
+
             <ProtectedLink
               to="/dashboard"
               allowedRoles={["USER", "VOLUNTEER"]}
               className="btn btn-primary"
             >
-              Join Event
+              {t("events.joinEvent")}
             </ProtectedLink>
           </div>
 
           <div className="event-card">
             <span className="event-date">10 SEP</span>
 
-            <h3>Food Donation Camp</h3>
+            <h3>{t("events.event3.title")}</h3>
 
             <p>
-              Donate groceries and essential food items for our monthly hunger
-              relief campaign.
+              {t("events.event3.description")}
             </p>
+
             <ProtectedLink
               to="/dashboard"
               allowedRoles={["USER", "VOLUNTEER"]}
               className="btn btn-primary"
             >
-              Join Event
+              {t("events.joinEvent")}
             </ProtectedLink>
           </div>
+
         </div>
       </div>
     </section>

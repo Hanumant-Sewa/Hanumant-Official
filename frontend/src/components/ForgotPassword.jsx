@@ -2,8 +2,11 @@ import { Mail, ArrowLeft, Heart, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 
 function ForgotPassword() {
+  const { t } = useTranslation();
+
   const [method, setMethod] = useState("email");
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +22,6 @@ function ForgotPassword() {
         text: "Mobile OTP password reset is not available yet. Please use your email address.",
         confirmButtonColor: "#d97706",
       });
-
       return;
     }
 
@@ -30,7 +32,6 @@ function ForgotPassword() {
         text: "Please enter your registered email address.",
         confirmButtonColor: "#d97706",
       });
-
       return;
     }
 
@@ -91,7 +92,7 @@ function ForgotPassword() {
         <div className="auth-info">
           <Link to="/login" className="auth-back">
             <ArrowLeft size={18} />
-            Back to Login
+            {t("forgotPassword.backToLogin")}
           </Link>
 
           <div className="auth-heart">
@@ -99,24 +100,19 @@ function ForgotPassword() {
           </div>
 
           <h1>
-            Reset Your <span>Password</span>
+            {t("forgotPassword.titleFirst")}{" "}
+            <span>{t("forgotPassword.titleHighlight")}</span>
           </h1>
 
-          <p>
-            Enter your registered email address or mobile number to reset your
-            password.
-          </p>
+          <p>{t("forgotPassword.description")}</p>
         </div>
 
         <div className="auth-card">
-          <h2>Forgot Password?</h2>
+          <h2>{t("forgotPassword.cardTitle")}</h2>
 
-          <p className="auth-subtitle">
-            Choose email or mobile number to reset your password.
-          </p>
+          <p className="auth-subtitle">{t("forgotPassword.subtitle")}</p>
 
           {/* EMAIL / MOBILE OPTION */}
-
           <div className="reset-methods">
             <button
               type="button"
@@ -129,7 +125,7 @@ function ForgotPassword() {
               }}
             >
               <Mail size={20} />
-              Email
+              {t("forgotPassword.email")}
             </button>
 
             <button
@@ -147,14 +143,16 @@ function ForgotPassword() {
               }}
             >
               <Phone size={20} />
-              Mobile Number
+              {t("forgotPassword.mobile")}
             </button>
           </div>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>
-                {method === "email" ? "Email Address" : "Mobile Number"}
+                {method === "email"
+                  ? t("forgotPassword.emailAddress")
+                  : t("forgotPassword.mobileNumber")}
               </label>
 
               <div className="input-box">
@@ -164,8 +162,8 @@ function ForgotPassword() {
                   type={method === "email" ? "email" : "tel"}
                   placeholder={
                     method === "email"
-                      ? "Enter your email"
-                      : "Enter your mobile number"
+                      ? t("forgotPassword.emailPlaceholder")
+                      : t("forgotPassword.mobilePlaceholder")
                   }
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
@@ -183,14 +181,14 @@ function ForgotPassword() {
               {loading
                 ? "Sending..."
                 : method === "email"
-                  ? "Send Reset Link"
-                  : "Send OTP"}
+                  ? t("forgotPassword.sendResetLink")
+                  : t("forgotPassword.sendOtp")}
             </button>
           </form>
 
           <p className="register-text">
-            Remember your password?
-            <Link to="/login">Login</Link>
+            {t("forgotPassword.rememberPassword")}{" "}
+            <Link to="/login">{t("forgotPassword.login")}</Link>
           </p>
         </div>
       </div>
