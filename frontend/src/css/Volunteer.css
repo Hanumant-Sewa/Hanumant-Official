@@ -218,24 +218,19 @@
 
 .volunteer-page .hero-text h1 {
     margin: 0;
-
     color: var(--text);
-
     font-family: 'Poppins', sans-serif;
     font-size: clamp(40px, 4.5vw, 62px);
     line-height: 1.06;
 }
 
 .volunteer-page .hero-text h1 span {
-    display: block;
     color: var(--primary);
 }
 
 .volunteer-page .hero-text h2 {
     margin: 14px 0 10px;
-
     color: var(--text);
-
     font-size: clamp(17px, 1.8vw, 21px);
     line-height: 1.35;
 }
@@ -272,24 +267,16 @@
 .volunteer-page .hero-stats {
     position: absolute;
     z-index: 5;
-
     left: 50%;
     bottom: 0;
-
     transform: translate(-50%, 50%);
-
     width: min(90%, 1120px);
-
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-
     background: #fff;
-
     border: 1px solid var(--border);
     border-radius: 16px;
-
     box-shadow: var(--shadow-lg);
-
     overflow: hidden;
 }
 
@@ -3361,7 +3348,6 @@
 
     .volunteer-page .hero-stats {
         width: 92%;
-        grid-template-columns: repeat(2, 1fr);
     }
 
     .volunteer-page .stat-box {

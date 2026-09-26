@@ -23,9 +23,9 @@
     }
 
     .navbar-donate {
-        width: 145px;
-        height: 46px;
-        font-size: 0.9rem;
+        width: 120px;
+        height: 40px;
+        font-size: 0.7rem;
     }
 
     /* HERO — still desktop */
@@ -66,7 +66,7 @@
 
     .events-grid,
     .testimonial-grid {
-        gap: 20px;
+        gap: 16px;
     }
 
     .donation-container {
@@ -132,7 +132,7 @@
     /* ---------- NAVBAR ---------- */
 
     .navbar-container {
-        width: 94%;
+        width: 98%;
     }
 
     .navbar-logo-image {
@@ -145,7 +145,7 @@
     }
 
     .nav-links a {
-        font-size: 0.84rem;
+        font-size: 0.82rem;
     }
 
     .navbar-actions {
@@ -158,9 +158,9 @@
     }
 
     .navbar-donate {
-        width: 120px;
-        height: 42px;
-        font-size: 0.8rem;
+        width: 100px;
+        height: 38px;
+        font-size: 0.7rem;
     }
 /* =====================================================
    HERO — TABLET
@@ -168,7 +168,7 @@
 .hero {
         width: 100%;
         min-height: auto;
-        padding-bottom: 60px;
+        /* padding-bottom: 60px; */
         margin: 0;
     }
 .hero-container {
@@ -259,16 +259,18 @@
         background: #f6eee5;
     }
 
-    .hero-art img {
-        display: block;
-        width: 120%;
-        height: 100%;
-        max-width: none;
-        max-height: none;
-        object-fit: contain;
-        object-position: center center;
-        opacity: 1;
-    }
+  .hero-art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    object-position: center 30%;
+    opacity: 1;
+    filter: blur(1.5px);
+    transform: scale(1.01);
+}
 
     /* Existing ::before becomes the readability layer */
   .hero-art::before {
@@ -325,9 +327,8 @@
         left: 5%;
         right: 5%;
         bottom: 0;
-        transform: translateY(42%);
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        min-height: 100px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      
     }
 
     .stat {
@@ -354,7 +355,7 @@
 
 
     /* ---------- ABOUT ---------- */
-
+    
     .about-container {
         grid-template-columns: 1fr 1fr;
         gap: 30px;
@@ -723,21 +724,14 @@
     }
 
     .navbar-donate {
-        width: 105px;
-        height: 40px;
-        font-size: 0.72rem;
+        width: 90px;
+        height: 38px;
+        font-size: 0.7rem;
     }
 
-
-    /* =====================================================
-       HERO
-       Image is a complete background visual.
-       Content is centered above it.
-    ===================================================== */
-
-    .hero {
-        padding-bottom: 70px;
-    }
+   .hero{
+    padding-bottom: 0;
+   }
 
     .hero-container {
         width: 100%;
@@ -843,12 +837,12 @@
     /* ---------- MAIN SECTION SPACING ---------- */
 
     .section {
-        padding-top: clamp(32px, 3vw, 70px);
-        padding-bottom: clamp(32px, 3vw, 70px);
+        padding-top: clamp(28px, 2.5vw, 70px);
+        padding-bottom: clamp(28px, 2.5vw, 70px);
     }
 
     .section-title {
-        margin-bottom: 34px;
+        margin-bottom: 28px;
     }
 
     .section-title h2 {
@@ -970,11 +964,11 @@
     }
 
     .impact-card {
-        padding: 28px 15px;
+        padding: 24px 12px;
     }
 
     .impact-card h3 {
-        font-size: clamp(2rem, 5vw, 2.8rem);
+        font-size: clamp(1.5rem, 4vw, 2.8rem);
     }
 
 
@@ -1455,9 +1449,7 @@
         background: rgba(220, 38, 38, 0.08);
         color: #dc2626;
     }
-    .hero {
-        padding-bottom: 70px;
-    }
+   
     .hero-container {
         width: 100%;
         min-height: 570px;
@@ -1628,7 +1620,7 @@
         line-height: 1.2;
     }
     .section-title {
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         padding: 0 5px;
     }
     .section-title h2 {
@@ -1638,6 +1630,9 @@
     .section-title p {
         font-size: 0.84rem;
         line-height: 1.65;
+    }
+    .about{
+        margin-top: 40px;
     }
     .about-container {
         grid-template-columns: 1fr;
@@ -1687,7 +1682,7 @@
         border-radius: 20px;
     }
     .transparency-header {
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
         gap: 12px;
         margin-bottom: 20px;
@@ -1722,8 +1717,12 @@
         align-items: flex-start;
         gap: 10px;
     }
+    .transparency-footer p{
+        font-size: 0.8rem;
+    }
     .transparency-footer a {
         white-space: normal;
+        font-size: 1rem;
     }
     .programs-grid {
         grid-template-columns: 1fr;
@@ -1764,7 +1763,7 @@
         padding: 23px 20px;
     }
     .community-journey {
-        padding: 22px 15px;
+        padding: 18px 15px;
         border-radius: 20px;
     }
     .community-journey-header {
@@ -1793,15 +1792,15 @@
         gap: 10px;
     }
     .impact-card {
-        padding: 23px 10px;
+        padding: 22px 10px;
         border-radius: 18px;
     }
     .impact-card i {
-        font-size: 30px;
-        margin-bottom: 12px;
+        font-size: 24px;
+        margin-bottom: 3px;
     }
     .impact-card h3 {
-        font-size: clamp(1.8rem, 7vw, 2.25rem);
+        font-size: clamp(1.2rem, 3.5vw, 2.25rem);
     }
     .impact-card p {
         font-size: 0.72rem;
@@ -2691,12 +2690,12 @@
     }
 
     .impact-card {
-        padding: 20px 7px;
+        padding: 6px;
         border-radius: 16px;
     }
 
     .impact-card h3 {
-        font-size: 30px;
+        font-size: 28px;
     }
 
     .impact-card p {
@@ -3165,7 +3164,7 @@
     /* ---------- COMMON ---------- */
 
     .section-title {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
 
     .section-title h2 {
@@ -3237,12 +3236,11 @@
     /* ---------- IMPACT ---------- */
 
     .impact-grid {
-        grid-template-columns: 1fr;
         gap: 10px;
     }
 
     .impact-card h3 {
-        font-size: 29px;
+        font-size: 24px;
     }
 
 
@@ -3872,7 +3870,7 @@
     }
 
     .impact-card h3 {
-        font-size: 27px;
+        font-size: 22px;
     }
 
     .impact-card p {

@@ -21,19 +21,13 @@ function Hero() {
         ========================== */}
 
         <div className="hero-content">
-          <div className="hero-badge">
-            {t("home.hero.badge")}
-          </div>
+          <div className="hero-badge">{t("home.hero.badge")}</div>
 
           <h1>
-            {t("home.hero.titleFirst")}
+            सेवा से बड़ा
             <br />
             <span className="second-line">
-              {t("home.hero.titleSecond")}{" "}
-              <span className="orange">
-                {t("home.hero.titleHighlight")}
-              </span>{" "}
-              {t("home.hero.titleLast")}
+              कोई <span className="orange">धर्म</span> नहीं
             </span>
           </h1>
 
@@ -41,13 +35,9 @@ function Hero() {
             <span></span>✧<span></span>
           </div>
 
-          <h3 className="hero-theme">
-            {t("home.hero.theme")}
-          </h3>
+          <h3 className="hero-theme">{t("home.hero.theme")}</h3>
 
-          <p>
-            {t("home.hero.description")}
-          </p>
+          <p>{t("home.hero.description")}</p>
 
           {/* =========================
               HERO BUTTONS
@@ -73,9 +63,7 @@ function Hero() {
             </ProtectedButton>
           </div>
 
-          <p className="hero-founder">
-            {t("home.hero.founded")}
-          </p>
+          <p className="hero-founder">{t("home.hero.founded")}</p>
 
           {/* =========================
               TRUST FEATURES
@@ -86,13 +74,9 @@ function Hero() {
               <ShieldCheck size={43} />
 
               <div>
-                <strong>
-                  {t("home.hero.features.transparent.value")}
-                </strong>
+                <strong>{t("home.hero.features.transparent.value")}</strong>
 
-                <span>
-                  {t("home.hero.features.transparent.label")}
-                </span>
+                <span>{t("home.hero.features.transparent.label")}</span>
               </div>
             </div>
 
@@ -100,13 +84,9 @@ function Hero() {
               <Clock3 size={43} />
 
               <div>
-                <strong>
-                  {t("home.hero.features.support.value")}
-                </strong>
+                <strong>{t("home.hero.features.support.value")}</strong>
 
-                <span>
-                  {t("home.hero.features.support.label")}
-                </span>
+                <span>{t("home.hero.features.support.label")}</span>
               </div>
             </div>
 
@@ -114,9 +94,7 @@ function Hero() {
               <Infinity size={45} />
 
               <div>
-                <span>
-                  {t("home.hero.features.hope")}
-                </span>
+                <span>{t("home.hero.features.hope")}</span>
               </div>
             </div>
           </div>
@@ -144,9 +122,7 @@ function Hero() {
 
           <div>
             <strong>50K+</strong>
-            <span>
-              {t("home.hero.stats.lives")}
-            </span>
+            <span>{t("home.hero.stats.lives")}</span>
           </div>
         </div>
 
@@ -155,9 +131,7 @@ function Hero() {
 
           <div>
             <strong>500+</strong>
-            <span>
-              {t("home.hero.stats.volunteers")}
-            </span>
+            <span>{t("home.hero.stats.volunteers")}</span>
           </div>
         </div>
 
@@ -166,9 +140,7 @@ function Hero() {
 
           <div>
             <strong>20+</strong>
-            <span>
-              {t("home.hero.stats.cities")}
-            </span>
+            <span>{t("home.hero.stats.cities")}</span>
           </div>
         </div>
 
@@ -177,9 +149,7 @@ function Hero() {
 
           <div>
             <strong>1000+</strong>
-            <span>
-              {t("home.hero.stats.families")}
-            </span>
+            <span>{t("home.hero.stats.families")}</span>
           </div>
         </div>
       </div>
