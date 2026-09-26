@@ -1,9 +1,7 @@
 @media (max-width: 1200px) {
-
     .navbar-container {
         width: 94%;
     }
-
     .nav-links {
         gap: 18px;
         margin-right: 22px;
@@ -29,23 +27,22 @@
     }
 
     /* HERO — still desktop */
+   /* HERO — still desktop */
     .hero-container {
-        width: 96%;
-        grid-template-columns: 46% 54%;
+    width: 96%;
+    grid-template-columns: 48% 52%;
     }
-
-    .hero h1 {
-        font-size: clamp(3rem, 5.1vw, 5rem);
-    }
-
     .hero-art {
-        width: 57%;
+    width: clamp(52%, 55vw, 57%);
+}
+    .hero h1 {
+    font-size: clamp(3rem, 5.1vw, 5rem);
     }
-
-    .stats-card {
-        left: 5%;
-        right: 5%;
-    }
+   
+   .stats-card {
+    left: 5%;
+    right: 5%;
+   }
 
     /* Main landing grids */
     .programs-grid {
@@ -165,198 +162,37 @@
 /* =====================================================
    HERO — TABLET
 ===================================================== */
-.hero {
-        width: 100%;
-        min-height: auto;
-        /* padding-bottom: 60px; */
-        margin: 0;
-    }
-.hero-container {
-        position: relative;
-        isolation: isolate;
-        width: 100%;
-        max-width: none;
-        min-height: 540px;
-        margin: 0;
-        padding: 35px 20px 55px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        border-radius: 0;
-        box-sizing: border-box;
-    }
-    .hero-content {
-    position: relative;
-    z-index: 5;
-    width: 90%;
-    max-width: 760px;
-    padding: 20px;
-    margin: 0 auto;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
- }
 
 .hero-badge {
     margin-bottom: 12px;
 }
-
 .hero h1 {
-    max-width: 700px;
-
-    font-size: clamp(2.6rem, 5.5vw, 4rem);
+    max-width: 650px;
+    font-size: clamp(2.6rem, 5vw, 4rem);
     line-height: 1.05;
 }
-
-.hero-divider {
-    width: min(85%, 450px);
-    margin: 15px auto;
-}
-
 .hero-theme {
     font-size: clamp(1rem, 1.8vw, 1.2rem);
 }
-
-.hero-content > p {
-    max-width: 620px;
-    margin-left: auto;
-    margin-right: auto;
+.stats-card {
+    left: 5%;
+    right: 5%;
+    bottom: 0;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
-
-.hero-buttons {
-    width: min(100%, 610px);
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: stretch;
-    gap: 12px;
-}
-
-.hero-btn {
-    flex: 1 1 0;
+.stat {
     min-width: 0;
-    max-width: none;
-    white-space: nowrap;
+    padding: 8px 10px;
+    gap: 8px;
 }
-     /* Full visual layer.
-       It is NOT a 50%/55% column anymore. */
-     .hero-art {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        z-index: -2;
-        overflow: hidden;
-        background: #f6eee5;
-    }
-
-  .hero-art img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
-    object-fit: cover;
-    object-position: center 30%;
-    opacity: 1;
-    filter: blur(1.5px);
-    transform: scale(1.01);
+.stat strong {
+    font-size: clamp(1.15rem, 2vw, 1.7rem);
 }
-
-    /* Existing ::before becomes the readability layer */
-  .hero-art::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-
-    background: linear-gradient(
-        90deg,
-        rgba(255, 250, 243, 0.90) 0%,
-        rgba(255, 250, 243, 0.60) 25%,
-        rgba(255, 250, 243, 0.25) 50%,
-        rgba(255, 250, 243, 0.05) 75%,
-        rgba(255, 250, 243, 0) 100%
-    );
+.stat span {
+    font-size: 0.72rem;
 }
-
-    /* Second subtle layer makes the lower part readable */
- .hero-art::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-
-    background: linear-gradient(
-        180deg,
-        rgba(255, 250, 243, 0) 0%,
-        rgba(255, 250, 243, 0) 65%,
-        rgba(255, 250, 243, 0.12) 100%
-    );
-}
-
-    .hero-founder {
-        text-align: center;
-    }
-
-    /* Three trust items */
-    .hero-features {
-        width: min(100%, 680px);
-        justify-content: center;
-        gap: 0;
-    }
-
-    .hero-feature {
-        flex: 1;
-        justify-content: center;
-    }
-
-    /* Stats stay attached to the hero, but don't cover content */
-    .stats-card {
-        left: 5%;
-        right: 5%;
-        bottom: 0;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      
-    }
-
-    .stat {
-        min-width: 0;
-        padding: 8px 10px;
-        gap: 8px;
-    }
-
-    .stat strong {
-        font-size: clamp(1.15rem, 2vw, 1.7rem);
-    }
-
-    .stat span {
-        font-size: 0.72rem;
-    }
-
-
-    /* ---------- COMMON SECTION WIDTH ---------- */
-
-    .section-title {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-
-    /* ---------- ABOUT ---------- */
-    
-    .about-container {
+/* about */
+.about-container {
         grid-template-columns: 1fr 1fr;
         gap: 30px;
     }
@@ -450,13 +286,6 @@
     }
 
 
-    /* ---------- FOOTER ---------- */
-
-    .footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 30px;
-    }
-
 
     /* ---------- AUTH ---------- */
 
@@ -536,8 +365,6 @@
 
     .volunteer-hero {
         min-height: 570px;
-        padding-left: 5%;
-        padding-right: 5%;
         background-position: center right;
     }
 
@@ -736,24 +563,16 @@
     .hero-container {
         width: 100%;
         min-height: 560px;
+         box-sizing:border-box;
         padding: 48px 18px 65px;
         border-radius: 0;
+    }
+    .hero-art {
+        width:clamp(52%,55vw,57%);
     }
 
     .hero-art img {
         object-position: center;
-        opacity: 3;
-    }
-
-    .hero-art::before {
-        background:
-            linear-gradient(
-                90deg,
-                rgba(255, 250, 243, 0.97) 0%,
-                rgba(255, 250, 243, 0.84) 38%,
-                rgba(255, 250, 243, 0.48) 72%,
-                rgba(255, 250, 243, 0.22) 100%
-            );
     }
 
     .hero-content {
@@ -771,12 +590,12 @@
     }
 
     .hero-theme {
-        font-size: clamp(0.95rem, 2vw, 1.15rem);
+        font-size: clamp(1rem, 2vw, 1.25rem);
+       
     }
 
     .hero-content > p {
         max-width: 600px;
-        font-size: 0.94rem;
     }
 
     .hero-buttons {
@@ -851,7 +670,6 @@
 
     .section-title p {
         max-width: 680px;
-        font-size: 0.92rem;
     }
 
 
@@ -1355,8 +1173,8 @@
     }
     .mobile-menu-button {
         display: flex !important;
-        width: 42px;
-        height: 42px;
+        width: 38px;
+        height: 38px;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
@@ -1401,7 +1219,7 @@
         align-items: center;
         justify-content: flex-start;
         gap: 5px;
-        padding: 10px 13px;
+        padding: 6px 13px;
         border: 1px solid transparent;
         border-radius: 9px;
         background: transparent;
@@ -1476,7 +1294,6 @@
         display: block;
         object-fit: fill;
         object-position: center;
-        opacity: 5;
         transform: none;
     }
   
@@ -2475,8 +2292,8 @@
     }
 
     .mobile-menu-button {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
     }
 
 
@@ -2495,20 +2312,9 @@
     }
 
     .hero-art img {
-        opacity: 5;
         object-position: center center;
     }
 
-    .hero-art::before {
-        background:
-            linear-gradient(
-                180deg,
-                rgba(255, 250, 243, 0.84) 0%,
-                rgba(255, 250, 243, 0.60) 35%,
-                rgba(255, 250, 243, 0.62) 65%,
-                rgba(255, 250, 243, 0.90) 100%
-            );
-    }
 
     .hero-content {
         padding: 18px 7px;
@@ -3007,8 +2813,8 @@
     }
 
     .mobile-menu-button {
-        width: 38px;
-        height: 38px;
+        width: 32px;
+        height: 32px;
         padding: 5px;
     }
 
@@ -3033,19 +2839,7 @@
     }
 
     .hero-art img {
-        opacity: 5;
         object-position: center center;
-    }
-
-    .hero-art::before {
-        background:
-            linear-gradient(
-                180deg,
-                rgba(255, 250, 243, 0.86) 0%,
-                rgba(255, 250, 243, 0.60) 38%,
-                rgba(255, 250, 243, 0.66) 68%,
-                rgba(255, 250, 243, 0.93) 100%
-            );
     }
 
     .hero-content {
@@ -3719,8 +3513,8 @@
     }
 
     .mobile-menu-button {
-        width: 36px;
-        height: 36px;
+        width: 30px;
+        height: 30px;
     }
 
 
@@ -3737,7 +3531,6 @@
     }
 
     .hero-art img {
-        opacity: 4;
         object-position: center center;
     }
 

@@ -74,24 +74,6 @@ function Footer() {
             <li>{t("footer.programs.emergencyRelief")}</li>
           </ul>
         </div>
-
-        {/* Newsletter */}
-        <div className="footer-col">
-          <h3>{t("footer.newsletter.title")}</h3>
-
-          <p>{t("footer.newsletter.description")}</p>
-
-          <form className="newsletter">
-            <input
-              type="email"
-              placeholder={t("footer.newsletter.placeholder")}
-            />
-
-            <button type="submit">
-              {t("footer.newsletter.subscribe")}
-            </button>
-          </form>
-        </div>
       </div>
 
       <div className="footer-bottom">

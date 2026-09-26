@@ -3754,10 +3754,9 @@ footer {
     color: #fff;
     padding: clamp(30px, 3vw, 45px) 0 0;
 }
-
 .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: clamp(18px, 2.5vw, 32px);
 }
 
