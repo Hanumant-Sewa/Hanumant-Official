@@ -748,6 +748,9 @@
 .programs {
     background: linear-gradient(180deg, #FFF8F0, #FFFDF9);
 }
+.programs-grid-mobile {
+    display: none;
+}
 
 .programs-grid {
     display: grid;
@@ -3497,8 +3500,8 @@
 }
 
 .donation-card h4 {
-    font-size: clamp(19px, 2vw, 24px);
-    margin-bottom: clamp(12px, 1.5vw, 18px);
+    font-size: clamp(15px, 1.5vw, 24px);
+    margin-bottom: clamp(10px, 1.5vw, 18px);
     font-family: 'Poppins', sans-serif;
 }
 

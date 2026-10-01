@@ -8,6 +8,7 @@ import {
   Users,
   Megaphone,
   ArrowRight,
+  ChevronDown,
 } from "lucide-react";
 
 import ProtectedButton from "./ProtectedButton";
@@ -22,43 +23,36 @@ function Programs() {
       title: t("programs.items.foodDistribution.title"),
       text: t("programs.items.foodDistribution.text"),
     },
-
     {
       icon: Recycle,
       title: t("programs.items.foodRescue.title"),
       text: t("programs.items.foodRescue.text"),
     },
-
     {
       icon: CookingPot,
       title: t("programs.items.communityKitchen.title"),
       text: t("programs.items.communityKitchen.text"),
     },
-
     {
       icon: ShoppingBasket,
       title: t("programs.items.grocerySupport.title"),
       text: t("programs.items.grocerySupport.text"),
     },
-
     {
       icon: Ambulance,
       title: t("programs.items.emergencyRelief.title"),
       text: t("programs.items.emergencyRelief.text"),
     },
-
     {
       icon: HandHeart,
       title: t("programs.items.communityCare.title"),
       text: t("programs.items.communityCare.text"),
     },
-
     {
       icon: Users,
       title: t("programs.items.volunteerProgram.title"),
       text: t("programs.items.volunteerProgram.text"),
     },
-
     {
       icon: Megaphone,
       title: t("programs.items.awareness.title"),
@@ -79,14 +73,14 @@ function Programs() {
             <span>{t("programs.heading.titleSecond")}</span>
           </h2>
 
-          <p>
-            {t("programs.heading.description")}
-          </p>
+          <p>{t("programs.heading.description")}</p>
         </div>
 
-        {/* PROGRAM GRID */}
+        {/* =====================================================
+                    DESKTOP / TABLET PROGRAM GRID
+            ===================================================== */}
 
-        <div className="programs-grid">
+        <div className="programs-grid programs-grid-desktop">
           {programs.map((program, index) => {
             const Icon = program.icon;
 
@@ -104,7 +98,11 @@ function Programs() {
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
+                {/* TITLE */}
+
                 <h3>{program.title}</h3>
+
+                {/* DESCRIPTION */}
 
                 <p>{program.text}</p>
               </div>
@@ -112,15 +110,59 @@ function Programs() {
           })}
         </div>
 
-        {/* BOTTOM CTA */}
+        {/* =====================================================
+                    MOBILE PROGRAM ACCORDION
+            ===================================================== */}
+
+        <div className="programs-grid-mobile">
+          {programs.map((program, index) => {
+            const Icon = program.icon;
+
+            return (
+              <details className="program-mobile-card" key={program.title}>
+                <summary className="program-mobile-header">
+                  {/* ICON */}
+
+                  <div className="program-mobile-icon">
+                    <Icon strokeWidth={2} />
+                  </div>
+
+                  {/* TITLE */}
+
+                  <h3>{program.title}</h3>
+
+                  {/* NUMBER */}
+
+                  <span className="program-mobile-number">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  {/* ARROW */}
+
+                  <span className="program-mobile-toggle">
+                    <ChevronDown />
+                  </span>
+                </summary>
+
+                {/* DESCRIPTION */}
+
+                <div className="program-mobile-content">
+                  <p>{program.text}</p>
+                </div>
+              </details>
+            );
+          })}
+        </div>
+
+        {/* =====================================================
+                            BOTTOM CTA
+            ===================================================== */}
 
         <div className="programs-cta">
           <div>
             <span>{t("programs.cta.badge")}</span>
 
-            <h3>
-              {t("programs.cta.title")}
-            </h3>
+            <h3>{t("programs.cta.title")}</h3>
           </div>
 
           <ProtectedButton
