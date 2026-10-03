@@ -919,9 +919,6 @@
     margin-left: 0;
   }
 
-  .dashboard-stats {
-    grid-template-columns: 1fr;
-  }
 
   .activity-grid {
     grid-template-columns: 1fr;

@@ -3420,10 +3420,6 @@
         padding-right: 5%;
     }
 
-    .dashboard-stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
@@ -4029,9 +4025,8 @@
         padding: 40px 25px 60px;
     }
 
-    .dashboard-stats,
     .dashboard-grid {
-        grid-template-columns: 1fr;
+       grid-template-columns: repeat(2, 1fr);
     }
 
     .dashboard-right {

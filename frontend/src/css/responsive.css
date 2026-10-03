@@ -1119,10 +1119,6 @@
         gap: 20px;
     }
 
-    .dashboard-stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
@@ -2126,7 +2122,6 @@
         padding: 35px 20px 55px;
     }
     .dashboard-stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
     }
     .dashboard-stat-card {

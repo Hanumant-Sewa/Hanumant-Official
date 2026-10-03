@@ -83,9 +83,7 @@ function Campaigns() {
             <span> {t("campaigns.active.heading.titleSecond")}</span>
           </h2>
 
-          <p>
-            {t("campaigns.active.heading.description")}
-          </p>
+          <p>{t("campaigns.active.heading.description")}</p>
         </div>
 
         {/* ================= CAMPAIGN GRID ================= */}
@@ -162,7 +160,7 @@ function Campaigns() {
                 {/* CAMPAIGN DETAILS */}
 
                 <ProtectedLink
-                  to="/campaigns"
+                  to="/dashboard"
                   allowedRoles={["USER", "VOLUNTEER"]}
                   className="campaign-link"
                 >
@@ -187,9 +185,7 @@ function Campaigns() {
               </h3>
             </div>
 
-            <p>
-              {t("campaigns.journey.description")}
-            </p>
+            <p>{t("campaigns.journey.description")}</p>
           </div>
 
           <div className="community-journey-flow">
@@ -197,10 +193,7 @@ function Campaigns() {
               const Icon = item.icon;
 
               return (
-                <div
-                  className="community-journey-item"
-                  key={item.title}
-                >
+                <div className="community-journey-item" key={item.title}>
                   {/* ICON */}
 
                   <div className="community-journey-icon">
