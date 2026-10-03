@@ -1795,122 +1795,82 @@ function Dashboard() {
       {/* =====================================================
           INVITE FRIENDS MODAL
       ===================================================== */}
-
       {showInviteModal && (
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="invite-modal-title"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9999,
-            background: "rgba(0, 0, 0, 0.55)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px",
-          }}
+          className="invite-modal-overlay"
           onClick={() => setShowInviteModal(false)}
         >
           <div
-            className="dashboard-card"
-            style={{
-              width: "min(100%, 560px)",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              position: "relative",
-            }}
+            className="invite-modal"
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               aria-label="Close invitation"
+              className="invite-modal-close"
               onClick={() => setShowInviteModal(false)}
-              style={{
-                position: "absolute",
-                top: "16px",
-                right: "16px",
-                border: "none",
-                background: "transparent",
-                cursor: "pointer",
-              }}
             >
               <X size={22} />
             </button>
-
-            <div className="dashboard-card-header">
+            <div className="invite-modal-header">
               <div>
                 <span className="card-eyebrow">Community</span>
-
                 <h2 id="invite-modal-title">Invite Friends</h2>
               </div>
-
-              <UserPlus size={22} />
+              <UserPlus className="invite-modal-header-icon" size={22} />
             </div>
-
             {invitationLoading ? (
-              <div className="dashboard-empty-state">
-                <LoaderCircle size={35} className="loading-spinner" />
-
-                <h3>Creating your invitation</h3>
-
-                <p>Please wait a moment.</p>
+              <div className="invite-modal-content">
+                <div className="dashboard-empty-state">
+                  <LoaderCircle size={35} className="loading-spinner" />
+                  <h3>Creating your invitation</h3>
+                  <p>Please wait a moment.</p>
+                </div>
               </div>
             ) : !invitation ? (
-              <div className="dashboard-empty-state">
-                <UserPlus size={35} />
-
-                <h3>Bring someone into the Seva family</h3>
-
-                <p>
-                  Create a personal invitation and share it with someone you
-                  know.
-                </p>
-
-                <button
-                  type="button"
-                  className="dashboard-outline-button"
-                  onClick={handleCreateInvitation}
-                >
-                  <UserPlus size={17} />
-                  Create Invitation
-                </button>
+              <div className="invite-modal-content">
+                <div className="dashboard-empty-state">
+                  <UserPlus size={35} />
+                  <h3>Bring someone into the Seva family</h3>
+                  <p>
+                    Create a personal invitation and share it with someone you
+                    know.
+                  </p>
+                  <button
+                    type="button"
+                    className="dashboard-outline-button"
+                    onClick={handleCreateInvitation}
+                  >
+                    <UserPlus size={17} />
+                    Create Invitation
+                  </button>
+                </div>
               </div>
             ) : (
-              <>
-                <div className="dashboard-empty-state">
+              <div className="invite-modal-content">
+                <div className="dashboard-empty-state invite-intro">
                   {copied ? <Check size={35} /> : <Share2 size={35} />}
-
                   <h3>{copied ? "Link copied" : "Your invitation is ready"}</h3>
-
                   <p>
                     Share the link with a friend. After they register or log in,
                     they can accept your invitation.
                   </p>
                 </div>
-
-                <div className="profile-details">
+                <div className="profile-details invite-profile-details">
                   <div className="profile-detail-item">
                     <div className="profile-detail-icon">
                       <Share2 size={18} />
                     </div>
-
-                    <div>
+                    <div className="invite-link-content">
                       <span>Invitation Link</span>
-
-                      <strong
-                        style={{
-                          wordBreak: "break-all",
-                        }}
-                      >
-                        {invitation.url}
-                      </strong>
+                      <strong>{invitation.url}</strong>
                     </div>
                   </div>
                 </div>
-
-                <div className="quick-actions">
+                <div className="quick-actions invite-quick-actions">
                   <button
                     type="button"
                     className="quick-action"
@@ -1919,16 +1879,12 @@ function Dashboard() {
                     <div className="quick-action-icon">
                       {copied ? <Check size={21} /> : <Copy size={21} />}
                     </div>
-
                     <div>
                       <strong>{copied ? "Link Copied" : "Copy Link"}</strong>
-
                       <span>Copy and share anywhere</span>
                     </div>
-
                     <ArrowRight size={17} />
                   </button>
-
                   <button
                     type="button"
                     className="quick-action"
@@ -1937,16 +1893,12 @@ function Dashboard() {
                     <div className="quick-action-icon">
                       <Share2 size={21} />
                     </div>
-
                     <div>
                       <strong>Share Invitation</strong>
-
                       <span>Share through available apps</span>
                     </div>
-
                     <ArrowRight size={17} />
                   </button>
-
                   <button
                     type="button"
                     className="quick-action"
@@ -1955,107 +1907,74 @@ function Dashboard() {
                     <div className="quick-action-icon">
                       <QrCode size={21} />
                     </div>
-
                     <div>
                       <strong>Show QR Code</strong>
-
                       <span>Let your friend scan to join</span>
                     </div>
-
                     <ArrowRight size={17} />
                   </button>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>
       )}
-
       {/* =====================================================
-          QR CODE MODAL
-      ===================================================== */}
+    QR CODE MODAL
+===================================================== */}
 
       {showQrModal && invitation?.url && (
         <div
+          className="qr-modal-overlay"
           role="dialog"
           aria-modal="true"
           aria-labelledby="qr-modal-title"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 10000,
-            background: "rgba(0, 0, 0, 0.6)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px",
-          }}
           onClick={() => setShowQrModal(false)}
         >
           <div
-            className="dashboard-card"
-            style={{
-              width: "min(100%, 430px)",
-              textAlign: "center",
-              position: "relative",
-            }}
+            className="qr-modal"
             onClick={(event) => event.stopPropagation()}
           >
+            {/* Close Button */}
             <button
               type="button"
+              className="qr-modal-close"
               aria-label="Close QR code"
               onClick={() => setShowQrModal(false)}
-              style={{
-                position: "absolute",
-                top: "16px",
-                right: "16px",
-                border: "none",
-                background: "transparent",
-                cursor: "pointer",
-              }}
             >
               <X size={22} />
             </button>
 
-            <div className="dashboard-card-header">
+            {/* Header */}
+            <div className="qr-modal-header">
               <div>
-                <span className="card-eyebrow">Invitation</span>
+                <span className="qr-modal-eyebrow">Invitation</span>
 
                 <h2 id="qr-modal-title">Scan to Join</h2>
               </div>
 
-              <QrCode size={22} />
+              <QrCode size={22} className="qr-modal-header-icon" />
             </div>
 
-            <div className="dashboard-empty-state">
-              <p>
-                Ask your friend to scan this QR code using their phone camera.
-              </p>
+            {/* Description */}
+            <p className="qr-modal-description">
+              Ask your friend to scan this QR code using their phone camera.
+            </p>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "20px",
-                  background: "#ffffff",
-                  borderRadius: "12px",
-                  margin: "15px auto 20px",
-                  width: "fit-content",
-                }}
-              >
-                <QRCodeSVG value={invitation.url} size={220} level="H" />
-              </div>
-
-              <button
-                type="button"
-                className="dashboard-outline-button"
-                onClick={() => setShowQrModal(false)}
-              >
-                Done
-                <Check size={17} />
-              </button>
+            {/* QR Code */}
+            <div className="qr-code-wrapper">
+              <QRCodeSVG value={invitation.url} size={240} level="H" />
             </div>
+
+            {/* Done Button */}
+            <button
+              type="button"
+              className="qr-modal-done"
+              onClick={() => setShowQrModal(false)}
+            >
+              Done
+              <Check size={17} />
+            </button>
           </div>
         </div>
       )}

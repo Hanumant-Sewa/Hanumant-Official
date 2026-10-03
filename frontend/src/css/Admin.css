@@ -9,34 +9,25 @@
   --admin-primary-dark: #b45309;
   --admin-primary-light: #fff7ed;
   --admin-primary-soft: #ffedd5;
-
   --admin-bg: #f6f7f9;
   --admin-surface: #ffffff;
   --admin-surface-soft: #fafafa;
-
   --admin-text: #1f2937;
   --admin-text-dark: #111827;
   --admin-text-muted: #6b7280;
   --admin-text-light: #9ca3af;
-
   --admin-border: #e8ebef;
   --admin-border-dark: #d9dee4;
-
   --admin-success: #16a34a;
   --admin-success-bg: #ecfdf3;
-
   --admin-warning: #d97706;
   --admin-warning-bg: #fff7ed;
-
   --admin-danger: #dc2626;
   --admin-danger-bg: #fef2f2;
-
   --admin-info: #2563eb;
   --admin-info-bg: #eff6ff;
-
   --admin-sidebar: #18212b;
   --admin-sidebar-light: #202b36;
-
   min-height: 100vh;
   display: flex;
   background: var(--admin-bg);
@@ -185,31 +176,20 @@
   position: relative;
   width: 100%;
   min-height: 45px;
-
   display: flex;
   align-items: center;
-
-  gap: 12px;
-
+  gap: 15px;
   margin-bottom: 4px;
-
   padding: 10px 13px;
-
   border: 1px solid transparent;
   border-radius: 9px;
-
   background: transparent;
-
   color: #aeb8c2;
-
   cursor: pointer;
-
   text-align: left;
-
   font-family: inherit;
   font-size: 12px;
   font-weight: 500;
-
   transition:
     background .2s ease,
     color .2s ease,
@@ -670,12 +650,9 @@
 
 .admin-dashboard .admin-stat-card span {
   display: block;
-
   color: var(--admin-text-muted);
-
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 500;
-
   line-height: 1.4;
 }
 
@@ -800,43 +777,38 @@
 
 .admin-dashboard .admin-table {
   width: 100%;
-
   min-width: 720px;
-
   border-collapse: collapse;
 }
 
 .admin-dashboard .admin-table th {
   padding: 12px 15px;
-
   background: #fafbfc;
-
   color: #7b8792;
-
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 700;
-
   letter-spacing: .025em;
-
   text-align: left;
-
   white-space: nowrap;
-
   border-bottom: 1px solid var(--admin-border);
 }
 
 .admin-dashboard .admin-table td {
   padding: 13px 15px;
-
   border-top: 1px solid #f0f2f4;
-
   color: #53606b;
-
-  font-size: 10px;
-
+  font-size: 12px;
   vertical-align: middle;
 }
-
+.admin-dashboard .admin-table td strong,
+.admin-dashboard .admin-table td small{
+  display:block;
+}
+.admin-dashboard .admin-table td small{
+  margin-top:4px;
+  color:var(--admin-text-muted);
+  line-height:1.5;
+}
 .admin-dashboard .admin-table tbody tr {
   transition: background .15s ease;
 }
@@ -851,22 +823,18 @@
 
 .admin-dashboard .admin-table small {
   color: #98a1aa;
-
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .admin-dashboard .admin-user-cell strong {
   display: block;
-
   color: var(--admin-text-dark);
-
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
 }
 
 .admin-dashboard .admin-user-cell small {
   display: block;
-
   margin-top: 3px;
 }
 
@@ -987,24 +955,16 @@
 .admin-dashboard .admin-primary-button,
 .admin-dashboard .admin-secondary-button {
   min-height: 37px;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   gap: 7px;
-
   padding: 8px 14px;
-
   border-radius: 8px;
-
   font-family: inherit;
-
   font-size: 10px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition:
     transform .18s ease,
     background .18s ease,
@@ -1507,27 +1467,21 @@
 
 .admin-dashboard .admin-modal-backdrop {
   position: fixed;
-
   inset: 0;
-
   z-index: 2000;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 24px;
-
-  background:
-    rgba(15,23,42,.58);
-
+  background: rgba(15,23,42,.58);
   backdrop-filter: blur(4px);
-
   overflow-y: auto;
-
   box-sizing: border-box;
 }
-
+/* SweetAlert must appear above admin application modal */
+.swal2-container {
+  z-index: 99999 !important;
+}
 
 /* =========================================================
    GENERIC MODAL
@@ -2077,7 +2031,23 @@
 
   animation: admin-campaign-modal-in 0.2s ease;
 }
-
+.admin-dashboard .admin-campaign-actions{
+  display:flex;
+  align-items:center;
+  gap:clamp(8px,1vw,12px);
+}
+.admin-dashboard .admin-campaign-actions .admin-icon-button{
+  width:37px;
+  height:37px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+}
+.admin-dashboard .admin-campaign-actions .admin-icon-button svg{
+  width:clamp(17px,1.5vw,19px);
+  height:clamp(17px,1.5vw,19px);
+}
 @keyframes admin-campaign-modal-in {
   from {
     opacity: 0;
@@ -2430,9 +2400,7 @@
 .admin-dashboard .admin-campaign-form .admin-modal-footer
 .admin-secondary-button {
   border: 1px solid #dfe4e8;
-
   background: #ffffff;
-
   color: #475467;
 }
 

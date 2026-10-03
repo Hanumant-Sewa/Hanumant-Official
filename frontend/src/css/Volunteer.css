@@ -1370,6 +1370,15 @@
 .application-status-page .approved-badge{
     background:#E9F8EF;
     color:#27854D;
+    margin: 4px auto 0;
+}
+.application-status-page .approved-badge + .status-action {
+  margin-top: 16px;
+}
+
+.application-status-page .approved-badge + .status-action {
+  min-width: 190px;
+  height: 44px;
 }
 .application-status-page .rejected-badge{
     background:#FDECEC;
@@ -1378,29 +1387,8 @@
 /*====================================================
                     STATUS BUTTONS
 ====================================================*/
-.application-status-page .orange-button{
-    min-height:44px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    padding:0 18px;
-    border:1px solid var(--primary);
-    border-radius:8px;
-    background:var(--primary);
-    color:#fff;
-    font-family:inherit;
-    font-size:14px;
-    font-weight:600;
-    cursor:pointer;
-    transition:background .2s ease,transform .2s ease,box-shadow .2s ease;
-}
-.application-status-page .orange-button:hover{
-    background:var(--primary-dark);
-    border-color:var(--primary-dark);
-    transform:translateY(-1px);
-    box-shadow:0 5px 15px rgba(217,119,6,.18);
-}
+
+
 .application-status-page .outline-button{
     min-height:44px;
     display:inline-flex;
@@ -1425,17 +1413,24 @@
 .application-status-page .status-action{
     margin-top:18px;
 }
-.application-status-page .status-bottom-actions{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:12px;
-    margin-top:20px;
+.application-status-page .status-bottom-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
 }
-.application-status-page .status-bottom-action{
-    margin:0;
-    padding:0;
+
+.application-status-page .status-bottom-action {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.application-status-page .status-bottom-action button {
+  min-width: 250px;
+  height: 46px;
+  margin: 0;
+  white-space: nowrap;
 }
 /*====================================================
                     ADMIN REMARKS
@@ -4352,10 +4347,19 @@
         line-height: 1.55;
     }
 
-    .application-status-page .status-bottom-actions {
-        flex-direction: column;
-        gap: 9px;
-    }
+   .application-status-page .status-bottom-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+    .application-status-page .status-bottom-action {
+    width: 100%;
+  }
+
+  .application-status-page .status-bottom-action button {
+    width: 100%;
+    min-width: 0;
+  }
 
     .application-status-page .status-bottom-actions .orange-button,
     .application-status-page .status-bottom-actions .outline-button {

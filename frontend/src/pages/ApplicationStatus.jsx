@@ -302,16 +302,6 @@ const ApplicationStatus = () => {
                   <CheckCircle size={16} />
                   Application Approved
                 </div>
-
-                <button
-                  type="button"
-                  className="orange-button status-action"
-                  onClick={() => navigate("/volunteer/dashboard")}
-                >
-                  <LayoutDashboard size={18} />
-                  Open Dashboard
-                  <ArrowRight size={18} />
-                </button>
               </>
             )}
 
