@@ -52,7 +52,11 @@ const allowedOrigins = [
   // Local development frontend
   "http://localhost:5173",
 
-  // Firebase production frontend
+  // Current production domain
+  "https://hanumantseva.org",
+  "https://www.hanumantseva.org",
+
+  // Firebase hosting domains
   "https://hanumant-seva.web.app",
   "https://hanumant-seva.firebaseapp.com",
 ];
